@@ -2944,7 +2944,7 @@ describe('wordOnlineHandler', () => {
 
         describe('Contain Word WAC Image', () => {
             itChromeOnly('Contain Single WAC Image', () => {
-                runTest(
+                const [,] = runTest(
                     '<span style="padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: relative; cursor: move; left: 0px; top: 2px; text-indent: 0px; color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;, &quot;Segoe UI Web&quot;, Arial, Verdana, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; width: auto; height: auto; transform: rotate(0deg);" role="presentation" class="WACImageContainer NoPadding DragDrop BlobObject SCXW139784418 BCX8"><img src="http://www.microsoft.com" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; border: none; white-space: pre !important; vertical-align: baseline; width: 264px; height: 96px;" alt="Graphical user interface, text, application Description automatically generated" class="WACImage SCXW139784418 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important; display: block; position: absolute; transform: rotate(0deg); width: 264px; height: 96px; left: 0px; top: 0px;" class="WACImageBorder SCXW139784418 BCX8"></span></span>',
                     undefined,
                     {
@@ -2969,10 +2969,6 @@ describe('wordOnlineHandler', () => {
                                             marginRight: '0px',
                                             marginBottom: '0px',
                                             marginLeft: '0px',
-                                            borderTop: '',
-                                            borderRight: '',
-                                            borderBottom: '',
-                                            borderLeft: '',
                                             verticalAlign: 'top',
                                         },
                                         dataset: {},
@@ -2982,6 +2978,12 @@ describe('wordOnlineHandler', () => {
                                 ],
                                 format: {},
                                 isImplicit: true,
+                                segmentFormat: {
+                                    fontFamily:
+                                        '"Segoe UI", "Segoe UI Web", Arial, Verdana, sans-serif',
+                                    fontSize: '12px',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
                             },
                         ],
                     }
@@ -3405,7 +3407,7 @@ describe('wordOnlineHandler', () => {
                                     blockType: 'Table',
                                     rows: [
                                         {
-                                            height: 0,
+                                            height: 87,
                                             format: {},
                                             cells: [
                                                 {
@@ -3500,12 +3502,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -3521,33 +3523,31 @@ describe('wordOnlineHandler', () => {
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
+                                                                textIndent: '0px',
                                                                 marginTop: '0px',
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
                                                                 paddingRight: '6px',
                                                                 paddingLeft: '6px',
-                                                                textIndent: '0px',
                                                             },
                                                         },
                                                     ],
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
-                                                        borderTop: '1px solid',
+                                                        textIndent: '0px',
+                                                        borderTop: '1px solid initial',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
-                                                        borderLeft: '1px solid',
+                                                        borderLeft: '1px solid initial',
                                                         backgroundColor: 'rgb(21, 96, 130)',
                                                         verticalAlign: 'middle',
                                                         width: '312px',
-                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
                                                     isHeader: false,
-                                                    dataset: {
-                                                        celllook: '69905',
-                                                    },
+                                                    dataset: { celllook: '69905' },
                                                 },
                                                 {
                                                     blockGroupType: 'TableCell',
@@ -3596,12 +3596,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -3617,38 +3617,36 @@ describe('wordOnlineHandler', () => {
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
+                                                                textIndent: '0px',
                                                                 marginTop: '0px',
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
                                                                 paddingRight: '6px',
                                                                 paddingLeft: '6px',
-                                                                textIndent: '0px',
                                                             },
                                                         },
                                                     ],
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
-                                                        borderTop: '1px solid',
-                                                        borderRight: '1px solid',
+                                                        textIndent: '0px',
+                                                        borderTop: '1px solid initial',
+                                                        borderRight: '1px solid initial',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
                                                         backgroundColor: 'rgb(21, 96, 130)',
                                                         verticalAlign: 'middle',
                                                         width: '312px',
-                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
                                                     isHeader: false,
-                                                    dataset: {
-                                                        celllook: '69905',
-                                                    },
+                                                    dataset: { celllook: '69905' },
                                                 },
                                             ],
                                         },
                                         {
-                                            height: 0,
+                                            height: 27,
                                             format: {},
                                             cells: [
                                                 {
@@ -3697,12 +3695,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -3718,34 +3716,32 @@ describe('wordOnlineHandler', () => {
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
+                                                                textIndent: '0px',
                                                                 marginTop: '0px',
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
                                                                 paddingRight: '6px',
                                                                 paddingLeft: '6px',
-                                                                textIndent: '0px',
                                                             },
                                                         },
                                                     ],
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
+                                                        textIndent: '0px',
                                                         borderTop: '1px solid rgb(0, 0, 0)',
-                                                        borderRight: '1px solid',
+                                                        borderRight: '1px solid initial',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
-                                                        borderLeft: '1px solid',
+                                                        borderLeft: '1px solid initial',
                                                         backgroundColor: 'rgb(0, 0, 0)',
                                                         verticalAlign: 'middle',
                                                         width: '624px',
-                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
                                                     isHeader: false,
-                                                    dataset: {
-                                                        celllook: '69905',
-                                                    },
+                                                    dataset: { celllook: '69905' },
                                                 },
                                                 {
                                                     blockGroupType: 'TableCell',
@@ -3753,26 +3749,24 @@ describe('wordOnlineHandler', () => {
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
+                                                        textIndent: '0px',
                                                         borderTop: '1px solid rgb(0, 0, 0)',
-                                                        borderRight: '1px solid',
+                                                        borderRight: '1px solid initial',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
-                                                        borderLeft: '1px solid',
+                                                        borderLeft: '1px solid initial',
                                                         backgroundColor: 'rgb(0, 0, 0)',
                                                         verticalAlign: 'middle',
                                                         width: '624px',
-                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: true,
                                                     spanAbove: false,
                                                     isHeader: false,
-                                                    dataset: {
-                                                        celllook: '69905',
-                                                    },
+                                                    dataset: { celllook: '69905' },
                                                 },
                                             ],
                                         },
                                         {
-                                            height: 0,
+                                            height: 20,
                                             format: {},
                                             cells: [
                                                 {
@@ -3822,12 +3816,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -3862,12 +3856,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -3950,12 +3944,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -4071,12 +4065,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -4110,12 +4104,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -4165,12 +4159,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -4204,12 +4198,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -4303,12 +4297,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -4391,12 +4385,12 @@ describe('wordOnlineHandler', () => {
                                                                     format: {
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
+                                                                        textIndent: '0px',
                                                                         marginLeft: '0px',
                                                                         marginRight: '0px',
                                                                         whiteSpace: 'pre-wrap',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                        textIndent: '0px',
                                                                     },
                                                                     segmentFormat: {
                                                                         italic: false,
@@ -4412,33 +4406,31 @@ describe('wordOnlineHandler', () => {
                                                             format: {
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
+                                                                textIndent: '0px',
                                                                 marginTop: '0px',
                                                                 marginRight: '0px',
                                                                 marginBottom: '0px',
                                                                 marginLeft: '0px',
                                                                 paddingRight: '6px',
                                                                 paddingLeft: '6px',
-                                                                textIndent: '0px',
                                                             },
                                                         },
                                                     ],
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
+                                                        textIndent: '0px',
                                                         borderTop: '1px solid rgb(0, 0, 0)',
                                                         borderRight: '1px solid rgb(0, 0, 0)',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
                                                         borderLeft: '1px solid rgb(0, 0, 0)',
                                                         verticalAlign: 'top',
                                                         width: '624px',
-                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
                                                     isHeader: false,
-                                                    dataset: {
-                                                        celllook: '4369',
-                                                    },
+                                                    dataset: { celllook: '4369' },
                                                 },
                                                 {
                                                     blockGroupType: 'TableCell',
@@ -4446,20 +4438,18 @@ describe('wordOnlineHandler', () => {
                                                     format: {
                                                         direction: 'ltr',
                                                         textAlign: 'start',
+                                                        textIndent: '0px',
                                                         borderTop: '1px solid rgb(0, 0, 0)',
                                                         borderRight: '1px solid rgb(0, 0, 0)',
                                                         borderBottom: '1px solid rgb(0, 0, 0)',
                                                         borderLeft: '1px solid rgb(0, 0, 0)',
                                                         verticalAlign: 'top',
                                                         width: '624px',
-                                                        textIndent: '0px',
                                                     },
                                                     spanLeft: true,
                                                     spanAbove: false,
                                                     isHeader: false,
-                                                    dataset: {
-                                                        celllook: '4369',
-                                                    },
+                                                    dataset: { celllook: '4369' },
                                                 },
                                             ],
                                         },
@@ -4467,6 +4457,7 @@ describe('wordOnlineHandler', () => {
                                     format: {
                                         direction: 'ltr',
                                         textAlign: 'start',
+                                        textIndent: '0px',
                                         marginTop: '0px',
                                         marginRight: '0px',
                                         marginBottom: '0px',
@@ -4474,39 +4465,35 @@ describe('wordOnlineHandler', () => {
                                         width: '0px',
                                         tableLayout: 'fixed',
                                         borderCollapse: true,
-                                        textIndent: '0px',
+                                        legacyTableBorder: '1',
                                     },
                                     widths: [],
-                                    dataset: {
-                                        tablelook: '1696',
-                                        tablestyle: 'MsoTableGrid',
-                                    },
+                                    dataset: { tablelook: '1696', tablestyle: 'MsoTableGrid' },
                                 },
                             ],
                             format: {
                                 direction: 'ltr',
                                 textAlign: 'start',
+                                textIndent: '0px',
                                 marginTop: '2px',
                                 marginRight: '0px',
                                 marginBottom: '2px',
-                                textIndent: '0px',
                             },
                         },
                     ],
                     format: {
                         direction: 'ltr',
                         textAlign: 'start',
+                        textIndent: '0px',
                         backgroundColor: 'rgb(255, 255, 255)',
                         marginTop: '0px',
                         marginRight: '0px',
                         marginBottom: '0px',
                         marginLeft: '0px',
-                        textIndent: '0px',
                     },
                 },
             ],
         };
-
         runTest(
             '<div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;, &quot;Segoe UI Web&quot;, Arial, Verdana, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;" class="OutlineElement Ltr BCX8 SCXW253660117"><div style="margin: 2px 0px 2px -5px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; position: relative; display: flex; justify-content: flex-start;" class="TableContainer Ltr BCX8 SCXW253660117"><table style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; table-layout: fixed; width: 0px; overflow: visible; border-collapse: collapse; empty-cells: show; position: relative; background: transparent; border-spacing: 0px;" aria-rowcount="3" data-tablelook="1696" data-tablestyle="MsoTableGrid" border="1" class="Table Ltr TableWordWrap BCX8 SCXW253660117"><tbody style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="BCX8 SCXW253660117"><tr style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; height: 87px;" aria-rowindex="1" role="row" class="TableRow BCX8 SCXW253660117"><td style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; vertical-align: middle; overflow: visible; position: relative; background-color: rgb(21, 96, 130); width: 312px; border-width: 1px 0px 1px 1px; border-style: solid none solid solid; border-top-color: initial; border-right-color: initial; border-bottom-color: rgb(0, 0, 0); border-left-color: initial; border-image: initial;" data-celllook="69905" role="rowheader" class="TableCellBorderSelection FirstRow FirstCol LowContrastShading BCX8 AdvancedProofingDarkMode ContextualSpellingDarkMode SpellingErrorWhite SimilarityReviewedWhite SimilarityUnreviewedWhite SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; display: flex; overflow: visible; width: 15px; height: 10px; cursor: pointer; z-index: 5; background-color: transparent; bottom: -5.5px; left: -15.5px;" class="TableHoverRowHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 20px; height: 12px; top: -12.5px; left: auto; cursor: pointer; z-index: 4; text-align: center; display: inline-block; background-color: transparent; right: -10px;" class="TableHoverColumnHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 7px; z-index: 1; background-repeat: repeat; cursor: pointer; height: calc(100% + 1px); left: -4px; top: -0.5px;" class="TableCellLeftBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 1; background-repeat: repeat; background-color: transparent; cursor: pointer; left: -0.5px; width: calc(100% + 0.5px); top: -4px;" class="TableCellTopBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; bottom: 0px; overflow: visible; width: 7px; top: -0.5px; z-index: 3; background-repeat: repeat; height: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/hD55E5E9C2AD2E4F5_resources/1033/ColResize.cur&quot;), pointer; right: -3.5px;" class="TableColumnResizeHandle BCX8 SCXW253660117"></div><div style="margin: -3px 0px 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 3; background-repeat: repeat; background-color: transparent; left: -0.5px; width: calc(100% + 0.5px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/h1E5273DBAA04AEF6_resources/1033/RowResize.cur&quot;), pointer; bottom: -4px;" class="TableInsertRowGapBlank BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px 6px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible;" class="TableCellContent BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(255, 255, 255); font-size: 20pt; line-height: 41.85px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; font-weight: bold;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun BookmarkStart SCXW253660117 BCX8">ODSP</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 20pt; line-height: 41.85px; font-family: WordVisiCarriageReturn_MSFontService, &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(255, 255, 255);" class="LineBreakBlob BlobObject DragDrop SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8">&nbsp;</span><br style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(255, 255, 255); font-size: 20pt; line-height: 41.85px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; font-weight: bold;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">xFun</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 20pt; line-height: 41.85px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(255, 255, 255);" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559740&quot;:279}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div></div></td><td style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; vertical-align: middle; overflow: visible; position: relative; background-color: rgb(21, 96, 130); width: 312px; border-width: 1px 1px 1px 0px; border-style: solid solid solid none; border-top-color: initial; border-right-color: initial; border-bottom-color: rgb(0, 0, 0); border-left-color: initial; border-image: initial;" data-celllook="69905" role="columnheader" class="TableCellBorderSelection FirstRow LastCol LowContrastShading BCX8 AdvancedProofingDarkMode ContextualSpellingDarkMode SpellingErrorWhite SimilarityReviewedWhite SimilarityUnreviewedWhite SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 20px; height: 12px; top: -12.5px; left: auto; cursor: pointer; z-index: 4; text-align: center; display: inline-block; background-color: transparent; right: -10.5px;" class="TableHoverColumnHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 7px; z-index: 1; background-repeat: repeat; cursor: pointer; height: calc(100% + 1px); left: -3.5px; top: -0.5px;" class="TableCellLeftBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 1; background-repeat: repeat; background-color: transparent; cursor: pointer; left: 0px; width: calc(100% + 0.5px); top: -4px;" class="TableCellTopBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; bottom: 0px; overflow: visible; width: 7px; top: -0.5px; z-index: 3; background-repeat: repeat; height: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/hD55E5E9C2AD2E4F5_resources/1033/ColResize.cur&quot;), pointer; right: -4px;" class="TableColumnResizeHandle BCX8 SCXW253660117"></div><div style="margin: -3px 0px 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 3; background-repeat: repeat; background-color: transparent; left: 0px; width: calc(100% + 0.5px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/h1E5273DBAA04AEF6_resources/1033/RowResize.cur&quot;), pointer; bottom: -4px;" class="TableInsertRowGapBlank BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px 6px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible;" class="TableCellContent BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(255, 255, 255); font-size: 21.5pt; line-height: 44.175px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; font-weight: bold;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">Title of Announcement</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 21.5pt; line-height: 44.175px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(255, 255, 255);" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559740&quot;:279}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div></div></td></tr><tr style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; height: 27px;" aria-rowindex="2" role="row" class="TableRow BCX8 SCXW253660117"><td style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; vertical-align: middle; overflow: visible; position: relative; background-color: rgb(0, 0, 0); width: 624px; border-width: 1px; border-style: solid; border-top-color: rgb(0, 0, 0); border-right-color: initial; border-bottom-color: rgb(0, 0, 0); border-left-color: initial; border-image: initial;" colspan="2" data-celllook="69905" role="rowheader" class="TableCellBorderSelection FirstCol LastCol LowContrastShading BCX8 AdvancedProofingDarkMode ContextualSpellingDarkMode SpellingErrorDarkMode SimilarityReviewedLightMode SimilarityUnreviewedDarkMode SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; display: flex; overflow: visible; width: 15px; height: 10px; cursor: pointer; z-index: 5; background-color: transparent; bottom: -5.5px; left: -15.5px;" class="TableHoverRowHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 7px; z-index: 1; background-repeat: repeat; cursor: pointer; height: calc(100% + 1px); left: -4px; top: -0.5px;" class="TableCellLeftBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 1; background-repeat: repeat; background-color: transparent; cursor: pointer; left: -0.5px; width: calc(100% + 1px); top: -4px;" class="TableCellTopBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; bottom: 0px; overflow: visible; width: 7px; top: -0.5px; z-index: 3; background-repeat: repeat; height: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/hD55E5E9C2AD2E4F5_resources/1033/ColResize.cur&quot;), pointer; right: -4px;" class="TableColumnResizeHandle BCX8 SCXW253660117"></div><div style="margin: -3px 0px 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 3; background-repeat: repeat; background-color: transparent; left: -0.5px; width: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/h1E5273DBAA04AEF6_resources/1033/RowResize.cur&quot;), pointer; bottom: -4px;" class="TableInsertRowGapBlank BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px 6px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible;" class="TableCellContent BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(255, 255, 255); font-size: 14pt; line-height: 24.4125px; font-family: Aptos_MSFontService, Aptos_MSFontService_EmbeddedFont, Aptos_MSFontService_MSFontService, sans-serif; font-weight: bold;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">Announcement&nbsp;</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 14pt; line-height: 24.4125px; font-family: Aptos_MSFontService, Aptos_MSFontService_EmbeddedFont, Aptos_MSFontService_MSFontService, sans-serif; color: rgb(255, 255, 255);" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559740&quot;:279}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div></div></td></tr><tr style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; height: 20px;" aria-rowindex="3" role="row" class="TableRow BCX8 SCXW253660117"><td style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; vertical-align: top; overflow: visible; position: relative; background-color: transparent; width: 624px; border: 1px solid rgb(0, 0, 0);" colspan="2" data-celllook="4369" role="rowheader" class="TableCellBorderSelection FirstCol LastCol LastRow BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; display: flex; overflow: visible; width: 15px; height: 10px; cursor: pointer; z-index: 5; background-color: transparent; bottom: -5.5px; left: -15.5px;" class="TableHoverRowHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 7px; z-index: 1; background-repeat: repeat; cursor: pointer; height: calc(100% + 1px); left: -4px; top: -0.5px;" class="TableCellLeftBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 1; background-repeat: repeat; background-color: transparent; cursor: pointer; left: -0.5px; width: calc(100% + 1px); top: -4px;" class="TableCellTopBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; bottom: 0px; overflow: visible; width: 7px; top: -0.5px; z-index: 3; background-repeat: repeat; height: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/hD55E5E9C2AD2E4F5_resources/1033/ColResize.cur&quot;), pointer; right: -4px;" class="TableColumnResizeHandle BCX8 SCXW253660117"></div><div style="margin: -3px 0px 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 3; background-repeat: repeat; background-color: transparent; left: -0.5px; width: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/h1E5273DBAA04AEF6_resources/1033/RowResize.cur&quot;), pointer; bottom: -4px;" class="TableInsertRowGapBlank BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px 6px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible;" class="TableCellContent BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">Hello&nbsp;</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8"></span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[Brief description of change]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: WordVisiCarriageReturn_MSFontService, &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" class="LineBreakBlob BlobObject DragDrop SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8">&nbsp;</span><br style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun EmptyTextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[What changed and how it </span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">benefits</span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8"> </span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; background-repeat: repeat-x; background-position: left bottom; background-image: var(--urlSpellingErrorV2); border-bottom: 1px solid transparent;" class="NormalTextRun SpellingErrorV2Themed SCXW253660117 BCX8">devs</span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8"></span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:291}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[Any action needed by devs]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:291}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8"></span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:291}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[Link to Documentation ]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: WordVisiCarriageReturn_MSFontService, &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" class="LineBreakBlob BlobObject DragDrop SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8">&nbsp;</span><br style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">&nbsp;</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:291}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[What comes next if something comes next]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: WordVisiCarriageReturn_MSFontService, &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" class="LineBreakBlob BlobObject DragDrop SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8">&nbsp;</span><br style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun EmptyTextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div></div></td></tr></tbody></table></div></div>',
             undefined,
@@ -4597,9 +4584,9 @@ describe('wordOnlineHandler', () => {
     });
 
     itChromeOnly('Test with multiple list items', () => {
-        runTest(
+        const [,] = runTest(
             '<div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1372804505" paraeid="{eda76604-e671-4d57-b201-b51196189a19}{123}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="2030008708" paraeid="{6992e937-522a-4d72-bd0e-df82a2072fe7}{172}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle2 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-alpha; overflow: visible;"><li data-leveltext="%2." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:1,&quot;335559684&quot;:-1,&quot;335559685&quot;:1440,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,4,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%2.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="2" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 72px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1014254816" paraeid="{759c6a1b-b3fc-4831-bc8d-1354c2c5db98}{21}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:1440,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle2 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-alpha; overflow: visible;"><li data-leveltext="%2." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:1,&quot;335559684&quot;:-1,&quot;335559685&quot;:1440,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,4,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%2.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="2" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 72px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1091958214" paraeid="{759c6a1b-b3fc-4831-bc8d-1354c2c5db98}{120}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:1440,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle3 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-roman; overflow: visible;"><li data-leveltext="%3." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:2,&quot;335559684&quot;:-1,&quot;335559685&quot;:2160,&quot;335559991&quot;:180,&quot;469769242&quot;:[65533,2,46],&quot;469777803&quot;:&quot;right&quot;,&quot;469777804&quot;:&quot;%3.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="3" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 132px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="839056829" paraeid="{759c6a1b-b3fc-4831-bc8d-1354c2c5db98}{215}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:2160,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:180}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle3 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-roman; overflow: visible;"><li data-leveltext="%3." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:2,&quot;335559684&quot;:-1,&quot;335559685&quot;:2160,&quot;335559991&quot;:180,&quot;469769242&quot;:[65533,2,46],&quot;469777803&quot;:&quot;right&quot;,&quot;469777804&quot;:&quot;%3.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="3" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 132px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1810158270" paraeid="{f908626c-78ed-46b1-8200-5622a1ffe344}{44}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:2160,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:180}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle2 SCXW143175918 BCX8" role="list" start="3" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-alpha; overflow: visible;"><li data-leveltext="%2." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:1,&quot;335559684&quot;:-1,&quot;335559685&quot;:1440,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,4,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%2.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="3" data-aria-level="2" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 72px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="139753695" paraeid="{f908626c-78ed-46b1-8200-5622a1ffe344}{124}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:1440,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle2 SCXW143175918 BCX8" role="list" start="4" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: lower-alpha; overflow: visible;"><li data-leveltext="%2." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:1,&quot;335559684&quot;:-1,&quot;335559685&quot;:1440,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,4,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%2.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="4" data-aria-level="2" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 72px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="407695755" paraeid="{f908626c-78ed-46b1-8200-5622a1ffe344}{209}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:1440,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="3" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="3" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="620995694" paraeid="{9878f376-5df8-4e62-ba39-9c6a1817f7b5}{34}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="4" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="3" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="4" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="406328277" paraeid="{9878f376-5df8-4e62-ba39-9c6a1817f7b5}{119}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="502077388" paraeid="{2147c5de-cb36-425c-ad05-d9081387dfe2}{97}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="338729307" paraeid="{6992e937-522a-4d72-bd0e-df82a2072fe7}{209}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1060692795" paraeid="{9878f376-5df8-4e62-ba39-9c6a1817f7b5}{212}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1868174151" paraeid="{5ff1bd63-a438-4abf-b8f6-ee8fc30ba819}{1}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="4" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="963440506" paraeid="{b77ffaa8-6f5e-4079-83c2-373c935ff7d8}{1}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="955920880" paraeid="{b77ffaa8-6f5e-4079-83c2-373c935ff7d8}{129}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="4" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1825308776" paraeid="{b77ffaa8-6f5e-4079-83c2-373c935ff7d8}{173}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="326656423" paraeid="{5ff1bd63-a438-4abf-b8f6-ee8fc30ba819}{107}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="99360513" paraeid="{6b98cfd7-eaec-4e75-8b54-ad1b76c09801}{11}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="96460220" paraeid="{5ff1bd63-a438-4abf-b8f6-ee8fc30ba819}{157}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="5" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="927907704" paraeid="{6b98cfd7-eaec-4e75-8b54-ad1b76c09801}{55}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="5" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1760568901" paraeid="{6b98cfd7-eaec-4e75-8b54-ad1b76c09801}{169}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="660136120" paraeid="{0bd5b816-7be0-4589-b756-3f1f2a595131}{30}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;"></span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="934524283" paraeid="{33f05aa7-528d-4f60-a926-5a5ab49bb8f6}{7}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 10.6667px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:0,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="1" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="6" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1629030307" paraeid="{33f05aa7-528d-4f60-a926-5a5ab49bb8f6}{51}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div><div class="ListContainerWrapper SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; position: relative; color: rgb(0, 0, 0); font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ol class="NumberListStyle1 SCXW143175918 BCX8" role="list" start="2" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; cursor: text; list-style-type: decimal; overflow: visible;"><li data-leveltext="%1." data-font="" data-listid="6" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559683&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0,46],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px 0px 0px 24px; padding: 0px; user-select: text; clear: both; cursor: text; overflow: visible; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Aptos, Aptos_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW143175918 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1045937546" paraeid="{33f05aa7-528d-4f60-a926-5a5ab49bb8f6}{165}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-variant-ligatures: none !important; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"><span class="NormalTextRun SCXW143175918 BCX8" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text;">_</span></span><span class="EOP SCXW143175918 BCX8" data-ccp-props="{&quot;134233117&quot;:false,&quot;134233118&quot;:false,&quot;201341983&quot;:0,&quot;335551550&quot;:1,&quot;335551620&quot;:1,&quot;335559685&quot;:720,&quot;335559737&quot;:0,&quot;335559738&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:279,&quot;335559991&quot;:360}" style="-webkit-user-drag: none; -webkit-tap-highlight-color: transparent; margin: 0px; padding: 0px; user-select: text; font-size: 12pt; line-height: 22.0875px; font-family: Aptos, Aptos_MSFontService, sans-serif;"> </span></p></li></ol></div>',
-            '<ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">_&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">_&nbsp;</span></p></div><ol start="2" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">_&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">&nbsp;</span></p></div><div style="background-color: rgb(255, 255, 255); margin: 0px;"><p style="direction: ltr; text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px 0px 10.6667px; color: rgb(0, 0, 0);"><span style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; line-height: 22.0875px;">_&nbsp;</span></p></div><ol start="1" style="direction: ltr; margin-top: 0px; margin-bottom: 0px;"><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li><li style="font-family: Aptos, Aptos_MSFontService, sans-serif; font-size: 12pt; direction: ltr; margin-top: 0px; margin-bottom: 0px;"><p role="presentation" style="text-align: left; text-indent: 0px; white-space: pre-wrap; margin: 0px; color: rgb(0, 0, 0);"><span style="line-height: 22.0875px;">_&nbsp;</span></p></li></ol>',
+            undefined,
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -4655,73 +4642,13 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
-                                dataset: {},
-                            },
-                        ],
-                        formatHolder: {
-                            segmentType: 'SelectionMarker',
-                            isSelected: false,
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
-                        },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
-                    },
-                    {
-                        blockType: 'BlockGroup',
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Text',
-                                        text: '_',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        segmentType: 'Text',
-                                        text: ' ',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
                                 format: {
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
+                                    direction: 'ltr',
                                     marginTop: '0px',
                                     marginRight: '0px',
                                     marginBottom: '0px',
-                                    marginLeft: '0px',
+                                    paddingLeft: '1em',
                                 },
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                decorator: { tagName: 'p', format: {} },
-                            },
-                        ],
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                                 dataset: {},
                             },
                         ],
@@ -4733,7 +4660,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -4792,12 +4725,8 @@ describe('wordOnlineHandler', () => {
                                     marginTop: '0px',
                                     marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                 },
-                                dataset: {},
-                            },
-                            {
-                                listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                                 dataset: {},
                             },
                         ],
@@ -4809,7 +4738,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -4868,12 +4803,19 @@ describe('wordOnlineHandler', () => {
                                     marginTop: '0px',
                                     marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                 },
                                 dataset: {},
                             },
                             {
                                 listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
                                 dataset: {},
                             },
                         ],
@@ -4885,7 +4827,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '72px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -4944,6 +4892,7 @@ describe('wordOnlineHandler', () => {
                                     marginTop: '0px',
                                     marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                 },
                                 dataset: {},
                             },
@@ -4954,12 +4903,8 @@ describe('wordOnlineHandler', () => {
                                     marginTop: '0px',
                                     marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                 },
-                                dataset: {},
-                            },
-                            {
-                                listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                                 dataset: {},
                             },
                         ],
@@ -4971,7 +4916,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '72px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -5030,6 +4981,7 @@ describe('wordOnlineHandler', () => {
                                     marginTop: '0px',
                                     marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                 },
                                 dataset: {},
                             },
@@ -5040,12 +4992,19 @@ describe('wordOnlineHandler', () => {
                                     marginTop: '0px',
                                     marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                 },
                                 dataset: {},
                             },
                             {
                                 listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
                                 dataset: {},
                             },
                         ],
@@ -5057,83 +5016,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
-                    },
-                    {
-                        blockType: 'BlockGroup',
-                        blockGroupType: 'ListItem',
-                        blocks: [
-                            {
-                                blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Text',
-                                        text: '_',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                    {
-                                        segmentType: 'Text',
-                                        text: ' ',
-                                        format: {
-                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                            fontSize: '12pt',
-                                            italic: false,
-                                            fontWeight: 'normal',
-                                            textColor: 'rgb(0, 0, 0)',
-                                            lineHeight: '22.0875px',
-                                        },
-                                    },
-                                ],
-                                format: {
-                                    textAlign: 'start',
-                                    textIndent: '0px',
-                                    whiteSpace: 'pre-wrap',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '0px',
-                                },
-                                segmentFormat: {
-                                    italic: false,
-                                    fontWeight: 'normal',
-                                    textColor: 'rgb(0, 0, 0)',
-                                },
-                                decorator: { tagName: 'p', format: {} },
-                            },
-                        ],
-                        levels: [
-                            {
-                                listType: 'OL',
-                                format: {
-                                    direction: 'ltr',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                },
-                                dataset: {},
-                            },
-                            {
-                                listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
-                                dataset: {},
-                            },
-                        ],
-                        formatHolder: {
-                            segmentType: 'SelectionMarker',
-                            isSelected: false,
-                            format: {
-                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
-                                fontSize: '12pt',
-                            },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '132px',
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -5192,12 +5081,30 @@ describe('wordOnlineHandler', () => {
                                     marginTop: '0px',
                                     marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                 },
                                 dataset: {},
                             },
                             {
                                 listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
+                                dataset: {},
+                            },
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
                                 dataset: {},
                             },
                         ],
@@ -5209,7 +5116,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '132px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -5263,7 +5176,24 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
+                                dataset: {},
+                            },
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
                                 dataset: {},
                             },
                         ],
@@ -5275,7 +5205,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '72px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -5329,7 +5265,24 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
+                                dataset: {},
+                            },
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
                                 dataset: {},
                             },
                         ],
@@ -5341,7 +5294,169 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '72px',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: '_',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                    {
+                                        segmentType: 'Text',
+                                        text: ' ',
+                                        format: {
+                                            fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                            fontSize: '12pt',
+                                            italic: false,
+                                            fontWeight: 'normal',
+                                            textColor: 'rgb(0, 0, 0)',
+                                            lineHeight: '22.0875px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    textAlign: 'start',
+                                    textIndent: '0px',
+                                    whiteSpace: 'pre-wrap',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                },
+                                segmentFormat: {
+                                    italic: false,
+                                    fontWeight: 'normal',
+                                    textColor: 'rgb(0, 0, 0)',
+                                },
+                                decorator: { tagName: 'p', format: {} },
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
+                                dataset: {},
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos, Aptos_MSFontService, sans-serif',
+                                fontSize: '12pt',
+                            },
+                        },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -5610,7 +5725,9 @@ describe('wordOnlineHandler', () => {
                                 format: {
                                     direction: 'ltr',
                                     marginTop: '0px',
+                                    marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                     startNumberOverride: 1,
                                 },
                                 dataset: {},
@@ -5624,7 +5741,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -5740,7 +5863,13 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
                                 dataset: {},
                             },
                         ],
@@ -5752,7 +5881,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -5971,7 +6106,9 @@ describe('wordOnlineHandler', () => {
                                 format: {
                                     direction: 'ltr',
                                     marginTop: '0px',
+                                    marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                     startNumberOverride: 1,
                                 },
                                 dataset: {},
@@ -5985,7 +6122,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -6039,7 +6182,13 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
                                 dataset: {},
                             },
                         ],
@@ -6051,7 +6200,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -6220,7 +6375,9 @@ describe('wordOnlineHandler', () => {
                                 format: {
                                     direction: 'ltr',
                                     marginTop: '0px',
+                                    marginRight: '0px',
                                     marginBottom: '0px',
+                                    paddingLeft: '1em',
                                     startNumberOverride: 1,
                                 },
                                 dataset: {},
@@ -6234,7 +6391,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -6288,7 +6451,13 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                                format: {
+                                    direction: 'ltr',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    paddingLeft: '1em',
+                                },
                                 dataset: {},
                             },
                         ],
@@ -6300,7 +6469,13 @@ describe('wordOnlineHandler', () => {
                                 fontSize: '12pt',
                             },
                         },
-                        format: { direction: 'ltr', marginTop: '0px', marginBottom: '0px' },
+                        format: {
+                            direction: 'ltr',
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '24px',
+                        },
                     },
                 ],
             },
