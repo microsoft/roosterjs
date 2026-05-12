@@ -8,5 +8,7 @@ export const containerSizeFormatParser: FormatParser<SizeFormat> = (format, elem
     if (element.tagName == 'DIV' || element.tagName == 'P') {
         delete format.width;
         delete format.height;
+        delete format.maxHeight;
+        delete format.maxWidth;
     }
 };
