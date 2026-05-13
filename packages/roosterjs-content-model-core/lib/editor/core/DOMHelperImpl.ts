@@ -13,6 +13,151 @@ import type {
     DOMHelper,
 } from 'roosterjs-content-model-types';
 
+let safariShadowPolyfillApplied = false;
+
+function isSafariBrowser(): boolean {
+    const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
+    return ua.indexOf('AppleWebKit') >= 0 && ua.indexOf('Chrome') < 0 && ua.indexOf('Android') < 0;
+}
+
+/**
+ * Polyfill for ShadowRoot.prototype.getSelection on Safari.
+ * Uses the execCommand('indent') + beforeinput.getTargetRanges() trick to capture
+ * selection ranges inside a shadow DOM, since Safari does not natively support
+ * shadowRoot.getSelection().
+ */
+function applySafariShadowSelectionPolyfill(doc: Document): void {
+    if (safariShadowPolyfillApplied) {
+        return;
+    }
+    safariShadowPolyfillApplied = true;
+
+    const supportsShadowSelection =
+        typeof (ShadowRoot.prototype as any).getSelection === 'function';
+    const supportsBeforeInput = typeof InputEvent.prototype.getTargetRanges === 'function';
+
+    if (supportsShadowSelection || !supportsBeforeInput) {
+        return;
+    }
+
+    let processing = false;
+
+    class ShadowSelection {
+        _ranges: Range[] = [];
+
+        get rangeCount(): number {
+            return this._ranges.length;
+        }
+
+        get type(): string {
+            return this._ranges.length > 0 ? 'Range' : 'None';
+        }
+
+        get anchorNode(): Node | null {
+            return this._ranges[0]?.startContainer ?? null;
+        }
+
+        get anchorOffset(): number {
+            return this._ranges[0]?.startOffset ?? 0;
+        }
+
+        get focusNode(): Node | null {
+            return this._ranges[0]?.endContainer ?? null;
+        }
+
+        get focusOffset(): number {
+            return this._ranges[0]?.endOffset ?? 0;
+        }
+
+        getRangeAt(index: number): Range {
+            return this._ranges[index];
+        }
+
+        addRange(range: Range): void {
+            this._ranges.push(range);
+            doc.getSelection()?.addRange(range);
+        }
+
+        removeAllRanges(): void {
+            this._ranges = [];
+        }
+
+        setBaseAndExtent(
+            anchorNode: Node,
+            anchorOffset: number,
+            focusNode: Node,
+            focusOffset: number
+        ): void {
+            const range = doc.createRange();
+            range.setStart(anchorNode, anchorOffset);
+            range.setEnd(focusNode, focusOffset);
+            this._ranges = [range];
+            doc.getSelection()?.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+        }
+    }
+
+    const selection = new ShadowSelection();
+
+    (ShadowRoot.prototype as any).getSelection = function () {
+        return selection;
+    };
+
+    function getDeepActiveElement(): Element | null {
+        let active: Element | null = doc.activeElement;
+        while (active?.shadowRoot?.activeElement) {
+            active = active.shadowRoot.activeElement;
+        }
+        return active;
+    }
+
+    const win = doc.defaultView!;
+
+    win.addEventListener(
+        'selectionchange',
+        () => {
+            if (!processing) {
+                processing = true;
+                const active = getDeepActiveElement();
+                if (active && active.getAttribute('contenteditable') === 'true') {
+                    doc.execCommand('indent');
+                } else {
+                    selection.removeAllRanges();
+                }
+                processing = false;
+            }
+        },
+        true
+    );
+
+    win.addEventListener(
+        'beforeinput',
+        (event: InputEvent) => {
+            if (processing) {
+                const ranges = event.getTargetRanges();
+                const range = ranges[0];
+                if (range) {
+                    const newRange = doc.createRange();
+                    newRange.setStart(range.startContainer, range.startOffset);
+                    newRange.setEnd(range.endContainer, range.endOffset);
+                    selection.removeAllRanges();
+                    selection._ranges.push(newRange);
+                }
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+        },
+        true
+    );
+
+    win.addEventListener(
+        'selectstart',
+        () => {
+            selection.removeAllRanges();
+        },
+        true
+    );
+}
+
 /**
  * @internal
  */
@@ -229,6 +374,13 @@ class DOMHelperImpl implements DOMHelper {
         const rootNode = contentDiv.getRootNode();
         this.shadowRoot = rootNode instanceof ShadowRoot ? rootNode : null;
         this.doc = contentDiv.ownerDocument;
+
+        // Apply Safari shadow DOM selection polyfill before creating the adapter,
+        // so that the polyfilled getSelection is detected by createSelectionAdapter.
+        if (this.shadowRoot && isSafariBrowser()) {
+            applySafariShadowSelectionPolyfill(this.doc);
+        }
+
         this.selectionAdapter = createSelectionAdapter(this.shadowRoot, this.doc);
     }
 
@@ -429,6 +581,10 @@ class DOMHelperImpl implements DOMHelper {
 
     getEventRoot(): Document {
         return this.doc;
+    }
+
+    getShadowRoot(): ShadowRoot | null {
+        return this.shadowRoot;
     }
 }
 

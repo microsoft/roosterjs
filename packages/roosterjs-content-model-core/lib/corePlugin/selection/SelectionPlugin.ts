@@ -47,6 +47,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
     private logicalRootDisposer: (() => void) | null = null;
+    private selectStartDisposer: (() => void) | null = null;
     private isSafari = false;
     private isMac = false;
     private scrollTopCache: number = 0;
@@ -104,6 +105,14 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             .getEventRoot()
             .addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
+            const shadowRoot = this.editor.getDOMHelper().getShadowRoot();
+            if (shadowRoot) {
+                shadowRoot.addEventListener('selectstart', this.onSelectStart);
+                this.selectStartDisposer = () => {
+                    shadowRoot.removeEventListener('selectstart', this.onSelectStart);
+                };
+            }
+
             this.disposer = this.editor.attachDomEvent({
                 focus: { beforeDispatch: this.onFocus },
                 drop: { beforeDispatch: this.onDrop },
@@ -130,6 +139,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         this.logicalRootDisposer?.();
         this.logicalRootDisposer = null;
+
+        this.selectStartDisposer?.();
+        this.selectStartDisposer = null;
 
         this.detachMouseEvent();
         this.editor = null;
@@ -735,6 +747,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             }
             const sc = this.editor.getScrollContainer();
             this.scrollTopCache = sc.scrollTop;
+        }
+    };
+
+    private onSelectStart = () => {
+        if (this.editor && !this.editor.isInShadowEdit()) {
+            this.state.selection = null;
         }
     };
 

@@ -171,4 +171,9 @@ export interface DOMHelper {
      * Used for events like 'selectionchange' that fire on the shadow root.
      */
     getEventRoot(): Document;
+
+    /**
+     * Get the shadow root if the editor content div is inside a shadow DOM, null otherwise.
+     */
+    getShadowRoot(): ShadowRoot | null;
 }
