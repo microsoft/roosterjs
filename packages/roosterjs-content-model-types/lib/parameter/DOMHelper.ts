@@ -127,4 +127,48 @@ export interface DOMHelper {
      * @returns An array of Ranges that match the search criteria
      */
     getRangesByText(text: string, matchCase: boolean, wholeWord: boolean): Range[];
+
+    /**
+     * Get the current selection. In shadow DOM, delegates to the resolved
+     * selection adapter (getComposedRanges → shadowRoot.getSelection → document.getSelection).
+     */
+    getSelection(): Selection | null;
+
+    /**
+     * Get the current selection range, handling shadow DOM StaticRange conversion.
+     * Returns a live Range in all browsers.
+     */
+    getSelectionRange(): Range | null;
+
+    /**
+     * Set the selection to the given range, handling browser differences for shadow DOM.
+     * @param range The range to set
+     * @param isReverted Whether the selection is reverted (focus before anchor)
+     */
+    setSelectionRange(range: Range, isReverted?: boolean): void;
+
+    /**
+     * Detect if the current selection is reverted (focus before anchor).
+     * In shadow DOM with getComposedRanges, returns false since StaticRange has no direction.
+     */
+    isSelectionReverted(): boolean;
+
+    /**
+     * Append a style element to the correct root (shadow root or document.head)
+     * @param style The style element to append
+     */
+    appendStyle(style: HTMLStyleElement): void;
+
+    /**
+     * Append an element to the correct root container (shadow root or document.body)
+     * @param element The element to append
+     */
+    appendToRoot(element: HTMLElement): void;
+
+    /**
+     * Get the root node for event listener registration.
+     * Returns shadow root when in shadow DOM, document otherwise.
+     * Used for events like 'selectionchange' that fire on the shadow root.
+     */
+    getEventRoot(): Document;
 }

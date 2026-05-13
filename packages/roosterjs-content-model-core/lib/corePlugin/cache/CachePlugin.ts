@@ -55,7 +55,10 @@ class CachePlugin implements PluginWithState<CachePluginState> {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.editor.getDocument().addEventListener('selectionchange', this.onNativeSelectionChange);
+        this.editor
+            .getDOMHelper()
+            .getEventRoot()
+            .addEventListener('selectionchange', this.onNativeSelectionChange);
 
         this.state.textMutationObserver.startObserving();
     }
@@ -70,7 +73,8 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
         if (this.editor) {
             this.editor
-                .getDocument()
+                .getDOMHelper()
+                .getEventRoot()
                 .removeEventListener('selectionchange', this.onNativeSelectionChange);
             this.editor = null;
         }

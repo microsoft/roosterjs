@@ -354,10 +354,21 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     }
 
     private resetEditor() {
+        const useShadowDom = window.location.search.includes('shadowDom');
+
         this.setState({
-            editorCreator: (div: HTMLDivElement, options: EditorOptions) => {
-                return new Editor(div, options);
-            },
+            editorCreator: useShadowDom
+                ? (div: HTMLDivElement, options: EditorOptions) => {
+                      const shadowRoot = div.attachShadow({ mode: 'open' });
+                      const innerDiv = document.createElement('div');
+                      innerDiv.style.width = '100%';
+                      innerDiv.style.height = '100%';
+                      shadowRoot.appendChild(innerDiv);
+                      return new Editor(innerDiv, options);
+                  }
+                : (div: HTMLDivElement, options: EditorOptions) => {
+                      return new Editor(div, options);
+                  },
         });
     }
 

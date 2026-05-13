@@ -6,10 +6,10 @@ import { getSafeIdSelector } from 'roosterjs-content-model-dom';
 export function ensureUniqueId(element: HTMLElement, idPrefix: string): string {
     idPrefix = element.id || idPrefix;
 
-    const doc = element.ownerDocument;
+    const root = element.getRootNode() as Document | ShadowRoot;
     let i = 0;
 
-    while (!element.id || doc.querySelectorAll(getSafeIdSelector(element.id)).length > 1) {
+    while (!element.id || root.querySelectorAll(getSafeIdSelector(element.id)).length > 1) {
         element.id = idPrefix + '_' + i++;
     }
 

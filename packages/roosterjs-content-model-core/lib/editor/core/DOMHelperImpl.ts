@@ -6,6 +6,7 @@ import {
     parseValueWithUnit,
     toArray,
 } from 'roosterjs-content-model-dom';
+import { areSameRanges } from '../../corePlugin/cache/areSameSelections';
 import type {
     ContentModelSegmentFormat,
     DarkColorHandler,
@@ -22,8 +23,214 @@ export interface DOMHelperImplOption {
     cloneIndependentRoot?: boolean;
 }
 
+/**
+ * @internal
+ * Adapter interface for shadow DOM selection operations.
+ * Resolved once at construction time to avoid repeated feature detection.
+ */
+interface ShadowSelectionAdapter {
+    getRange(): Range | null;
+    getSelection(): Selection | null;
+    isReverted(): boolean;
+    setRange(range: Range, isReverted: boolean): void;
+}
+
+/**
+ * Standard adapter using getComposedRanges (modern Chrome/Firefox/Safari)
+ */
+class ComposedRangesAdapter implements ShadowSelectionAdapter {
+    constructor(private shadowRoot: ShadowRoot, private doc: Document) {}
+
+    getSelection(): Selection | null {
+        return this.doc.defaultView?.getSelection() ?? null;
+    }
+
+    getRange(): Range | null {
+        const sel = this.getSelection();
+        if (!sel) {
+            return null;
+        }
+
+        const staticRanges = (sel as any).getComposedRanges({
+            shadowRoots: [this.shadowRoot],
+        });
+
+        if (staticRanges?.length > 0) {
+            const sr = staticRanges[0] as StaticRange;
+            const range = this.doc.createRange();
+            range.setStart(sr.startContainer, sr.startOffset);
+            range.setEnd(sr.endContainer, sr.endOffset);
+            return range;
+        }
+        return null;
+    }
+
+    isReverted(): boolean {
+        // getComposedRanges returns StaticRange which doesn't expose direction
+        return false;
+    }
+
+    setRange(range: Range, isReverted: boolean): void {
+        const sel = this.getSelection();
+        if (!sel) {
+            return;
+        }
+        sel.removeAllRanges();
+
+        if (!isReverted) {
+            sel.addRange(range);
+        } else {
+            sel.setBaseAndExtent(
+                range.endContainer,
+                range.endOffset,
+                range.startContainer,
+                range.startOffset
+            );
+        }
+    }
+}
+
+/**
+ * Deprecated Chromium adapter using shadowRoot.getSelection() (non-standard)
+ */
+class ShadowRootSelectionAdapter implements ShadowSelectionAdapter {
+    constructor(private shadowRoot: ShadowRoot) {}
+
+    getSelection(): Selection | null {
+        return (this.shadowRoot as any).getSelection() ?? null;
+    }
+
+    getRange(): Range | null {
+        const sel = this.getSelection();
+        if (!sel || sel.rangeCount === 0) {
+            return null;
+        }
+        return sel.getRangeAt(0);
+    }
+
+    isReverted(): boolean {
+        const sel = this.getSelection();
+        if (!sel || sel.rangeCount === 0) {
+            return false;
+        }
+        const range = sel.getRangeAt(0);
+        return sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset;
+    }
+
+    setRange(range: Range, isReverted: boolean): void {
+        const sel = this.getSelection();
+        if (!sel) {
+            return;
+        }
+
+        const currentRange = sel.rangeCount > 0 && sel.getRangeAt(0);
+        if (currentRange && areSameRanges(currentRange, range)) {
+            return;
+        }
+        sel.removeAllRanges();
+
+        if (!isReverted) {
+            sel.addRange(range);
+        } else {
+            sel.setBaseAndExtent(
+                range.endContainer,
+                range.endOffset,
+                range.startContainer,
+                range.startOffset
+            );
+        }
+    }
+}
+
+/**
+ * Document adapter using document.getSelection() (older Firefox piercing / no shadow DOM)
+ */
+class DocumentSelectionAdapter implements ShadowSelectionAdapter {
+    constructor(private doc: Document) {}
+
+    getSelection(): Selection | null {
+        return this.doc.defaultView?.getSelection() ?? null;
+    }
+
+    getRange(): Range | null {
+        const sel = this.getSelection();
+        if (!sel || sel.rangeCount === 0) {
+            return null;
+        }
+        return sel.getRangeAt(0);
+    }
+
+    isReverted(): boolean {
+        const sel = this.getSelection();
+        if (!sel || sel.rangeCount === 0) {
+            return false;
+        }
+        const range = sel.getRangeAt(0);
+        return sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset;
+    }
+
+    setRange(range: Range, isReverted: boolean): void {
+        const sel = this.getSelection();
+        if (!sel) {
+            return;
+        }
+
+        const currentRange = sel.rangeCount > 0 && sel.getRangeAt(0);
+        if (currentRange && areSameRanges(currentRange, range)) {
+            return;
+        }
+        sel.removeAllRanges();
+
+        if (!isReverted) {
+            sel.addRange(range);
+        } else {
+            sel.setBaseAndExtent(
+                range.endContainer,
+                range.endOffset,
+                range.startContainer,
+                range.startOffset
+            );
+        }
+    }
+}
+
+/**
+ * Resolve the correct selection adapter once at construction time
+ */
+function createSelectionAdapter(
+    shadowRoot: ShadowRoot | null,
+    doc: Document
+): ShadowSelectionAdapter {
+    if (!shadowRoot) {
+        return new DocumentSelectionAdapter(doc);
+    }
+
+    // 1. Standard: getComposedRanges (modern Chrome/Firefox/Safari)
+    const sel = doc.defaultView?.getSelection();
+    if (sel && 'getComposedRanges' in sel) {
+        return new ComposedRangesAdapter(shadowRoot, doc);
+    }
+
+    // 2. Deprecated: shadowRoot.getSelection() (older Chromium)
+    if ('getSelection' in shadowRoot) {
+        return new ShadowRootSelectionAdapter(shadowRoot);
+    }
+
+    // 3. Fallback: document.getSelection() (older Firefox — pierces shadow DOM)
+    return new DocumentSelectionAdapter(doc);
+}
+
 class DOMHelperImpl implements DOMHelper {
-    constructor(private contentDiv: HTMLElement, options?: DOMHelperImplOption) {}
+    private shadowRoot: ShadowRoot | null;
+    private doc: Document;
+    private selectionAdapter: ShadowSelectionAdapter;
+
+    constructor(private contentDiv: HTMLElement, options?: DOMHelperImplOption) {
+        const rootNode = contentDiv.getRootNode();
+        this.shadowRoot = rootNode instanceof ShadowRoot ? rootNode : null;
+        this.doc = contentDiv.ownerDocument;
+        this.selectionAdapter = createSelectionAdapter(this.shadowRoot, this.doc);
+    }
 
     queryElements(selector: string): HTMLElement[] {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
@@ -97,7 +304,9 @@ class DOMHelperImpl implements DOMHelper {
     }
 
     hasFocus(): boolean {
-        const activeElement = this.contentDiv.ownerDocument.activeElement;
+        const activeElement = this.shadowRoot
+            ? this.shadowRoot.activeElement
+            : this.doc.activeElement;
         return !!(activeElement && this.contentDiv.contains(activeElement));
     }
 
@@ -184,6 +393,42 @@ class DOMHelperImpl implements DOMHelper {
      */
     getRangesByText(text: string, matchCase: boolean, wholeWord: boolean): Range[] {
         return getRangesByText(this.contentDiv, text, matchCase, wholeWord, true /*editableOnly*/);
+    }
+
+    getSelection(): Selection | null {
+        return this.selectionAdapter.getSelection();
+    }
+
+    getSelectionRange(): Range | null {
+        return this.selectionAdapter.getRange();
+    }
+
+    setSelectionRange(range: Range, isReverted: boolean = false): void {
+        this.selectionAdapter.setRange(range, isReverted);
+    }
+
+    isSelectionReverted(): boolean {
+        return this.selectionAdapter.isReverted();
+    }
+
+    appendStyle(style: HTMLStyleElement): void {
+        if (this.shadowRoot) {
+            this.shadowRoot.appendChild(style);
+        } else {
+            this.doc.head.appendChild(style);
+        }
+    }
+
+    appendToRoot(element: HTMLElement): void {
+        if (this.shadowRoot) {
+            this.shadowRoot.appendChild(element);
+        } else {
+            this.doc.body.appendChild(element);
+        }
+    }
+
+    getEventRoot(): Document {
+        return this.doc;
     }
 }
 

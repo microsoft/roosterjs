@@ -1,0 +1,19 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(head:*)",
+            "Bash(tail:*)",
+            "Bash(cat:*)",
+            "Bash(cd /c/repo/roosterjs && npx tsc -p packages/tsconfig.json --noEmit 2>&1)",
+            "Bash(cd /c/repo/roosterjs && npx tsc -p packages/tsconfig.test.json --noEmit 2>&1)",
+            "Bash(grep:*)",
+            "Bash(cd /c/repo/roosterjs && yarn test:fast 2>&1)",
+            "Bash(yarn test:fast:*)",
+            "Bash(ls:*)",
+            "Bash(sed:*)",
+            "Bash(awk NR>=1690 && NR<=1710 *)",
+            "Bash(awk -F: '$1>=1560 && $1<=2700')",
+            "Bash(awk *)"
+        ]
+    }
+}

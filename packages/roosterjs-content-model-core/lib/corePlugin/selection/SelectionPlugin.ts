@@ -96,11 +96,13 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
 
         const env = this.editor.getEnvironment();
-        const document = this.editor.getDocument();
 
         this.isSafari = !!env.isSafari;
         this.isMac = !!env.isMac;
-        document.addEventListener('selectionchange', this.onSelectionChange);
+        this.editor
+            .getDOMHelper()
+            .getEventRoot()
+            .addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
             this.disposer = this.editor.attachDomEvent({
                 focus: { beforeDispatch: this.onFocus },
@@ -116,7 +118,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     dispose() {
-        this.editor?.getDocument().removeEventListener('selectionchange', this.onSelectionChange);
+        this.editor
+            ?.getDOMHelper()
+            .getEventRoot()
+            .removeEventListener('selectionchange', this.onSelectionChange);
 
         if (this.disposer) {
             this.disposer();
@@ -736,19 +741,17 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private onSelectionChange = () => {
         if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
             const newSelection = this.editor.getDOMSelection();
+            const domHelper = this.editor.getDOMHelper();
 
             //If am image selection changed to a wider range due a keyboard event, we should update the selection
-            const selection = this.editor.getDocument().getSelection();
-            if (selection && selection.focusNode) {
-                const image = isSingleImageInSelection(selection);
+            const range = domHelper.getSelectionRange();
+            if (range) {
+                const image = isSingleImageInSelection(range);
                 if (newSelection?.type == 'image' && !image) {
-                    const range = selection.getRangeAt(0);
                     this.editor.setDOMSelection({
                         type: 'range',
                         range,
-                        isReverted:
-                            selection.focusNode != range.endContainer ||
-                            selection.focusOffset != range.endOffset,
+                        isReverted: domHelper.isSelectionReverted(),
                     });
                 } else if (newSelection?.type !== 'image' && image) {
                     this.editor.setDOMSelection({
