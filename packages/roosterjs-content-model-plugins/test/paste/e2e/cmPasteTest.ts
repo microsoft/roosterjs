@@ -42,29 +42,36 @@ describe(ID, () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Table',
+                    widths: [],
                     rows: [
                         {
-                            height: <any>jasmine.anything(),
-                            format: {},
+                            height: 0,
                             cells: [
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
-                                            blockType: 'Paragraph',
                                             segments: [
                                                 {
-                                                    segmentType: 'Text',
                                                     text: 'No.',
+                                                    segmentType: 'Text',
                                                     format: {
+                                                        textColor: 'black',
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
                                                         fontWeight: '700',
-                                                        textColor: 'black',
                                                     },
                                                 },
                                             ],
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
+                                            blockType: 'Paragraph',
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
@@ -78,10 +85,6 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderTop: '0.5pt solid',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
-                                        borderLeft: '0.5pt solid',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -90,30 +93,33 @@ describe(ID, () => {
                                         width: '52pt',
                                         height: '28.5pt',
                                     },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {
-                                        ogsb: 'white',
-                                    },
+                                    dataset: { ogsb: 'white' },
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
-                                            blockType: 'Paragraph',
                                             segments: [
                                                 {
-                                                    segmentType: 'Text',
                                                     text: 'ID',
+                                                    segmentType: 'Text',
                                                     format: {
+                                                        textColor: 'black',
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
                                                         fontWeight: '700',
-                                                        textColor: 'black',
                                                     },
                                                 },
                                             ],
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
+                                            blockType: 'Paragraph',
                                             format: {
                                                 textAlign: 'center',
                                                 whiteSpace: 'nowrap',
@@ -137,30 +143,33 @@ describe(ID, () => {
                                         verticalAlign: 'middle',
                                         width: '56pt',
                                     },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {
-                                        ogsb: 'white',
-                                    },
+                                    dataset: { ogsb: 'white' },
                                 },
                                 {
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
-                                            blockType: 'Paragraph',
                                             segments: [
                                                 {
-                                                    segmentType: 'Text',
                                                     text: 'Work Item Type',
+                                                    segmentType: 'Text',
                                                     format: {
+                                                        textColor: 'black',
                                                         fontFamily: 'Calibri, sans-serif',
                                                         fontSize: '11pt',
                                                         fontWeight: '700',
-                                                        textColor: 'black',
                                                     },
                                                 },
                                             ],
+                                            segmentFormat: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '11pt',
+                                                textColor: 'black',
+                                            },
+                                            blockType: 'Paragraph',
                                             format: {
                                                 textAlign: 'center',
                                                 marginTop: '0px',
@@ -182,33 +191,28 @@ describe(ID, () => {
                                         verticalAlign: 'middle',
                                         width: '62pt',
                                     },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {
-                                        ogsb: 'white',
-                                    },
+                                    dataset: { ogsb: 'white' },
                                 },
                             ],
+                            format: {},
                         },
                     ],
-                    format: <any>{
+                    blockType: 'Table',
+                    format: {
                         textAlign: 'start',
                         backgroundColor: 'rgb(255, 255, 255)',
                         width: '170pt',
+                        textColor: 'rgb(0, 0, 0)',
                         useBorderBox: true,
                         borderCollapse: true,
-                        textColor: 'rgb(0, 0, 0)',
-                    },
-                    widths: <any>jasmine.anything(),
+                    } as any,
                     dataset: {},
                 },
                 {
-                    blockType: 'Paragraph',
                     segments: [
                         {
-                            segmentType: 'SelectionMarker',
                             isSelected: true,
+                            segmentType: 'SelectionMarker',
                             format: {
                                 backgroundColor: '',
                                 fontFamily: '',
@@ -223,11 +227,9 @@ describe(ID, () => {
                                 underline: false,
                             },
                         },
-                        {
-                            segmentType: 'Br',
-                            format: {},
-                        },
+                        { segmentType: 'Br', format: {} },
                     ],
+                    blockType: 'Paragraph',
                     format: {},
                 },
             ],
