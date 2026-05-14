@@ -75,11 +75,21 @@ function applySafariShadowSelectionPolyfill(doc: Document): void {
 
         addRange(range: Range): void {
             this._ranges.push(range);
-            doc.getSelection()?.addRange(range);
+            const sel = doc.getSelection();
+            if (sel) {
+                sel.removeAllRanges();
+                sel.setBaseAndExtent(
+                    range.startContainer,
+                    range.startOffset,
+                    range.endContainer,
+                    range.endOffset
+                );
+            }
         }
 
         removeAllRanges(): void {
             this._ranges = [];
+            doc.getSelection()?.removeAllRanges();
         }
 
         setBaseAndExtent(
