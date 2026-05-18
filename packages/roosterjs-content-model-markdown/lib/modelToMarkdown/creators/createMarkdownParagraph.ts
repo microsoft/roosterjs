@@ -57,8 +57,8 @@ function textProcessor(text: ContentModelText): string {
     // Move leading/trailing whitespace outside the markers so the emitted
     // markdown is valid (CommonMark requires emphasis markers to hug
     // non-whitespace), e.g. "world " with <b> => " " + "**world**".
-    const match = /^(\s*)([\s\S]*?)(\s*)$/.exec(text.text) ?? [];
-    const [, leading, core, trailing] = match;
+    const match = /^(\s*)([\s\S]*?)(\s*)$/.exec(text.text);
+    const [, leading, core, trailing] = match ? match : ['', '', text.text, ''];
 
     if (!core) {
         return text.text;
