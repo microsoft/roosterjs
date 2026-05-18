@@ -112,32 +112,7 @@ function applySafariShadowSelectionPolyfill(doc: Document): void {
         return selection;
     };
 
-    function getDeepActiveElement(): Element | null {
-        let active: Element | null = doc.activeElement;
-        while (active?.shadowRoot?.activeElement) {
-            active = active.shadowRoot.activeElement;
-        }
-        return active;
-    }
-
     const win = doc.defaultView!;
-
-    win.addEventListener(
-        'selectionchange',
-        () => {
-            if (!processing) {
-                processing = true;
-                const active = getDeepActiveElement();
-                if (active && active.getAttribute('contenteditable') === 'true') {
-                    doc.execCommand('indent');
-                } else {
-                    selection.removeAllRanges();
-                }
-                processing = false;
-            }
-        },
-        true
-    );
 
     win.addEventListener(
         'beforeinput',
@@ -232,15 +207,11 @@ class ComposedRangesAdapter implements ShadowSelectionAdapter {
         }
         sel.removeAllRanges();
 
+        const { startContainer, startOffset, endContainer, endOffset } = range;
         if (!isReverted) {
-            sel.addRange(range);
+            sel.setBaseAndExtent(startContainer, startOffset, endContainer, endOffset);
         } else {
-            sel.setBaseAndExtent(
-                range.endContainer,
-                range.endOffset,
-                range.startContainer,
-                range.startOffset
-            );
+            sel.setBaseAndExtent(endContainer, endOffset, startContainer, startOffset);
         }
     }
 }
@@ -284,15 +255,11 @@ class ShadowRootSelectionAdapter implements ShadowSelectionAdapter {
         }
         sel.removeAllRanges();
 
+        const { startContainer, startOffset, endContainer, endOffset } = range;
         if (!isReverted) {
-            sel.addRange(range);
+            sel.setBaseAndExtent(startContainer, startOffset, endContainer, endOffset);
         } else {
-            sel.setBaseAndExtent(
-                range.endContainer,
-                range.endOffset,
-                range.startContainer,
-                range.startOffset
-            );
+            sel.setBaseAndExtent(endContainer, endOffset, startContainer, startOffset);
         }
     }
 }

@@ -353,18 +353,21 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         );
     }
 
+    private shadowDomEditorDiv: HTMLDivElement | undefined;
     private resetEditor() {
         const useShadowDom = window.location.search.includes('shadowDom');
-
         this.setState({
             editorCreator: useShadowDom
                 ? (div: HTMLDivElement, options: EditorOptions) => {
-                      const shadowRoot = div.attachShadow({ mode: 'open' });
-                      const innerDiv = document.createElement('div');
-                      innerDiv.style.width = '100%';
-                      innerDiv.style.height = '100%';
-                      shadowRoot.appendChild(innerDiv);
-                      return new Editor(innerDiv, options);
+                      if (!this.shadowDomEditorDiv) {
+                          const shadowRoot = div.attachShadow({ mode: 'open' });
+                          const innerDiv = document.createElement('div');
+                          innerDiv.style.width = '100%';
+                          innerDiv.style.height = '100%';
+                          shadowRoot.appendChild(innerDiv);
+                          this.shadowDomEditorDiv = innerDiv;
+                      }
+                      return new Editor(this.shadowDomEditorDiv, options);
                   }
                 : (div: HTMLDivElement, options: EditorOptions) => {
                       return new Editor(div, options);
