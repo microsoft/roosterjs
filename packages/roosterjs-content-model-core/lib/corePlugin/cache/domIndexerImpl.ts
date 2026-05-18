@@ -325,7 +325,19 @@ export class DomIndexerImpl implements DomIndexer {
                         );
                     } else {
                         const marker1 = this.reconcileNodeSelection(startContainer, startOffset);
-                        const marker2 = this.reconcileNodeSelection(endContainer, endOffset);
+                        // Pass marker1 to the second call so its adjacent-marker cleanup
+                        // does not consume the SelectionMarker we just inserted. Without
+                        // this guard, when marker1 lands directly next to endContainer's
+                        // segment in paragraph.segments (e.g. startOffset == startContainer
+                        // text length), the second splice would absorb marker1 and leave
+                        // setSelection with a dangling reference. See issue #3341.
+                        const marker2 = this.reconcileNodeSelection(
+                            endContainer,
+                            endOffset,
+                            undefined,
+                            undefined,
+                            marker1
+                        );
 
                         if (marker1 && marker2) {
                             if (newSelection.isReverted) {
@@ -421,11 +433,18 @@ export class DomIndexerImpl implements DomIndexer {
         node: Node,
         offset: number,
         defaultFormat?: ContentModelSegmentFormat,
-        selectionMarker?: ContentModelSelectionMarker
+        selectionMarker?: ContentModelSelectionMarker,
+        preserveMarker?: Selectable
     ): Selectable | undefined {
         if (isNodeOfType(node, 'TEXT_NODE')) {
             if (isIndexedSegment(node)) {
-                return this.reconcileTextSelection(node, offset, undefined, selectionMarker);
+                return this.reconcileTextSelection(
+                    node,
+                    offset,
+                    undefined,
+                    selectionMarker,
+                    preserveMarker
+                );
             } else if (isIndexedDelimiter(node)) {
                 return this.reconcileDelimiterSelection(node, defaultFormat);
             } else {
@@ -462,7 +481,8 @@ export class DomIndexerImpl implements DomIndexer {
         textNode: IndexedSegmentNode,
         startOffset?: number,
         endOffset?: number,
-        selectionMarker?: ContentModelSelectionMarker
+        selectionMarker?: ContentModelSelectionMarker,
+        preserveMarker?: Selectable
     ) {
         const { paragraph, segments } = textNode.__roosterjsContentModel;
         const first = segments[0];
@@ -533,14 +553,16 @@ export class DomIndexerImpl implements DomIndexer {
             if (firstIndex >= 0 && lastIndex >= 0) {
                 while (
                     firstIndex > 0 &&
-                    paragraph.segments[firstIndex - 1].segmentType == 'SelectionMarker'
+                    paragraph.segments[firstIndex - 1].segmentType == 'SelectionMarker' &&
+                    paragraph.segments[firstIndex - 1] !== preserveMarker
                 ) {
                     firstIndex--;
                 }
 
                 while (
                     lastIndex < paragraph.segments.length - 1 &&
-                    paragraph.segments[lastIndex + 1].segmentType == 'SelectionMarker'
+                    paragraph.segments[lastIndex + 1].segmentType == 'SelectionMarker' &&
+                    paragraph.segments[lastIndex + 1] !== preserveMarker
                 ) {
                     lastIndex++;
                 }
