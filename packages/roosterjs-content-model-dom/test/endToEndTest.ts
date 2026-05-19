@@ -3028,6 +3028,40 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
         );
     });
 
+    it('Text with invisible unicode tag characters is stripped, meaningful invisible chars preserved', () => {
+        // Source HTML contains U+E0041 / U+E0042 (unicode tag range — must be stripped)
+        // mixed with U+200B (ZWSP), U+200D (ZWJ), U+202E (RLO), U+202C (PDF)
+        // which must be preserved.
+        runTest(
+            '<p>a\u{E0041}b\u{200B}c\u{E0042}d\u{202E}evil\u{202C}e</p>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'ab\u{200B}cd\u{202E}evil\u{202C}e',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
+                    },
+                ],
+            },
+            'ab\u{200B}cd\u{202E}evil\u{202C}e',
+            '<p>ab\u{200B}cd\u{202E}evil\u{202C}e</p>'
+        );
+    });
+
     it('LI without UL followed by other blocks', () => {
         runTest(
             '<li>test</li><div>other</div>',
