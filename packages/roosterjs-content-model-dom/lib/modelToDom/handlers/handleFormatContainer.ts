@@ -53,13 +53,29 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
             applyFormat(containerNode, context.formatAppliers.container, container.format, context);
         });
 
-        if (container.tagName == 'pre') {
-            stackFormat(context, PreChildFormat, () => {
-                context.modelHandlers.blockGroupChildren(doc, containerNode, container, context);
-            });
-        } else {
-            context.modelHandlers.blockGroupChildren(doc, containerNode, container, context);
-        }
+        stackFormat(
+            context,
+            container.format.direction ? { direction: container.format.direction } : null,
+            () => {
+                if (container.tagName == 'pre') {
+                    stackFormat(context, PreChildFormat, () => {
+                        context.modelHandlers.blockGroupChildren(
+                            doc,
+                            containerNode,
+                            container,
+                            context
+                        );
+                    });
+                } else {
+                    context.modelHandlers.blockGroupChildren(
+                        doc,
+                        containerNode,
+                        container,
+                        context
+                    );
+                }
+            }
+        );
 
         element = containerNode;
     }

@@ -76,7 +76,13 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
         applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
 
         stackFormat(context, listItem.formatHolder.format, () => {
-            context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+            stackFormat(
+                context,
+                listItem.format.direction ? { direction: listItem.format.direction } : null,
+                () => {
+                    context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+                }
+            );
         });
     } else {
         // There is no level for this list item, that means it should be moved out of the list
