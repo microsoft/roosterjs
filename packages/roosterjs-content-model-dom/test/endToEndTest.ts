@@ -2,7 +2,7 @@ import * as createGeneralBlock from '../lib/modelApi/creators/createGeneralBlock
 import { contentModelToDom } from '../lib/modelToDom/contentModelToDom';
 import { contentModelToText, createDomToModelContext, createModelToDomContext } from '../lib';
 import { domToContentModel } from '../lib/domToModel/domToContentModel';
-import { expectHtml, itChromeOnly } from './testUtils';
+import { expectHtml } from './testUtils';
 import {
     ContentModelBlockFormat,
     ContentModelDocument,
