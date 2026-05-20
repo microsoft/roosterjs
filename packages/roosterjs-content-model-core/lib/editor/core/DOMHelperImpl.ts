@@ -13,7 +13,7 @@ import type {
 } from 'roosterjs-content-model-types';
 
 function isShadowRoot(node: Node): node is ShadowRoot {
-    return 'adoptedStyleSheets' in node && 'host' in node;
+    return 'host' in node;
 }
 
 /**
