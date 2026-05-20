@@ -531,7 +531,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
     getFocusedPosition(): NodePosition | null {
-        const sel = this.getDOMHelper().getSelection();
+        const sel = this.getDocument().defaultView?.getSelection();
         if (sel?.focusNode && this.contains(sel.focusNode)) {
             return new Position(sel.focusNode, sel.focusOffset);
         }

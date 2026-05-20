@@ -158,7 +158,16 @@ function setRangeSelection(core: EditorCore, element: HTMLElement | undefined, c
             range.collapse();
         }
 
-        const isReverted = collapse ? false : core.domHelper.isSelectionReverted();
+        let isReverted = false;
+        if (!collapse) {
+            const sel = core.physicalRoot.ownerDocument.defaultView?.getSelection();
+            const currentRange = sel && sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
+            if (sel && currentRange) {
+                isReverted =
+                    sel.focusNode != currentRange.endContainer ||
+                    sel.focusOffset != currentRange.endOffset;
+            }
+        }
         core.domHelper.setSelectionRange(range, isReverted);
     }
 }

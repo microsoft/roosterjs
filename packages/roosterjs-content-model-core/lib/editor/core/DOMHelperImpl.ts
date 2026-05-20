@@ -1,3 +1,4 @@
+import { areSameRanges } from 'roosterjs-content-model-core/lib/corePlugin/cache/areSameSelections';
 import {
     getColor,
     getRangesByText,
@@ -203,12 +204,8 @@ class DOMHelperImpl implements DOMHelper {
         return getRangesByText(this.contentDiv, text, matchCase, wholeWord, true /*editableOnly*/);
     }
 
-    getSelection(): Selection | null {
-        return this.doc.defaultView?.getSelection() ?? null;
-    }
-
     getSelectionRange(): Range | null {
-        const sel = this.getSelection();
+        const sel = this.doc.defaultView?.getSelection();
         if (!sel) {
             return null;
         }
@@ -232,11 +229,11 @@ class DOMHelperImpl implements DOMHelper {
     }
 
     setSelectionRange(range: Range, isReverted: boolean = false): void {
-        const sel = this.getSelection();
-        if (!sel) {
+        const sel = this.doc.defaultView?.getSelection();
+        const currentRange = this.getSelectionRange();
+        if (!sel || !currentRange || areSameRanges(range, currentRange)) {
             return;
         }
-        sel.removeAllRanges();
 
         const { startContainer, startOffset, endContainer, endOffset } = range;
         if (!isReverted) {
@@ -246,29 +243,12 @@ class DOMHelperImpl implements DOMHelper {
         }
     }
 
-    isSelectionReverted(): boolean {
-        if (this.useComposedRanges) {
-            return false;
-        }
-
-        const sel = this.getSelection();
-        if (!sel || sel.rangeCount === 0) {
-            return false;
-        }
-        const range = sel.getRangeAt(0);
-        return sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset;
-    }
-
     appendToRoot(element: HTMLElement): void {
         if (this.shadowRoot) {
             this.shadowRoot.appendChild(element);
         } else {
             this.doc.body.appendChild(element);
         }
-    }
-
-    getShadowRoot(): ShadowRoot | null {
-        return this.shadowRoot;
     }
 }
 

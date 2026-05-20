@@ -18,11 +18,18 @@ export const getDOMSelection: GetDOMSelection = core => {
 function getNewSelection(core: EditorCore): DOMSelection | null {
     const range = core.domHelper.getSelectionRange();
 
-    return range && core.logicalRoot.contains(range.commonAncestorContainer)
-        ? {
-              type: 'range',
-              range,
-              isReverted: core.domHelper.isSelectionReverted(),
-          }
-        : null;
+    if (!range || !core.logicalRoot.contains(range.commonAncestorContainer)) {
+        return null;
+    }
+
+    const selection = core.logicalRoot.ownerDocument.defaultView?.getSelection();
+    const isReverted = selection
+        ? selection.focusNode != range.endContainer || selection.focusOffset != range.endOffset
+        : false;
+
+    return {
+        type: 'range',
+        range,
+        isReverted,
+    };
 }

@@ -47,7 +47,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private state: SelectionPluginState;
     private disposer: (() => void) | null = null;
     private logicalRootDisposer: (() => void) | null = null;
-    private selectStartDisposer: (() => void) | null = null;
     private isSafari = false;
     private isMac = false;
     private scrollTopCache: number = 0;
@@ -97,21 +96,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
 
         const env = this.editor.getEnvironment();
+        const document = this.editor.getDocument();
 
         this.isSafari = !!env.isSafari;
         this.isMac = !!env.isMac;
-        this.editor.getDocument().addEventListener('selectionchange', this.onSelectionChange);
+        document.addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
-            // Safari doesn't fire 'selectionchange' on the document for selections inside
-            // a shadow root, so listen to 'selectstart' on the shadow root to clear stale state.
-            const shadowRoot = this.editor.getDOMHelper().getShadowRoot();
-            if (shadowRoot) {
-                shadowRoot.addEventListener('selectstart', this.onSelectStart);
-                this.selectStartDisposer = () => {
-                    shadowRoot.removeEventListener('selectstart', this.onSelectStart);
-                };
-            }
-
             this.disposer = this.editor.attachDomEvent({
                 focus: { beforeDispatch: this.onFocus },
                 drop: { beforeDispatch: this.onDrop },
@@ -135,9 +125,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         this.logicalRootDisposer?.();
         this.logicalRootDisposer = null;
-
-        this.selectStartDisposer?.();
-        this.selectStartDisposer = null;
 
         this.detachMouseEvent();
         this.editor = null;
@@ -746,12 +733,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     };
 
-    private onSelectStart = () => {
-        if (this.editor && !this.editor.isInShadowEdit()) {
-            this.state.selection = null;
-        }
-    };
-
     private onSelectionChange = () => {
         if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
             const newSelection = this.editor.getDOMSelection();
@@ -762,10 +743,14 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             if (range) {
                 const image = isSingleImageInSelection(range);
                 if (newSelection?.type == 'image' && !image) {
+                    const sel = this.editor.getDocument().defaultView?.getSelection();
+                    const isReverted = sel
+                        ? sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset
+                        : false;
                     this.editor.setDOMSelection({
                         type: 'range',
                         range,
-                        isReverted: domHelper.isSelectionReverted(),
+                        isReverted,
                     });
                 } else if (newSelection?.type !== 'image' && image) {
                     this.editor.setDOMSelection({

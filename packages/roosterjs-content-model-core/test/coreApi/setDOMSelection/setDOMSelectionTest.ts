@@ -13,7 +13,6 @@ describe('setDOMSelection', () => {
     let hasFocusSpy: jasmine.Spy;
     let triggerEventSpy: jasmine.Spy;
     let setSelectionRangeSpy: jasmine.Spy;
-    let isSelectionRevertedSpy: jasmine.Spy;
     let createRangeSpy: jasmine.Spy;
     let setEditorStyleSpy: jasmine.Spy;
     let containsSpy: jasmine.Spy;
@@ -31,7 +30,6 @@ describe('setDOMSelection', () => {
         setSelectionRangeSpy = jasmine.createSpy('setSelectionRange').and.callFake(() => {
             expect(core.selection.skipReselectOnFocus).toBeTrue();
         });
-        isSelectionRevertedSpy = jasmine.createSpy('isSelectionReverted');
         createRangeSpy = jasmine.createSpy('createRange');
         setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
         containsSpy = jasmine.createSpy('contains').and.returnValue(true);
@@ -67,7 +65,6 @@ describe('setDOMSelection', () => {
             domHelper: {
                 hasFocus: hasFocusSpy,
                 setSelectionRange: setSelectionRangeSpy,
-                isSelectionReverted: isSelectionRevertedSpy,
             },
             lifecycle: {
                 isDarkMode: false,

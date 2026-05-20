@@ -129,12 +129,6 @@ export interface DOMHelper {
     getRangesByText(text: string, matchCase: boolean, wholeWord: boolean): Range[];
 
     /**
-     * Get the current selection. In shadow DOM, delegates to the resolved
-     * selection adapter (getComposedRanges → shadowRoot.getSelection → document.getSelection).
-     */
-    getSelection(): Selection | null;
-
-    /**
      * Get the current selection range, handling shadow DOM StaticRange conversion.
      * Returns a live Range in all browsers.
      */
@@ -148,19 +142,8 @@ export interface DOMHelper {
     setSelectionRange(range: Range, isReverted?: boolean): void;
 
     /**
-     * Detect if the current selection is reverted (focus before anchor).
-     * In shadow DOM with getComposedRanges, returns false since StaticRange has no direction.
-     */
-    isSelectionReverted(): boolean;
-
-    /**
      * Append an element to the correct root container (shadow root or document.body)
      * @param element The element to append
      */
     appendToRoot(element: HTMLElement): void;
-
-    /**
-     * Get the shadow root if the editor content div is inside a shadow DOM, null otherwise.
-     */
-    getShadowRoot(): ShadowRoot | null;
 }
