@@ -6,141 +6,14 @@ import {
     parseValueWithUnit,
     toArray,
 } from 'roosterjs-content-model-dom';
-import { areSameRanges } from '../../corePlugin/cache/areSameSelections';
 import type {
     ContentModelSegmentFormat,
     DarkColorHandler,
     DOMHelper,
 } from 'roosterjs-content-model-types';
 
-let safariShadowPolyfillApplied = false;
-
-function isSafariBrowser(): boolean {
-    const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-    return ua.indexOf('AppleWebKit') >= 0 && ua.indexOf('Chrome') < 0 && ua.indexOf('Android') < 0;
-}
-
-/**
- * Polyfill for ShadowRoot.prototype.getSelection on Safari.
- * Uses the execCommand('indent') + beforeinput.getTargetRanges() trick to capture
- * selection ranges inside a shadow DOM, since Safari does not natively support
- * shadowRoot.getSelection().
- */
-function applySafariShadowSelectionPolyfill(doc: Document): void {
-    if (safariShadowPolyfillApplied) {
-        return;
-    }
-    safariShadowPolyfillApplied = true;
-
-    const supportsShadowSelection =
-        typeof (ShadowRoot.prototype as any).getSelection === 'function';
-    const supportsBeforeInput = typeof InputEvent.prototype.getTargetRanges === 'function';
-
-    if (supportsShadowSelection || !supportsBeforeInput) {
-        return;
-    }
-
-    let processing = false;
-
-    class ShadowSelection {
-        _ranges: Range[] = [];
-
-        get rangeCount(): number {
-            return this._ranges.length;
-        }
-
-        get type(): string {
-            return this._ranges.length > 0 ? 'Range' : 'None';
-        }
-
-        get anchorNode(): Node | null {
-            return this._ranges[0]?.startContainer ?? null;
-        }
-
-        get anchorOffset(): number {
-            return this._ranges[0]?.startOffset ?? 0;
-        }
-
-        get focusNode(): Node | null {
-            return this._ranges[0]?.endContainer ?? null;
-        }
-
-        get focusOffset(): number {
-            return this._ranges[0]?.endOffset ?? 0;
-        }
-
-        getRangeAt(index: number): Range {
-            return this._ranges[index];
-        }
-
-        addRange(range: Range): void {
-            this._ranges.push(range);
-            const sel = doc.getSelection();
-            if (sel) {
-                sel.removeAllRanges();
-                sel.setBaseAndExtent(
-                    range.startContainer,
-                    range.startOffset,
-                    range.endContainer,
-                    range.endOffset
-                );
-            }
-        }
-
-        removeAllRanges(): void {
-            this._ranges = [];
-            doc.getSelection()?.removeAllRanges();
-        }
-
-        setBaseAndExtent(
-            anchorNode: Node,
-            anchorOffset: number,
-            focusNode: Node,
-            focusOffset: number
-        ): void {
-            const range = doc.createRange();
-            range.setStart(anchorNode, anchorOffset);
-            range.setEnd(focusNode, focusOffset);
-            this._ranges = [range];
-            doc.getSelection()?.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
-        }
-    }
-
-    const selection = new ShadowSelection();
-
-    (ShadowRoot.prototype as any).getSelection = function () {
-        return selection;
-    };
-
-    const win = doc.defaultView!;
-
-    win.addEventListener(
-        'beforeinput',
-        (event: InputEvent) => {
-            if (processing) {
-                const ranges = event.getTargetRanges();
-                const range = ranges[0];
-                if (range) {
-                    const newRange = doc.createRange();
-                    newRange.setStart(range.startContainer, range.startOffset);
-                    newRange.setEnd(range.endContainer, range.endOffset);
-                    selection.removeAllRanges();
-                    selection._ranges.push(newRange);
-                }
-                event.preventDefault();
-                event.stopImmediatePropagation();
-            }
-        },
-        true
-    );
-
-    win.addEventListener(
-        'selectstart',
-        () => {
-            selection.removeAllRanges();
-        },
-        true
-    );
+function isShadowRoot(node: Node): node is ShadowRoot {
+    return 'adoptedStyleSheets' in node && 'host' in node;
 }
 
 /**
@@ -153,212 +26,18 @@ export interface DOMHelperImplOption {
     cloneIndependentRoot?: boolean;
 }
 
-/**
- * @internal
- * Adapter interface for shadow DOM selection operations.
- * Resolved once at construction time to avoid repeated feature detection.
- */
-interface ShadowSelectionAdapter {
-    getRange(): Range | null;
-    getSelection(): Selection | null;
-    isReverted(): boolean;
-    setRange(range: Range, isReverted: boolean): void;
-}
-
-/**
- * Standard adapter using getComposedRanges (modern Chrome/Firefox/Safari)
- */
-class ComposedRangesAdapter implements ShadowSelectionAdapter {
-    constructor(private shadowRoot: ShadowRoot, private doc: Document) {}
-
-    getSelection(): Selection | null {
-        return this.doc.defaultView?.getSelection() ?? null;
-    }
-
-    getRange(): Range | null {
-        const sel = this.getSelection();
-        if (!sel) {
-            return null;
-        }
-
-        const staticRanges = (sel as any).getComposedRanges({
-            shadowRoots: [this.shadowRoot],
-        });
-
-        if (staticRanges?.length > 0) {
-            const sr = staticRanges[0] as StaticRange;
-            const range = this.doc.createRange();
-            range.setStart(sr.startContainer, sr.startOffset);
-            range.setEnd(sr.endContainer, sr.endOffset);
-            return range;
-        }
-        return null;
-    }
-
-    isReverted(): boolean {
-        // getComposedRanges returns StaticRange which doesn't expose direction
-        return false;
-    }
-
-    setRange(range: Range, isReverted: boolean): void {
-        const sel = this.getSelection();
-        if (!sel) {
-            return;
-        }
-        sel.removeAllRanges();
-
-        const { startContainer, startOffset, endContainer, endOffset } = range;
-        if (!isReverted) {
-            sel.setBaseAndExtent(startContainer, startOffset, endContainer, endOffset);
-        } else {
-            sel.setBaseAndExtent(endContainer, endOffset, startContainer, startOffset);
-        }
-    }
-}
-
-/**
- * Deprecated Chromium adapter using shadowRoot.getSelection() (non-standard)
- */
-class ShadowRootSelectionAdapter implements ShadowSelectionAdapter {
-    constructor(private shadowRoot: ShadowRoot) {}
-
-    getSelection(): Selection | null {
-        return (this.shadowRoot as any).getSelection() ?? null;
-    }
-
-    getRange(): Range | null {
-        const sel = this.getSelection();
-        if (!sel || sel.rangeCount === 0) {
-            return null;
-        }
-        return sel.getRangeAt(0);
-    }
-
-    isReverted(): boolean {
-        const sel = this.getSelection();
-        if (!sel || sel.rangeCount === 0) {
-            return false;
-        }
-        const range = sel.getRangeAt(0);
-        return sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset;
-    }
-
-    setRange(range: Range, isReverted: boolean): void {
-        const sel = this.getSelection();
-        if (!sel) {
-            return;
-        }
-
-        const currentRange = sel.rangeCount > 0 && sel.getRangeAt(0);
-        if (currentRange && areSameRanges(currentRange, range)) {
-            return;
-        }
-        sel.removeAllRanges();
-
-        const { startContainer, startOffset, endContainer, endOffset } = range;
-        if (!isReverted) {
-            sel.setBaseAndExtent(startContainer, startOffset, endContainer, endOffset);
-        } else {
-            sel.setBaseAndExtent(endContainer, endOffset, startContainer, startOffset);
-        }
-    }
-}
-
-/**
- * Document adapter using document.getSelection() (older Firefox piercing / no shadow DOM)
- */
-class DocumentSelectionAdapter implements ShadowSelectionAdapter {
-    constructor(private doc: Document) {}
-
-    getSelection(): Selection | null {
-        return this.doc.defaultView?.getSelection() ?? null;
-    }
-
-    getRange(): Range | null {
-        const sel = this.getSelection();
-        if (!sel || sel.rangeCount === 0) {
-            return null;
-        }
-        return sel.getRangeAt(0);
-    }
-
-    isReverted(): boolean {
-        const sel = this.getSelection();
-        if (!sel || sel.rangeCount === 0) {
-            return false;
-        }
-        const range = sel.getRangeAt(0);
-        return sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset;
-    }
-
-    setRange(range: Range, isReverted: boolean): void {
-        const sel = this.getSelection();
-        if (!sel) {
-            return;
-        }
-
-        const currentRange = sel.rangeCount > 0 && sel.getRangeAt(0);
-        if (currentRange && areSameRanges(currentRange, range)) {
-            return;
-        }
-        sel.removeAllRanges();
-
-        if (!isReverted) {
-            sel.addRange(range);
-        } else {
-            sel.setBaseAndExtent(
-                range.endContainer,
-                range.endOffset,
-                range.startContainer,
-                range.startOffset
-            );
-        }
-    }
-}
-
-/**
- * Resolve the correct selection adapter once at construction time
- */
-function createSelectionAdapter(
-    shadowRoot: ShadowRoot | null,
-    doc: Document
-): ShadowSelectionAdapter {
-    if (!shadowRoot) {
-        return new DocumentSelectionAdapter(doc);
-    }
-
-    // 1. Standard: getComposedRanges (modern Chrome/Firefox/Safari)
-    const sel = doc.defaultView?.getSelection();
-    if (sel && 'getComposedRanges' in sel) {
-        return new ComposedRangesAdapter(shadowRoot, doc);
-    }
-
-    // 2. Deprecated: shadowRoot.getSelection() (older Chromium)
-    if ('getSelection' in shadowRoot) {
-        return new ShadowRootSelectionAdapter(shadowRoot);
-    }
-
-    // 3. Fallback: document.getSelection() (older Firefox — pierces shadow DOM)
-    return new DocumentSelectionAdapter(doc);
-}
-
 class DOMHelperImpl implements DOMHelper {
     private shadowRoot: ShadowRoot | null;
     private doc: Document;
-    private selectionAdapter: ShadowSelectionAdapter;
+    private useComposedRanges: boolean;
 
     constructor(private contentDiv: HTMLElement, options?: DOMHelperImplOption) {
         const rootNode = contentDiv.getRootNode();
-        this.shadowRoot = rootNode instanceof ShadowRoot ? rootNode : null;
+        this.shadowRoot = isShadowRoot(rootNode) ? rootNode : null;
         this.doc = contentDiv.ownerDocument;
 
-        // Apply Safari shadow DOM selection polyfill before creating the adapter,
-        // so that the polyfilled getSelection is detected by createSelectionAdapter.
-        if (this.shadowRoot && isSafariBrowser()) {
-            applySafariShadowSelectionPolyfill(this.doc);
-        }
-
-        this.selectionAdapter = createSelectionAdapter(this.shadowRoot, this.doc);
+        const sel = this.doc.defaultView?.getSelection();
+        this.useComposedRanges = !!(this.shadowRoot && sel && 'getComposedRanges' in sel);
     }
 
     queryElements(selector: string): HTMLElement[] {
@@ -525,27 +204,59 @@ class DOMHelperImpl implements DOMHelper {
     }
 
     getSelection(): Selection | null {
-        return this.selectionAdapter.getSelection();
+        return this.doc.defaultView?.getSelection() ?? null;
     }
 
     getSelectionRange(): Range | null {
-        return this.selectionAdapter.getRange();
+        const sel = this.getSelection();
+        if (!sel) {
+            return null;
+        }
+
+        if (this.useComposedRanges) {
+            const staticRanges = (sel as any).getComposedRanges({
+                shadowRoots: [this.shadowRoot],
+            });
+
+            if (staticRanges?.length > 0) {
+                const sr = staticRanges[0] as StaticRange;
+                const range = this.doc.createRange();
+                range.setStart(sr.startContainer, sr.startOffset);
+                range.setEnd(sr.endContainer, sr.endOffset);
+                return range;
+            }
+            return null;
+        }
+
+        return sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
     }
 
     setSelectionRange(range: Range, isReverted: boolean = false): void {
-        this.selectionAdapter.setRange(range, isReverted);
+        const sel = this.getSelection();
+        if (!sel) {
+            return;
+        }
+        sel.removeAllRanges();
+
+        const { startContainer, startOffset, endContainer, endOffset } = range;
+        if (!isReverted) {
+            sel.setBaseAndExtent(startContainer, startOffset, endContainer, endOffset);
+        } else {
+            sel.setBaseAndExtent(endContainer, endOffset, startContainer, startOffset);
+        }
     }
 
     isSelectionReverted(): boolean {
-        return this.selectionAdapter.isReverted();
-    }
-
-    appendStyle(style: HTMLStyleElement): void {
-        if (this.shadowRoot) {
-            this.shadowRoot.appendChild(style);
-        } else {
-            this.doc.head.appendChild(style);
+        if (this.useComposedRanges) {
+            return false;
         }
+
+        const sel = this.getSelection();
+        if (!sel || sel.rangeCount === 0) {
+            return false;
+        }
+        const range = sel.getRangeAt(0);
+        return sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset;
     }
 
     appendToRoot(element: HTMLElement): void {
@@ -554,10 +265,6 @@ class DOMHelperImpl implements DOMHelper {
         } else {
             this.doc.body.appendChild(element);
         }
-    }
-
-    getEventRoot(): Document {
-        return this.doc;
     }
 
     getShadowRoot(): ShadowRoot | null {

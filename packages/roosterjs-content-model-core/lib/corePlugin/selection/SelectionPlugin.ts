@@ -100,11 +100,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         this.isSafari = !!env.isSafari;
         this.isMac = !!env.isMac;
-        this.editor
-            .getDOMHelper()
-            .getEventRoot()
-            .addEventListener('selectionchange', this.onSelectionChange);
+        this.editor.getDocument().addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
+            // Safari doesn't fire 'selectionchange' on the document for selections inside
+            // a shadow root, so listen to 'selectstart' on the shadow root to clear stale state.
             const shadowRoot = this.editor.getDOMHelper().getShadowRoot();
             if (shadowRoot) {
                 shadowRoot.addEventListener('selectstart', this.onSelectStart);
@@ -127,10 +126,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     }
 
     dispose() {
-        this.editor
-            ?.getDOMHelper()
-            .getEventRoot()
-            .removeEventListener('selectionchange', this.onSelectionChange);
+        this.editor?.getDocument().removeEventListener('selectionchange', this.onSelectionChange);
 
         if (this.disposer) {
             this.disposer();

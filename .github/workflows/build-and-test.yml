@@ -20,13 +20,6 @@ jobs:
 
             - name: Build
               run: npm run-script build:ci
-
-            - name: Deploy
-              uses: JamesIves/github-pages-deploy-action@3.6.2
-              with:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  BRANCH: gh-pages
-                  FOLDER: dist/deploy
     test-on-chrome:
         runs-on: ubuntu-latest
         steps:

@@ -154,23 +154,10 @@ export interface DOMHelper {
     isSelectionReverted(): boolean;
 
     /**
-     * Append a style element to the correct root (shadow root or document.head)
-     * @param style The style element to append
-     */
-    appendStyle(style: HTMLStyleElement): void;
-
-    /**
      * Append an element to the correct root container (shadow root or document.body)
      * @param element The element to append
      */
     appendToRoot(element: HTMLElement): void;
-
-    /**
-     * Get the root node for event listener registration.
-     * Returns shadow root when in shadow DOM, document otherwise.
-     * Used for events like 'selectionchange' that fire on the shadow root.
-     */
-    getEventRoot(): Document;
 
     /**
      * Get the shadow root if the editor content div is inside a shadow DOM, null otherwise.

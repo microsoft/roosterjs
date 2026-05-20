@@ -21,7 +21,7 @@ export const setEditorStyle: SetEditorStyle = (
         const doc = core.physicalRoot.ownerDocument;
 
         styleElement = doc.createElement('style');
-        core.domHelper.appendStyle(styleElement);
+        core.domHelper.appendToRoot(styleElement);
 
         styleElement.dataset.roosterjsStyleKey = key;
         core.lifecycle.styleElements[key] = styleElement;
