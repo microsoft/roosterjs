@@ -150,24 +150,24 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 };
 
 function setRangeSelection(core: EditorCore, element: HTMLElement | undefined, collapse: boolean) {
-    if (element && core.physicalRoot.contains(element)) {
-        const range = core.physicalRoot.ownerDocument.createRange();
+    const doc = core.physicalRoot.ownerDocument;
+    if (element && doc.contains(element)) {
+        const range = doc.createRange();
+        let isReverted: boolean | undefined = undefined;
 
         range.selectNode(element);
         if (collapse) {
             range.collapse();
-        }
-
-        let isReverted = false;
-        if (!collapse) {
-            const sel = core.physicalRoot.ownerDocument.defaultView?.getSelection();
-            const currentRange = sel && sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
-            if (sel && currentRange) {
+        } else {
+            const selection = doc.defaultView?.getSelection();
+            const range = selection && selection.rangeCount > 0 && selection.getRangeAt(0);
+            if (selection && range) {
                 isReverted =
-                    sel.focusNode != currentRange.endContainer ||
-                    sel.focusOffset != currentRange.endOffset;
+                    selection.focusNode != range.endContainer ||
+                    selection.focusOffset != range.endOffset;
             }
         }
+
         core.domHelper.setSelectionRange(range, isReverted);
     }
 }
