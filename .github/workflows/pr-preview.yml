@@ -1,0 +1,48 @@
+name: Deploy PR Preview
+on:
+    pull_request:
+        types:
+            - opened
+            - reopened
+            - synchronize
+            - closed
+
+concurrency: preview-${{ github.ref }}
+
+jobs:
+    deploy-preview:
+        # Skip PRs from forks: GITHUB_TOKEN is read-only for fork PRs,
+        # so it cannot push to gh-pages. Fork support requires a separate
+        # workflow_run-based design.
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set Node Version
+              if: github.event.action != 'closed'
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 'v18.16.0'
+
+            - name: Install dependencies
+              if: github.event.action != 'closed'
+              run: yarn
+
+            - name: Build
+              if: github.event.action != 'closed'
+              run: yarn build
+
+            - name: Deploy preview
+              # Pinned to commit SHA (v1.8.1) for supply-chain safety, since
+              # this third-party action runs with write access to gh-pages and PRs.
+              uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+              with:
+                  source-dir: ./dist/deploy
+                  preview-branch: gh-pages
+                  umbrella-dir: pr-preview
+                  action: auto
