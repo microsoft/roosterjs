@@ -2,14 +2,35 @@ import * as getRangesByText from 'roosterjs-content-model-dom/lib/domUtils/getRa
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
 import { DOMHelper } from 'roosterjs-content-model-types';
 
+/**
+ * Creates a minimal mock HTMLElement for createDOMHelper.
+ * The constructor needs: getRootNode(), ownerDocument.defaultView.getSelection().
+ * Merges any provided ownerDocument props while ensuring defaultView.getSelection exists.
+ */
+function createMockDiv(props: Record<string, any>): any {
+    const { ownerDocument, getRootNode, ...rest } = props || {};
+    const { defaultView, ...ownerDocRest } = ownerDocument || {};
+    return {
+        ...rest,
+        getRootNode: getRootNode || (() => document),
+        ownerDocument: {
+            ...ownerDocRest,
+            defaultView: {
+                getSelection: (): null => null,
+                ...defaultView,
+            },
+        },
+    };
+}
+
 describe('DOMHelperImpl', () => {
     describe('isNodeInEditor', () => {
         it('isNodeInEditor', () => {
             const mockedResult = 'RESULT' as any;
             const containsSpy = jasmine.createSpy('contains').and.returnValue(mockedResult);
-            const mockedDiv = {
+            const mockedDiv = createMockDiv({
                 contains: containsSpy,
-            } as any;
+            });
             const domHelper = createDOMHelper(mockedDiv);
             const mockedNode = 'NODE' as any;
 
@@ -39,9 +60,9 @@ describe('DOMHelperImpl', () => {
 
         it('isNodeInEditor, check root node, excludeRoot=true, do not call contains', () => {
             const containsSpy = jasmine.createSpy('contains');
-            const mockedDiv = {
+            const mockedDiv = createMockDiv({
                 contains: containsSpy,
-            } as any;
+            });
             const domHelper = createDOMHelper(mockedDiv);
 
             const result = domHelper.isNodeInEditor(mockedDiv, true);
@@ -57,9 +78,9 @@ describe('DOMHelperImpl', () => {
             const querySelectorAllSpy = jasmine
                 .createSpy('querySelectorAll')
                 .and.returnValue(mockedResult);
-            const mockedDiv: HTMLElement = {
+            const mockedDiv = createMockDiv({
                 querySelectorAll: querySelectorAllSpy,
-            } as any;
+            }) as any;
             const mockedSelector = 'SELECTOR';
             const domHelper = createDOMHelper(mockedDiv);
 
@@ -73,9 +94,9 @@ describe('DOMHelperImpl', () => {
     describe('getTextContent', () => {
         it('getTextContent', () => {
             const mockedTextContent = 'TEXT';
-            const mockedDiv: HTMLDivElement = {
+            const mockedDiv = createMockDiv({
                 textContent: mockedTextContent,
-            } as any;
+            }) as any;
             const domHelper = createDOMHelper(mockedDiv);
 
             const result = domHelper.getTextContent();
@@ -86,12 +107,12 @@ describe('DOMHelperImpl', () => {
 
     describe('calculateZoomScale', () => {
         it('calculateZoomScale 1', () => {
-            const mockedDiv = {
+            const mockedDiv = createMockDiv({
                 getBoundingClientRect: () => ({
                     width: 1,
                 }),
                 offsetWidth: 2,
-            } as any;
+            });
             const domHelper = createDOMHelper(mockedDiv);
 
             const zoomScale = domHelper.calculateZoomScale();
@@ -100,12 +121,12 @@ describe('DOMHelperImpl', () => {
         });
 
         it('calculateZoomScale 2', () => {
-            const mockedDiv = {
+            const mockedDiv = createMockDiv({
                 getBoundingClientRect: () => ({
                     width: 1,
                 }),
                 offsetWidth: 0, // Wrong number, should return 1 as fallback
-            } as any;
+            });
             const domHelper = createDOMHelper(mockedDiv);
 
             const zoomScale = domHelper.calculateZoomScale();
@@ -119,9 +140,9 @@ describe('DOMHelperImpl', () => {
             const mockedAttr = 'ATTR';
             const mockedValue = 'VALUE';
             const getAttributeSpy = jasmine.createSpy('getAttribute').and.returnValue(mockedValue);
-            const mockedDiv = {
+            const mockedDiv = createMockDiv({
                 getAttribute: getAttributeSpy,
-            } as any;
+            });
 
             const domHelper = createDOMHelper(mockedDiv);
             const result = domHelper.getDomAttribute(mockedAttr);
@@ -138,10 +159,10 @@ describe('DOMHelperImpl', () => {
             const mockedValue = 'VALUE';
             const setAttributeSpy = jasmine.createSpy('setAttribute');
             const removeAttributeSpy = jasmine.createSpy('removeAttribute');
-            const mockedDiv = {
+            const mockedDiv = createMockDiv({
                 setAttribute: setAttributeSpy,
                 removeAttribute: removeAttributeSpy,
-            } as any;
+            });
 
             const domHelper = createDOMHelper(mockedDiv);
             domHelper.setDomAttribute(mockedAttr1, mockedValue);
@@ -160,9 +181,9 @@ describe('DOMHelperImpl', () => {
             const styleName: keyof CSSStyleDeclaration = 'backgroundColor';
             const styleSpy = jasmine.createSpyObj('style', [styleName]);
             styleSpy[styleName] = mockedValue;
-            const mockedDiv = {
+            const mockedDiv = createMockDiv({
                 style: styleSpy,
-            } as any;
+            });
 
             const domHelper = createDOMHelper(mockedDiv);
             const result = domHelper.getDomStyle(styleName);
@@ -237,12 +258,12 @@ describe('DOMHelperImpl', () => {
 
         beforeEach(() => {
             containsSpy = jasmine.createSpy('contains');
-            mockedRoot = {
+            mockedRoot = createMockDiv({
                 ownerDocument: {
                     activeElement: mockedElement,
                 },
                 contains: containsSpy,
-            } as any;
+            }) as any;
 
             domHelper = createDOMHelper(mockedRoot);
         });
@@ -279,13 +300,13 @@ describe('DOMHelperImpl', () => {
         beforeEach(() => {
             getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
 
-            div = {
+            div = createMockDiv({
                 ownerDocument: {
                     defaultView: {
                         getComputedStyle: getComputedStyleSpy,
                     },
                 },
-            } as any;
+            }) as any;
         });
 
         it('LTR', () => {
@@ -322,14 +343,14 @@ describe('DOMHelperImpl', () => {
         beforeEach(() => {
             getComputedStyleSpy = jasmine.createSpy('getComputedStyle');
 
-            div = {
+            div = createMockDiv({
                 ownerDocument: {
                     defaultView: {
                         getComputedStyle: getComputedStyleSpy,
                     },
                 },
                 clientWidth: 1000,
-            } as any;
+            });
         });
 
         it('getClientWidth', () => {
@@ -357,7 +378,7 @@ describe('DOMHelperImpl', () => {
             const mockedClone = 'CLONE' as any;
             const cloneSpy = jasmine.createSpy('cloneSpy').and.returnValue(mockedClone);
             const importNodeSpy = jasmine.createSpy('importNodeSpy').and.returnValue(mockedClone);
-            const mockedDiv: HTMLElement = {
+            const mockedDiv = createMockDiv({
                 cloneNode: cloneSpy,
                 ownerDocument: {
                     implementation: {
@@ -366,7 +387,7 @@ describe('DOMHelperImpl', () => {
                         }),
                     },
                 },
-            } as any;
+            }) as any;
             const domHelper = createDOMHelper(mockedDiv);
 
             const result = domHelper.getClonedRoot();
@@ -379,7 +400,7 @@ describe('DOMHelperImpl', () => {
 
     describe('getContainerFormat', () => {
         it('getContainerFormat', () => {
-            const mockedDiv: HTMLDivElement = {
+            const mockedDiv = createMockDiv({
                 ownerDocument: {
                     defaultView: {
                         getComputedStyle: () => ({
@@ -398,7 +419,7 @@ describe('DOMHelperImpl', () => {
                 },
                 style: {},
                 getAttribute: (): null => null,
-            } as any;
+            }) as any;
             const domHelper = createDOMHelper(mockedDiv);
 
             const result = domHelper.getContainerFormat();
@@ -419,7 +440,7 @@ describe('DOMHelperImpl', () => {
         });
 
         it('getContainerFormat use style color', () => {
-            const mockedDiv: HTMLDivElement = {
+            const mockedDiv = createMockDiv({
                 ownerDocument: {
                     defaultView: {
                         getComputedStyle: () => ({
@@ -441,7 +462,7 @@ describe('DOMHelperImpl', () => {
                     backgroundColor: 'style-bg-color',
                 },
                 getAttribute: (): null => null,
-            } as any;
+            }) as any;
             const domHelper = createDOMHelper(mockedDiv);
 
             const result = domHelper.getContainerFormat();
@@ -462,7 +483,7 @@ describe('DOMHelperImpl', () => {
         });
 
         it('getContainerFormat use style color in dark mode', () => {
-            const mockedDiv: HTMLDivElement = {
+            const mockedDiv = createMockDiv({
                 ownerDocument: {
                     defaultView: {
                         getComputedStyle: () => ({
@@ -484,7 +505,7 @@ describe('DOMHelperImpl', () => {
                     backgroundColor: 'var(--darkBgColor, lightBgColor)',
                 },
                 getAttribute: (): null => null,
-            } as any;
+            }) as any;
             const mockDarkHandler = {} as any;
 
             const domHelper = createDOMHelper(mockedDiv);
@@ -507,7 +528,7 @@ describe('DOMHelperImpl', () => {
         });
 
         it('getContainerFormat use runtime color in dark mode', () => {
-            const mockedDiv: HTMLDivElement = {
+            const mockedDiv = createMockDiv({
                 ownerDocument: {
                     defaultView: {
                         getComputedStyle: () => ({
@@ -526,7 +547,7 @@ describe('DOMHelperImpl', () => {
                 },
                 style: {},
                 getAttribute: (): null => null,
-            } as any;
+            }) as any;
             const mockDarkHandler = {} as any;
 
             const domHelper = createDOMHelper(mockedDiv);
@@ -648,6 +669,219 @@ describe('DOMHelperImpl', () => {
 
             expect(getRangesByTextSpy).toHaveBeenCalledWith(contentDiv, 'test', false, true, true);
             expect(ranges).toBe(getRangesByTextSpy.calls.mostRecent().returnValue);
+        });
+    });
+
+    describe('getSelectionRange', () => {
+        it('returns null when no selection', () => {
+            const mockedDiv = createMockDiv({
+                ownerDocument: {
+                    defaultView: {
+                        getSelection: (): null => null,
+                    },
+                },
+            });
+            const domHelper = createDOMHelper(mockedDiv);
+
+            expect(domHelper.getSelectionRange()).toBeNull();
+        });
+
+        it('returns null when rangeCount is 0', () => {
+            const mockedDiv = createMockDiv({
+                ownerDocument: {
+                    defaultView: {
+                        getSelection: () => ({ rangeCount: 0 }),
+                    },
+                },
+            });
+            const domHelper = createDOMHelper(mockedDiv);
+
+            expect(domHelper.getSelectionRange()).toBeNull();
+        });
+
+        it('returns range when selection has range', () => {
+            const mockedRange = document.createRange();
+            const mockedDiv = createMockDiv({
+                ownerDocument: {
+                    defaultView: {
+                        getSelection: () => ({ rangeCount: 1, getRangeAt: () => mockedRange }),
+                    },
+                },
+            });
+            const domHelper = createDOMHelper(mockedDiv);
+
+            expect(domHelper.getSelectionRange()).toBe(mockedRange);
+        });
+    });
+
+    describe('setSelectionRange', () => {
+        it('does nothing when no selection object', () => {
+            const mockedDiv = createMockDiv({
+                ownerDocument: {
+                    defaultView: {
+                        getSelection: (): null => null,
+                    },
+                },
+            });
+            const domHelper = createDOMHelper(mockedDiv);
+            const range = document.createRange();
+
+            // Should not throw
+            domHelper.setSelectionRange(range);
+        });
+
+        it('does nothing when ranges are same', () => {
+            const container = document.createElement('div');
+            const textNode = document.createTextNode('hello');
+            container.appendChild(textNode);
+            document.body.appendChild(container);
+
+            const existingRange = document.createRange();
+            existingRange.setStart(textNode, 0);
+            existingRange.setEnd(textNode, 3);
+
+            const newRange = document.createRange();
+            newRange.setStart(textNode, 0);
+            newRange.setEnd(textNode, 3);
+
+            const setBaseAndExtentSpy = jasmine.createSpy('setBaseAndExtent');
+            const mockedDiv = createMockDiv({
+                ownerDocument: {
+                    defaultView: {
+                        getSelection: () => ({
+                            rangeCount: 1,
+                            getRangeAt: () => existingRange,
+                            setBaseAndExtent: setBaseAndExtentSpy,
+                        }),
+                    },
+                    createRange: () => document.createRange(),
+                },
+            });
+            const domHelper = createDOMHelper(mockedDiv);
+
+            domHelper.setSelectionRange(newRange);
+
+            expect(setBaseAndExtentSpy).not.toHaveBeenCalled();
+            document.body.removeChild(container);
+        });
+
+        it('sets selection forward when not reverted', () => {
+            const container = document.createElement('div');
+            const textNode = document.createTextNode('hello world');
+            container.appendChild(textNode);
+            document.body.appendChild(container);
+
+            const existingRange = document.createRange();
+            existingRange.setStart(textNode, 0);
+            existingRange.setEnd(textNode, 3);
+
+            const newRange = document.createRange();
+            newRange.setStart(textNode, 0);
+            newRange.setEnd(textNode, 5);
+
+            const setBaseAndExtentSpy = jasmine.createSpy('setBaseAndExtent');
+            const mockedDiv = createMockDiv({
+                ownerDocument: {
+                    defaultView: {
+                        getSelection: () => ({
+                            rangeCount: 1,
+                            getRangeAt: () => existingRange,
+                            setBaseAndExtent: setBaseAndExtentSpy,
+                            removeAllRanges: jasmine.createSpy('removeAllRanges'),
+                        }),
+                    },
+                    createRange: () => document.createRange(),
+                },
+            });
+            const domHelper = createDOMHelper(mockedDiv);
+
+            domHelper.setSelectionRange(newRange, false);
+
+            expect(setBaseAndExtentSpy).toHaveBeenCalledWith(textNode, 0, textNode, 5);
+            document.body.removeChild(container);
+        });
+
+        it('sets selection reverted when isReverted is true', () => {
+            const container = document.createElement('div');
+            const textNode = document.createTextNode('hello world');
+            container.appendChild(textNode);
+            document.body.appendChild(container);
+
+            const existingRange = document.createRange();
+            existingRange.setStart(textNode, 0);
+            existingRange.setEnd(textNode, 3);
+
+            const newRange = document.createRange();
+            newRange.setStart(textNode, 0);
+            newRange.setEnd(textNode, 5);
+
+            const setBaseAndExtentSpy = jasmine.createSpy('setBaseAndExtent');
+            const mockedDiv = createMockDiv({
+                ownerDocument: {
+                    defaultView: {
+                        getSelection: () => ({
+                            rangeCount: 1,
+                            getRangeAt: () => existingRange,
+                            setBaseAndExtent: setBaseAndExtentSpy,
+                            removeAllRanges: jasmine.createSpy('removeAllRanges'),
+                        }),
+                    },
+                    createRange: () => document.createRange(),
+                },
+            });
+            const domHelper = createDOMHelper(mockedDiv);
+
+            domHelper.setSelectionRange(newRange, true);
+
+            expect(setBaseAndExtentSpy).toHaveBeenCalledWith(textNode, 5, textNode, 0);
+            document.body.removeChild(container);
+        });
+    });
+
+    describe('appendToRoot', () => {
+        it('appends to document.body when no shadow root', () => {
+            const div = document.createElement('div');
+            const domHelper = createDOMHelper(div);
+            const element = document.createElement('span');
+
+            domHelper.appendToRoot(element);
+
+            expect(document.body.contains(element)).toBeTrue();
+            document.body.removeChild(element);
+        });
+
+        it('appends to shadow root when in shadow DOM', () => {
+            const host = document.createElement('div');
+            document.body.appendChild(host);
+            const shadowRoot = host.attachShadow({ mode: 'open' });
+            const contentDiv = document.createElement('div');
+            shadowRoot.appendChild(contentDiv);
+
+            const domHelper = createDOMHelper(contentDiv);
+            const element = document.createElement('span');
+
+            domHelper.appendToRoot(element);
+
+            expect(shadowRoot.contains(element)).toBeTrue();
+            document.body.removeChild(host);
+        });
+    });
+
+    describe('hasFocus in shadow DOM', () => {
+        it('uses shadowRoot.activeElement when in shadow DOM', () => {
+            const host = document.createElement('div');
+            document.body.appendChild(host);
+            const shadowRoot = host.attachShadow({ mode: 'open' });
+            const contentDiv = document.createElement('div');
+            contentDiv.setAttribute('contenteditable', 'true');
+            shadowRoot.appendChild(contentDiv);
+
+            const domHelper = createDOMHelper(contentDiv);
+
+            // When no element is focused in the shadow root
+            expect(domHelper.hasFocus()).toBeFalse();
+
+            document.body.removeChild(host);
         });
     });
 });

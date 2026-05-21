@@ -1,4 +1,4 @@
-import { areSameRanges } from 'roosterjs-content-model-core/lib/corePlugin/cache/areSameSelections';
+import { areSameRanges } from '../../utils/areSameRanges';
 import {
     getColor,
     getRangesByText,
