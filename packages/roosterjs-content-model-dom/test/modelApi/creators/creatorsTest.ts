@@ -403,18 +403,18 @@ describe('Creators', () => {
     });
 
     it('createSelectionMarker with selection', () => {
-        const format = { a: 1 } as any;
+        const format = { fontSize: '10px', a: 1 } as any;
         const marker = createSelectionMarker(format);
 
         expect(marker).toEqual({
             segmentType: 'SelectionMarker',
             isSelected: true,
-            format: { a: 1 } as any,
+            format: { fontSize: '10px' },
         });
 
-        (<any>marker.format).a = 2;
+        (<any>marker.format).fontSize = '20px';
 
-        expect(format).toEqual({ a: 1 });
+        expect(format).toEqual({ fontSize: '10px', a: 1 } as any);
     });
 
     it('createBr', () => {

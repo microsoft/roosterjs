@@ -13,12 +13,16 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
             format.direction = dir == 'rtl' ? 'rtl' : 'ltr';
         }
     },
-    apply: (format, element) => {
+    apply: (format, element, context) => {
         if (format.direction) {
             element.style.direction = format.direction;
         }
 
-        if (format.direction == 'rtl' && isElementOfType(element, 'table')) {
+        if (
+            format.direction == 'rtl' &&
+            isElementOfType(element, 'table') &&
+            context.implicitFormat.direction != 'rtl'
+        ) {
             element.style.justifySelf = 'flex-end';
         }
     },

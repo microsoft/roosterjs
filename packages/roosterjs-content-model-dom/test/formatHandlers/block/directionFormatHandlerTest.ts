@@ -90,4 +90,29 @@ describe('directionFormatHandler.apply', () => {
             '<table style="direction: rtl; justify-self: flex-end;"></table>'
         );
     });
+
+    it('RTL on table, parent implicit direction is LTR, applies justify-self', () => {
+        const table = document.createElement('table');
+        format.direction = 'rtl';
+        context.implicitFormat.direction = 'ltr';
+        directionFormatHandler.apply(format, table, context);
+        expect(table.outerHTML).toBe(
+            '<table style="direction: rtl; justify-self: flex-end;"></table>'
+        );
+    });
+
+    it('RTL on table, parent implicit direction is RTL, skips justify-self', () => {
+        const table = document.createElement('table');
+        format.direction = 'rtl';
+        context.implicitFormat.direction = 'rtl';
+        directionFormatHandler.apply(format, table, context);
+        expect(table.outerHTML).toBe('<table style="direction: rtl;"></table>');
+    });
+
+    it('RTL on non-table element, never applies justify-self', () => {
+        const td = document.createElement('td');
+        format.direction = 'rtl';
+        directionFormatHandler.apply(format, td, context);
+        expect(td.outerHTML).toBe('<td style="direction: rtl;"></td>');
+    });
 });

@@ -605,6 +605,74 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(model.hasRevertedRangeSelection).toBeFalsy();
     });
 
+    it('Repro #3341: range across two text nodes with startOffset at end of first node', () => {
+        const node1 = document.createTextNode('test1') as any;
+        const node2 = document.createTextNode('test2') as any;
+        const parent = document.createElement('div');
+
+        parent.appendChild(node1);
+        parent.appendChild(node2);
+
+        // Range starts at the END of node1 (offset 5) and ends inside node2 (offset 3).
+        // After the first reconcile call marker1 lands directly before node2's segment;
+        // the second call's adjacent-marker cleanup loop must NOT eat marker1.
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node1, 5, node2, 3),
+            isReverted: false,
+        };
+        const paragraph = createParagraph();
+        const oldSegment1 = createText('');
+        const oldSegment2 = createText('');
+
+        paragraph.segments.push(oldSegment1, oldSegment2);
+        domIndexerImpl.onSegment(node1, paragraph, [oldSegment1]);
+        domIndexerImpl.onSegment(node2, paragraph, [oldSegment2]);
+        model.blocks.push(paragraph);
+
+        const result = domIndexerImpl.reconcileSelection(model, newRangeEx);
+
+        const segment1: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'test1',
+            format: {},
+        };
+        const segment2: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'tes',
+            format: {},
+            isSelected: true,
+        };
+        const segment3: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't2',
+            format: {},
+        };
+        const marker1 = createSelectionMarker();
+        const marker2 = createSelectionMarker();
+
+        expect(result).toBeTrue();
+        expect(node1.__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment1],
+        });
+        expect(node2.__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment2, segment3],
+        });
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1, marker1, segment2, marker2, segment3],
+        });
+        expect(setSelectionSpy).toHaveBeenCalledWith(model, marker1, marker2);
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+        expect(model.hasRevertedRangeSelection).toBeFalsy();
+    });
+
     it('no old range, normal range on indexed text, expanded on other type of node', () => {
         const node1 = document.createTextNode('test1') as any;
         const node2 = document.createElement('br') as any;
