@@ -204,7 +204,7 @@ describe('createMarkdownBlockGroup', () => {
         paragraph.segments.push(text);
         paragraph.segments.push(linkText);
         blockGroup.blocks.push(paragraph);
-        runTest(blockGroup, `> *text *[link](https://example.com)\n\n`, {
+        runTest(blockGroup, `> *text* [link](https://example.com)\n\n`, {
             listItemCount: 0,
             subListItemCount: 0,
         });
