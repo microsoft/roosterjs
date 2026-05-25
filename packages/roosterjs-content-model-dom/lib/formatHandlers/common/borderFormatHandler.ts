@@ -24,6 +24,7 @@ const AllKeys = [...BorderKeys, ...BorderRadiusKeys];
  */
 export const borderFormatHandler: FormatHandler<BorderFormat> = {
     parse: (format, element, _, defaultStyle) => {
+        // Retrieve borderStyle
         BorderKeys.forEach((key, i) => {
             const value = element.style[key];
             const defaultWidth = defaultStyle[BorderWidthKeys[i]] ?? '0px';
@@ -34,7 +35,16 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
             }
 
             if (value && width != defaultWidth) {
-                format[key] = value == 'none' ? '' : value;
+                // Remove 'initial' from the last part (color) of the border value
+                // since browsers ignore it when setting the inline style property
+                const parts = value.split(' ');
+
+                if (parts[parts.length - 1] == 'initial') {
+                    parts.pop();
+                }
+
+                const result = parts.join(' ');
+                format[key] = result == 'none' ? '' : result;
             }
         });
 

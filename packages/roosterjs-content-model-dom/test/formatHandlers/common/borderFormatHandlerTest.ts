@@ -73,6 +73,36 @@ describe('borderFormatHandler.parse', () => {
         expect(format).toEqual({});
     });
 
+    it('Has multi-value border-style shorthand', () => {
+        div.style.borderStyle = 'solid dotted double dashed';
+        div.style.borderWidth = '1px';
+        div.style.borderColor = 'red';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid red',
+            borderRight: '1px dotted red',
+            borderBottom: '1px double red',
+            borderLeft: '1px dashed red',
+        });
+    });
+
+    it('Has multi-value border-style shorthand with 3 values', () => {
+        div.style.borderStyle = 'solid dotted double';
+        div.style.borderWidth = '1px';
+        div.style.borderColor = 'red';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid red',
+            borderRight: '1px dotted red',
+            borderBottom: '1px double red',
+            borderLeft: '1px dotted red',
+        });
+    });
+
     it('Has 0 width border', () => {
         div.style.border = '0px sold black';
 
