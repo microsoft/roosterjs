@@ -660,6 +660,72 @@ describe('handleTable', () => {
         );
     });
 
+    it('Cell with RTL direction propagates direction into implicitFormat for children', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell(false, false, false, { direction: 'rtl' });
+        table.rows[0].cells.push(cell);
+
+        let capturedDirection: string | undefined;
+        context.modelHandlers.blockGroupChildren = jasmine
+            .createSpy('blockGroupChildren')
+            .and.callFake(
+                (_doc: Document, _node: Node, _group: unknown, ctx: ModelToDomContext) => {
+                    capturedDirection = ctx.implicitFormat.direction;
+                }
+            );
+
+        handleTable(document, parent, table, context, null);
+
+        expect(capturedDirection).toBe('rtl');
+        // implicitFormat must be restored after stackFormat
+        expect(context.implicitFormat.direction).toBeUndefined();
+    });
+
+    it('Cell with LTR direction propagates direction into implicitFormat for children', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell(false, false, false, { direction: 'ltr' });
+        table.rows[0].cells.push(cell);
+
+        let capturedDirection: string | undefined;
+        context.implicitFormat.direction = 'rtl';
+        context.modelHandlers.blockGroupChildren = jasmine
+            .createSpy('blockGroupChildren')
+            .and.callFake(
+                (_doc: Document, _node: Node, _group: unknown, ctx: ModelToDomContext) => {
+                    capturedDirection = ctx.implicitFormat.direction;
+                }
+            );
+
+        handleTable(document, parent, table, context, null);
+
+        expect(capturedDirection).toBe('ltr');
+        // implicitFormat must be restored
+        expect(context.implicitFormat.direction).toBe('rtl');
+    });
+
+    it('Cell without direction does not change implicitFormat for children', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+        table.rows[0].cells.push(cell);
+
+        let capturedDirection: string | undefined;
+        context.implicitFormat.direction = 'rtl';
+        context.modelHandlers.blockGroupChildren = jasmine
+            .createSpy('blockGroupChildren')
+            .and.callFake(
+                (_doc: Document, _node: Node, _group: unknown, ctx: ModelToDomContext) => {
+                    capturedDirection = ctx.implicitFormat.direction;
+                }
+            );
+
+        handleTable(document, parent, table, context, null);
+
+        expect(capturedDirection).toBe('rtl');
+    });
+
     it('handleTable without cache', () => {
         const parent = document.createElement('div');
         const tableModel = createTable(1);
