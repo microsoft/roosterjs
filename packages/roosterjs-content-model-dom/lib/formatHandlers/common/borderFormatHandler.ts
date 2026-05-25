@@ -24,7 +24,6 @@ const AllKeys = [...BorderKeys, ...BorderRadiusKeys];
  */
 export const borderFormatHandler: FormatHandler<BorderFormat> = {
     parse: (format, element, _, defaultStyle) => {
-        // Retrieve borderStyle
         BorderKeys.forEach((key, i) => {
             const value = element.style[key];
             const defaultWidth = defaultStyle[BorderWidthKeys[i]] ?? '0px';
