@@ -743,10 +743,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             if (range) {
                 const image = isSingleImageInSelection(range);
                 if (newSelection?.type == 'image' && !image) {
-                    const sel = this.editor.getDocument().defaultView?.getSelection();
-                    const isReverted = sel
-                        ? sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset
-                        : false;
+                    const isReverted = domHelper.isSelectionReverted(range);
                     this.editor.setDOMSelection({
                         type: 'range',
                         range,

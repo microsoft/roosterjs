@@ -153,18 +153,15 @@ function setRangeSelection(core: EditorCore, element: HTMLElement | undefined, c
     if (element && core.domHelper.isNodeInEditor(element)) {
         const doc = core.physicalRoot.ownerDocument;
         const range = doc.createRange();
-        let isReverted: boolean | undefined = undefined;
+        let isReverted = false;
 
         range.selectNode(element);
         if (collapse) {
             range.collapse();
         } else {
-            const selection = doc.defaultView?.getSelection();
-            const range = selection && selection.rangeCount > 0 && selection.getRangeAt(0);
-            if (selection && range) {
-                isReverted =
-                    selection.focusNode != range.endContainer ||
-                    selection.focusOffset != range.endOffset;
+            const currentRange = core.domHelper.getSelectionRange();
+            if (currentRange) {
+                isReverted = core.domHelper.isSelectionReverted(currentRange);
             }
         }
 

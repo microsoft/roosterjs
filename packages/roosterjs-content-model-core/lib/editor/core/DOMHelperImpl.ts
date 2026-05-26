@@ -36,6 +36,10 @@ class DOMHelperImpl implements DOMHelper {
     private shadowRoot: ShadowRoot | null;
     private doc: Document;
     private useComposedRanges: boolean;
+    private useBeforeInputPolyfill: boolean;
+    private polyfillRange: Range | null = null;
+    private polyfillProcessing: boolean = false;
+    private polyfillDisposer: (() => void) | null = null;
 
     constructor(private contentDiv: HTMLElement, options?: DOMHelperImplOption) {
         const rootNode = contentDiv.getRootNode();
@@ -44,6 +48,83 @@ class DOMHelperImpl implements DOMHelper {
 
         const sel = this.doc.defaultView?.getSelection();
         this.useComposedRanges = !!(this.shadowRoot && sel && 'getComposedRanges' in sel);
+
+        // For old Safari that has no getComposedRanges but supports beforeinput/getTargetRanges
+        const supportsBeforeInput = !!(
+            this.doc.defaultView &&
+            'InputEvent' in this.doc.defaultView &&
+            'getTargetRanges' in (this.doc.defaultView as any).InputEvent.prototype
+        );
+        this.useBeforeInputPolyfill = !!(
+            this.shadowRoot &&
+            !this.useComposedRanges &&
+            supportsBeforeInput
+        );
+
+        if (this.useBeforeInputPolyfill) {
+            this.initBeforeInputPolyfill();
+        }
+    }
+
+    private initBeforeInputPolyfill(): void {
+        const win = this.doc.defaultView!;
+
+        const onSelectionChange = () => {
+            if (!this.polyfillProcessing) {
+                this.polyfillProcessing = true;
+
+                const active = this.getActiveElementInShadow();
+                if (
+                    active &&
+                    active.getAttribute('contenteditable') === 'true' &&
+                    this.contentDiv.contains(active)
+                ) {
+                    this.doc.execCommand('indent');
+                } else {
+                    this.polyfillRange = null;
+                }
+
+                this.polyfillProcessing = false;
+            }
+        };
+
+        const onBeforeInput = (event: InputEvent) => {
+            if (this.polyfillProcessing) {
+                const ranges = event.getTargetRanges();
+                if (ranges.length > 0) {
+                    const sr = ranges[0];
+                    const range = this.doc.createRange();
+                    range.setStart(sr.startContainer, sr.startOffset);
+                    range.setEnd(sr.endContainer, sr.endOffset);
+                    this.polyfillRange = range;
+                }
+
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+        };
+
+        const onSelectStart = () => {
+            this.polyfillRange = null;
+        };
+
+        win.addEventListener('selectionchange', onSelectionChange, true);
+        win.addEventListener('beforeinput', onBeforeInput as EventListener, true);
+        win.addEventListener('selectstart', onSelectStart, true);
+
+        this.polyfillDisposer = () => {
+            win.removeEventListener('selectionchange', onSelectionChange, true);
+            win.removeEventListener('beforeinput', onBeforeInput as EventListener, true);
+            win.removeEventListener('selectstart', onSelectStart, true);
+        };
+    }
+
+    private getActiveElementInShadow(): Element | null {
+        let active: Element | null = this.doc.activeElement;
+        while (active && active.shadowRoot && active.shadowRoot.activeElement) {
+            active = active.shadowRoot.activeElement;
+        }
+        return active;
     }
 
     queryElements(selector: string): HTMLElement[] {
@@ -210,6 +291,10 @@ class DOMHelperImpl implements DOMHelper {
     }
 
     getSelectionRange(): Range | null {
+        if (this.useBeforeInputPolyfill) {
+            return this.polyfillRange;
+        }
+
         const sel = this.doc.defaultView?.getSelection();
         if (!sel) {
             return null;
@@ -233,6 +318,18 @@ class DOMHelperImpl implements DOMHelper {
         return sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
     }
 
+    isSelectionReverted(range: Range): boolean {
+        // In shadow DOM, we cannot reliably detect direction
+        if (this.useBeforeInputPolyfill || this.useComposedRanges) {
+            return false;
+        }
+
+        const sel = this.doc.defaultView?.getSelection();
+        return sel
+            ? sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset
+            : false;
+    }
+
     setSelectionRange(range: Range, isReverted: boolean = false): void {
         const sel = this.doc.defaultView?.getSelection();
         const currentRange = this.getSelectionRange();
@@ -254,6 +351,14 @@ class DOMHelperImpl implements DOMHelper {
         } else {
             this.doc.body.appendChild(element);
         }
+    }
+
+    dispose(): void {
+        if (this.polyfillDisposer) {
+            this.polyfillDisposer();
+            this.polyfillDisposer = null;
+        }
+        this.polyfillRange = null;
     }
 }
 

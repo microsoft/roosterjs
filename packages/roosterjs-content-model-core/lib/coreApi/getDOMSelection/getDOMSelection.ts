@@ -22,10 +22,7 @@ function getNewSelection(core: EditorCore): DOMSelection | null {
         return null;
     }
 
-    const selection = core.logicalRoot.ownerDocument.defaultView?.getSelection();
-    const isReverted = selection
-        ? selection.focusNode != range.endContainer || selection.focusOffset != range.endOffset
-        : false;
+    const isReverted = core.domHelper.isSelectionReverted(range);
 
     return {
         type: 'range',

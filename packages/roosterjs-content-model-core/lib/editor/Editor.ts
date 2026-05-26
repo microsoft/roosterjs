@@ -80,6 +80,7 @@ export class Editor implements IEditor {
         }
 
         core.darkColorHandler.reset();
+        core.domHelper?.dispose?.();
 
         this.core = null;
     }
