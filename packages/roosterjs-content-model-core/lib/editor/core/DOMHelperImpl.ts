@@ -301,12 +301,21 @@ class DOMHelperImpl implements DOMHelper {
         }
 
         if (this.useComposedRanges) {
-            const staticRanges = (sel as any).getComposedRanges({
-                shadowRoots: [this.shadowRoot],
-            });
+            // Safari 17.4+ uses options dict; Safari 17.2-17.3 uses rest params
+            let staticRanges: StaticRange[] | undefined;
+            try {
+                staticRanges = (sel as any).getComposedRanges({
+                    shadowRoots: [this.shadowRoot],
+                });
+            } catch {
+                try {
+                    // Fallback for Safari 17.2-17.3 which uses rest parameter syntax
+                    staticRanges = (sel as any).getComposedRanges(this.shadowRoot);
+                } catch {}
+            }
 
-            if (staticRanges?.length > 0) {
-                const sr = staticRanges[0] as StaticRange;
+            if (staticRanges?.length && staticRanges?.length > 0) {
+                const sr = staticRanges[0];
                 const range = this.doc.createRange();
                 range.setStart(sr.startContainer, sr.startOffset);
                 range.setEnd(sr.endContainer, sr.endOffset);
