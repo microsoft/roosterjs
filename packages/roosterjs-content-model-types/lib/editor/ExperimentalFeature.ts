@@ -64,4 +64,11 @@ export type ExperimentalFeature =
     /**
      * Transform the table border colors when switching from light to dark mode
      */
-    | 'TransformTableBorderColors';
+    | 'TransformTableBorderColors'
+
+    /**
+     * When the editor content div is inside a Shadow DOM, enable shadow root detection
+     * in DOMHelper so that selection, focus, and element appending work correctly within
+     * the shadow boundary.
+     */
+    | 'ShadowDom';

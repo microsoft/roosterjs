@@ -355,21 +355,36 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     private shadowDomEditorDiv: HTMLDivElement | undefined;
     private resetEditor() {
-        const useShadowDom = window.location.search.includes('shadowDom');
+        const useShadowDom = this.editorOptionPlugin
+            .getBuildInPluginState()
+            .experimentalFeatures.has('ShadowDom');
+
         this.setState({
             editorCreator: useShadowDom
                 ? (div: HTMLDivElement, options: EditorOptions) => {
-                      if (!this.shadowDomEditorDiv) {
-                          const shadowRoot = div.attachShadow({ mode: 'open' });
-                          const innerDiv = document.createElement('div');
-                          innerDiv.style.width = '100%';
-                          innerDiv.style.height = '100%';
-                          shadowRoot.appendChild(innerDiv);
-                          this.shadowDomEditorDiv = innerDiv;
+                      while (div.firstChild) {
+                          div.removeChild(div.firstChild);
                       }
-                      return new Editor(this.shadowDomEditorDiv, options);
+                      const newDivHost = document.createElement('div');
+                      div.appendChild(newDivHost);
+                      const shadowRoot = newDivHost.attachShadow({ mode: 'open' });
+                      const innerDiv = document.createElement('div');
+                      innerDiv.style.width = '100%';
+                      innerDiv.style.height = '100%';
+                      innerDiv.style.outline = 'none';
+                      shadowRoot.appendChild(innerDiv);
+                      this.shadowDomEditorDiv = newDivHost;
+                      const editor = new Editor(innerDiv, options);
+
+                      div.setAttribute('style', newDivHost.getAttribute('style') || '');
+                      newDivHost.style.width = '100%';
+                      newDivHost.style.height = '100%';
+
+                      return editor;
                   }
                 : (div: HTMLDivElement, options: EditorOptions) => {
+                      this.shadowDomEditorDiv?.remove();
+                      this.shadowDomEditorDiv = undefined;
                       return new Editor(div, options);
                   },
         });

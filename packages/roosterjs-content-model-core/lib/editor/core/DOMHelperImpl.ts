@@ -25,6 +25,11 @@ export interface DOMHelperImplOption {
      * @deprecated This is always treated as true now
      */
     cloneIndependentRoot?: boolean;
+
+    /**
+     * When true, enable shadow root detection so the editor works inside a Shadow DOM.
+     */
+    useShadowDom?: boolean;
 }
 
 class DOMHelperImpl implements DOMHelper {
@@ -34,7 +39,7 @@ class DOMHelperImpl implements DOMHelper {
 
     constructor(private contentDiv: HTMLElement, options?: DOMHelperImplOption) {
         const rootNode = contentDiv.getRootNode();
-        this.shadowRoot = isShadowRoot(rootNode) ? rootNode : null;
+        this.shadowRoot = options?.useShadowDom && isShadowRoot(rootNode) ? rootNode : null;
         this.doc = contentDiv.ownerDocument;
 
         const sel = this.doc.defaultView?.getSelection();
