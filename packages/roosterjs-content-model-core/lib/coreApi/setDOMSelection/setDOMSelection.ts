@@ -150,8 +150,8 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 };
 
 function setRangeSelection(core: EditorCore, element: HTMLElement | undefined, collapse: boolean) {
-    const doc = core.physicalRoot.ownerDocument;
-    if (element && doc.contains(element)) {
+    if (element && core.domHelper.isNodeInEditor(element)) {
+        const doc = core.physicalRoot.ownerDocument;
         const range = doc.createRange();
         let isReverted: boolean | undefined = undefined;
 

@@ -17,6 +17,7 @@ describe('setDOMSelection', () => {
     let createRangeSpy: jasmine.Spy;
     let setEditorStyleSpy: jasmine.Spy;
     let containsSpy: jasmine.Spy;
+    let isNodeInEditorSpy: jasmine.Spy;
     let doc: Document;
     let contentDiv: HTMLDivElement;
     let mockedRange = 'RANGE' as any;
@@ -34,6 +35,7 @@ describe('setDOMSelection', () => {
         createRangeSpy = jasmine.createSpy('createRange');
         setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
         containsSpy = jasmine.createSpy('contains').and.returnValue(true);
+        isNodeInEditorSpy = jasmine.createSpy('isNodeInEditor').and.returnValue(true);
         appendChildSpy = jasmine.createSpy('appendChild');
         createElementSpy = jasmine.createSpy('createElement').and.returnValue({
             appendChild: appendChildSpy,
@@ -74,6 +76,7 @@ describe('setDOMSelection', () => {
             domHelper: createMockDomHelper({
                 hasFocus: hasFocusSpy,
                 setSelectionRange: setSelectionRangeSpy,
+                isNodeInEditor: isNodeInEditorSpy,
             }),
             lifecycle: {
                 isDarkMode: false,
@@ -471,6 +474,7 @@ describe('setDOMSelection', () => {
             };
 
             containsSpy.and.returnValue(false);
+            isNodeInEditorSpy.and.returnValue(false);
 
             createRangeSpy.and.returnValue(mockedRange);
 
@@ -919,8 +923,7 @@ describe('setDOMSelection', () => {
                 '#table_0>TBODY> tr:nth-child(1)>TD:nth-child(2) *',
             ]);
 
-            expect(containsSpy).toHaveBeenCalledTimes(1);
-            expect(containsSpy).toHaveBeenCalledWith(innerDIV);
+            expect(isNodeInEditorSpy).toHaveBeenCalledWith(innerDIV);
         });
 
         it('Select TD with double merged cell', () => {

@@ -236,7 +236,7 @@ class DOMHelperImpl implements DOMHelper {
     setSelectionRange(range: Range, isReverted: boolean = false): void {
         const sel = this.doc.defaultView?.getSelection();
         const currentRange = this.getSelectionRange();
-        if (!sel || !currentRange || areSameRanges(range, currentRange)) {
+        if (!sel || (currentRange && areSameRanges(range, currentRange))) {
             return;
         }
 
