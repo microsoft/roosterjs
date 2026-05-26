@@ -857,7 +857,7 @@ describe('DOMHelperImpl', () => {
             const contentDiv = document.createElement('div');
             shadowRoot.appendChild(contentDiv);
 
-            const domHelper = createDOMHelper(contentDiv);
+            const domHelper = createDOMHelper(contentDiv, { useShadowDom: true });
             const element = document.createElement('span');
 
             domHelper.appendToRoot(element);
@@ -876,7 +876,7 @@ describe('DOMHelperImpl', () => {
             contentDiv.setAttribute('contenteditable', 'true');
             shadowRoot.appendChild(contentDiv);
 
-            const domHelper = createDOMHelper(contentDiv);
+            const domHelper = createDOMHelper(contentDiv, { useShadowDom: true });
 
             // When no element is focused in the shadow root
             expect(domHelper.hasFocus()).toBeFalse();
