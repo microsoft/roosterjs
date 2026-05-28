@@ -85,6 +85,10 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
+                                        borderTop: '0.5pt solid',
+                                        borderRight: '0.5pt solid',
+                                        borderBottom: '0.5pt solid',
+                                        borderLeft: '0.5pt solid',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
