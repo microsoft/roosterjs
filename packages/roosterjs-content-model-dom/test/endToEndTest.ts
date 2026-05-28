@@ -1375,7 +1375,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                             },
                         ],
                         format: {
-                            borderLeft: '3px solid rgb(200, 200, 200)',
+                            borderLeft: '3px solid rgb(200,200,200)',
                             marginTop: '1em',
                             marginRight: '40px',
                             marginBottom: '1em',

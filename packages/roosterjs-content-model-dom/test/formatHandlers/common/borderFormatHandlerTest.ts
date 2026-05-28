@@ -58,10 +58,10 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
-            borderTop: jasmine.stringMatching(/1px (none )?red/),
-            borderRight: jasmine.stringMatching(/2px (none )?red/),
-            borderBottom: jasmine.stringMatching(/3px (none )?red/),
-            borderLeft: jasmine.stringMatching(/4px (none )?red/),
+            borderTop: jasmine.stringMatching(/1px\s+(none\s+)?red/),
+            borderRight: jasmine.stringMatching(/2px\s+(none\s+)?red/),
+            borderBottom: jasmine.stringMatching(/3px\s+(none\s+)?red/),
+            borderLeft: jasmine.stringMatching(/4px\s+(none\s+)?red/),
         });
     });
 
