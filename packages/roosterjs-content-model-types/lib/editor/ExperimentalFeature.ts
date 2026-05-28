@@ -64,4 +64,11 @@ export type ExperimentalFeature =
     /**
      * Transform the table border colors when switching from light to dark mode
      */
-    | 'TransformTableBorderColors';
+    | 'TransformTableBorderColors'
+
+    /**
+     * Strip invisible unicode characters (U+E0000 to U+EFFFF) from text segments during DOM to Model conversion.
+     * These characters can be used to hide text in HTML and may cause unexpected behavior.
+     * @see https://embracethered.com/blog/posts/2024/hiding-and-finding-text-with-unicode-tags/
+     */
+    | 'FilterInvisibleUnicode';
