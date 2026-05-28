@@ -1,6 +1,6 @@
 import { BorderKeys } from '../utils/borderKeys';
 import type { BorderFormat } from 'roosterjs-content-model-types';
-import { combineBorderValue, extractBorderValues } from 'roosterjs-content-model-dom';
+import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
 import type { FormatHandler } from '../FormatHandler';
 
 // This array needs to match BorderKeys array
