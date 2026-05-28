@@ -1,5 +1,6 @@
 import { BorderFormat, DomToModelContext, ModelToDomContext } from 'roosterjs-content-model-types';
 import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFormatHandler';
+import { combineBorderValue, extractBorderValues } from '../../../lib/domUtils/style/borderValues';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 
@@ -171,6 +172,35 @@ describe('borderFormatHandler.parse', () => {
 
         expect(format).toEqual({
             borderBottomRightRadius: '10px',
+        });
+    });
+
+    it('Should strip initial color from border value', () => {
+        const mockElement = ({
+            style: {
+                borderTop: '1px solid initial',
+                borderRight: '1px solid initial',
+                borderBottom: '1px solid initial',
+                borderLeft: '1px solid initial',
+                borderTopWidth: '1px',
+                borderRightWidth: '1px',
+                borderBottomWidth: '1px',
+                borderLeftWidth: '1px',
+                borderRadius: '',
+                borderTopLeftRadius: '',
+                borderTopRightRadius: '',
+                borderBottomLeftRadius: '',
+                borderBottomRightRadius: '',
+            },
+        } as unknown) as HTMLElement;
+
+        borderFormatHandler.parse(format, mockElement, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid',
+            borderRight: '1px solid',
+            borderBottom: '1px solid',
+            borderLeft: '1px solid',
         });
     });
 });
