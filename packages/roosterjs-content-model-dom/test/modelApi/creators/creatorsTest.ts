@@ -233,36 +233,36 @@ describe('Creators', () => {
         });
     });
 
-    it('createText with invisible unicode characters', () => {
+    it('createText with invisible unicode characters does not strip by default', () => {
         const text = 'a\u{E0041}b\u{E0042}c';
         const result = createText(text);
 
         expect(result).toEqual({
             segmentType: 'Text',
             format: {},
-            text: 'abc',
+            text: 'a\u{E0041}b\u{E0042}c',
         });
     });
 
-    it('createText with only invisible unicode characters', () => {
+    it('createText with only invisible unicode characters does not strip by default', () => {
         const text = '\u{E0000}\u{E007F}\u{EFFFF}';
         const result = createText(text);
 
         expect(result).toEqual({
             segmentType: 'Text',
             format: {},
-            text: '',
+            text: '\u{E0000}\u{E007F}\u{EFFFF}',
         });
     });
 
-    it('createText with invisible unicode at boundary range', () => {
+    it('createText with invisible unicode at boundary range does not strip by default', () => {
         const text = '\u{DFFFF}start\u{E0000}mid\u{EFFFF}end\u{F0000}';
         const result = createText(text);
 
         expect(result).toEqual({
             segmentType: 'Text',
             format: {},
-            text: '\u{DFFFF}startmidend\u{F0000}',
+            text: '\u{DFFFF}start\u{E0000}mid\u{EFFFF}end\u{F0000}',
         });
     });
 
@@ -279,25 +279,14 @@ describe('Creators', () => {
         });
     });
 
-    it('createText strips only tag-range chars, keeps meaningful invisible chars', () => {
-        const text = 'a​\u{E0041}b‮\u{E0042}c';
-        const result = createText(text);
-
-        expect(result).toEqual({
-            segmentType: 'Text',
-            format: {},
-            text: 'a​b‮c',
-        });
-    });
-
     it('createText does not strip visible characters', () => {
-        const text = 'hello world 你好   ​';
+        const text = 'hello world 你好   ​';
         const result = createText(text);
 
         expect(result).toEqual({
             segmentType: 'Text',
             format: {},
-            text: 'hello world 你好   ​',
+            text: 'hello world 你好   ​',
         });
     });
 
