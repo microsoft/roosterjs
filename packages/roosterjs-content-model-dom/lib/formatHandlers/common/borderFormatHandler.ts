@@ -35,13 +35,16 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
             }
 
             if (value && width != defaultWidth) {
-                // Remove 'initial' from the last part (color) of the border value
-                // since browsers ignore it when setting the inline style property
-                const border = extractBorderValues(value);
-                if (border.color === 'initial') {
-                    border.color = '';
+                let result = value;
+                if (result.includes('initial')) {
+                    // Remove 'initial' from the last part (color) of the border value
+                    // since browsers ignore it when setting the inline style property
+                    const border = extractBorderValues(value);
+                    if (border.color === 'initial') {
+                        border.color = '';
+                    }
+                    result = combineBorderValue(border);
                 }
-                const result = combineBorderValue(border);
                 format[key] = result == 'none' ? '' : result;
             }
         });
