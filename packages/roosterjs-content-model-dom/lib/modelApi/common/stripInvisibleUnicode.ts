@@ -4,6 +4,7 @@
 const INVISIBLE_UNICODE_REGEX = /[\u{E0000}-\u{EFFFF}]/gu;
 
 /**
+ * @internal
  * Strip invisible unicode characters from the given string
  * @param value The string to be processed
  * @returns The string with invisible unicode characters removed
