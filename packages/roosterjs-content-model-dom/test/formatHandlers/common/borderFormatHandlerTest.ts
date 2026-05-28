@@ -1,6 +1,5 @@
 import { BorderFormat, DomToModelContext, ModelToDomContext } from 'roosterjs-content-model-types';
 import { borderFormatHandler } from '../../../lib/formatHandlers/common/borderFormatHandler';
-import { combineBorderValue, extractBorderValues } from '../../../lib/domUtils/style/borderValues';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 
