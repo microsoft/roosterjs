@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.01% </span>
+                <span class="strong">96.03% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>337/351</span>
+                <span class='fraction'>339/353</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.8% </span>
+                <span class="strong">83.51% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>393/469</span>
+                <span class='fraction'>395/473</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.87% </span>
+                <span class="strong">95.89% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>325/339</span>
+                <span class='fraction'>327/341</span>
             </div>
         
             
@@ -906,7 +906,9 @@
 <a name='L847'></a><a href='#L847'>847</a>
 <a name='L848'></a><a href='#L848'>848</a>
 <a name='L849'></a><a href='#L849'>849</a>
-<a name='L850'></a><a href='#L850'>850</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L850'></a><a href='#L850'>850</a>
+<a name='L851'></a><a href='#L851'>851</a>
+<a name='L852'></a><a href='#L852'>852</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1642,7 +1644,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">206x</span>
-<span class="cline-any cline-yes">1619x</span>
+<span class="cline-any cline-yes">1909x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1654,6 +1657,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2493,19 +2497,21 @@ class SelectionPlugin implements PluginWithState&lt;SelectionPluginState&gt; {
     private onSelectionChange = () =&gt; {
         if (this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.h</span>asFocus() &amp;&amp; !this.editor.isInShadowEdit()) {
             const newSelection = this.editor.getDOMSelection();
+            const domHelper = this.editor.getDOMHelper();
 &nbsp;
             //If am image selection changed to a wider range due a keyboard event, we should update the selection
-            const selection = this.editor.getDocument().getSelection();
-            if (selection &amp;&amp; selection.focusNode) {
-                const image = isSingleImageInSelection(selection);
+            const range = domHelper.getSelectionRange();
+            if (range) {
+                const image = isSingleImageInSelection(range);
                 if (newSelection<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>ype == 'image' &amp;&amp; !image) {
-                    const range = selection.getRangeAt(0);
+                    const sel = this.editor.getDocument().defaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSelection();
+                    const isReverted = sel
+                        ? sel.focusNode != range.endContainer || <span class="branch-1 cbranch-no" title="branch not covered" >sel.focusOffset != range.endOffset</span>
+                        : <span class="branch-1 cbranch-no" title="branch not covered" >false;</span>
                     this.editor.setDOMSelection({
                         type: 'range',
                         range,
-                        isReverted:
-                            selection.focusNode != range.endContainer ||
-<span class="branch-1 cbranch-no" title="branch not covered" >                            selection.focusOffset != range.endOffset,</span>
+                        isReverted,
                     });
                 } else if (newSelection<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>ype !== 'image' &amp;&amp; image) {
                     this.editor.setDOMSelection({
@@ -2611,7 +2617,7 @@ export function createSelectionPlugin(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 29 2026 00:02:18 GMT+0000 (Coordinated Universal Time)
+                at Fri May 29 2026 15:41:28 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
