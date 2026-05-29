@@ -1,9 +1,3 @@
-declare global {
-    interface Selection {
-        getComposedRanges(options: { shadowRoots: ShadowRoot[] }): StaticRange[];
-    }
-}
-
 import { areSameRanges } from '../../utils/areSameRanges';
 import {
     getColor,
@@ -18,6 +12,14 @@ import type {
     DarkColorHandler,
     DOMHelper,
 } from 'roosterjs-content-model-types';
+
+interface SelectionWithComposedRanges extends Selection {
+    getComposedRanges(options: { shadowRoots: ShadowRoot[] }): StaticRange[];
+}
+
+function isSelectionWithComposedRanges(sel: Selection): sel is SelectionWithComposedRanges {
+    return 'getComposedRanges' in sel;
+}
 
 function isShadowRoot(node: Node): node is ShadowRoot {
     return 'host' in node;
@@ -221,7 +223,7 @@ class DOMHelperImpl implements DOMHelper {
             return null;
         }
 
-        if (this.useComposedRanges && this.shadowRoot) {
+        if (this.useComposedRanges && this.shadowRoot && isSelectionWithComposedRanges(sel)) {
             const staticRanges = sel.getComposedRanges({
                 shadowRoots: [this.shadowRoot],
             });
