@@ -532,7 +532,7 @@ describe('CopyPastePlugin |', () => {
                     'text/html',
                     '<img id="image">'
                 );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', ' ');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -956,7 +956,7 @@ describe('CopyPastePlugin |', () => {
                     'text/html',
                     '<img id="image">'
                 );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', ' ');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
