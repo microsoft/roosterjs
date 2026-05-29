@@ -1,15 +1,16 @@
 import { announce } from '../../../lib/coreApi/announce/announce';
+import { createMockDomHelper } from '../../testUtils/createMockDomHelper';
 import { EditorCore } from 'roosterjs-content-model-types';
 
 describe('announce', () => {
     let core: EditorCore;
     let createElementSpy: jasmine.Spy;
-    let appendChildSpy: jasmine.Spy;
     let getterSpy: jasmine.Spy;
+    let mockDomHelper: ReturnType<typeof createMockDomHelper>;
 
     beforeEach(() => {
+        mockDomHelper = createMockDomHelper();
         createElementSpy = jasmine.createSpy('createElement');
-        appendChildSpy = jasmine.createSpy('appendChild');
         getterSpy = jasmine.createSpy('getter');
 
         core = {
@@ -19,11 +20,9 @@ describe('announce', () => {
             physicalRoot: {
                 ownerDocument: {
                     createElement: createElementSpy,
-                    body: {
-                        appendChild: appendChildSpy,
-                    },
                 },
             },
+            domHelper: mockDomHelper,
         } as any;
     });
 
@@ -36,7 +35,7 @@ describe('announce', () => {
         announce(core, {});
 
         expect(createElementSpy).toHaveBeenCalled();
-        expect(appendChildSpy).toHaveBeenCalled();
+        expect(mockDomHelper.appendToRoot).toHaveBeenCalled();
         expect(mockedDiv.textContent).toBeUndefined();
     });
 
@@ -51,7 +50,7 @@ describe('announce', () => {
         });
 
         expect(createElementSpy).toHaveBeenCalledWith('div');
-        expect(appendChildSpy).toHaveBeenCalledWith(mockedDiv);
+        expect(mockDomHelper.appendToRoot).toHaveBeenCalledWith(mockedDiv);
         expect(mockedDiv).toEqual({
             style: {
                 clip: 'rect(0px, 0px, 0px, 0px)',
@@ -81,7 +80,7 @@ describe('announce', () => {
 
         expect(getterSpy).toHaveBeenCalledWith('announceListItemBullet');
         expect(createElementSpy).toHaveBeenCalledWith('div');
-        expect(appendChildSpy).toHaveBeenCalledWith(mockedDiv);
+        expect(mockDomHelper.appendToRoot).toHaveBeenCalledWith(mockedDiv);
         expect(mockedDiv).toEqual({
             style: {
                 clip: 'rect(0px, 0px, 0px, 0px)',
@@ -112,7 +111,7 @@ describe('announce', () => {
 
         expect(getterSpy).toHaveBeenCalledWith('announceListItemBullet');
         expect(createElementSpy).toHaveBeenCalledWith('div');
-        expect(appendChildSpy).toHaveBeenCalledWith(mockedDiv);
+        expect(mockDomHelper.appendToRoot).toHaveBeenCalledWith(mockedDiv);
         expect(mockedDiv).toEqual({
             style: {
                 clip: 'rect(0px, 0px, 0px, 0px)',
@@ -143,7 +142,7 @@ describe('announce', () => {
 
         expect(getterSpy).toHaveBeenCalledWith('announceListItemBullet');
         expect(createElementSpy).toHaveBeenCalledWith('div');
-        expect(appendChildSpy).toHaveBeenCalledWith(mockedDiv);
+        expect(mockDomHelper.appendToRoot).toHaveBeenCalledWith(mockedDiv);
         expect(mockedDiv).toEqual({
             style: {
                 clip: 'rect(0px, 0px, 0px, 0px)',
@@ -177,7 +176,7 @@ describe('announce', () => {
 
         expect(removeChildSpy).not.toHaveBeenCalled();
         expect(createElementSpy).not.toHaveBeenCalled();
-        expect(appendChildSpy).not.toHaveBeenCalled();
+        expect(mockDomHelper.appendToRoot).not.toHaveBeenCalled();
         expect(mockedDiv).toEqual({
             textContent: 'test',
             parentElement: {
