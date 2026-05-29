@@ -13,6 +13,14 @@ import type {
     DOMHelper,
 } from 'roosterjs-content-model-types';
 
+interface SelectionWithComposedRanges extends Selection {
+    getComposedRanges(options: { shadowRoots: ShadowRoot[] }): StaticRange[];
+}
+
+function isSelectionWithComposedRanges(sel: Selection): sel is SelectionWithComposedRanges {
+    return 'getComposedRanges' in sel;
+}
+
 function isShadowRoot(node: Node): node is ShadowRoot {
     return 'host' in node;
 }
@@ -300,9 +308,9 @@ class DOMHelperImpl implements DOMHelper {
             return null;
         }
 
-        if (this.useComposedRanges) {
+        if (this.useComposedRanges && this.shadowRoot && isSelectionWithComposedRanges(sel)) {
             // Safari 17.4+ uses options dict; Safari 17.2-17.3 uses rest params
-            let staticRanges: StaticRange[] | undefined;
+            let staticRanges: StaticRange[] = [];
             try {
                 staticRanges = (sel as any).getComposedRanges({
                     shadowRoots: [this.shadowRoot],
@@ -314,7 +322,7 @@ class DOMHelperImpl implements DOMHelper {
                 } catch {}
             }
 
-            if (staticRanges?.length && staticRanges?.length > 0) {
+            if (staticRanges.length > 0) {
                 const sr = staticRanges[0];
                 const range = this.doc.createRange();
                 range.setStart(sr.startContainer, sr.startOffset);

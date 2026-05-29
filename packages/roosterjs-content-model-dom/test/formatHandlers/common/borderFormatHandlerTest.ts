@@ -58,10 +58,10 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
-            borderTop: jasmine.stringMatching(/1px (none )?red/),
-            borderRight: jasmine.stringMatching(/2px (none )?red/),
-            borderBottom: jasmine.stringMatching(/3px (none )?red/),
-            borderLeft: jasmine.stringMatching(/4px (none )?red/),
+            borderTop: jasmine.stringMatching(/1px\s+(none\s+)?red/),
+            borderRight: jasmine.stringMatching(/2px\s+(none\s+)?red/),
+            borderBottom: jasmine.stringMatching(/3px\s+(none\s+)?red/),
+            borderLeft: jasmine.stringMatching(/4px\s+(none\s+)?red/),
         });
     });
 
@@ -71,6 +71,36 @@ describe('borderFormatHandler.parse', () => {
         borderFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({});
+    });
+
+    it('Has multi-value border-style shorthand', () => {
+        div.style.borderStyle = 'solid dotted double dashed';
+        div.style.borderWidth = '1px';
+        div.style.borderColor = 'red';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid red',
+            borderRight: '1px dotted red',
+            borderBottom: '1px double red',
+            borderLeft: '1px dashed red',
+        });
+    });
+
+    it('Has multi-value border-style shorthand with 3 values', () => {
+        div.style.borderStyle = 'solid dotted double';
+        div.style.borderWidth = '1px';
+        div.style.borderColor = 'red';
+
+        borderFormatHandler.parse(format, div, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid red',
+            borderRight: '1px dotted red',
+            borderBottom: '1px double red',
+            borderLeft: '1px dotted red',
+        });
     });
 
     it('Has 0 width border', () => {
@@ -141,6 +171,35 @@ describe('borderFormatHandler.parse', () => {
 
         expect(format).toEqual({
             borderBottomRightRadius: '10px',
+        });
+    });
+
+    it('Should strip initial color from border value', () => {
+        const mockElement = ({
+            style: {
+                borderTop: '1px solid initial',
+                borderRight: '1px solid initial',
+                borderBottom: '1px solid initial',
+                borderLeft: '1px solid initial',
+                borderTopWidth: '1px',
+                borderRightWidth: '1px',
+                borderBottomWidth: '1px',
+                borderLeftWidth: '1px',
+                borderRadius: '',
+                borderTopLeftRadius: '',
+                borderTopRightRadius: '',
+                borderBottomLeftRadius: '',
+                borderBottomRightRadius: '',
+            },
+        } as unknown) as HTMLElement;
+
+        borderFormatHandler.parse(format, mockElement, context, {});
+
+        expect(format).toEqual({
+            borderTop: '1px solid',
+            borderRight: '1px solid',
+            borderBottom: '1px solid',
+            borderLeft: '1px solid',
         });
     });
 });

@@ -1,5 +1,6 @@
 import { BorderKeys } from '../utils/borderKeys';
 import type { BorderFormat } from 'roosterjs-content-model-types';
+import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
 import type { FormatHandler } from '../FormatHandler';
 
 // This array needs to match BorderKeys array
@@ -34,7 +35,17 @@ export const borderFormatHandler: FormatHandler<BorderFormat> = {
             }
 
             if (value && width != defaultWidth) {
-                format[key] = value == 'none' ? '' : value;
+                let result = value;
+                if (result.includes('initial')) {
+                    // Remove 'initial' from the last part (color) of the border value
+                    // since browsers ignore it when setting the inline style property
+                    const border = extractBorderValues(value);
+                    if (border.color === 'initial') {
+                        border.color = '';
+                    }
+                    result = combineBorderValue(border);
+                }
+                format[key] = result == 'none' ? '' : result;
             }
         });
 
