@@ -1,3 +1,9 @@
+declare global {
+    interface Selection {
+        getComposedRanges(options: { shadowRoots: ShadowRoot[] }): StaticRange[];
+    }
+}
+
 import { areSameRanges } from '../../utils/areSameRanges';
 import {
     getColor,
