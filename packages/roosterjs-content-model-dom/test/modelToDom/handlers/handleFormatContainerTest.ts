@@ -110,6 +110,63 @@ describe('handleFormatContainer', () => {
         });
     });
 
+    it('RTL container propagates direction into implicitFormat for children', () => {
+        const parent = document.createElement('div');
+        const container = createFormatContainer('div', { direction: 'rtl' });
+        const paragraph = createParagraph();
+        container.blocks.push(paragraph);
+
+        let capturedDirection: string | undefined;
+        handleBlockGroupChildren.and.callFake((_doc, _node, _group, ctx) => {
+            capturedDirection = ctx.implicitFormat.direction;
+        });
+
+        handleFormatContainer(document, parent, container, context, null);
+
+        expect(capturedDirection).toBe('rtl');
+        // implicitFormat must be restored after stackFormat
+        expect(context.implicitFormat.direction).toBeUndefined();
+    });
+
+    it('Container without direction does not change implicitFormat for children', () => {
+        const parent = document.createElement('div');
+        const container = createFormatContainer('div');
+        const paragraph = createParagraph();
+        container.blocks.push(paragraph);
+
+        let capturedDirection: string | undefined;
+        context.implicitFormat.direction = 'rtl';
+        handleBlockGroupChildren.and.callFake((_doc, _node, _group, ctx) => {
+            capturedDirection = ctx.implicitFormat.direction;
+        });
+
+        handleFormatContainer(document, parent, container, context, null);
+
+        expect(capturedDirection).toBe('rtl');
+    });
+
+    it('Pre container with RTL direction propagates both pre format and direction', () => {
+        const parent = document.createElement('div');
+        const container = createFormatContainer('pre', { direction: 'rtl' });
+        const paragraph = createParagraph();
+        paragraph.segments.push(createText('test'));
+        container.blocks.push(paragraph);
+
+        let capturedDirection: string | undefined;
+        let capturedWhiteSpace: string | undefined;
+        handleBlockGroupChildren.and.callFake((_doc, _node, _group, ctx) => {
+            capturedDirection = ctx.implicitFormat.direction;
+            capturedWhiteSpace = ctx.implicitFormat.whiteSpace;
+        });
+
+        handleFormatContainer(document, parent, container, context, null);
+
+        expect(capturedDirection).toBe('rtl');
+        expect(capturedWhiteSpace).toBe('pre');
+        expect(context.implicitFormat.direction).toBeUndefined();
+        expect(context.implicitFormat.whiteSpace).toBeUndefined();
+    });
+
     it('With onNodeCreated', () => {
         const parent = document.createElement('div');
         const quote = createFormatContainer('blockquote');

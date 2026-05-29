@@ -1,4 +1,3 @@
-import * as addRangeToSelection from '../../../lib/coreApi/setDOMSelection/addRangeToSelection';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as copyPasteEntityOverride from '../../../lib/override/pasteCopyBlockEntityParser';
 import * as deleteSelectionsFile from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
@@ -125,8 +124,6 @@ describe('CopyPastePlugin |', () => {
                     newImages: [],
                 });
             });
-
-        spyOn(addRangeToSelection, 'addRangeToSelection');
 
         plugin = createCopyPastePlugin({
             allowedCustomPasteType,
@@ -532,7 +529,7 @@ describe('CopyPastePlugin |', () => {
                     'text/html',
                     '<img id="image">'
                 );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', ' ');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -956,7 +953,7 @@ describe('CopyPastePlugin |', () => {
                     'text/html',
                     '<img id="image">'
                 );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', ' ');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).toHaveBeenCalledTimes(1);

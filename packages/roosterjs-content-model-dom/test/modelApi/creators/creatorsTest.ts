@@ -233,6 +233,63 @@ describe('Creators', () => {
         });
     });
 
+    it('createText with invisible unicode characters does not strip by default', () => {
+        const text = 'a\u{E0041}b\u{E0042}c';
+        const result = createText(text);
+
+        expect(result).toEqual({
+            segmentType: 'Text',
+            format: {},
+            text: 'a\u{E0041}b\u{E0042}c',
+        });
+    });
+
+    it('createText with only invisible unicode characters does not strip by default', () => {
+        const text = '\u{E0000}\u{E007F}\u{EFFFF}';
+        const result = createText(text);
+
+        expect(result).toEqual({
+            segmentType: 'Text',
+            format: {},
+            text: '\u{E0000}\u{E007F}\u{EFFFF}',
+        });
+    });
+
+    it('createText with invisible unicode at boundary range does not strip by default', () => {
+        const text = '\u{DFFFF}start\u{E0000}mid\u{EFFFF}end\u{F0000}';
+        const result = createText(text);
+
+        expect(result).toEqual({
+            segmentType: 'Text',
+            format: {},
+            text: '\u{DFFFF}start\u{E0000}mid\u{EFFFF}end\u{F0000}',
+        });
+    });
+
+    it('createText preserves meaningful invisible characters outside the tag range', () => {
+        // ​ = Zero-Width Space, ‍ = Zero-Width Joiner,
+        // ‮ = Right-to-Left Override, ‬ = Pop Directional Formatting
+        const text = 'a​b‍c‮d‬e';
+        const result = createText(text);
+
+        expect(result).toEqual({
+            segmentType: 'Text',
+            format: {},
+            text: 'a​b‍c‮d‬e',
+        });
+    });
+
+    it('createText does not strip visible characters', () => {
+        const text = 'hello world 你好   ​';
+        const result = createText(text);
+
+        expect(result).toEqual({
+            segmentType: 'Text',
+            format: {},
+            text: 'hello world 你好   ​',
+        });
+    });
+
     it('createTableRow', () => {
         const row = createTableRow();
 
@@ -403,18 +460,18 @@ describe('Creators', () => {
     });
 
     it('createSelectionMarker with selection', () => {
-        const format = { a: 1 } as any;
+        const format = { fontSize: '10px', a: 1 } as any;
         const marker = createSelectionMarker(format);
 
         expect(marker).toEqual({
             segmentType: 'SelectionMarker',
             isSelected: true,
-            format: { a: 1 } as any,
+            format: { fontSize: '10px' },
         });
 
-        (<any>marker.format).a = 2;
+        (<any>marker.format).fontSize = '20px';
 
-        expect(format).toEqual({ a: 1 });
+        expect(format).toEqual({ fontSize: '10px', a: 1 } as any);
     });
 
     it('createBr', () => {

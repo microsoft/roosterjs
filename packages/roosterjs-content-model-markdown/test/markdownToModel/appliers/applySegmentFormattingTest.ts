@@ -98,6 +98,109 @@ describe('applySegmentFormatting', () => {
         runTest('text with ![image](http://image.com)', paragraph);
     });
 
+    it('Bold inside link', () => {
+        const paragraph = createParagraph();
+        const segment = createText('text with ');
+        const link = createText('bold link', { fontWeight: 'bold' });
+        link.link = {
+            dataset: {},
+            format: {
+                href: 'http://link.com',
+                underline: true,
+            },
+        };
+        paragraph.segments.push(segment);
+        paragraph.segments.push(link);
+        runTest('text with [**bold link**](http://link.com)', paragraph);
+    });
+
+    it('Italic inside link', () => {
+        const paragraph = createParagraph();
+        const segment = createText('text with ');
+        const link = createText('italic link', { italic: true });
+        link.link = {
+            dataset: {},
+            format: {
+                href: 'http://link.com',
+                underline: true,
+            },
+        };
+        paragraph.segments.push(segment);
+        paragraph.segments.push(link);
+        runTest('text with [*italic link*](http://link.com)', paragraph);
+    });
+
+    it('Strikethrough inside link', () => {
+        const paragraph = createParagraph();
+        const segment = createText('text with ');
+        const link = createText('strike link', { strikethrough: true });
+        link.link = {
+            dataset: {},
+            format: {
+                href: 'http://link.com',
+                underline: true,
+            },
+        };
+        paragraph.segments.push(segment);
+        paragraph.segments.push(link);
+        runTest('text with [~~strike link~~](http://link.com)', paragraph);
+    });
+
+    it('Mixed formatting inside link', () => {
+        const paragraph = createParagraph();
+        const segment = createText('text with ');
+        const before = createText('start ');
+        before.link = {
+            dataset: {},
+            format: { href: 'http://link.com', underline: true },
+        };
+        const bold = createText('bold', { fontWeight: 'bold' });
+        bold.link = {
+            dataset: {},
+            format: { href: 'http://link.com', underline: true },
+        };
+        const after = createText(' end');
+        after.link = {
+            dataset: {},
+            format: { href: 'http://link.com', underline: true },
+        };
+        paragraph.segments.push(segment);
+        paragraph.segments.push(before);
+        paragraph.segments.push(bold);
+        paragraph.segments.push(after);
+        runTest('text with [start **bold** end](http://link.com)', paragraph);
+    });
+
+    it('Bold around link', () => {
+        const paragraph = createParagraph();
+        const segment = createText('text with ');
+        const link = createText('link', { fontWeight: 'bold' });
+        link.link = {
+            dataset: {},
+            format: { href: 'http://link.com', underline: true },
+        };
+        paragraph.segments.push(segment);
+        paragraph.segments.push(link);
+        runTest('text with **[link](http://link.com)**', paragraph);
+    });
+
+    it('Bold continues into link', () => {
+        const paragraph = createParagraph();
+        const segment = createText('text with ');
+        const boldText = createText('bold ', { fontWeight: 'bold' });
+        const link = createText('link', { fontWeight: 'bold' });
+        link.link = {
+            dataset: {},
+            format: { href: 'http://link.com', underline: true },
+        };
+        const trailing = createText(' tail', { fontWeight: 'bold' });
+        paragraph.segments.push(segment);
+        paragraph.segments.push(boldText);
+        paragraph.segments.push(link);
+        paragraph.segments.push(trailing);
+        runTest('text with **bold [link](http://link.com) tail**', paragraph);
+    });
+
     it('Complex paragraph with Image, Links, bold and italic', () => {
         const paragraph = createParagraph();
         const segment1 = createText('text with ');

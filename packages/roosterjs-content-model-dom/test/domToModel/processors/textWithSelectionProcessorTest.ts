@@ -574,8 +574,8 @@ describe('textWithSelectionProcessor', () => {
         };
         context.pendingFormat = {
             format: {
-                a: 'a',
-            } as any,
+                fontFamily: 'Arial',
+            },
             insertPoint: {
                 node: text,
                 offset: 2,
@@ -598,7 +598,7 @@ describe('textWithSelectionProcessor', () => {
                         },
                         {
                             segmentType: 'SelectionMarker',
-                            format: { a: 'a' } as any,
+                            format: { fontFamily: 'Arial' },
                             isSelected: true,
                         },
                         {

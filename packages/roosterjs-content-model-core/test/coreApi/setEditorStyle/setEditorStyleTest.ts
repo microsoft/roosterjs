@@ -1,19 +1,20 @@
 import * as ensureUniqueId from '../../../lib/coreApi/setEditorStyle/ensureUniqueId';
+import { createMockDomHelper } from '../../testUtils/createMockDomHelper';
 import { EditorCore } from 'roosterjs-content-model-types';
 import { setEditorStyle } from '../../../lib/coreApi/setEditorStyle/setEditorStyle';
 
 describe('setEditorStyle', () => {
     let core: EditorCore;
     let createElementSpy: jasmine.Spy;
-    let appendChildSpy: jasmine.Spy;
     let insertRuleSpy: jasmine.Spy;
     let deleteRuleSpy: jasmine.Spy;
     let ensureUniqueIdSpy: jasmine.Spy;
     let mockedStyle: HTMLStyleElement;
+    let mockDomHelper: ReturnType<typeof createMockDomHelper>;
 
     beforeEach(() => {
+        mockDomHelper = createMockDomHelper();
         createElementSpy = jasmine.createSpy('createElement');
-        appendChildSpy = jasmine.createSpy('appendChild');
         insertRuleSpy = jasmine.createSpy('insertRule');
         deleteRuleSpy = jasmine.createSpy('deleteRule');
         ensureUniqueIdSpy = spyOn(ensureUniqueId, 'ensureUniqueId').and.returnValue('uniqueId');
@@ -21,11 +22,9 @@ describe('setEditorStyle', () => {
             physicalRoot: {
                 ownerDocument: {
                     createElement: createElementSpy,
-                    head: {
-                        appendChild: appendChildSpy,
-                    },
                 },
             },
+            domHelper: mockDomHelper,
             lifecycle: {
                 styleElements: {},
             },
@@ -46,7 +45,7 @@ describe('setEditorStyle', () => {
 
         expect(core.lifecycle.styleElements).toEqual({});
         expect(createElementSpy).not.toHaveBeenCalled();
-        expect(appendChildSpy).not.toHaveBeenCalled();
+        expect(mockDomHelper.appendToRoot).not.toHaveBeenCalled();
         expect(insertRuleSpy).not.toHaveBeenCalled();
         expect(deleteRuleSpy).not.toHaveBeenCalled();
         expect(ensureUniqueIdSpy).not.toHaveBeenCalled();
@@ -60,7 +59,7 @@ describe('setEditorStyle', () => {
         setEditorStyle(core, 'key0', 'rule');
 
         expect(createElementSpy).toHaveBeenCalledWith('style');
-        expect(appendChildSpy).toHaveBeenCalledWith(mockedStyle);
+        expect(mockDomHelper.appendToRoot).toHaveBeenCalledWith(mockedStyle);
         expect(insertRuleSpy).toHaveBeenCalledTimes(1);
         expect(insertRuleSpy).toHaveBeenCalledWith('#uniqueId {rule}');
         expect(deleteRuleSpy).not.toHaveBeenCalled();
@@ -77,7 +76,7 @@ describe('setEditorStyle', () => {
         setEditorStyle(core, 'key0', 'rule', ['selector1', 'selector2']);
 
         expect(createElementSpy).toHaveBeenCalledWith('style');
-        expect(appendChildSpy).toHaveBeenCalledWith(mockedStyle);
+        expect(mockDomHelper.appendToRoot).toHaveBeenCalledWith(mockedStyle);
         expect(insertRuleSpy).toHaveBeenCalledTimes(1);
         expect(insertRuleSpy).toHaveBeenCalledWith(
             '#uniqueId selector1,#uniqueId selector2 {rule}'
@@ -96,7 +95,7 @@ describe('setEditorStyle', () => {
         setEditorStyle(core, 'key0', 'rule', 'before');
 
         expect(createElementSpy).toHaveBeenCalledWith('style');
-        expect(appendChildSpy).toHaveBeenCalledWith(mockedStyle);
+        expect(mockDomHelper.appendToRoot).toHaveBeenCalledWith(mockedStyle);
         expect(insertRuleSpy).toHaveBeenCalledTimes(1);
         expect(insertRuleSpy).toHaveBeenCalledWith('#uniqueId::before {rule}');
         expect(deleteRuleSpy).not.toHaveBeenCalled();
@@ -127,7 +126,7 @@ describe('setEditorStyle', () => {
         setEditorStyle(core, 'key0', null);
 
         expect(createElementSpy).not.toHaveBeenCalled();
-        expect(appendChildSpy).not.toHaveBeenCalled();
+        expect(mockDomHelper.appendToRoot).not.toHaveBeenCalled();
         expect(insertRuleSpy).toHaveBeenCalledTimes(0);
         expect(deleteRuleSpy).toHaveBeenCalledTimes(2);
         expect(deleteRuleSpy).toHaveBeenCalledWith(1);
@@ -165,7 +164,7 @@ describe('setEditorStyle', () => {
         setEditorStyle(core, 'key0', 'rule3');
 
         expect(createElementSpy).not.toHaveBeenCalled();
-        expect(appendChildSpy).not.toHaveBeenCalled();
+        expect(mockDomHelper.appendToRoot).not.toHaveBeenCalled();
         expect(insertRuleSpy).toHaveBeenCalledTimes(1);
         expect(insertRuleSpy).toHaveBeenCalledWith('#uniqueId {rule3}');
         expect(deleteRuleSpy).toHaveBeenCalledTimes(2);
@@ -195,7 +194,7 @@ describe('setEditorStyle', () => {
         setEditorStyle(core, 'key0', 'rule', selectors, 50);
 
         expect(createElementSpy).toHaveBeenCalledWith('style');
-        expect(appendChildSpy).toHaveBeenCalledWith(mockedStyle);
+        expect(mockDomHelper.appendToRoot).toHaveBeenCalledWith(mockedStyle);
         expect(insertRuleSpy).toHaveBeenCalledTimes(3);
         expect(insertRuleSpy).toHaveBeenCalledWith(
             '#uniqueId longSelector1,#uniqueId longSelector2 {rule}'

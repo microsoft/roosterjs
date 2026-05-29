@@ -1,3 +1,4 @@
+import { createMockDomHelper } from '../../testUtils/createMockDomHelper';
 import { EditorCore } from 'roosterjs-content-model-types';
 import { getDOMSelection } from '../../../lib/coreApi/getDOMSelection/getDOMSelection';
 
@@ -26,9 +27,13 @@ describe('getDOMSelection', () => {
             logicalRoot: contentDiv,
             lifecycle: {},
             selection: {},
-            domHelper: {
+            domHelper: createMockDomHelper({
                 hasFocus: hasFocusSpy,
-            },
+                getSelectionRange: jasmine.createSpy('getSelectionRange').and.callFake(() => {
+                    const selection = getSelectionSpy();
+                    return selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+                }),
+            }),
         } as any;
     });
 

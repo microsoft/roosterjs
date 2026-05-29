@@ -2,6 +2,10 @@ import { extractClipboardItems } from 'roosterjs-content-model-dom';
 import { paste } from 'roosterjs-content-model-core';
 import type { RibbonButton } from 'roosterjs-react';
 
+interface ClipboardWithUnsanitized {
+    read(options?: { unsanitized?: string[] }): Promise<ClipboardItems>;
+}
+
 /**
  * @internal
  * "Paste" button on the format ribbon
@@ -12,10 +16,10 @@ export const pasteButton: RibbonButton<'buttonNamePaste'> = {
     iconName: 'Paste',
     onClick: async editor => {
         const doc = editor.getDocument();
-        const clipboard = doc.defaultView.navigator.clipboard;
+        const clipboard = doc.defaultView.navigator.clipboard as ClipboardWithUnsanitized;
         if (clipboard && clipboard.read) {
             try {
-                const clipboardItems = await clipboard.read();
+                const clipboardItems = await clipboard.read({ unsanitized: ['text/html'] });
                 const dataTransferItems = await Promise.all(
                     createDataTransferItems(clipboardItems)
                 );

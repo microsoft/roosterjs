@@ -13,7 +13,5 @@ export function createAriaLiveElement(document: Document): HTMLDivElement {
     div.style.width = '1px';
     div.ariaLive = 'assertive';
 
-    document.body.appendChild(div);
-
     return div;
 }
