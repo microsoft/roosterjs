@@ -4,7 +4,9 @@ import { onCreateCopyEntityNode } from '../../override/pasteCopyBlockEntityParse
 import {
     contentModelToDom,
     contentModelToText,
+    createDomToModelContext,
     createModelToDomContext,
+    domToContentModel,
     trimModelForSelection,
     isElementOfType,
     isNodeOfType,
@@ -69,9 +71,13 @@ export function getContentForCopy(
                 isCut,
             });
 
+            // Build the text content from the (possibly modified) cloned root DOM tree so that any
+            // changes made by beforeCutCopy event handlers are reflected in the plain text result as well
+            const textModel = domToContentModel(clonedRoot, createDomToModelContext());
+
             return {
                 htmlContent: clonedRoot,
-                textContent: contentModelToText(pasteModel),
+                textContent: contentModelToText(textModel),
             };
         }
     }
