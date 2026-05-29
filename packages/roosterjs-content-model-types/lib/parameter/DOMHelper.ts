@@ -135,13 +135,6 @@ export interface DOMHelper {
     getSelectionRange(): Range | null;
 
     /**
-     * Check if the current selection is reverted (focus before anchor).
-     * Returns false in Shadow DOM environments where direction cannot be determined.
-     * @param range The range to compare against (from getSelectionRange)
-     */
-    isSelectionReverted(range: Range): boolean;
-
-    /**
      * Set the selection to the given range, handling browser differences for shadow DOM.
      * @param range The range to set
      * @param isReverted Whether the selection is reverted (focus before anchor)
@@ -153,9 +146,4 @@ export interface DOMHelper {
      * @param element The element to append
      */
     appendToRoot(element: HTMLElement): void;
-
-    /**
-     * Dispose the DOMHelper, removing any event listeners it registered.
-     */
-    dispose(): void;
 }

@@ -28,10 +28,8 @@ export function createMockDomHelper(
         getContainerFormat: jasmine.createSpy('getContainerFormat').and.returnValue({}),
         getRangesByText: jasmine.createSpy('getRangesByText').and.returnValue([]),
         getSelectionRange: jasmine.createSpy('getSelectionRange').and.returnValue(null),
-        isSelectionReverted: jasmine.createSpy('isSelectionReverted').and.returnValue(false),
         setSelectionRange: jasmine.createSpy('setSelectionRange'),
         appendToRoot: jasmine.createSpy('appendToRoot'),
-        dispose: jasmine.createSpy('dispose'),
     };
 
     return { ...defaults, ...overrides } as any;

@@ -335,18 +335,6 @@ class DOMHelperImpl implements DOMHelper {
         return sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
     }
 
-    isSelectionReverted(range: Range): boolean {
-        // In shadow DOM, we cannot reliably detect direction
-        if (this.useBeforeInputPolyfill || this.useComposedRanges) {
-            return false;
-        }
-
-        const sel = this.doc.defaultView?.getSelection();
-        return sel
-            ? sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset
-            : false;
-    }
-
     setSelectionRange(range: Range, isReverted: boolean = false): void {
         const sel = this.doc.defaultView?.getSelection();
         const currentRange = this.getSelectionRange();

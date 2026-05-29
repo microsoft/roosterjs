@@ -33,15 +33,6 @@ describe('getDOMSelection', () => {
                     const selection = getSelectionSpy();
                     return selection && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
                 }),
-                isSelectionReverted: jasmine
-                    .createSpy('isSelectionReverted')
-                    .and.callFake((range: Range) => {
-                        const selection = getSelectionSpy();
-                        return selection
-                            ? selection.focusNode != range.endContainer ||
-                                  selection.focusOffset != range.endOffset
-                            : false;
-                    }),
             }),
         } as any;
     });

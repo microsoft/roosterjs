@@ -3551,12 +3551,6 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         getDOMHelperSpy = jasmine.createSpy('getDOMHelper').and.returnValue({
             getSelectionRange: () => mockedRange,
-            isSelectionReverted: (range: Range) => {
-                const sel = getSelectionSpy();
-                return sel
-                    ? sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset
-                    : false;
-            },
         });
 
         editor = ({
