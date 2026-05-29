@@ -295,4 +295,42 @@ describe('getContentForCopy', () => {
         expect(result).toBeDefined();
         div.remove();
     });
+
+    it('should build text content from the clonedRoot modified by beforeCutCopy', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText('original text');
+
+        text.isSelected = true;
+        para.segments.push(text);
+        model.blocks.push(para);
+
+        const div = mockDocument.createElement('div');
+        mockDocument.body.appendChild(div);
+        const range: Range = new Range();
+        range.selectNode(div);
+
+        const selection: DOMSelection = {
+            type: 'range',
+            range,
+            isReverted: false,
+        };
+
+        spyOn(editor, 'getDOMSelection').and.returnValue(selection);
+        spyOn(editor, 'getContentModelCopy').and.returnValue(model);
+
+        // Event handler replaces the content of the cloned root tree
+        triggerEventSpy.and.callFake((_eventType: string, event: BeforeCutCopyEvent) => {
+            const modifiedRoot = event.clonedRoot;
+            modifiedRoot.innerHTML = '<p>modified text</p>';
+
+            return event;
+        });
+
+        const result = getContentForCopy(editor, false, new ClipboardEvent('copy'));
+
+        expect(result).not.toBeNull();
+        expect(result!.textContent).toBe('modified text');
+        div.remove();
+    });
 });

@@ -567,6 +567,249 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
         );
     });
 
+    it('LTR table under RTL table', () => {
+        runTest(
+            '<table dir="rtl"><tr><td><table dir="ltr"><tr><td>bb</td></tr></table></td></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                format: {},
+                                height: 0,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Table',
+                                                rows: [
+                                                    {
+                                                        format: {},
+                                                        height: 0,
+                                                        cells: [
+                                                            {
+                                                                blockGroupType: 'TableCell',
+                                                                blocks: [
+                                                                    {
+                                                                        blockType: 'Paragraph',
+                                                                        segments: [
+                                                                            {
+                                                                                segmentType: 'Text',
+                                                                                text: 'bb',
+                                                                                format: {},
+                                                                            },
+                                                                        ],
+                                                                        format: {
+                                                                            direction: 'ltr',
+                                                                        },
+                                                                        isImplicit: true,
+                                                                    },
+                                                                ],
+                                                                format: {
+                                                                    direction: 'ltr',
+                                                                },
+                                                                spanLeft: false,
+                                                                spanAbove: false,
+                                                                isHeader: false,
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                                format: {
+                                                    direction: 'ltr',
+                                                },
+                                                widths: [],
+                                                dataset: {},
+                                            },
+                                        ],
+                                        format: {
+                                            direction: 'rtl',
+                                        },
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: { direction: 'rtl' },
+                        widths: [],
+                        dataset: {},
+                    },
+                ],
+            },
+            'bb',
+            '<table style="direction: rtl; justify-self: flex-end;"><tbody><tr><td style="direction: rtl;"><table style="direction: ltr;"><tbody><tr><td style="direction: ltr;"><div style="direction: ltr;">bb</div></td></tr></tbody></table></td></tr></tbody></table>'
+        );
+    });
+
+    it('RTL table under LTR table', () => {
+        runTest(
+            '<table dir="ltr"><tr><td><table dir="rtl"><tr><td>bb</td></tr></table></td></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                format: {},
+                                height: 0,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Table',
+                                                rows: [
+                                                    {
+                                                        format: {},
+                                                        height: 0,
+                                                        cells: [
+                                                            {
+                                                                blockGroupType: 'TableCell',
+                                                                blocks: [
+                                                                    {
+                                                                        blockType: 'Paragraph',
+                                                                        segments: [
+                                                                            {
+                                                                                segmentType: 'Text',
+                                                                                text: 'bb',
+                                                                                format: {},
+                                                                            },
+                                                                        ],
+                                                                        format: {
+                                                                            direction: 'rtl',
+                                                                        },
+                                                                        isImplicit: true,
+                                                                    },
+                                                                ],
+                                                                format: {
+                                                                    direction: 'rtl',
+                                                                },
+                                                                spanLeft: false,
+                                                                spanAbove: false,
+                                                                isHeader: false,
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                                format: {
+                                                    direction: 'rtl',
+                                                },
+                                                widths: [],
+                                                dataset: {},
+                                            },
+                                        ],
+                                        format: {
+                                            direction: 'ltr',
+                                        },
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: { direction: 'ltr' },
+                        widths: [],
+                        dataset: {},
+                    },
+                ],
+            },
+            'bb',
+            '<table style="direction: ltr;"><tbody><tr><td style="direction: ltr;"><table style="direction: rtl; justify-self: flex-end;"><tbody><tr><td style="direction: rtl;"><div style="direction: rtl;">bb</div></td></tr></tbody></table></td></tr></tbody></table>'
+        );
+    });
+
+    it('RTL table under RTL table', () => {
+        runTest(
+            '<table dir="rtl"><tr><td><table dir="rtl"><tr><td>bb</td></tr></table></td></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                format: {},
+                                height: 0,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Table',
+                                                rows: [
+                                                    {
+                                                        format: {},
+                                                        height: 0,
+                                                        cells: [
+                                                            {
+                                                                blockGroupType: 'TableCell',
+                                                                blocks: [
+                                                                    {
+                                                                        blockType: 'Paragraph',
+                                                                        segments: [
+                                                                            {
+                                                                                segmentType: 'Text',
+                                                                                text: 'bb',
+                                                                                format: {},
+                                                                            },
+                                                                        ],
+                                                                        format: {
+                                                                            direction: 'rtl',
+                                                                        },
+                                                                        isImplicit: true,
+                                                                    },
+                                                                ],
+                                                                format: {
+                                                                    direction: 'rtl',
+                                                                },
+                                                                spanLeft: false,
+                                                                spanAbove: false,
+                                                                isHeader: false,
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                                format: {
+                                                    direction: 'rtl',
+                                                },
+                                                widths: [],
+                                                dataset: {},
+                                            },
+                                        ],
+                                        format: {
+                                            direction: 'rtl',
+                                        },
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: { direction: 'rtl' },
+                        widths: [],
+                        dataset: {},
+                    },
+                ],
+            },
+            'bb',
+            '<table style="direction: rtl; justify-self: flex-end;"><tbody><tr><td style="direction: rtl;"><table style="direction: rtl;"><tbody><tr><td style="direction: rtl;"><div style="direction: rtl;">bb</div></td></tr></tbody></table></td></tr></tbody></table>'
+        );
+    });
+
     it('Table under styled block', () => {
         runTest(
             '<b style="background-color:red; display: block">aa<table><tr><td>bb</td></tr></table>cc</b>',
@@ -3026,6 +3269,77 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             'www.bing.com',
             '<sup><a href="http://www.bing.com">www.bing.com</a></sup>'
         );
+    });
+
+    it('Text with invisible unicode tag characters is stripped when FilterInvisibleUnicode feature is enabled', () => {
+        // Source HTML contains U+E0041 / U+E0042 (unicode tag range — must be stripped)
+        // mixed with U+200B (ZWSP), U+200D (ZWJ), U+202E (RLO), U+202C (PDF)
+        // which must be preserved.
+        const div1 = document.createElement('div');
+        div1.innerHTML = '<p>a\u{E0041}b\u{200B}c\u{E0042}d\u{202E}evil\u{202C}e</p>';
+
+        const model = domToContentModel(
+            div1,
+            createDomToModelContext({ experimentalFeatures: ['FilterInvisibleUnicode'] })
+        );
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'ab\u{200B}cd\u{202E}evil\u{202C}e',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                    },
+                    decorator: {
+                        tagName: 'p',
+                        format: {},
+                    },
+                },
+            ],
+        });
+
+        const text = contentModelToText(model);
+        expect(text).toBe('ab\u{200B}cd\u{202E}evil\u{202C}e');
+    });
+
+    it('Text with invisible unicode tag characters is NOT stripped when feature is disabled', () => {
+        const div1 = document.createElement('div');
+        div1.innerHTML = '<p>a\u{E0041}b\u{E0042}c</p>';
+
+        const model = domToContentModel(div1, createDomToModelContext());
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'a\u{E0041}b\u{E0042}c',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                    },
+                    decorator: {
+                        tagName: 'p',
+                        format: {},
+                    },
+                },
+            ],
+        });
     });
 
     it('LI without UL followed by other blocks', () => {

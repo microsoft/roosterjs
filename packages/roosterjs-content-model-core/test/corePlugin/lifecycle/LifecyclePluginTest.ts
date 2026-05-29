@@ -7,7 +7,14 @@ import { DarkColorHandler, IEditor } from 'roosterjs-content-model-types';
 const announceContainer = {} as Readonly<HTMLDivElement>;
 
 describe('LifecyclePlugin', () => {
+    let appendToRootSpy: jasmine.Spy;
+    let getDOMHelper: jasmine.Spy;
+
     beforeEach(() => {
+        appendToRootSpy = jasmine.createSpy('appendToRoot');
+        getDOMHelper = jasmine.createSpy('getDOMHelper').and.returnValue({
+            appendToRoot: appendToRootSpy,
+        });
         spyOn(createAriaLiveElementFile, 'createAriaLiveElement').and.returnValue(
             announceContainer
         );
@@ -27,6 +34,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(state).toEqual({
@@ -75,6 +83,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(state).toEqual({
@@ -119,6 +128,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(state).toEqual({
@@ -156,6 +166,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(div.isContentEditable).toBeTrue();
@@ -184,6 +195,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(div.isContentEditable).toBeFalse();
@@ -213,6 +225,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             getColorManager: () => mockedDarkColorHandler,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(setColorSpy).toHaveBeenCalledTimes(2);
@@ -248,6 +261,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             getColorManager: () => mockedDarkColorHandler,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(setColorSpy).toHaveBeenCalledTimes(2);
@@ -305,6 +319,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             getColorManager: () => mockedDarkColorHandler,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(setColorSpy).toHaveBeenCalledTimes(0);
@@ -338,6 +353,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: jasmine.createSpy(),
             triggerEvent: jasmine.createSpy(),
             getDocument,
+            getDOMHelper,
         });
 
         const state = plugin.getState();

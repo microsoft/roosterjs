@@ -125,8 +125,8 @@ describe('childProcessor', () => {
         };
         context.pendingFormat = {
             format: {
-                a: 'a',
-            } as any,
+                fontFamily: 'Arial',
+            },
             insertPoint: {
                 node: div,
                 offset: 0,
@@ -144,12 +144,12 @@ describe('childProcessor', () => {
                     segments: [
                         {
                             segmentType: 'SelectionMarker',
-                            format: { a: 'a' } as any,
+                            format: { fontFamily: 'Arial' },
                             isSelected: true,
                         },
                     ],
                     isImplicit: true,
-                    segmentFormat: { a: 'a' } as any,
+                    segmentFormat: { fontFamily: 'Arial' },
                 },
             ],
         });
@@ -404,7 +404,7 @@ describe('childProcessor', () => {
     it('Process with segment format and selection marker', () => {
         const div = document.createElement('div');
 
-        context.segmentFormat = { a: 'b' } as any;
+        context.segmentFormat = { fontFamily: 'Arial' };
         context.selection = {
             type: 'range',
             range: {
@@ -423,10 +423,14 @@ describe('childProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Paragraph',
             segments: [
-                { segmentType: 'SelectionMarker', format: { a: 'b' } as any, isSelected: true },
+                {
+                    segmentType: 'SelectionMarker',
+                    format: { fontFamily: 'Arial' },
+                    isSelected: true,
+                },
             ],
             isImplicit: true,
-            segmentFormat: { a: 'b' } as any,
+            segmentFormat: { fontFamily: 'Arial' },
             format: {},
         });
     });

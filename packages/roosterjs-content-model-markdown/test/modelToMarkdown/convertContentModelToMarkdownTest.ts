@@ -115,6 +115,66 @@ describe('convertContentModelToMarkdown', () => {
         expect(md).toEqual(markdown);
     });
 
+    it('should move trailing whitespace outside bold markers (issue 3100)', () => {
+        const model = createContentModelDocument();
+        const paragraph = createParagraph();
+        paragraph.segments.push(createText('hello '));
+        paragraph.segments.push(createText('world ', { fontWeight: 'bold' }));
+        paragraph.segments.push(createText('how are you?'));
+        model.blocks.push(paragraph);
+
+        const md = convertContentModelToMarkdown(model).trim();
+        expect(md).toEqual('hello **world** how are you?');
+    });
+
+    it('should move leading whitespace outside italic markers (issue 3100)', () => {
+        const model = createContentModelDocument();
+        const paragraph = createParagraph();
+        paragraph.segments.push(createText('hello'));
+        paragraph.segments.push(createText(' world', { italic: true }));
+        paragraph.segments.push(createText(' how are you?'));
+        model.blocks.push(paragraph);
+
+        const md = convertContentModelToMarkdown(model).trim();
+        expect(md).toEqual('hello *world* how are you?');
+    });
+
+    it('should move surrounding whitespace outside strikethrough markers', () => {
+        const model = createContentModelDocument();
+        const paragraph = createParagraph();
+        paragraph.segments.push(createText('a'));
+        paragraph.segments.push(createText(' b ', { strikethrough: true }));
+        paragraph.segments.push(createText('c'));
+        model.blocks.push(paragraph);
+
+        const md = convertContentModelToMarkdown(model).trim();
+        expect(md).toEqual('a ~~b~~ c');
+    });
+
+    it('should move whitespace outside combined bold + italic markers', () => {
+        const model = createContentModelDocument();
+        const paragraph = createParagraph();
+        paragraph.segments.push(createText('x'));
+        paragraph.segments.push(createText(' y ', { fontWeight: 'bold', italic: true }));
+        paragraph.segments.push(createText('z'));
+        model.blocks.push(paragraph);
+
+        const md = convertContentModelToMarkdown(model).trim();
+        expect(md).toEqual('x ***y*** z');
+    });
+
+    it('should not wrap whitespace-only segments with markers', () => {
+        const model = createContentModelDocument();
+        const paragraph = createParagraph();
+        paragraph.segments.push(createText('a'));
+        paragraph.segments.push(createText(' ', { fontWeight: 'bold' }));
+        paragraph.segments.push(createText('b'));
+        model.blocks.push(paragraph);
+
+        const md = convertContentModelToMarkdown(model).trim();
+        expect(md).toEqual('a b');
+    });
+
     it('should set a default alt to images', () => {
         const markdown = '![image](https://www.example.com/image)';
         const model = createModelFromHtml("<img src='https://www.example.com/image'>");
