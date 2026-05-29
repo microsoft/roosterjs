@@ -17,6 +17,7 @@ export const announce: Announce = (core, announceData) => {
 
     if (!core.lifecycle.announceContainer) {
         core.lifecycle.announceContainer = createAriaLiveElement(core.physicalRoot.ownerDocument);
+        core.domHelper.appendToRoot(core.lifecycle.announceContainer);
     }
 
     if (textToAnnounce && core.lifecycle.announceContainer) {

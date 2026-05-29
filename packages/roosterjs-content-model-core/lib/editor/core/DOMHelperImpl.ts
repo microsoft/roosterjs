@@ -1,3 +1,4 @@
+import { areSameRanges } from '../../utils/areSameRanges';
 import {
     getColor,
     getRangesByText,
@@ -12,6 +13,18 @@ import type {
     DOMHelper,
 } from 'roosterjs-content-model-types';
 
+interface SelectionWithComposedRanges extends Selection {
+    getComposedRanges(options: { shadowRoots: ShadowRoot[] }): StaticRange[];
+}
+
+function isSelectionWithComposedRanges(sel: Selection): sel is SelectionWithComposedRanges {
+    return 'getComposedRanges' in sel;
+}
+
+function isShadowRoot(node: Node): node is ShadowRoot {
+    return 'host' in node;
+}
+
 /**
  * @internal
  */
@@ -20,10 +33,26 @@ export interface DOMHelperImplOption {
      * @deprecated This is always treated as true now
      */
     cloneIndependentRoot?: boolean;
+
+    /**
+     * When true, enable shadow root detection so the editor works inside a Shadow DOM.
+     */
+    useShadowDom?: boolean;
 }
 
 class DOMHelperImpl implements DOMHelper {
-    constructor(private contentDiv: HTMLElement, options?: DOMHelperImplOption) {}
+    private shadowRoot: ShadowRoot | null;
+    private doc: Document;
+    private useComposedRanges: boolean;
+
+    constructor(private contentDiv: HTMLElement, options?: DOMHelperImplOption) {
+        const rootNode = contentDiv.getRootNode();
+        this.shadowRoot = options?.useShadowDom && isShadowRoot(rootNode) ? rootNode : null;
+        this.doc = contentDiv.ownerDocument;
+
+        const sel = this.doc.defaultView?.getSelection();
+        this.useComposedRanges = !!(this.shadowRoot && sel && 'getComposedRanges' in sel);
+    }
 
     queryElements(selector: string): HTMLElement[] {
         return toArray(this.contentDiv.querySelectorAll(selector)) as HTMLElement[];
@@ -97,7 +126,9 @@ class DOMHelperImpl implements DOMHelper {
     }
 
     hasFocus(): boolean {
-        const activeElement = this.contentDiv.ownerDocument.activeElement;
+        const activeElement = this.shadowRoot
+            ? this.shadowRoot.activeElement
+            : this.doc.activeElement;
         return !!(activeElement && this.contentDiv.contains(activeElement));
     }
 
@@ -184,6 +215,53 @@ class DOMHelperImpl implements DOMHelper {
      */
     getRangesByText(text: string, matchCase: boolean, wholeWord: boolean): Range[] {
         return getRangesByText(this.contentDiv, text, matchCase, wholeWord, true /*editableOnly*/);
+    }
+
+    getSelectionRange(): Range | null {
+        const sel = this.doc.defaultView?.getSelection();
+        if (!sel) {
+            return null;
+        }
+
+        if (this.useComposedRanges && this.shadowRoot && isSelectionWithComposedRanges(sel)) {
+            const staticRanges = sel.getComposedRanges({
+                shadowRoots: [this.shadowRoot],
+            });
+
+            if (staticRanges?.length > 0) {
+                const sr = staticRanges[0];
+                const range = this.doc.createRange();
+                range.setStart(sr.startContainer, sr.startOffset);
+                range.setEnd(sr.endContainer, sr.endOffset);
+                return range;
+            }
+            return null;
+        }
+
+        return sel.rangeCount > 0 ? sel.getRangeAt(0) : null;
+    }
+
+    setSelectionRange(range: Range, isReverted: boolean = false): void {
+        const sel = this.doc.defaultView?.getSelection();
+        const currentRange = this.getSelectionRange();
+        if (!sel || (currentRange && areSameRanges(range, currentRange))) {
+            return;
+        }
+
+        const { startContainer, startOffset, endContainer, endOffset } = range;
+        if (!isReverted) {
+            sel.setBaseAndExtent(startContainer, startOffset, endContainer, endOffset);
+        } else {
+            sel.setBaseAndExtent(endContainer, endOffset, startContainer, startOffset);
+        }
+    }
+
+    appendToRoot(element: HTMLElement): void {
+        if (this.shadowRoot) {
+            this.shadowRoot.appendChild(element);
+        } else {
+            this.doc.body.appendChild(element);
+        }
     }
 }
 

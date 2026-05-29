@@ -1,5 +1,13 @@
 import { ensureUniqueId } from '../../../lib/coreApi/setEditorStyle/ensureUniqueId';
 
+function createMockElement(mock: Partial<HTMLElement>, doc: Document) {
+    return {
+        ownerDocument: doc,
+        getRootNode: () => doc,
+        ...mock,
+    } as HTMLElement;
+}
+
 describe('ensureUniqueId', () => {
     let doc: Document;
     let querySelectorAllSpy: jasmine.Spy;
@@ -12,9 +20,7 @@ describe('ensureUniqueId', () => {
     });
 
     it('no id', () => {
-        const element = {
-            ownerDocument: doc,
-        } as any;
+        const element = createMockElement({}, doc);
         querySelectorAllSpy.and.returnValue([]);
         const result = ensureUniqueId(element, 'prefix');
 
@@ -22,10 +28,12 @@ describe('ensureUniqueId', () => {
     });
 
     it('Has unique id', () => {
-        const element = {
-            ownerDocument: doc,
-            id: 'unique',
-        } as any;
+        const element = createMockElement(
+            {
+                id: 'unique',
+            },
+            doc
+        );
         querySelectorAllSpy.and.returnValue([{}]);
         const result = ensureUniqueId(element, 'prefix');
 
@@ -33,10 +41,12 @@ describe('ensureUniqueId', () => {
     });
 
     it('Has duplicated', () => {
-        const element = {
-            ownerDocument: doc,
-            id: 'dup',
-        } as any;
+        const element = createMockElement(
+            {
+                id: 'dup',
+            },
+            doc
+        );
         querySelectorAllSpy.and.callFake((selector: string) =>
             selector == '#dup' ? [{}, {}] : []
         );
@@ -46,10 +56,12 @@ describe('ensureUniqueId', () => {
     });
 
     it('Has duplicated and unsupported id', () => {
-        const element = {
-            ownerDocument: doc,
-            id: '0dup',
-        } as any;
+        const element = createMockElement(
+            {
+                id: '0dup',
+            },
+            doc
+        );
         querySelectorAllSpy.and.callFake((selector: string) =>
             selector == '[id="0dup"]' ? [{}, {}] : []
         );
@@ -59,10 +71,12 @@ describe('ensureUniqueId', () => {
     });
 
     it('Should not throw when element id starts with number', () => {
-        const element = {
-            ownerDocument: doc,
-            id: '0',
-        } as any;
+        const element = createMockElement(
+            {
+                id: '0',
+            },
+            doc
+        );
 
         let isFirst = true;
         querySelectorAllSpy.and.callFake((_selector: string) => {
@@ -80,10 +94,12 @@ describe('ensureUniqueId', () => {
     });
 
     it('Should not throw when element id starts with hyphen', () => {
-        const element = {
-            ownerDocument: doc,
-            id: '-',
-        } as any;
+        const element = createMockElement(
+            {
+                id: '-',
+            },
+            doc
+        );
 
         let isFirst = true;
         querySelectorAllSpy.and.callFake((_selector: string) => {

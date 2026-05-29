@@ -127,4 +127,23 @@ export interface DOMHelper {
      * @returns An array of Ranges that match the search criteria
      */
     getRangesByText(text: string, matchCase: boolean, wholeWord: boolean): Range[];
+
+    /**
+     * Get the current selection range, handling shadow DOM StaticRange conversion.
+     * Returns a live Range in all browsers.
+     */
+    getSelectionRange(): Range | null;
+
+    /**
+     * Set the selection to the given range, handling browser differences for shadow DOM.
+     * @param range The range to set
+     * @param isReverted Whether the selection is reverted (focus before anchor)
+     */
+    setSelectionRange(range: Range, isReverted?: boolean): void;
+
+    /**
+     * Append an element to the correct root container (shadow root or document.body)
+     * @param element The element to append
+     */
+    appendToRoot(element: HTMLElement): void;
 }

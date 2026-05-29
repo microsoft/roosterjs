@@ -1,4 +1,3 @@
-import { addRangeToSelection } from './addRangeToSelection';
 import { areSameSelections } from '../../corePlugin/cache/areSameSelections';
 import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
@@ -6,7 +5,11 @@ import { findTableCellElement } from './findTableCellElement';
 import { getSafeIdSelector, parseTableCells } from 'roosterjs-content-model-dom';
 import { setTableCellsStyle } from './setTableCellsStyle';
 import { toggleCaret } from './toggleCaret';
-import type { SelectionChangedEvent, SetDOMSelection } from 'roosterjs-content-model-types';
+import type {
+    EditorCore,
+    SelectionChangedEvent,
+    SetDOMSelection,
+} from 'roosterjs-content-model-types';
 
 const DOM_SELECTION_CSS_KEY = '_DOMSelection';
 const HIDE_SELECTION_CSS_KEY = '_DOMSelectionHideSelection';
@@ -29,7 +32,6 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     // Set skipReselectOnFocus to skip this behavior
     const skipReselectOnFocus = core.selection.skipReselectOnFocus;
 
-    const doc = core.physicalRoot.ownerDocument;
     const isDarkMode = core.lifecycle.isDarkMode;
     core.selection.skipReselectOnFocus = true;
     core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, null /*cssRule*/);
@@ -63,7 +65,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
                     [SELECTION_SELECTOR]
                 );
 
-                setRangeSelection(doc, image, false /* collapse */);
+                setRangeSelection(core, image, false /* collapse */);
                 break;
             case 'table':
                 const { table, firstColumn, firstRow, lastColumn, lastRow } = selection;
@@ -116,7 +118,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 
                 if (nodeToSelect) {
                     setRangeSelection(
-                        doc,
+                        core,
                         (nodeToSelect as HTMLElement) || undefined,
                         true /* collapse */
                     );
@@ -124,7 +126,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 
                 break;
             case 'range':
-                addRangeToSelection(doc, selection.range, selection.isReverted);
+                core.domHelper.setSelectionRange(selection.range, selection.isReverted);
 
                 core.selection.selection = core.domHelper.hasFocus() ? null : selection;
                 break;
@@ -147,8 +149,9 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     }
 };
 
-function setRangeSelection(doc: Document, element: HTMLElement | undefined, collapse: boolean) {
-    if (element && doc.contains(element)) {
+function setRangeSelection(core: EditorCore, element: HTMLElement | undefined, collapse: boolean) {
+    if (element && core.domHelper.isNodeInEditor(element)) {
+        const doc = core.physicalRoot.ownerDocument;
         const range = doc.createRange();
         let isReverted: boolean | undefined = undefined;
 
@@ -165,6 +168,6 @@ function setRangeSelection(doc: Document, element: HTMLElement | undefined, coll
             }
         }
 
-        addRangeToSelection(doc, range, isReverted);
+        core.domHelper.setSelectionRange(range, isReverted);
     }
 }
