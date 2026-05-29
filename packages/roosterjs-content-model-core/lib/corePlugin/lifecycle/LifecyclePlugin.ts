@@ -85,6 +85,7 @@ class LifecyclePlugin implements PluginWithState<LifecyclePluginState> {
 
         // Initialize the Announce container.
         this.state.announceContainer = createAriaLiveElement(editor.getDocument());
+        editor.getDOMHelper().appendToRoot(this.state.announceContainer);
     }
 
     /**

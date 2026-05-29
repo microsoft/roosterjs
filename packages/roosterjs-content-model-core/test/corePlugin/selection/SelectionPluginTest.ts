@@ -3239,6 +3239,7 @@ describe('SelectionPlugin on Safari', () => {
     let hasFocusSpy: jasmine.Spy;
     let isInShadowEditSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
+    let getDOMHelperSpy: jasmine.Spy;
     let editor: IEditor;
     let getSelectionSpy: jasmine.Spy;
 
@@ -3255,11 +3256,16 @@ describe('SelectionPlugin on Safari', () => {
             },
             addEventListener: addEventListenerSpy,
             removeEventListener: removeEventListenerSpy,
-            getSelection: getSelectionSpy,
+            defaultView: {
+                getSelection: getSelectionSpy,
+            },
         });
         hasFocusSpy = jasmine.createSpy('hasFocus');
         isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        getDOMHelperSpy = jasmine.createSpy('getDOMHelper').and.returnValue({
+            getSelectionRange: (): null => null,
+        });
 
         editor = ({
             getDocument: getDocumentSpy,
@@ -3270,6 +3276,7 @@ describe('SelectionPlugin on Safari', () => {
             hasFocus: hasFocusSpy,
             isInShadowEdit: isInShadowEditSpy,
             getDOMSelection: getDOMSelectionSpy,
+            getDOMHelper: getDOMHelperSpy,
             getColorManager: () => ({
                 getDarkColor: (color: string) => `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}${color}`,
             }),
@@ -3505,10 +3512,12 @@ describe('SelectionPlugin selectionChange on image selected', () => {
     let hasFocusSpy: jasmine.Spy;
     let isInShadowEditSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
+    let getDOMHelperSpy: jasmine.Spy;
     let editor: IEditor;
     let setDOMSelectionSpy: jasmine.Spy;
     let getRangeAtSpy: jasmine.Spy;
     let getSelectionSpy: jasmine.Spy;
+    let mockedRange: Range;
 
     beforeEach(() => {
         disposer = jasmine.createSpy('disposer');
@@ -3516,11 +3525,14 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         attachDomEvent = jasmine.createSpy('attachDomEvent').and.returnValue(disposer);
         removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         addEventListenerSpy = jasmine.createSpy('addEventListener');
-        getRangeAtSpy = jasmine.createSpy('getRangeAt');
+        mockedRange = { startContainer: {} } as Range;
+        getRangeAtSpy = jasmine.createSpy('getRangeAt').and.callFake(() => mockedRange);
         getSelectionSpy = jasmine.createSpy('getSelection').and.returnValue({
             focusNode: {
                 nodeName: 'SPAN',
             },
+            focusOffset: 0,
+            rangeCount: 1,
             getRangeAt: getRangeAtSpy,
         });
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
@@ -3529,12 +3541,17 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             },
             addEventListener: addEventListenerSpy,
             removeEventListener: removeEventListenerSpy,
-            getSelection: getSelectionSpy,
+            defaultView: {
+                getSelection: getSelectionSpy,
+            },
         });
         hasFocusSpy = jasmine.createSpy('hasFocus');
         isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
+        getDOMHelperSpy = jasmine.createSpy('getDOMHelper').and.returnValue({
+            getSelectionRange: () => mockedRange,
+        });
 
         editor = ({
             getDocument: getDocumentSpy,
@@ -3545,6 +3562,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             hasFocus: hasFocusSpy,
             isInShadowEdit: isInShadowEditSpy,
             getDOMSelection: getDOMSelectionSpy,
+            getDOMHelper: getDOMHelperSpy,
             setDOMSelection: setDOMSelectionSpy,
         } as any) as IEditor;
     });
