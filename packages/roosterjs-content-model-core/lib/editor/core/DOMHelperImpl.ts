@@ -215,13 +215,13 @@ class DOMHelperImpl implements DOMHelper {
             return null;
         }
 
-        if (this.useComposedRanges) {
-            const staticRanges = (sel as any).getComposedRanges({
+        if (this.useComposedRanges && this.shadowRoot) {
+            const staticRanges = sel.getComposedRanges({
                 shadowRoots: [this.shadowRoot],
             });
 
             if (staticRanges?.length > 0) {
-                const sr = staticRanges[0] as StaticRange;
+                const sr = staticRanges[0];
                 const range = this.doc.createRange();
                 range.setStart(sr.startContainer, sr.startOffset);
                 range.setEnd(sr.endContainer, sr.endOffset);
