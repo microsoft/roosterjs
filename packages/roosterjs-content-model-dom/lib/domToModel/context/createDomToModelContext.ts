@@ -39,7 +39,7 @@ export function createDomToModelContext(
 export function createDomToModelContextWithConfig(
     config: DomToModelSettings,
     editorContext?: EditorContext
-) {
+): DomToModelContext {
     return Object.assign(
         {},
         editorContext,

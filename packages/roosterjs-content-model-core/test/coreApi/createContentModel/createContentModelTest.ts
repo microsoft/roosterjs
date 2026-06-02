@@ -107,6 +107,30 @@ describe('createContentModel', () => {
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, currentContext);
         expect(model).toBe(mockedModel);
     });
+
+    it('Pass skipFormatContainerFallbackCheck option to context', () => {
+        const currentContext = { ...originalContext } as DomToModelContext;
+
+        spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(currentContext);
+
+        createContentModel(core, {
+            tryGetFromCache: false,
+            skipFormatContainerFallbackCheck: true,
+        });
+
+        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, currentContext);
+        expect(currentContext.skipFormatContainerFallbackCheck).toBe(true);
+    });
+
+    it('Do not set skipFormatContainerFallbackCheck when option not passed', () => {
+        const currentContext = { ...originalContext } as DomToModelContext;
+
+        spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(currentContext);
+
+        createContentModel(core, { tryGetFromCache: false });
+
+        expect(currentContext.skipFormatContainerFallbackCheck).toBeUndefined();
+    });
 });
 
 describe('createContentModel with selection', () => {
