@@ -1,6 +1,7 @@
 import * as addParser from '../../../lib/paste/utils/addParser';
 import * as ExcelFile from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import * as getDocumentSource from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
+import * as MarkdownFile from '../../../lib/paste/Markdown/convertPastedTextToMarkdown';
 import * as oneNoteFile from '../../../lib/paste/oneNote/processPastedContentFromOneNote';
 import * as PowerPointFile from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../../lib/paste/utils/setProcessor';
@@ -24,6 +25,7 @@ describe('Content Model Paste Plugin Test', () => {
             getTrustedHTMLHandler: () => trustedHTMLHandler,
             getDOMCreator: () => domCreator,
             getEnvironment: () => ({}),
+            getDocument: () => document,
         } as any) as IEditor;
         spyOn(addParser, 'addParser').and.callThrough();
         spyOn(setProcessor, 'setProcessor').and.callThrough();
@@ -172,6 +174,60 @@ describe('Content Model Paste Plugin Test', () => {
             expect(event.domToModelOption.additionalAllowedTags.length).toEqual(0);
             expect(Object.keys(event.domToModelOption.attributeSanitizers).length).toEqual(0);
             expect(Object.keys(event.domToModelOption.styleSanitizers).length).toEqual(4);
+        });
+
+        it('Default | plain text is converted to markdown HTML', () => {
+            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('default');
+            spyOn(MarkdownFile, 'convertPastedTextToMarkdown').and.callThrough();
+
+            (<any>event).clipboardData = {
+                text: '# Heading',
+                rawHtml: null,
+                types: [],
+            };
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+
+            expect(MarkdownFile.convertPastedTextToMarkdown).toHaveBeenCalledWith(
+                editor,
+                event.fragment,
+                '# Heading'
+            );
+        });
+
+        it('Default | formatted HTML is not converted to markdown HTML', () => {
+            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('default');
+            spyOn(MarkdownFile, 'convertPastedTextToMarkdown').and.callThrough();
+
+            (<any>event).clipboardData = {
+                text: 'hello world',
+                rawHtml: '<div>hello <b>world</b></div>',
+                types: [],
+            };
+            event.fragment.appendChild(domCreator.htmlToDOM('<div>hello <b>world</b></div>').body);
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+
+            expect(MarkdownFile.convertPastedTextToMarkdown).not.toHaveBeenCalled();
+        });
+
+        it('Default | plain text is not converted when pasting as plain text', () => {
+            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('default');
+            spyOn(MarkdownFile, 'convertPastedTextToMarkdown').and.callThrough();
+
+            (<any>event).pasteType = 'asPlainText';
+            (<any>event).clipboardData = {
+                text: '# Heading',
+                rawHtml: null,
+                types: [],
+            };
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+
+            expect(MarkdownFile.convertPastedTextToMarkdown).not.toHaveBeenCalled();
         });
 
         it('excelNonNativeEvent', () => {

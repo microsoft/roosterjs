@@ -1,6 +1,10 @@
 import { addParser } from './utils/addParser';
 import { blockElementParser } from './parsers/blockElementParser';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
+import {
+    convertPastedTextToMarkdown,
+    shouldConvertPastedTextToMarkdown,
+} from './Markdown/convertPastedTextToMarkdown';
 import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
 import { getDocumentSource } from './pasteSourceValidations/getDocumentSource';
@@ -143,6 +147,19 @@ export class PastePlugin implements EditorPlugin {
 
             case 'oneNoteDesktop':
                 processPastedContentFromOneNote(event);
+                break;
+
+            case 'default':
+                // When the pasted content is plain text (or HTML that is just a thin
+                // wrapper of plain text), interpret it as markdown and replace the paste
+                // fragment with the converted formatted HTML, so we paste formatted content
+                // by default instead of the raw markdown text.
+                if (
+                    pasteType === 'normal' &&
+                    shouldConvertPastedTextToMarkdown(clipboardData, fragment)
+                ) {
+                    convertPastedTextToMarkdown(this.editor, fragment, clipboardData.text);
+                }
                 break;
         }
 
