@@ -595,7 +595,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
             format: {},
-            segments: [segment1, marker1, segment2, segment3, marker2, segment4],
+            segments: [segment1, segment2, segment3, segment4],
         });
         expect(setSelectionSpy).toHaveBeenCalledWith(model, marker1, marker2);
         expect(model).toEqual({
@@ -615,7 +615,10 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         // Range starts at the END of node1 (offset 5) and ends inside node2 (offset 3).
         // After the first reconcile call marker1 lands directly before node2's segment;
-        // the second call's adjacent-marker cleanup loop must NOT eat marker1.
+        // the second call's adjacent-marker cleanup loop must NOT eat marker1, so that
+        // setSelection still receives both live markers. setSelection then drops both
+        // boundary markers (redundant: "tes" is selected between them in the same paragraph),
+        // which is why the final paragraph segments contain no SelectionMarker.
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node1, 5, node2, 3),
@@ -663,7 +666,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
             format: {},
-            segments: [segment1, marker1, segment2, marker2, segment3],
+            segments: [segment1, segment2, segment3],
         });
         expect(setSelectionSpy).toHaveBeenCalledWith(model, marker1, marker2);
         expect(model).toEqual({
@@ -724,7 +727,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
             format: {},
-            segments: [segment1, marker1, segment2, oldSegment2, marker2],
+            segments: [segment1, segment2, oldSegment2],
         });
         expect(setSelectionSpy).toHaveBeenCalledWith(model, marker1, marker2);
         expect(model).toEqual({
