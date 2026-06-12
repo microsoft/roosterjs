@@ -691,6 +691,7 @@ describe('handleParagraph', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            reconcileImageAttribute: null!,
             onMergeText: null!,
             clearIndex: null!,
         };
@@ -743,6 +744,7 @@ describe('handleParagraph', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            reconcileImageAttribute: null!,
             onMergeText: null!,
             clearIndex: null!,
         };
@@ -1395,7 +1397,9 @@ describe('Handle paragraph and adjust selections', () => {
             };
             handleParagraph(document, parent, paragraph, context, null);
 
-            expect((context as ModelToDomSegmentContext).noFollowingTextSegmentOrLast).toBeUndefined();
+            expect(
+                (context as ModelToDomSegmentContext).noFollowingTextSegmentOrLast
+            ).toBeUndefined();
         });
     });
 });

@@ -411,6 +411,38 @@ export class DomIndexerImpl implements DomIndexer {
         }
     }
 
+    reconcileImageAttribute(element: HTMLElement, attributeName: string) {
+        if (isElementOfType(element, 'img')) {
+            const image = getIndexedSegmentItem(element)?.segments[0];
+
+            if (image?.segmentType == 'Image') {
+                if (attributeName == 'src') {
+                    // Use getAttribute('src') instead of retrieving src directly, in case the src
+                    // has port and may be stripped by browser. This matches imageProcessor.
+                    image.src = element.getAttribute('src') ?? '';
+
+                    return true;
+                } else if (attributeName.indexOf('data-') == 0) {
+                    // A data-* attribute may be added, modified or removed. Rebuild the whole
+                    // dataset from DOM to keep it in sync, the same way imageProcessor builds it.
+                    const { dataset } = image;
+
+                    getObjectKeys(dataset).forEach(key => {
+                        delete dataset[key];
+                    });
+
+                    getObjectKeys(element.dataset).forEach(key => {
+                        dataset[key] = element.dataset[key] || '';
+                    });
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private onBlockEntityDelimiter(
         node: Node | null,
         entity: ContentModelEntity,

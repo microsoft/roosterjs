@@ -1698,6 +1698,121 @@ describe('domIndexerImpl.reconcileElementId', () => {
     });
 });
 
+describe('domIndexerImpl.reconcileImageAttribute', () => {
+    function indexImage(img: HTMLImageElement, image: ReturnType<typeof createImage>) {
+        const para = createParagraph();
+        const segIndex: SegmentItem = {
+            paragraph: para,
+            segments: [image],
+        };
+
+        para.segments.push(image);
+        ((img as Node) as IndexedSegmentNode).__roosterjsContentModel = segIndex;
+    }
+
+    it('unindexed image src', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        img.setAttribute('src', 'new.png');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'src');
+
+        expect(result).toBe(false);
+        expect(image.src).toBe('test');
+    });
+
+    it('indexed image src', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        indexImage(img, image);
+
+        img.setAttribute('src', 'new.png');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'src');
+
+        expect(result).toBe(true);
+        expect(image.src).toBe('new.png');
+    });
+
+    it('indexed image src removed', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        indexImage(img, image);
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'src');
+
+        expect(result).toBe(true);
+        expect(image.src).toBe('');
+    });
+
+    it('indexed image data-* added', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        indexImage(img, image);
+
+        img.setAttribute('data-foo', 'bar');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'data-foo');
+
+        expect(result).toBe(true);
+        expect(image.dataset).toEqual({ foo: 'bar' });
+    });
+
+    it('indexed image data-* modified', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        image.dataset.foo = 'old';
+        indexImage(img, image);
+
+        img.setAttribute('data-foo', 'new');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'data-foo');
+
+        expect(result).toBe(true);
+        expect(image.dataset).toEqual({ foo: 'new' });
+    });
+
+    it('indexed image data-* removed', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        image.dataset.foo = 'bar';
+        indexImage(img, image);
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'data-foo');
+
+        expect(result).toBe(true);
+        expect(image.dataset).toEqual({});
+    });
+
+    it('indexed image, unrelated attribute', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        indexImage(img, image);
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'alt');
+
+        expect(result).toBe(false);
+        expect(image.src).toBe('test');
+    });
+
+    it('non-image element', () => {
+        const div = document.createElement('div');
+
+        div.setAttribute('src', 'new.png');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(div, 'src');
+
+        expect(result).toBe(false);
+    });
+});
+
 describe('domIndexerImpl.clearIndex', () => {
     it('clear index, no child', () => {
         const domIndexer = new DomIndexerImpl(true);
