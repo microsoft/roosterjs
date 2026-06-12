@@ -1,4 +1,5 @@
-import type { ClipboardData, DOMCreator } from 'roosterjs-content-model-types';
+import { isContentMarkdown } from './isContentMarkdown';
+import type { ClipboardData, DOMCreator, IEditor } from 'roosterjs-content-model-types';
 
 // Tags that are considered "thin wrappers", which only add structure (such as line breaks)
 // around the plain text without applying any real formatting to its content.
@@ -6,31 +7,29 @@ const ThinWrapperTags = new Set<string>(['DIV', 'P', 'BR', 'SPAN']);
 
 /**
  * Detect whether the given clipboard content can be interpreted as markdown.
- * @param doc The document to use for creating the document fragment.
+ * @param editor The editor instance.
  * @param clipboardData The clipboard data to check.
- * @param trustedHTMLHandler The handler to use for parsing HTML.
  * @returns True if the content can be interpreted as markdown, false otherwise.
  */
-export function isPastedContentMarkdown(
-    doc: Document,
-    clipboardData: ClipboardData,
-    trustedHTMLHandler: DOMCreator
-): boolean {
+export function isPastedContentMarkdown(editor: IEditor, clipboardData: ClipboardData): boolean {
     const { text, rawHtml } = clipboardData;
 
-    // There must be some plain text to interpret as markdown
     if (!text || !text.trim()) {
         return false;
     }
 
-    // No HTML content at all (text/plain only), so the plain text is all we have
-    if (!rawHtml) {
-        return true;
+    if (isContentMarkdown(text)) {
+        if (!rawHtml) {
+            return true;
+        }
+
+        const doc = editor.getDocument();
+        const trustedHTMLHandler = editor.getDOMCreator();
+        const fragment = parseHtmlToFragment(rawHtml, doc, trustedHTMLHandler);
+
+        return isThinWrapperOfPlainText(fragment, text);
     }
-
-    const fragment = parseHtmlToFragment(rawHtml, doc, trustedHTMLHandler);
-
-    return isThinWrapperOfPlainText(fragment, text);
+    return false;
 }
 
 function isThinWrapperOfPlainText(fragment: DocumentFragment, text: string): boolean {
@@ -46,13 +45,12 @@ function isThinWrapperOfPlainText(fragment: DocumentFragment, text: string): boo
         for (let j = 0; j < element.attributes.length; j++) {
             const attr = element.attributes[j];
 
-            if (attr.name === 'class' || attr.name !== 'style') {
+            if (attr.name !== 'class' && attr.name !== 'style') {
                 return false;
             }
         }
     }
 
-    // Make sure the HTML and the plain text actually represent the same content
     return removeWhitespace(fragment.textContent || '') === removeWhitespace(text);
 }
 

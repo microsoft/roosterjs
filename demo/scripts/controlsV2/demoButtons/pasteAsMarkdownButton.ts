@@ -1,10 +1,10 @@
+import { mergeModel } from 'roosterjs-content-model-dom';
+import { paste } from 'roosterjs-content-model-core';
+import { readClipboardData } from '../../utils/readClipboardData';
 import {
     convertMarkdownToContentModel,
     isPastedContentMarkdown,
 } from 'roosterjs-content-model-markdown';
-import { mergeModel } from 'roosterjs-content-model-dom';
-import { paste } from 'roosterjs-content-model-core';
-import { readClipboardData } from '../../utils/readClipboardData';
 import type { IEditor } from 'roosterjs-content-model-types';
 import type { RibbonButton } from 'roosterjs-react';
 
@@ -28,7 +28,7 @@ export const pasteAsMarkdownButton: RibbonButton<'buttonNamePasteAsMarkdown'> = 
             return;
         }
 
-        if (isPastedContentMarkdown(doc, clipboardData, editor.getDOMCreator())) {
+        if (isPastedContentMarkdown(editor, clipboardData)) {
             insertMarkdown(editor, clipboardData.text);
         } else {
             paste(editor, clipboardData);
