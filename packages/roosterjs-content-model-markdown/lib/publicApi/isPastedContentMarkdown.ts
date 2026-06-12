@@ -43,8 +43,6 @@ function isThinWrapperOfPlainText(fragment: DocumentFragment, text: string): boo
             return false;
         }
 
-        // Allow elements whose attributes are limited to non-formatting class names
-        // and/or a style attribute (any style is permitted).
         for (let j = 0; j < element.attributes.length; j++) {
             const attr = element.attributes[j];
 
