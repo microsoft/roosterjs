@@ -1,23 +1,24 @@
-import { ClipboardData, DOMCreator } from 'roosterjs-content-model-types';
+import { ClipboardData, DOMCreator, IEditor } from 'roosterjs-content-model-types';
 import { isPastedContentMarkdown } from '../../lib/publicApi/isPastedContentMarkdown';
 
 describe('isPastedContentMarkdown', () => {
     let doc: Document;
     let trustedHTMLHandler: DOMCreator;
+    let editor: IEditor;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument('test');
         trustedHTMLHandler = {
             htmlToDOM: (html: string) => new DOMParser().parseFromString(html, 'text/html'),
         };
+        editor = ({
+            getDocument: () => doc,
+            getDOMCreator: () => trustedHTMLHandler,
+        } as unknown) as IEditor;
     });
 
     function runTest(clipboardData: Partial<ClipboardData>, expected: boolean) {
-        const result = isPastedContentMarkdown(
-            doc,
-            clipboardData as ClipboardData,
-            trustedHTMLHandler
-        );
+        const result = isPastedContentMarkdown(editor, clipboardData as ClipboardData);
         expect(result).toBe(expected);
     }
 
@@ -31,6 +32,10 @@ describe('isPastedContentMarkdown', () => {
 
     it('should return false when text contains only whitespace', () => {
         runTest({ text: '   \n\t  ', rawHtml: '<p>foo</p>' }, false);
+    });
+
+    it('should return false when text contains no markdown patterns', () => {
+        runTest({ text: 'just plain text', rawHtml: '<p>just plain text</p>' }, false);
     });
 
     it('should return true when text exists and rawHtml is undefined', () => {
@@ -56,8 +61,8 @@ describe('isPastedContentMarkdown', () => {
     it('should return true when rawHtml uses nested allowed wrapper tags', () => {
         runTest(
             {
-                text: 'line1 line2',
-                rawHtml: '<div><p>line1<br/>line2</p></div>',
+                text: '# line1 line2',
+                rawHtml: '<div><p># line1<br/>line2</p></div>',
             },
             true
         );
@@ -83,13 +88,13 @@ describe('isPastedContentMarkdown', () => {
         );
     });
 
-    it('should return false when wrapper element has a class attribute', () => {
+    it('should return true when wrapper element has only a class attribute', () => {
         runTest(
             {
                 text: '# Hello',
                 rawHtml: '<p class="md"># Hello</p>',
             },
-            false
+            true
         );
     });
 
@@ -106,8 +111,8 @@ describe('isPastedContentMarkdown', () => {
     it('should return false when rawHtml contains a non-thin-wrapper tag (e.g. <strong>)', () => {
         runTest(
             {
-                text: 'bold text',
-                rawHtml: '<p><strong>bold text</strong></p>',
+                text: '**bold text**',
+                rawHtml: '<p><strong>**bold text**</strong></p>',
             },
             false
         );
@@ -116,8 +121,8 @@ describe('isPastedContentMarkdown', () => {
     it('should return false when rawHtml contains a heading tag', () => {
         runTest(
             {
-                text: 'Hello',
-                rawHtml: '<h1>Hello</h1>',
+                text: '# Hello',
+                rawHtml: '<h1># Hello</h1>',
             },
             false
         );
@@ -126,8 +131,8 @@ describe('isPastedContentMarkdown', () => {
     it('should return false when rawHtml contains a list element', () => {
         runTest(
             {
-                text: 'item',
-                rawHtml: '<ul><li>item</li></ul>',
+                text: '- item',
+                rawHtml: '<ul><li>- item</li></ul>',
             },
             false
         );
@@ -136,8 +141,8 @@ describe('isPastedContentMarkdown', () => {
     it('should return false when rawHtml contains an anchor tag', () => {
         runTest(
             {
-                text: 'link',
-                rawHtml: '<p><a href="x">link</a></p>',
+                text: '[link](url)',
+                rawHtml: '<p><a href="x">[link](url)</a></p>',
             },
             false
         );
@@ -156,8 +161,8 @@ describe('isPastedContentMarkdown', () => {
     it('should return false when html text content has extra characters not in plain text', () => {
         runTest(
             {
-                text: 'Hello',
-                rawHtml: '<p>Hello world</p>',
+                text: '# Hello',
+                rawHtml: '<p># Hello world</p>',
             },
             false
         );
@@ -166,8 +171,8 @@ describe('isPastedContentMarkdown', () => {
     it('should return true when rawHtml has multiple thin wrappers matching the text', () => {
         runTest(
             {
-                text: 'foo bar',
-                rawHtml: '<div><p>foo</p><p>bar</p></div>',
+                text: '# foo bar',
+                rawHtml: '<div><p># foo</p><p>bar</p></div>',
             },
             true
         );
@@ -176,24 +181,27 @@ describe('isPastedContentMarkdown', () => {
     it('should return true when <br> is used inside thin wrappers', () => {
         runTest(
             {
-                text: 'foo bar',
-                rawHtml: '<p>foo<br/>bar</p>',
+                text: '# foo bar',
+                rawHtml: '<p># foo<br/>bar</p>',
             },
             true
         );
     });
 
-    it('should use the provided trustedHTMLHandler to parse rawHtml', () => {
+    it('should use the editor-provided trustedHTMLHandler to parse rawHtml', () => {
         const spyDom = new DOMParser().parseFromString('<p># Hello</p>', 'text/html');
         const handler: DOMCreator = {
             htmlToDOM: jasmine.createSpy('htmlToDOM').and.returnValue(spyDom),
         };
+        const editorWithSpy = ({
+            getDocument: () => doc,
+            getDOMCreator: () => handler,
+        } as unknown) as IEditor;
 
-        const result = isPastedContentMarkdown(
-            doc,
-            { text: '# Hello', rawHtml: '<p># Hello</p>' } as ClipboardData,
-            handler
-        );
+        const result = isPastedContentMarkdown(editorWithSpy, {
+            text: '# Hello',
+            rawHtml: '<p># Hello</p>',
+        } as ClipboardData);
 
         expect(handler.htmlToDOM).toHaveBeenCalledWith('<p># Hello</p>');
         expect(result).toBe(true);
@@ -203,13 +211,16 @@ describe('isPastedContentMarkdown', () => {
         const handler: DOMCreator = {
             htmlToDOM: () => ({} as Document),
         };
+        const editorWithEmpty = ({
+            getDocument: () => doc,
+            getDOMCreator: () => handler,
+        } as unknown) as IEditor;
 
         // Empty fragment textContent ('') will not match the non-empty plain text
-        const result = isPastedContentMarkdown(
-            doc,
-            { text: '# Hello', rawHtml: '<p># Hello</p>' } as ClipboardData,
-            handler
-        );
+        const result = isPastedContentMarkdown(editorWithEmpty, {
+            text: '# Hello',
+            rawHtml: '<p># Hello</p>',
+        } as ClipboardData);
 
         expect(result).toBe(false);
     });
