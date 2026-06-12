@@ -9,6 +9,7 @@ const ContentHandlers: {
     ['text/*']: (data, value, type?) => !!type && (data.customValues[type] = value),
     ['text/link-preview']: tryParseLinkPreview,
     ['text/uri-list']: (data, value) => (data.text = value),
+    ['vscode-editor-data']: tryVSCodeDataParser,
 };
 
 /**
@@ -58,7 +59,8 @@ export function extractClipboardItems(
                     resolve();
                 });
             } else {
-                const customType = getAllowedCustomType(type, allowedCustomPasteType);
+                const customType =
+                    getAllowedCustomType(type, allowedCustomPasteType) || getVSCodeTypes(type);
                 const handler =
                     ContentHandlers[type] || (customType ? ContentHandlers['text/*'] : null);
                 return new Promise<void>(resolve =>
@@ -82,9 +84,19 @@ function tryParseLinkPreview(data: ClipboardData, value: string) {
     } catch {}
 }
 
+function tryVSCodeDataParser(data: ClipboardData, _value: string) {
+    try {
+        data.customValues['vscode-editor-data'] = 'true';
+    } catch {}
+}
+
 function getAllowedCustomType(type: string, allowedCustomPasteType?: string[]) {
     const textType = type.indexOf('text/') == 0 ? type.substring('text/'.length) : null;
     const index =
         allowedCustomPasteType && textType ? allowedCustomPasteType.indexOf(textType) : -1;
     return textType && index >= 0 ? textType : undefined;
+}
+
+function getVSCodeTypes(type: string) {
+    return type == 'vscode-editor-data' ? 'vscode-editor-data' : undefined;
 }
