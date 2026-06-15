@@ -20,4 +20,9 @@ export type PasteType =
     /**
      * If there is a image uri in the clipboard, paste the content as image element
      */
-    | 'asImage';
+    | 'asImage'
+
+    /**
+     * If there is markdown content in the clipboard, paste it as markdown
+     */
+    | 'asMarkdown';

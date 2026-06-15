@@ -19,6 +19,7 @@ import { getPresetModelById } from '../sidePane/presets/allPresets/allPresets';
 import { getTabs, tabNames } from '../tabs/getTabs';
 import { getTheme } from '../theme/themes';
 import { MarkdownPanePlugin } from '../sidePane/MarkdownPane/MarkdownPanePlugin';
+import { MarkdownPastePlugin } from 'roosterjs-content-model-markdown';
 import { OptionState, UrlPlaceholder } from '../sidePane/editorOptions/OptionState';
 import { popoutButton } from '../demoButtons/popoutButton';
 import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
@@ -568,6 +569,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             imageMenu,
             watermarkText,
             markdownOptions,
+            markdownPasteOptions,
             autoFormatOptions,
             linkTitle,
             customReplacements,
@@ -583,6 +585,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.markdown && new MarkdownPlugin(markdownOptions),
+            pluginList.markdown && new MarkdownPastePlugin(markdownPasteOptions),
             imageEditPlugin,
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),

@@ -118,6 +118,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private markdownItalic = React.createRef<HTMLInputElement>();
     private markdownStrikethrough = React.createRef<HTMLInputElement>();
     private markdownCode = React.createRef<HTMLInputElement>();
+    private markdownPasteAutoConversion = React.createRef<HTMLInputElement>();
     private linkTitle = React.createRef<HTMLInputElement>();
     private disableSideResize = React.createRef<HTMLInputElement>();
 
@@ -322,6 +323,13 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                                     value
                                         ? (state.markdownOptions.codeFormat = {})
                                         : (state.markdownOptions.codeFormat = undefined)
+                            )}
+                            {this.renderCheckBox(
+                                'Auto convert pasted markdown',
+                                this.markdownPasteAutoConversion,
+                                this.props.state.markdownPasteOptions.autoConversion,
+                                (state, value) =>
+                                    (state.markdownPasteOptions.autoConversion = value)
                             )}
                         </>
                     )}

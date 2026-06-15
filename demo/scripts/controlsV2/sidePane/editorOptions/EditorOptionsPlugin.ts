@@ -59,6 +59,9 @@ const initialState: OptionState = {
         strikethrough: true,
         codeFormat: {},
     },
+    markdownPasteOptions: {
+        autoConversion: false,
+    },
     editPluginOptions: {
         handleTabKey: {
             indentMultipleBlocks: true,

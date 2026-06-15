@@ -57,7 +57,7 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
     readonly htmlAttributes: Record<string, string>;
 
     /**
-     * Paste type option (as plain text, merge format, normal, as image)
+     * Paste type option (as plain text, merge format, normal, as image, asMarkdown)
      */
     readonly pasteType: PasteType;
 
