@@ -79,6 +79,8 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_markdown.html#convertcontentmodeltomarkdown" class="tsd-kind-icon">convert<wbr>Content<wbr>Model<wbr>ToMarkdown</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_markdown.html#convertmarkdowntocontentmodel" class="tsd-kind-icon">convert<wbr>Markdown<wbr>ToContent<wbr>Model</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_markdown.html#iscontentmarkdown" class="tsd-kind-icon">is<wbr>Content<wbr>Markdown</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_content_model_markdown.html#ispastedcontentmarkdown" class="tsd-kind-icon">is<wbr>Pasted<wbr>Content<wbr>Markdown</a></li>
 							</ul>
 						</section>
 					</div>
@@ -96,7 +98,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/19d63f2/packages/roosterjs-content-model-markdown/lib/modelToMarkdown/convertContentModelToMarkdown.ts#L11">roosterjs-content-model-markdown/lib/modelToMarkdown/convertContentModelToMarkdown.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/fabbe9a/packages/roosterjs-content-model-markdown/lib/modelToMarkdown/convertContentModelToMarkdown.ts#L11">roosterjs-content-model-markdown/lib/modelToMarkdown/convertContentModelToMarkdown.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -132,7 +134,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/19d63f2/packages/roosterjs-content-model-markdown/lib/markdownToModel/convertMarkdownToContentModel.ts#L11">roosterjs-content-model-markdown/lib/markdownToModel/convertMarkdownToContentModel.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/fabbe9a/packages/roosterjs-content-model-markdown/lib/markdownToModel/convertMarkdownToContentModel.ts#L11">roosterjs-content-model-markdown/lib/markdownToModel/convertMarkdownToContentModel.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -161,7 +163,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/19d63f2/packages/roosterjs-content-model-markdown/lib/markdownToModel/convertMarkdownToContentModel.ts#L22">roosterjs-content-model-markdown/lib/markdownToModel/convertMarkdownToContentModel.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/fabbe9a/packages/roosterjs-content-model-markdown/lib/markdownToModel/convertMarkdownToContentModel.ts#L22">roosterjs-content-model-markdown/lib/markdownToModel/convertMarkdownToContentModel.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -186,6 +188,78 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></h4>
 							<p>The ContentModelDocument</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="iscontentmarkdown" class="tsd-anchor"></a>
+					<h3>is<wbr>Content<wbr>Markdown</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Content<wbr>Markdown<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/fabbe9a/packages/roosterjs-content-model-markdown/lib/publicApi/isContentMarkdown.ts#L27">roosterjs-content-model-markdown/lib/publicApi/isContentMarkdown.ts:27</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Detect whether the given plain text contains any markdown markup.
+										Recognizes block-level patterns (headings, blockquotes, lists, horizontal rules, tables)
+									and inline patterns (bold, italic, strikethrough, links, images).</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>text: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The plain text to check.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True if the text contains any markdown markup, false otherwise.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="ispastedcontentmarkdown" class="tsd-anchor"></a>
+					<h3>is<wbr>Pasted<wbr>Content<wbr>Markdown</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Pasted<wbr>Content<wbr>Markdown<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a>, clipboardData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.clipboarddata.html" class="tsd-signature-type" data-tsd-kind="Interface">ClipboardData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/fabbe9a/packages/roosterjs-content-model-markdown/lib/publicApi/isPastedContentMarkdown.ts#L14">roosterjs-content-model-markdown/lib/publicApi/isPastedContentMarkdown.ts:14</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Detect whether the given clipboard content can be interpreted as markdown.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>editor: <a href="../interfaces/roosterjs_content_model_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The editor instance.</p>
+									</div>
+								</li>
+								<li>
+									<h5>clipboardData: <a href="../interfaces/roosterjs_content_model_types.clipboarddata.html" class="tsd-signature-type" data-tsd-kind="Interface">ClipboardData</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The clipboard data to check.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True if the content can be interpreted as markdown, false otherwise.</p>
 						</li>
 					</ul>
 				</section>
@@ -242,6 +316,12 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="roosterjs_content_model_markdown.html#convertmarkdowntocontentmodel" class="tsd-kind-icon">convert<wbr>Markdown<wbr>ToContent<wbr>Model</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_content_model_markdown.html#iscontentmarkdown" class="tsd-kind-icon">is<wbr>Content<wbr>Markdown</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_content_model_markdown.html#ispastedcontentmarkdown" class="tsd-kind-icon">is<wbr>Pasted<wbr>Content<wbr>Markdown</a>
 					</li>
 				</ul>
 			</nav>
