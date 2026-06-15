@@ -5,6 +5,8 @@ import type { ClipboardData, DOMCreator, IEditor } from 'roosterjs-content-model
 // around the plain text without applying any real formatting to its content.
 const ThinWrapperTags = new Set<string>(['DIV', 'P', 'BR', 'SPAN']);
 
+const AllowedAttributes = new Set<string>(['class', 'style']);
+
 /**
  * Detect whether the given clipboard content can be interpreted as markdown.
  * @param editor The editor instance.
@@ -45,7 +47,7 @@ function isThinWrapperOfPlainText(fragment: DocumentFragment, text: string): boo
         for (let j = 0; j < element.attributes.length; j++) {
             const attr = element.attributes[j];
 
-            if (attr.name !== 'class' && attr.name !== 'style') {
+            if (!AllowedAttributes.has(attr.name) && !attr.name.startsWith('data-')) {
                 return false;
             }
         }

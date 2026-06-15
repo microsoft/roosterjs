@@ -71,7 +71,9 @@ export class MarkdownPastePlugin implements EditorPlugin {
 }
 
 function convertPastedTextToMarkdown(editor: IEditor, fragment: DocumentFragment, text: string) {
-    const model = convertMarkdownToContentModel(text);
+    const model = convertMarkdownToContentModel(text, {
+        emptyLine: 'merge',
+    });
 
     while (fragment.firstChild) {
         fragment.removeChild(fragment.firstChild);
