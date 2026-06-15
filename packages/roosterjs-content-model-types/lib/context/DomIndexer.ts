@@ -80,6 +80,15 @@ export interface DomIndexer {
     reconcileElementId: (element: HTMLElement) => boolean;
 
     /**
+     * When src or a data-* attribute is changed on an indexed IMG element, update the related
+     * ContentModelImage (src property or dataset) so the cached model stays valid.
+     * @param element The element that has an attribute changed
+     * @param attributeName The name of the changed attribute
+     * @returns True if successfully updated, otherwise false
+     */
+    reconcileImageAttribute: (element: HTMLElement, attributeName: string) => boolean;
+
+    /**
      * When child list of editor content is changed, we can use this method to do sync the change from editor into content model.
      * This is mostly used when user start to type in an empty line. In that case browser will remove the existing BR node in the empty line if any,
      * and create a new TEXT node for the typed text. Here we use these information to remove original Br segment and create a new Text segment

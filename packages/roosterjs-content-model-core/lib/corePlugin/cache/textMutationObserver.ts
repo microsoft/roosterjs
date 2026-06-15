@@ -79,6 +79,17 @@ class TextMutationObserverImpl implements TextMutationObserver {
                             isNodeOfType(target, 'ELEMENT_NODE')
                         ) {
                             this.onMutation({ type: 'elementId', element: target });
+                        } else if (
+                            mutation.attributeName &&
+                            isNodeOfType(target, 'ELEMENT_NODE') &&
+                            (mutation.attributeName == 'src' ||
+                                mutation.attributeName.indexOf('data-') == 0)
+                        ) {
+                            this.onMutation({
+                                type: 'attribute',
+                                element: target,
+                                attributeName: mutation.attributeName,
+                            });
                         } else {
                             // We cannot handle attributes changes on editor content for now
                             canHandle = false;

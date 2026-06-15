@@ -10,6 +10,7 @@ import { imageBorderWidthButton } from '../demoButtons/imageBorderWidthButton';
 import { imageBoxShadowButton } from '../demoButtons/imageBoxShadowButton';
 import { ImageEditor } from 'roosterjs-content-model-types';
 import { listStartNumberButton } from '../demoButtons/listStartNumberButton';
+import { pasteAsMarkdownButton } from '../demoButtons/pasteAsMarkdownButton';
 import { pasteButton } from '../demoButtons/pasteButton';
 import { setBulletedListStyleButton } from '../demoButtons/setBulletedListStyleButton';
 import { setNumberedListStyleButton } from '../demoButtons/setNumberedListStyleButton';
@@ -137,6 +138,7 @@ const paragraphButtons: RibbonButton<any>[] = [
     spaceBeforeButton,
     spaceAfterButton,
     pasteButton,
+    pasteAsMarkdownButton,
 ];
 
 const allButtons: RibbonButton<any>[] = [
@@ -197,6 +199,7 @@ const allButtons: RibbonButton<any>[] = [
     spaceBeforeButton,
     spaceAfterButton,
     pasteButton,
+    pasteAsMarkdownButton,
 ];
 export function getButtons(
     id: tabNames,

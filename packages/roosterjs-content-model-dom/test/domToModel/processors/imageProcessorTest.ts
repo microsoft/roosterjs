@@ -326,6 +326,7 @@ describe('imageProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            reconcileImageAttribute: null!,
             onMergeText: null!,
             clearIndex: null!,
         };
