@@ -577,11 +577,13 @@ describe('CachePlugin', () => {
         let mockedObserver: any;
         let reconcileChildListSpy: jasmine.Spy;
         let reconcileElementIdSpy: jasmine.Spy;
+        let reconcileImageAttributeSpy: jasmine.Spy;
         let mockedIndexer: DomIndexer;
 
         beforeEach(() => {
             reconcileChildListSpy = jasmine.createSpy('reconcileChildList');
             reconcileElementIdSpy = jasmine.createSpy('reconcileElementId');
+            reconcileImageAttributeSpy = jasmine.createSpy('reconcileImageAttribute');
             startObservingSpy = jasmine.createSpy('startObserving');
             stopObservingSpy = jasmine.createSpy('stopObserving');
 
@@ -603,6 +605,7 @@ describe('CachePlugin', () => {
                 reconcileSelection: reconcileSelectionSpy,
                 reconcileChildList: reconcileChildListSpy,
                 reconcileElementId: reconcileElementIdSpy,
+                reconcileImageAttribute: reconcileImageAttributeSpy,
             } as any;
         });
 
@@ -784,6 +787,62 @@ describe('CachePlugin', () => {
 
             expect(reconcileElementIdSpy).toHaveBeenCalledTimes(1);
             expect(reconcileElementIdSpy).toHaveBeenCalledWith(mockedElement);
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: undefined,
+                cachedSelection: undefined,
+                paragraphMap: mockedParagraphMap,
+            });
+            expect(resetMapSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('attribute, can reconcile', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedElement = 'ELEMENT' as any;
+
+            reconcileImageAttributeSpy.and.returnValue(true);
+
+            onMutation({
+                type: 'attribute',
+                element: mockedElement,
+                attributeName: 'src',
+            });
+
+            expect(reconcileImageAttributeSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileImageAttributeSpy).toHaveBeenCalledWith(mockedElement, 'src');
+            expect(state).toEqual({
+                domIndexer: mockedIndexer,
+                textMutationObserver: mockedObserver,
+                cachedModel: 'MODEL' as any,
+                cachedSelection: 'SELECTION' as any,
+                paragraphMap: mockedParagraphMap,
+            });
+            expect(resetMapSpy).toHaveBeenCalledTimes(0);
+        });
+
+        it('attribute, cannot reconcile', () => {
+            const state = plugin.getState();
+            state.cachedModel = 'MODEL' as any;
+            state.cachedSelection = 'SELECTION' as any;
+            state.domIndexer = mockedIndexer;
+
+            const mockedElement = 'ELEMENT' as any;
+
+            reconcileImageAttributeSpy.and.returnValue(false);
+
+            onMutation({
+                type: 'attribute',
+                element: mockedElement,
+                attributeName: 'data-foo',
+            });
+
+            expect(reconcileImageAttributeSpy).toHaveBeenCalledTimes(1);
+            expect(reconcileImageAttributeSpy).toHaveBeenCalledWith(mockedElement, 'data-foo');
             expect(state).toEqual({
                 domIndexer: mockedIndexer,
                 textMutationObserver: mockedObserver,

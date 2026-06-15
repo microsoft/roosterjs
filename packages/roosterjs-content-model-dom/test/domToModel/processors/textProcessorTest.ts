@@ -580,6 +580,7 @@ describe('textProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            reconcileImageAttribute: null!,
             onMergeText: null!,
             clearIndex: null!,
         };
@@ -619,6 +620,7 @@ describe('textProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            reconcileImageAttribute: null!,
             onMergeText: null!,
             clearIndex: null!,
         };
@@ -669,6 +671,7 @@ describe('textProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            reconcileImageAttribute: null!,
             onMergeText: null!,
             clearIndex: null!,
         };
