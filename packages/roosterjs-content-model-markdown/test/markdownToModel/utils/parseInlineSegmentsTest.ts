@@ -288,6 +288,86 @@ describe('parseInlineSegments', () => {
         ]);
     });
 
+    it('should treat an escaped asterisk as literal and not start italic', () => {
+        runTest('\\*not italic\\*', [
+            {
+                segmentType: 'Text',
+                text: '*not italic*',
+                format: {},
+            },
+        ]);
+    });
+
+    it('should treat an escaped double asterisk as literal and not start bold', () => {
+        runTest('\\*\\*not bold\\*\\*', [
+            {
+                segmentType: 'Text',
+                text: '**not bold**',
+                format: {},
+            },
+        ]);
+    });
+
+    it('should treat escaped tildes as literal and not start strikethrough', () => {
+        runTest('\\~\\~not strike\\~\\~', [
+            {
+                segmentType: 'Text',
+                text: '~~not strike~~',
+                format: {},
+            },
+        ]);
+    });
+
+    it('should emit an escaped backslash as a single backslash', () => {
+        runTest('a\\\\b', [
+            {
+                segmentType: 'Text',
+                text: 'a\\b',
+                format: {},
+            },
+        ]);
+    });
+
+    it('should keep a trailing backslash as a literal backslash', () => {
+        runTest('end\\', [
+            {
+                segmentType: 'Text',
+                text: 'end\\',
+                format: {},
+            },
+        ]);
+    });
+
+    it('should keep a backslash before a non-escapable character', () => {
+        runTest('a\\b', [
+            {
+                segmentType: 'Text',
+                text: 'a\\b',
+                format: {},
+            },
+        ]);
+    });
+
+    it('should still parse formatting around escaped markers', () => {
+        runTest('*italic \\* still italic*', [
+            {
+                segmentType: 'Text',
+                text: 'italic * still italic',
+                format: { italic: true },
+            },
+        ]);
+    });
+
+    it('should treat escaped link brackets as literal text', () => {
+        runTest('\\[text\\](https://example.com)', [
+            {
+                segmentType: 'Text',
+                text: '[text](https://example.com)',
+                format: {},
+            },
+        ]);
+    });
+
     it('should apply provided link to plain text', () => {
         const segments: ContentModelSegment[] = [];
 
