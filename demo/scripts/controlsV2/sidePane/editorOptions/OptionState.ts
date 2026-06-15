@@ -21,6 +21,7 @@ export interface BuildInPluginList {
     pasteOption: boolean;
     sampleEntity: boolean;
     markdown: boolean;
+    markdownPaste: boolean;
     hyperlink: boolean;
     imageEditPlugin: boolean;
     customReplace: boolean;

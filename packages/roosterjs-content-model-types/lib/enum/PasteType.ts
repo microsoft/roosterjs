@@ -23,6 +23,6 @@ export type PasteType =
     | 'asImage'
 
     /**
-     * If there is markdown content in the clipboard, paste it as markdown
+     * If the editor includes a markdown plugin @see MarkdownPastePlugin, and there is markdown content in the clipboard, paste it as markdown
      */
     | 'asMarkdown';

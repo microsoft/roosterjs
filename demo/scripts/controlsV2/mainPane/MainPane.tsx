@@ -585,7 +585,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.tableEdit && new TableEditPlugin(),
             pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.markdown && new MarkdownPlugin(markdownOptions),
-            pluginList.markdown && new MarkdownPastePlugin(markdownPasteOptions),
+            pluginList.markdownPaste && new MarkdownPastePlugin(markdownPasteOptions),
             imageEditPlugin,
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),

@@ -18,6 +18,7 @@ const initialState: OptionState = {
         pasteOption: true,
         sampleEntity: true,
         markdown: true,
+        markdownPaste: true,
         imageEditPlugin: true,
         hyperlink: true,
         customReplace: true,

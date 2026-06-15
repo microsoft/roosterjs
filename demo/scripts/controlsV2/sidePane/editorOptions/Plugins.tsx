@@ -324,6 +324,12 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                                         ? (state.markdownOptions.codeFormat = {})
                                         : (state.markdownOptions.codeFormat = undefined)
                             )}
+                        </>
+                    )}
+                    {this.renderPluginItem(
+                        'markdownPaste',
+                        'MarkdownPaste',
+                        <>
                             {this.renderCheckBox(
                                 'Auto convert pasted markdown',
                                 this.markdownPasteAutoConversion,
