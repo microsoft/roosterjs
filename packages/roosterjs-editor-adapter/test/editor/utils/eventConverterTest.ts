@@ -161,7 +161,7 @@ describe('oldEventToNewEvent', () => {
                 htmlAfter: mockedHtmlAfter,
                 htmlBefore: mockedHtmlBefore,
                 htmlAttributes: mockedHTmlAttributes,
-                pasteType: 'asPlainText',
+                pasteType: 'asImage',
             }
         );
     });
