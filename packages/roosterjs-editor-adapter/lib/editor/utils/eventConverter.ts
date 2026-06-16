@@ -28,6 +28,8 @@ const PasteTypeNewToOld: Record<NewPasteType, OldPasteType> = {
     asPlainText: OldPasteType.AsPlainText,
     mergeFormat: OldPasteType.MergeFormat,
     normal: OldPasteType.Normal,
+    // The old editor system has no markdown paste concept, fall back to normal paste
+    asMarkdown: OldPasteType.Normal,
 };
 
 const PasteTypeOldToNew: Record<OldPasteType, NewPasteType> = {
