@@ -44,7 +44,7 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
             }
         });
 
-        cleanUpNodeStack(listFormat.nodeStack, context);
+        cleanUpNodeStack(listFormat.nodeStack, context, parent);
 
         // Remove all rest node if any since they don't appear in content model
         cleanUpRestNodes(refNode, context.rewriteFromModel);
@@ -53,13 +53,25 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
     }
 };
 
-function cleanUpNodeStack(nodeStack: ModelToDomListStackItem[], context: ModelToDomContext) {
+function cleanUpNodeStack(
+    nodeStack: ModelToDomListStackItem[],
+    context: ModelToDomContext,
+    leavingParent?: Node
+) {
     if (nodeStack.length > 0) {
         // Clear list stack, only run to nodeStack[1] because nodeStack[0] is the parent node
         for (let i = nodeStack.length - 1; i > 0; i--) {
             const node = nodeStack.pop()?.refNode ?? null;
 
             cleanUpRestNodes(node, context.rewriteFromModel);
+        }
+
+        if (leavingParent && nodeStack[0].node == leavingParent) {
+            // When leaving a parent node that is the same with the root of node stack
+            // It means the whole list node stack is being invalidated, so we clear it
+            while (nodeStack.length > 0) {
+                nodeStack.pop();
+            }
         }
     }
 }

@@ -55,6 +55,14 @@ export function parseInlineSegments(
     while (i < text.length) {
         const remaining = text.substring(i);
 
+        // Escaped character: a backslash followed by an ASCII punctuation character emits
+        // that character literally (e.g. "\*" -> "*") and is never treated as a marker.
+        if (text[i] === '\\' && i + 1 < text.length && isEscapable(text[i + 1])) {
+            buffer += text[i + 1];
+            i += 2;
+            continue;
+        }
+
         // Image: ![alt](url)
         const imgMatch = imagePattern.exec(remaining);
         if (imgMatch && isValidUrl(imgMatch[2])) {
@@ -136,6 +144,11 @@ function shouldToggleFormatting(
 
 function isWhitespace(char: string): boolean {
     return /\s/.test(char);
+}
+
+function isEscapable(char: string): boolean {
+    // Per CommonMark, any ASCII punctuation character may be backslash-escaped.
+    return /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(char);
 }
 
 function toggleFormatting(state: FormattingState, type: 'bold' | 'italic' | 'strikethrough'): void {
