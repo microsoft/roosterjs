@@ -178,7 +178,7 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
                 htmlAfter: input.htmlAfter,
                 htmlAttributes: input.htmlAttributes,
                 htmlBefore: input.htmlBefore,
-                pasteType: PasteTypeOldToNew[input.pasteType],
+                pasteType: refBeforePasteEvent?.pasteType ?? PasteTypeOldToNew[input.pasteType],
             };
 
         case PluginEventType.BeforeSetContent:
