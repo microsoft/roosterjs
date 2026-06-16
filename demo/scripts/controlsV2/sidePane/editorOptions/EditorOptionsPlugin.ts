@@ -18,6 +18,7 @@ const initialState: OptionState = {
         pasteOption: true,
         sampleEntity: true,
         markdown: true,
+        markdownPaste: true,
         imageEditPlugin: true,
         hyperlink: true,
         customReplace: true,
@@ -58,6 +59,9 @@ const initialState: OptionState = {
         italic: true,
         strikethrough: true,
         codeFormat: {},
+    },
+    markdownPasteOptions: {
+        autoConversion: false,
     },
     editPluginOptions: {
         handleTabKey: {

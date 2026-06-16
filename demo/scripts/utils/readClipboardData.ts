@@ -20,7 +20,6 @@ export async function readClipboardData(doc: Document): Promise<ClipboardData | 
 
     try {
         const clipboardItems = await clipboard.read();
-        console.log(clipboardItems);
         const dataTransferItems = await Promise.all(createDataTransferItems(clipboardItems));
         return await extractClipboardItems(dataTransferItems);
     } catch {
