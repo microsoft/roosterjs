@@ -1,4 +1,5 @@
 import { changeImageButton } from '../demoButtons/changeImageButton';
+import { changeCapitalizationButton } from '../demoButtons/changeCapitalizationButton';
 import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
 import { createImageEditButtons } from '../demoButtons/createImageEditButtons';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
@@ -79,6 +80,7 @@ const textButtons: RibbonButton<any>[] = [
     superscriptButton,
     subscriptButton,
     strikethroughButton,
+    changeCapitalizationButton,
 ];
 
 const tableButtons: RibbonButton<any>[] = [
@@ -167,6 +169,7 @@ const allButtons: RibbonButton<any>[] = [
     superscriptButton,
     subscriptButton,
     strikethroughButton,
+    changeCapitalizationButton,
     setHeadingLevelButton,
     codeButton,
     ltrButton,
