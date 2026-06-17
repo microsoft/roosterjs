@@ -5,6 +5,7 @@ import {
     addSegment,
     createContentModelDocument,
     createImage,
+    createSelectionMarker,
     createText,
 } from 'roosterjs-content-model-dom';
 
@@ -160,6 +161,94 @@ describe('changeCapitalization', () => {
             },
             'capitalize',
             1
+        );
+    });
+
+    it('Capitalize with collapsed selection in the middle of a word', () => {
+        const doc = createContentModelDocument();
+        const text1 = createText('he');
+        const marker = createSelectionMarker();
+        const text2 = createText('llo');
+
+        addSegment(doc, text1);
+        addSegment(doc, marker);
+        addSegment(doc, text2);
+
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'He',
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'llo',
+                            },
+                        ],
+                    },
+                ],
+            },
+            'capitalize',
+            1
+        );
+    });
+
+    it('Capitalize with collapsed selection at the start of a word does not change text', () => {
+        const doc = createContentModelDocument();
+        const text1 = createText('hello ');
+        const marker = createSelectionMarker();
+        const text2 = createText('there');
+
+        addSegment(doc, text1);
+        addSegment(doc, marker);
+        addSegment(doc, text2);
+
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'hello ',
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'there',
+                            },
+                        ],
+                    },
+                ],
+            },
+            'capitalize',
+            0
         );
     });
 
