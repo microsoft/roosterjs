@@ -37,5 +37,5 @@ export function expectEqual(model1: ContentModelDocument, ...model2: ContentMode
         )
     );
 
-    expect(model2.some(m => jasmine.objectContaining(m))).toBeTruthy();
+    expect(model2.some(m => jasmine.objectContaining(newModel))).toBeTruthy();
 }
