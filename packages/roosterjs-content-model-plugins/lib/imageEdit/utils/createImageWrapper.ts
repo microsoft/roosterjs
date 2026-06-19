@@ -62,16 +62,38 @@ export function createImageWrapper(
         rotators,
         croppers
     );
+    // Capture the image footprint before attaching the shadow root, since the light-DOM image
+    // stops being rendered once the shadow root takes over.
+    const imageWidth = image.offsetWidth;
+    const imageHeight = image.offsetHeight;
     const imageSpan = wrap(doc, image, 'span');
-    const shadowSpan = createShadowSpan(wrapper, imageSpan);
+    const shadowSpan = createShadowSpan(wrapper, imageSpan, imageWidth, imageHeight);
     return { wrapper, shadowSpan, imageClone, resizers, rotators, croppers };
 }
 
-const createShadowSpan = (wrapper: HTMLElement, imageSpan: HTMLSpanElement) => {
+const createShadowSpan = (
+    wrapper: HTMLElement,
+    imageSpan: HTMLSpanElement,
+    imageWidth: number,
+    imageHeight: number
+) => {
     const shadowRoot = imageSpan.attachShadow({
         mode: 'open',
     });
     imageSpan.id = IMAGE_EDIT_SHADOW_ROOT;
+
+    // Pin the shadow host to the original image's box so that wrapping the image does not grow the
+    // surrounding line box. Without this, the taller edit wrapper enlarges the line and the browser
+    // scrolls the selection back into view, making the editor jump. The wrapper and handles still
+    // overflow the host visually because overflow is left visible.
+    if (imageWidth > 0 && imageHeight > 0) {
+        imageSpan.style.display = 'inline-block';
+        imageSpan.style.width = `${imageWidth}px`;
+        imageSpan.style.height = `${imageHeight}px`;
+        imageSpan.style.verticalAlign = 'bottom';
+        imageSpan.style.overflow = 'visible';
+    }
+
     shadowRoot.appendChild(wrapper);
     return imageSpan;
 };
