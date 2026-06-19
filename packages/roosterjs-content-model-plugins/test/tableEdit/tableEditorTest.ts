@@ -15,7 +15,7 @@ import {
 } from '../../lib/tableEdit/editors/features/CellResizer';
 
 describe('TableEditor', () => {
-    xdescribe('disableFeatures', () => {
+    describe('disableFeatures', () => {
         const insideTheOffset = 5;
         let editor: IEditor;
         let table: HTMLTableElement;
@@ -29,6 +29,15 @@ describe('TableEditor', () => {
         ) {
             const setup = beforeTableTest(TEST_ID, undefined, featuresToDisable);
             editor = setup.editor;
+            // Give the editor a deterministic size that is larger than the test tables, with
+            // padding on every side, so the table is never flush against the scroll container's
+            // edges. createTableInserter suppresses the inserter when a cell touches the viewport
+            // edge (isOutsideTop/isOutsideBottom); whether that happened otherwise depended on
+            // leftover document.body layout from previously-run specs, making this test order
+            // dependent (randomly failing).
+            const editorDiv = editor.getDocument().getElementById(TEST_ID) as HTMLElement;
+            editorDiv.style.height = '400px';
+            editorDiv.style.padding = '100px';
             const rect = initialize(editor, cmTable);
             table = editor.getDOMHelper().queryElements('table')[0];
             const contentDiv = editor.getDocument().getElementById(TEST_ID);
