@@ -53,6 +53,13 @@ export function normalizeSingleSegment(
                 }
                 break;
             }
+        } else if (s.segmentType == 'Image') {
+            // If the previous segment is an image, we should keep the leading space of the current segment to maintain word separation.
+            context.ignoreLeadingSpaces = false;
+            break;
+        } else if (s.segmentType == 'Br') {
+            // If the previous segment is a line break, we should ignore the leading space of the current segment.
+            context.ignoreLeadingSpaces = true;
         } else if (s.segmentType != 'SelectionMarker') {
             break;
         }

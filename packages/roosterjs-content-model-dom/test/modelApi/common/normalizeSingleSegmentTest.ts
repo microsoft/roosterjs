@@ -1,7 +1,7 @@
+import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { normalizeSingleSegment } from '../../../lib/modelApi/common/normalizeSegment';
 import { ReadonlyContentModelParagraph } from 'roosterjs-content-model-types';
 
@@ -79,6 +79,19 @@ describe('normalizeSingleSegment', () => {
         normalizeSingleSegment(para as ReadonlyContentModelParagraph, text);
 
         // Image breaks the backward search, no prev text found => ignoreLeadingSpaces stays true
+        expect(text.text).toBe(' hello');
+    });
+
+    it('should ignore leading spaces when previous segment is a line break', () => {
+        const para = createParagraph();
+        const prev = { segmentType: 'Br' } as any;
+        const text = createText('  hello');
+
+        para.segments.push(prev, text);
+
+        normalizeSingleSegment(para as ReadonlyContentModelParagraph, text);
+
+        // Line break before, leading spaces should be ignored
         expect(text.text).toBe('hello');
     });
 
