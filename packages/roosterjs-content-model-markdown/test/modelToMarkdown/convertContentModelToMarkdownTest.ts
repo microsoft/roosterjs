@@ -109,7 +109,7 @@ describe('convertContentModelToMarkdown', () => {
     });
 
     it('should convert simple html to markdown', () => {
-        const markdown = 'hello **world** how are you?';
+        const markdown = 'hello **world** how are you?';
         const model = createModelFromHtml('<p>hello <b>world</b> how are you?</p>');
         const md = convertContentModelToMarkdown(model).trim();
         expect(md).toEqual(markdown);
