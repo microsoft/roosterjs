@@ -1,11 +1,22 @@
-import { contentModelToDom, createModelToDomContext } from 'roosterjs-content-model-dom';
 import { convertMarkdownToContentModel } from '../markdownToModel/convertMarkdownToContentModel';
 import { isPastedContentMarkdown } from '../publicApi/isPastedContentMarkdown';
+import {
+    contentModelToDom,
+    createModelToDomContext,
+    mergeModel,
+} from 'roosterjs-content-model-dom';
+
 import type { MarkdownPasteOptions } from './MarkdownPasteOptions';
-import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import type {
+    ClipboardData,
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+} from 'roosterjs-content-model-types';
 
 const DefaultOptions: MarkdownPasteOptions = {
     autoConversion: false,
+    undoConversion: false,
 };
 
 /**
@@ -58,14 +69,46 @@ export class MarkdownPastePlugin implements EditorPlugin {
      * @param event The event to handle:
      */
     onPluginEvent(event: PluginEvent) {
-        if (!this.editor || event.eventType != 'beforePaste') {
+        if (!this.editor) {
             return;
         }
-
-        const shouldConvert = event.pasteType === 'asMarkdown' || this.options.autoConversion;
-
-        if (shouldConvert && isPastedContentMarkdown(this.editor, event.clipboardData)) {
-            convertPastedTextToMarkdown(this.editor, event.fragment, event.clipboardData.text);
+        if (
+            event.eventType == 'contentChanged' &&
+            event.source == 'Paste' &&
+            this.options.autoConversion
+        ) {
+            const clipboardData = event.data as ClipboardData;
+            const shouldConvert = this.options.autoConversion && clipboardData.pasteNativeEvent;
+            if (
+                shouldConvert &&
+                isPastedContentMarkdown(this.editor, clipboardData) &&
+                clipboardData.modelBeforePaste
+            ) {
+                mergeModel(
+                    clipboardData.modelBeforePaste,
+                    convertMarkdownToContentModel(clipboardData.text, { emptyLine: 'merge' })
+                );
+                if (this.options.undoConversion) {
+                    this.editor.takeSnapshot();
+                }
+                this.editor.formatContentModel(
+                    model => {
+                        if (!clipboardData.modelBeforePaste) {
+                            return false;
+                        }
+                        model.blocks = clipboardData.modelBeforePaste.blocks;
+                        return true;
+                    },
+                    {
+                        apiName: 'MarkdownConversion',
+                    }
+                );
+            }
+        } else if (event.eventType == 'beforePaste' && !event.clipboardData.pasteNativeEvent) {
+            const shouldConvert = event.pasteType === 'asMarkdown';
+            if (shouldConvert && isPastedContentMarkdown(this.editor, event.clipboardData)) {
+                convertPastedTextToMarkdown(this.editor, event.fragment, event.clipboardData.text);
+            }
         }
     }
 }

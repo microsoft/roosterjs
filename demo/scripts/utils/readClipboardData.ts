@@ -21,7 +21,10 @@ export async function readClipboardData(doc: Document): Promise<ClipboardData | 
     try {
         const clipboardItems = await clipboard.read();
         const dataTransferItems = await Promise.all(createDataTransferItems(clipboardItems));
-        return await extractClipboardItems(dataTransferItems);
+        return await extractClipboardItems(
+            dataTransferItems,
+            undefined /* allowedCustomPasteType */
+        );
     } catch {
         return null;
     }
