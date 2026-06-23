@@ -52,7 +52,10 @@ function pruneUnselectedModelInternal(
                         if (segment.blocks.length > 0 || segment.isSelected) {
                             newSegments.push(segment);
                         }
-                    } else if (segment.isSelected && segment.segmentType != 'SelectionMarker') {
+                    } else if (
+                        (segment.isSelected && segment.segmentType != 'SelectionMarker') ||
+                        segment.link?.format.undeletable
+                    ) {
                         newSegments.push(segment);
                     }
                 }

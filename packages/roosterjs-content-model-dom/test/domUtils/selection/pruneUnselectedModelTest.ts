@@ -1474,4 +1474,131 @@ describe('pruneUnselectedModel', () => {
             ],
         });
     });
+
+    it('retains unselected segment with undeletable link', () => {
+        const group = createContentModelDocument();
+        const para = createParagraph();
+        const text1 = createText('undeletable link');
+        const text2 = createText('normal text');
+
+        text1.link = {
+            format: { href: 'http://example.com', undeletable: true },
+            dataset: {},
+        };
+
+        para.segments.push(text1);
+        para.segments.push(text2);
+        group.blocks.push(para);
+
+        pruneUnselectedModel(group);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'undeletable link',
+                            format: {},
+                            link: {
+                                format: { href: 'http://example.com', undeletable: true },
+                                dataset: {},
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('retains both selected segment and unselected undeletable link segment', () => {
+        const group = createContentModelDocument();
+        const para = createParagraph();
+        const text1 = createText('selected');
+        const text2 = createText('undeletable link');
+        const text3 = createText('normal');
+
+        text1.isSelected = true;
+        text2.link = {
+            format: { href: 'http://example.com', undeletable: true },
+            dataset: {},
+        };
+
+        para.segments.push(text1);
+        para.segments.push(text2);
+        para.segments.push(text3);
+        group.blocks.push(para);
+
+        pruneUnselectedModel(group);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'selected',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'undeletable link',
+                            format: {},
+                            link: {
+                                format: { href: 'http://example.com', undeletable: true },
+                                dataset: {},
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('does not retain unselected segment with link that is not undeletable', () => {
+        const group = createContentModelDocument();
+        const para = createParagraph();
+        const text1 = createText('selected');
+        const text2 = createText('deletable link');
+
+        text1.isSelected = true;
+        text2.link = {
+            format: { href: 'http://example.com' },
+            dataset: {},
+        };
+
+        para.segments.push(text1);
+        para.segments.push(text2);
+        group.blocks.push(para);
+
+        pruneUnselectedModel(group);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'selected',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });
