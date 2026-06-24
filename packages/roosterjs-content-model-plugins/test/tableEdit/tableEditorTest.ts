@@ -156,6 +156,276 @@ describe('TableEditor', () => {
         });
     });
 
+    describe('public methods and editing lifecycle', () => {
+        let editor: IEditor;
+        let table: HTMLTableElement;
+        let tEditor: TableEditor;
+        let onChangedSpy: jasmine.Spy;
+        const TEST_ID = 'tableEditorLifecycleTest';
+
+        function setup(cmTable: ContentModelTable = getModelTable(), isRtl: boolean = false) {
+            const s = beforeTableTest(TEST_ID);
+            editor = s.editor;
+            const editorDiv = editor.getDocument().getElementById(TEST_ID) as HTMLElement;
+            editorDiv.style.height = '400px';
+            editorDiv.style.padding = '100px';
+            const rect = initialize(editor, cmTable, isRtl);
+            table = editor.getDOMHelper().queryElements('table')[0];
+            const contentDiv = editor.getDocument().getElementById(TEST_ID);
+            onChangedSpy = jasmine.createSpy('onChanged');
+            tEditor = new TableEditor(
+                editor,
+                table,
+                null,
+                onChangedSpy,
+                undefined,
+                contentDiv,
+                undefined
+            );
+            return rect;
+        }
+
+        afterEach(() => {
+            afterTableTest(editor, tEditor, TEST_ID);
+        });
+
+        it('isEditing is false before any editing starts', () => {
+            setup();
+            expect(tEditor.isEditing()).toBe(false);
+        });
+
+        it('onSelect focuses the editor and sets a table selection', () => {
+            setup();
+            const focusSpy = spyOn(editor, 'focus');
+            const setDOMSelectionSpy = spyOn(editor, 'setDOMSelection');
+
+            tEditor.onSelect(table);
+
+            expect(focusSpy).toHaveBeenCalled();
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith(
+                jasmine.objectContaining({
+                    type: 'table',
+                    table,
+                    firstRow: 0,
+                    firstColumn: 0,
+                }) as any
+            );
+        });
+
+        it('onSelect only focuses when no table is passed', () => {
+            setup();
+            const focusSpy = spyOn(editor, 'focus');
+            const setDOMSelectionSpy = spyOn(editor, 'setDOMSelection');
+
+            tEditor.onSelect(null as any);
+
+            expect(focusSpy).toHaveBeenCalled();
+            expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        });
+
+        it('isOwnedElement returns true for a feature element and false for unrelated nodes', () => {
+            const tableRect = setup();
+            // Hover the center to ensure features are created
+            tEditor.onMouseMove(
+                tableRect.left + tableRect.width / 2,
+                tableRect.top + tableRect.height / 2
+            );
+
+            const mover = editor.getDocument().getElementById(TABLE_MOVER_ID);
+            expect(!!mover).toBe(true);
+            expect(tEditor.isOwnedElement(mover!)).toBe(true);
+
+            // A child of a feature element is also considered owned
+            const child = editor.getDocument().createElement('span');
+            mover!.appendChild(child);
+            expect(tEditor.isOwnedElement(child)).toBe(true);
+
+            expect(tEditor.isOwnedElement(editor.getDocument().body)).toBe(false);
+        });
+
+        it('onFinishEditing restores the saved range, snapshots and reports change', () => {
+            setup();
+            const focusSpy = spyOn(editor, 'focus');
+            const setDOMSelectionSpy = spyOn(editor, 'setDOMSelection');
+            const takeSnapshotSpy = spyOn(editor, 'takeSnapshot');
+            const mockedRange = { id: 'range' } as any;
+            (tEditor as any).range = mockedRange;
+            (tEditor as any).isCurrentlyEditing = true;
+
+            const result = (tEditor as any).onFinishEditing();
+
+            expect(result).toBe(false);
+            expect(focusSpy).toHaveBeenCalled();
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'range',
+                range: mockedRange,
+                isReverted: false,
+            });
+            expect(takeSnapshotSpy).toHaveBeenCalled();
+            expect(onChangedSpy).toHaveBeenCalled();
+            expect(tEditor.isEditing()).toBe(false);
+            expect((tEditor as any).range).toBeNull();
+        });
+
+        it('onFinishEditing does not restore selection when there is no saved range', () => {
+            setup();
+            const setDOMSelectionSpy = spyOn(editor, 'setDOMSelection');
+            spyOn(editor, 'takeSnapshot');
+
+            (tEditor as any).range = null;
+            (tEditor as any).onFinishEditing();
+
+            expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        });
+
+        it('onStartTableResize saves the current range and marks editing', () => {
+            setup();
+            const setLogicalRootSpy = spyOn(editor, 'setLogicalRoot');
+            const takeSnapshotSpy = spyOn(editor, 'takeSnapshot');
+            const mockedRange = { id: 'range' } as any;
+            spyOn(editor, 'getDOMSelection').and.returnValue({
+                type: 'range',
+                range: mockedRange,
+            } as any);
+
+            (tEditor as any).onStartTableResize();
+
+            expect(tEditor.isEditing()).toBe(true);
+            expect(setLogicalRootSpy).toHaveBeenCalledWith(null);
+            expect(takeSnapshotSpy).toHaveBeenCalled();
+            expect((tEditor as any).range).toBe(mockedRange);
+        });
+
+        it('onStartResize does not save a range when the selection is not a range', () => {
+            setup();
+            spyOn(editor, 'setLogicalRoot');
+            spyOn(editor, 'takeSnapshot');
+            spyOn(editor, 'getDOMSelection').and.returnValue({ type: 'image' } as any);
+
+            (tEditor as any).onStartResize();
+
+            expect((tEditor as any).range).toBeNull();
+        });
+
+        it('onStartCellResize marks editing and disposes the table resizer', () => {
+            setup();
+            spyOn(editor, 'setLogicalRoot');
+            spyOn(editor, 'takeSnapshot');
+            spyOn(editor, 'getDOMSelection').and.returnValue(null as any);
+
+            (tEditor as any).onStartCellResize();
+
+            expect(tEditor.isEditing()).toBe(true);
+            expect(editor.getDocument().getElementById(TABLE_RESIZER_ID)).toBeNull();
+        });
+
+        it('onStartTableMove marks editing, sets logical root and disposes features', () => {
+            const tableRect = setup();
+            tEditor.onMouseMove(
+                tableRect.left + tableRect.width / 2,
+                tableRect.top + tableRect.height / 2
+            );
+            const setLogicalRootSpy = spyOn(editor, 'setLogicalRoot');
+
+            (tEditor as any).onStartTableMove();
+
+            expect(tEditor.isEditing()).toBe(true);
+            expect(setLogicalRootSpy).toHaveBeenCalledWith(null);
+            expect(editor.getDocument().getElementById(TABLE_RESIZER_ID)).toBeNull();
+        });
+
+        it('onEndTableMove disposes the mover when requested and finishes editing', () => {
+            setup();
+            const finishSpy = spyOn(tEditor as any, 'onFinishEditing').and.returnValue(false);
+            const disposeMoverSpy = spyOn(tEditor as any, 'disposeTableMover').and.callThrough();
+
+            const result = (tEditor as any).onEndTableMove(true);
+
+            expect(disposeMoverSpy).toHaveBeenCalled();
+            expect(finishSpy).toHaveBeenCalled();
+            expect(result).toBe(false);
+        });
+
+        it('onEndTableMove keeps the mover when not requested', () => {
+            setup();
+            spyOn(tEditor as any, 'onFinishEditing').and.returnValue(false);
+            const disposeMoverSpy = spyOn(tEditor as any, 'disposeTableMover').and.callThrough();
+
+            (tEditor as any).onEndTableMove(false);
+
+            expect(disposeMoverSpy).not.toHaveBeenCalled();
+        });
+
+        it('onAfterInsert disposes the table resizer and finishes editing', () => {
+            setup();
+            const finishSpy = spyOn(tEditor as any, 'onFinishEditing').and.returnValue(false);
+
+            (tEditor as any).onAfterInsert();
+
+            expect(editor.getDocument().getElementById(TABLE_RESIZER_ID)).toBeNull();
+            expect(finishSpy).toHaveBeenCalled();
+        });
+
+        it('onBeforeEditTable applies the logical root', () => {
+            setup();
+            const setLogicalRootSpy = spyOn(editor, 'setLogicalRoot');
+
+            (tEditor as any).onBeforeEditTable();
+
+            expect(setLogicalRootSpy).toHaveBeenCalledWith(null);
+        });
+
+        it('getOnMouseOut disposes the editor when the mouse leaves to an outside element', () => {
+            setup();
+            const feature = editor.getDocument().createElement('div');
+            const disposeSpy = spyOn(tEditor, 'dispose');
+            const handler = (tEditor as any).getOnMouseOut(feature);
+
+            handler(<MouseEvent>(<any>{
+                relatedTarget: editor.getDocument().createElement('span'),
+            }));
+
+            expect(disposeSpy).toHaveBeenCalled();
+        });
+
+        it('getOnMouseOut does not dispose while editing', () => {
+            setup();
+            const feature = editor.getDocument().createElement('div');
+            const disposeSpy = spyOn(tEditor, 'dispose');
+            (tEditor as any).isCurrentlyEditing = true;
+            const handler = (tEditor as any).getOnMouseOut(feature);
+
+            handler(<MouseEvent>(<any>{
+                relatedTarget: editor.getDocument().createElement('span'),
+            }));
+
+            expect(disposeSpy).not.toHaveBeenCalled();
+        });
+
+        it('getOnMouseOut does not dispose when leaving to the feature itself', () => {
+            setup();
+            const feature = editor.getDocument().createElement('div');
+            const disposeSpy = spyOn(tEditor, 'dispose');
+            const handler = (tEditor as any).getOnMouseOut(feature);
+
+            handler(<MouseEvent>(<any>{ relatedTarget: feature }));
+
+            expect(disposeSpy).not.toHaveBeenCalled();
+        });
+
+        it('builds RTL editor features for a right-to-left table', () => {
+            const tableRect = setup(getModelTable(), /* isRtl */ true);
+
+            expect((tEditor as any).isRTL).toBe(true);
+
+            // Exercise the RTL branches of onMouseMove (top and side hover areas)
+            expect(() => tEditor.onMouseMove(tableRect.right, tableRect.top - 5)).not.toThrow();
+            expect(() =>
+                tEditor.onMouseMove(tableRect.right + 5, tableRect.top + tableRect.height / 2)
+            ).not.toThrow();
+        });
+    });
+
     describe('anchorContainer', () => {
         let editor: IEditor;
         let tEditor: TableEditor;
