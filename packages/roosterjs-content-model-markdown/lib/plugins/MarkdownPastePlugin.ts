@@ -1,10 +1,12 @@
 import { convertMarkdownToContentModel } from '../markdownToModel/convertMarkdownToContentModel';
 import { isPastedContentMarkdown } from '../publicApi/isPastedContentMarkdown';
+
 import {
     contentModelToDom,
     createModelToDomContext,
     mergeModel,
     ChangeSource,
+    cloneModel,
 } from 'roosterjs-content-model-dom';
 import type { MarkdownPasteOptions } from './MarkdownPasteOptions';
 import type {
@@ -75,7 +77,8 @@ export class MarkdownPastePlugin implements EditorPlugin {
         if (
             event.eventType === 'contentChanged' &&
             event.source === ChangeSource.Paste &&
-            this.options.autoConversion
+            this.options.autoConversion &&
+            event.data
         ) {
             const clipboardData = event.data as ClipboardData;
             const shouldConvert = this.options.autoConversion && clipboardData.pasteNativeEvent;
@@ -84,8 +87,9 @@ export class MarkdownPastePlugin implements EditorPlugin {
                 isPastedContentMarkdown(this.editor, clipboardData) &&
                 clipboardData.modelBeforePaste
             ) {
+                const modelBeforePaste = cloneModel(clipboardData.modelBeforePaste);
                 mergeModel(
-                    clipboardData.modelBeforePaste,
+                    modelBeforePaste,
                     convertMarkdownToContentModel(clipboardData.text, { emptyLine: 'merge' })
                 );
                 if (this.options.undoConversion) {
@@ -93,14 +97,12 @@ export class MarkdownPastePlugin implements EditorPlugin {
                 }
                 this.editor.formatContentModel(
                     model => {
-                        if (!clipboardData.modelBeforePaste) {
-                            return false;
-                        }
-                        model.blocks = clipboardData.modelBeforePaste.blocks;
+                        model.blocks = modelBeforePaste.blocks;
                         return true;
                     },
                     {
                         apiName: 'MarkdownConversion',
+                        scrollCaretIntoView: true,
                     }
                 );
             }

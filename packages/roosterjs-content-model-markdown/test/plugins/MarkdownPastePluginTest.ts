@@ -171,12 +171,15 @@ describe('MarkdownPastePlugin', () => {
             (model: ContentModelDocument) => boolean,
             FormatContentModelOptions
         ];
-        expect(options).toEqual({ apiName: 'MarkdownConversion' });
+        expect(options).toEqual({ apiName: 'MarkdownConversion', scrollCaretIntoView: true });
 
         const target = createEmptyModel();
         expect(callback(target)).toBe(true);
-        expect(target.blocks).toBe(modelBeforePaste.blocks);
-        expect(modelBeforePaste.blocks.length).toBeGreaterThan(0);
+        // The converted heading should have been merged into the target model
+        const hasHeadingBlock = target.blocks.some(
+            b => b.blockType === 'Paragraph' && b.decorator?.tagName === 'h1'
+        );
+        expect(hasHeadingBlock).toBe(true);
         plugin.dispose();
     });
 
@@ -219,30 +222,28 @@ describe('MarkdownPastePlugin', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
 
-        // The pre-existing text segment should still be present after merging
-        const firstBlock = modelBeforePaste.blocks[0];
-        expect(firstBlock.blockType).toBe('Paragraph');
-        if (firstBlock.blockType === 'Paragraph') {
-            const hasExistingText = firstBlock.segments.some(
-                s => s.segmentType === 'Text' && s.text === 'existing '
-            );
-            expect(hasExistingText).toBe(true);
-        }
-
-        // The converted heading should have been merged into the model
-        const hasHeadingBlock = modelBeforePaste.blocks.some(
-            b => b.blockType === 'Paragraph' && b.decorator?.tagName === 'h1'
-        );
-        expect(hasHeadingBlock).toBe(true);
-
-        // The callback should swap the formatted model's blocks for the merged ones
+        // The callback should produce a model that contains both the pre-existing
+        // text and the converted markdown heading
         const [callback] = formatContentModelSpy.calls.mostRecent().args as [
             (model: ContentModelDocument) => boolean,
             FormatContentModelOptions
         ];
         const target = createEmptyModel();
         expect(callback(target)).toBe(true);
-        expect(target.blocks).toBe(modelBeforePaste.blocks);
+
+        // The pre-existing text segment should still be present after merging
+        const hasExistingText = target.blocks.some(
+            b =>
+                b.blockType === 'Paragraph' &&
+                b.segments.some(s => s.segmentType === 'Text' && s.text === 'existing ')
+        );
+        expect(hasExistingText).toBe(true);
+
+        // The converted heading should have been merged into the model
+        const hasHeadingBlock = target.blocks.some(
+            b => b.blockType === 'Paragraph' && b.decorator?.tagName === 'h1'
+        );
+        expect(hasHeadingBlock).toBe(true);
 
         plugin.dispose();
     });
