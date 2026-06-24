@@ -104,7 +104,7 @@ export class MarkdownPastePlugin implements EditorPlugin {
                     }
                 );
             }
-        } else if (event.eventType == 'beforePaste' && !event.clipboardData.pasteNativeEvent) {
+        } else if (event.eventType === 'beforePaste' && !event.clipboardData.pasteNativeEvent) {
             const shouldConvert = event.pasteType === 'asMarkdown';
             if (shouldConvert && isPastedContentMarkdown(this.editor, event.clipboardData)) {
                 convertPastedTextToMarkdown(this.editor, event.fragment, event.clipboardData.text);
