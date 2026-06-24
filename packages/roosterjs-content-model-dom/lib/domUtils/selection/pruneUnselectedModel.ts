@@ -47,14 +47,17 @@ function pruneUnselectedModelInternal(
             case 'Paragraph':
                 const newSegments: ContentModelSegment[] = [];
                 for (const segment of block.segments) {
+                    const isSelectedOrUndeletable =
+                        segment.isSelected || segment.link?.format.undeletable;
+
                     if (segment.segmentType == 'General') {
                         pruneUnselectedModel(segment);
-                        if (segment.blocks.length > 0 || segment.isSelected) {
+                        if (segment.blocks.length > 0 || isSelectedOrUndeletable) {
                             newSegments.push(segment);
                         }
                     } else if (
-                        (segment.isSelected && segment.segmentType != 'SelectionMarker') ||
-                        segment.link?.format.undeletable
+                        isSelectedOrUndeletable &&
+                        segment.segmentType != 'SelectionMarker'
                     ) {
                         newSegments.push(segment);
                     }

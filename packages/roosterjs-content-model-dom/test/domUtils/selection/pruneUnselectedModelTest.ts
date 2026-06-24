@@ -1601,4 +1601,85 @@ describe('pruneUnselectedModel', () => {
             ],
         });
     });
+
+    it('retains unselected general segment with undeletable link', () => {
+        const group = createContentModelDocument();
+        const para = createParagraph();
+        const generalSpan = createGeneralSegment(document.createElement('span'));
+        const text = createText('normal text');
+
+        generalSpan.link = {
+            format: { href: 'http://example.com', undeletable: true },
+            dataset: {},
+        };
+
+        para.segments.push(generalSpan);
+        para.segments.push(text);
+        group.blocks.push(para);
+
+        pruneUnselectedModel(group);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            blocks: [],
+                            element: jasmine.anything(),
+                            link: {
+                                format: { href: 'http://example.com', undeletable: true },
+                                dataset: {},
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('does not retain selection marker with undeletable link', () => {
+        const group = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText('selected');
+        const marker = createSelectionMarker();
+
+        text.isSelected = true;
+        marker.link = {
+            format: { href: 'http://example.com', undeletable: true },
+            dataset: {},
+        };
+
+        para.segments.push(text);
+        para.segments.push(marker);
+        group.blocks.push(para);
+
+        pruneUnselectedModel(group);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'selected',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });
