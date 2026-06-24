@@ -4,8 +4,8 @@ import {
     contentModelToDom,
     createModelToDomContext,
     mergeModel,
+    ChangeSource,
 } from 'roosterjs-content-model-dom';
-
 import type { MarkdownPasteOptions } from './MarkdownPasteOptions';
 import type {
     ClipboardData,
@@ -73,8 +73,8 @@ export class MarkdownPastePlugin implements EditorPlugin {
             return;
         }
         if (
-            event.eventType == 'contentChanged' &&
-            event.source == 'Paste' &&
+            event.eventType === 'contentChanged' &&
+            event.source === ChangeSource.Paste &&
             this.options.autoConversion
         ) {
             const clipboardData = event.data as ClipboardData;
