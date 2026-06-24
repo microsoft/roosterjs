@@ -46,7 +46,7 @@ describe('Normalize text that contains space', () => {
     });
 
     it('Only second text with space', () => {
-        runTest(['a', '', '  b '], ['a', '', '\u00A0b']);
+        runTest(['a', '', '  b '], ['a', '', ' b']);
     });
 
     it('Text with multiple spaces', () => {
@@ -103,7 +103,7 @@ describe('Normalize text that contains space', () => {
                         },
                         {
                             segmentType: 'Text',
-                            text: '\u00A0b',
+                            text: ' b',
                             format: {},
                         },
                     ],
@@ -171,7 +171,7 @@ describe('Normalize text that contains space', () => {
                         },
                         {
                             segmentType: 'Text',
-                            text: '\u00A0b',
+                            text: 'b',
                             format: {},
                         },
                     ],
