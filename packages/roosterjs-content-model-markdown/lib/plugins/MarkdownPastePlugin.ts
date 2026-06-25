@@ -81,7 +81,8 @@ export class MarkdownPastePlugin implements EditorPlugin {
             event.data
         ) {
             const clipboardData = event.data as ClipboardData;
-            const shouldConvert = this.options.autoConversion && clipboardData.pasteNativeEvent;
+            const shouldConvert =
+                clipboardData && clipboardData.pasteNativeEvent && this.options.autoConversion;
             if (
                 shouldConvert &&
                 isPastedContentMarkdown(this.editor, clipboardData) &&
