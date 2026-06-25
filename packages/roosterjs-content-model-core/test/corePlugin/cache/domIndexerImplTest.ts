@@ -595,7 +595,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
             format: {},
-            segments: [segment1, marker1, segment2, segment3, marker2, segment4],
+            segments: [segment1, segment2, segment3, segment4],
         });
         expect(setSelectionSpy).toHaveBeenCalledWith(model, marker1, marker2);
         expect(model).toEqual({
@@ -615,7 +615,10 @@ describe('domIndexerImpl.reconcileSelection', () => {
 
         // Range starts at the END of node1 (offset 5) and ends inside node2 (offset 3).
         // After the first reconcile call marker1 lands directly before node2's segment;
-        // the second call's adjacent-marker cleanup loop must NOT eat marker1.
+        // the second call's adjacent-marker cleanup loop must NOT eat marker1, so that
+        // setSelection still receives both live markers. setSelection then drops both
+        // boundary markers (redundant: "tes" is selected between them in the same paragraph),
+        // which is why the final paragraph segments contain no SelectionMarker.
         const newRangeEx: DOMSelection = {
             type: 'range',
             range: createRange(node1, 5, node2, 3),
@@ -663,7 +666,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
             format: {},
-            segments: [segment1, marker1, segment2, marker2, segment3],
+            segments: [segment1, segment2, segment3],
         });
         expect(setSelectionSpy).toHaveBeenCalledWith(model, marker1, marker2);
         expect(model).toEqual({
@@ -724,7 +727,7 @@ describe('domIndexerImpl.reconcileSelection', () => {
         expect(paragraph).toEqual({
             blockType: 'Paragraph',
             format: {},
-            segments: [segment1, marker1, segment2, oldSegment2, marker2],
+            segments: [segment1, segment2, oldSegment2],
         });
         expect(setSelectionSpy).toHaveBeenCalledWith(model, marker1, marker2);
         expect(model).toEqual({
@@ -1692,6 +1695,121 @@ describe('domIndexerImpl.reconcileElementId', () => {
                 },
             ],
         });
+    });
+});
+
+describe('domIndexerImpl.reconcileImageAttribute', () => {
+    function indexImage(img: HTMLImageElement, image: ReturnType<typeof createImage>) {
+        const para = createParagraph();
+        const segIndex: SegmentItem = {
+            paragraph: para,
+            segments: [image],
+        };
+
+        para.segments.push(image);
+        ((img as Node) as IndexedSegmentNode).__roosterjsContentModel = segIndex;
+    }
+
+    it('unindexed image src', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        img.setAttribute('src', 'new.png');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'src');
+
+        expect(result).toBe(false);
+        expect(image.src).toBe('test');
+    });
+
+    it('indexed image src', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        indexImage(img, image);
+
+        img.setAttribute('src', 'new.png');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'src');
+
+        expect(result).toBe(true);
+        expect(image.src).toBe('new.png');
+    });
+
+    it('indexed image src removed', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        indexImage(img, image);
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'src');
+
+        expect(result).toBe(true);
+        expect(image.src).toBe('');
+    });
+
+    it('indexed image data-* added', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        indexImage(img, image);
+
+        img.setAttribute('data-foo', 'bar');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'data-foo');
+
+        expect(result).toBe(true);
+        expect(image.dataset).toEqual({ foo: 'bar' });
+    });
+
+    it('indexed image data-* modified', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        image.dataset.foo = 'old';
+        indexImage(img, image);
+
+        img.setAttribute('data-foo', 'new');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'data-foo');
+
+        expect(result).toBe(true);
+        expect(image.dataset).toEqual({ foo: 'new' });
+    });
+
+    it('indexed image data-* removed', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        image.dataset.foo = 'bar';
+        indexImage(img, image);
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'data-foo');
+
+        expect(result).toBe(true);
+        expect(image.dataset).toEqual({});
+    });
+
+    it('indexed image, unrelated attribute', () => {
+        const img = document.createElement('img');
+        const image = createImage('test');
+
+        indexImage(img, image);
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(img, 'alt');
+
+        expect(result).toBe(false);
+        expect(image.src).toBe('test');
+    });
+
+    it('non-image element', () => {
+        const div = document.createElement('div');
+
+        div.setAttribute('src', 'new.png');
+
+        const result = new DomIndexerImpl().reconcileImageAttribute(div, 'src');
+
+        expect(result).toBe(false);
     });
 });
 

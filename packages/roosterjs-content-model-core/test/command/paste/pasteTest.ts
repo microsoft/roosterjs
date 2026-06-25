@@ -397,7 +397,7 @@ describe('Paste with clipboardData', () => {
         expect(mergePasteContentSpy.calls.argsFor(0)[2]).toBeTrue();
     });
 
-    xit('Second paste', () => {
+    it('Second paste', () => {
         clipboardData.rawHtml = '';
         clipboardData.modelBeforePaste = {
             blockGroupType: 'Document',
@@ -405,6 +405,19 @@ describe('Paste with clipboardData', () => {
         };
 
         paste(editor, clipboardData);
+
+        // Merging empty content into an empty model produces no insertion point, so paste leaves
+        // the editor empty without setting a selection. The caret a browser leaves in an empty
+        // editable is browser-specific (Chrome keeps it inside the content div, Firefox drops it to
+        // <body>), which makes the rebuilt model non-deterministic. Place a collapsed selection at
+        // the start of the editor to read the canonical empty-editor model consistently.
+        const contentDiv = document.getElementById(ID)!;
+        const range = contentDiv.ownerDocument.createRange();
+        range.setStart(contentDiv, 0);
+        range.collapse(true);
+        const selection = contentDiv.ownerDocument.getSelection()!;
+        selection.removeAllRanges();
+        selection.addRange(range);
 
         const model = editor.getContentModelCopy('connected');
 

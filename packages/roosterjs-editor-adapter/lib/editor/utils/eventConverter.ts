@@ -28,6 +28,8 @@ const PasteTypeNewToOld: Record<NewPasteType, OldPasteType> = {
     asPlainText: OldPasteType.AsPlainText,
     mergeFormat: OldPasteType.MergeFormat,
     normal: OldPasteType.Normal,
+    // The old editor system has no markdown paste concept, fall back to normal paste
+    asMarkdown: OldPasteType.Normal,
 };
 
 const PasteTypeOldToNew: Record<OldPasteType, NewPasteType> = {
@@ -176,7 +178,7 @@ export function oldEventToNewEvent<TOldEvent extends OldEvent>(
                 htmlAfter: input.htmlAfter,
                 htmlAttributes: input.htmlAttributes,
                 htmlBefore: input.htmlBefore,
-                pasteType: PasteTypeOldToNew[input.pasteType],
+                pasteType: refBeforePasteEvent?.pasteType ?? PasteTypeOldToNew[input.pasteType],
             };
 
         case PluginEventType.BeforeSetContent:

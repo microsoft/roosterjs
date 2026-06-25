@@ -342,6 +342,60 @@ describe('TextMutationObserverImpl', () => {
         expect(onMutation).toHaveBeenCalledWith({ type: 'unknown' });
     });
 
+    it('src change', async () => {
+        const div = document.createElement('div');
+        const img = document.createElement('img');
+
+        div.appendChild(img);
+
+        const onMutation = jasmine.createSpy('onMutation');
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
+
+        observer.startObserving();
+
+        img.setAttribute('src', 'test.png');
+
+        observer.flushMutations();
+
+        await new Promise<void>(resolve => {
+            window.setTimeout(resolve, 10);
+        });
+
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'attribute',
+            element: img,
+            attributeName: 'src',
+        });
+    });
+
+    it('data-* change', async () => {
+        const div = document.createElement('div');
+        const img = document.createElement('img');
+
+        div.appendChild(img);
+
+        const onMutation = jasmine.createSpy('onMutation');
+        observer = textMutationObserver.createTextMutationObserver(div, onMutation);
+
+        observer.startObserving();
+
+        img.setAttribute('data-foo', 'bar');
+
+        observer.flushMutations();
+
+        await new Promise<void>(resolve => {
+            window.setTimeout(resolve, 10);
+        });
+
+        expect(onMutation).toHaveBeenCalledTimes(1);
+        expect(onMutation).toHaveBeenCalledWith({
+            type: 'attribute',
+            element: img,
+            attributeName: 'data-foo',
+        });
+    });
+
     it('Ignore changes under entity', () => {
         const div = document.createElement('div');
         const wrapper = document.createElement('div');

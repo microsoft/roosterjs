@@ -148,6 +148,18 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
                     break;
 
+                case 'attribute':
+                    if (
+                        !this.state.domIndexer.reconcileImageAttribute(
+                            mutation.element,
+                            mutation.attributeName
+                        )
+                    ) {
+                        this.invalidateCache();
+                    }
+
+                    break;
+
                 case 'unknown':
                     this.invalidateCache();
                     break;

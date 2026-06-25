@@ -507,4 +507,55 @@ describe('handleBlockGroupChildren', () => {
         expect(node1.parentNode).toBeNull();
         expect(node2.parentNode).toBeNull();
     });
+
+    it('Allow list cache: clear whole node stack when leaving parent that is root of node stack', () => {
+        const group = createContentModelDocument();
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+
+        // The list item is the only (and last) block, and its list element is a direct
+        // child of parent. So while handling it, handleList pushes parent as the root of
+        // the node stack (nodeStack[0].node === parent). When the loop finishes and we
+        // leave parent, the whole node stack should be cleared instead of keeping the root.
+        group.blocks.push(listItem);
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(context.listFormat.nodeStack).toEqual([]);
+        expect(parent.outerHTML).toBe('<div><ol start="1"><li></li></ol></div>');
+        expect(context.rewriteFromModel).toEqual({
+            addedBlockElements: [parent.firstChild!.firstChild as HTMLElement],
+            removedBlockElements: [],
+        });
+    });
+
+    it('Allow list cache: keep node stack root when leaving a different parent', () => {
+        const group = createContentModelDocument();
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+                format: {},
+                dataset: {},
+            },
+        ]);
+
+        // The root of the node stack is some other node, not the parent we are leaving.
+        // In this case the cleanup should keep the root entry (nodeStack[0]) and only
+        // pop the inner list levels.
+        const otherRoot = document.createElement('div');
+        const nodeStack = [{ node: otherRoot, refNode: null } as any];
+
+        group.blocks.push(listItem);
+        context.listFormat.nodeStack = nodeStack;
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(context.listFormat.nodeStack).toBe(nodeStack);
+        expect(context.listFormat.nodeStack).toEqual([{ node: otherRoot, refNode: null } as any]);
+    });
 });
