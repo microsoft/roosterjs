@@ -1,12 +1,11 @@
 import { convertMarkdownToContentModel } from '../markdownToModel/convertMarkdownToContentModel';
 import { isPastedContentMarkdown } from '../publicApi/isPastedContentMarkdown';
-
 import {
     contentModelToDom,
     createModelToDomContext,
     mergeModel,
     ChangeSource,
-    cloneModel,
+    cloneModelForPaste,
 } from 'roosterjs-content-model-dom';
 import type { MarkdownPasteOptions } from './MarkdownPasteOptions';
 import type {
@@ -88,7 +87,7 @@ export class MarkdownPastePlugin implements EditorPlugin {
                 isPastedContentMarkdown(this.editor, clipboardData) &&
                 clipboardData.modelBeforePaste
             ) {
-                const modelBeforePaste = cloneModel(clipboardData.modelBeforePaste);
+                const modelBeforePaste = cloneModelForPaste(clipboardData.modelBeforePaste);
                 mergeModel(
                     modelBeforePaste,
                     convertMarkdownToContentModel(clipboardData.text, { emptyLine: 'merge' })
