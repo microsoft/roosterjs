@@ -12,23 +12,11 @@ export const WORD_ONLINE_TABLE_TEMP_ELEMENT_CLASSES: string[] = [
 /**
  * @internal
  **/
-export const BULLET_LIST_STYLE: string = 'BulletListStyle';
-/**
- * @internal
- **/
-export const NUMBER_LIST_STYLE: string = 'NumberListStyle';
-/**
- * @internal
- **/
 export const IMAGE_BORDER: string = 'WACImageBorder';
 /**
  * @internal
  **/
 export const IMAGE_CONTAINER: string = 'WACImageContainer';
-/**
- * @internal
- **/
-export const OUTLINE_ELEMENT: string = 'OutlineElement';
 /**
  * @internal
  **/
@@ -59,8 +47,3 @@ export const TEMP_ELEMENTS_CLASSES: string[] = [
 export const REMOVE_MARGIN_ELEMENTS: string =
     `span.${IMAGE_CONTAINER},span.${IMAGE_BORDER},.${COMMENT_HIGHLIGHT_CLASS},.${COMMENT_HIGHLIGHT_CLICKED_CLASS},` +
     WORD_ONLINE_TABLE_TEMP_ELEMENT_CLASSES.map(c => `table div[class^="${c}"]`).join(',');
-
-/**
- * @internal
- **/
-export const WAC_IDENTIFY_SELECTOR: string = `ul[class^="${BULLET_LIST_STYLE}"]>.${OUTLINE_ELEMENT},ol[class^="${NUMBER_LIST_STYLE}"]>.${OUTLINE_ELEMENT},${REMOVE_MARGIN_ELEMENTS}`;

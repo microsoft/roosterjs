@@ -3,12 +3,15 @@ import { cloneModelForPaste, mergePasteContent } from './mergePasteContent';
 import { convertInlineCss } from '../createModelFromHtml/convertInlineCss';
 import { createPasteFragment } from './createPasteFragment';
 import { generatePasteOptionFromPlugins } from './generatePasteOptionFromPlugins';
+import { getDocumentSource } from './pasteSourceValidations/getDocumentSource';
 import { retrieveHtmlInfo } from './retrieveHtmlInfo';
+import type { HtmlFromClipboard } from './retrieveHtmlInfo';
 import type {
     PasteTypeOrGetter,
     ClipboardData,
     IEditor,
     DOMCreator,
+    KnownPasteSourceType,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -41,38 +44,45 @@ export function paste(
         clipboardData.rawHtml = cleanHtmlComments(clipboardData.rawHtml);
     }
     const doc = createDOMFromHtml(clipboardData.rawHtml, domCreator);
-    const pasteType =
-        typeof pasteTypeOrGetter == 'function'
-            ? pasteTypeOrGetter(doc, clipboardData)
-            : pasteTypeOrGetter;
 
     // 2. Handle HTML from clipboard
     const htmlFromClipboard = retrieveHtmlInfo(doc, clipboardData);
 
-    // 3. Create target fragment
+    // 3. Determine the source of the pasted content
+    const sourceRoot = (clipboardData.rawHtml == clipboardData.html
+        ? doc
+        : createDOMFromHtml(clipboardData.html, domCreator)
+    )?.body;
+    const pasteSource = getPasteSource(editor, clipboardData, htmlFromClipboard, sourceRoot);
+
+    // 4. Determine paste type
+    const pasteType =
+        typeof pasteTypeOrGetter == 'function'
+            ? pasteTypeOrGetter(doc, clipboardData, pasteSource)
+            : pasteTypeOrGetter;
+
+    // 5. Create target fragment
     const sourceFragment = createPasteFragment(
         editor.getDocument(),
         clipboardData,
         pasteType,
-        (clipboardData.rawHtml == clipboardData.html
-            ? doc
-            : createDOMFromHtml(clipboardData.html, domCreator)
-        )?.body
+        sourceRoot
     );
 
-    // 4. Trigger BeforePaste event to allow plugins modify the fragment
+    // 6. Trigger BeforePaste event to allow plugins modify the fragment
     const eventResult = generatePasteOptionFromPlugins(
         editor,
         clipboardData,
         sourceFragment,
         htmlFromClipboard,
-        pasteType
+        pasteType,
+        pasteSource
     );
 
-    // 5. Convert global CSS to inline CSS
+    // 7. Convert global CSS to inline CSS
     convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
 
-    // 6. Merge pasted content into main Content Model
+    // 8. Merge pasted content into main Content Model
     mergePasteContent(editor, eventResult, isFirstPaste);
 }
 
@@ -81,4 +91,20 @@ function createDOMFromHtml(
     domCreator: DOMCreator
 ): Document | null {
     return html ? domCreator.htmlToDOM(html) : null;
+}
+
+function getPasteSource(
+    editor: IEditor,
+    clipboardData: ClipboardData,
+    htmlFromClipboard: HtmlFromClipboard,
+    sourceRoot: HTMLElement | undefined
+): KnownPasteSourceType {
+    return getDocumentSource({
+        htmlAttributes: htmlFromClipboard.metadata,
+        fragment: sourceRoot ?? editor.getDocument().createDocumentFragment(),
+        clipboardItemTypes: clipboardData.types,
+        htmlFirstLevelChildTags: clipboardData.htmlFirstLevelChildTags,
+        environment: editor.getEnvironment(),
+        rawHtml: clipboardData.rawHtml,
+    });
 }

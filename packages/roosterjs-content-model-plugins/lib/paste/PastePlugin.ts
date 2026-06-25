@@ -3,12 +3,10 @@ import { blockElementParser } from './parsers/blockElementParser';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
 import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
-import { getDocumentSource } from './pasteSourceValidations/getDocumentSource';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { imageSizeParser } from './parsers/imageSizeParser';
 import { parseLink } from './parsers/linkParser';
 import { pasteButtonProcessor } from './processors/pasteButtonProcessor';
-import { PastePropertyNames } from './pasteSourceValidations/constants';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromOneNote } from './oneNote/processPastedContentFromOneNote';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
@@ -23,6 +21,8 @@ import type {
     IEditor,
     PluginEvent,
 } from 'roosterjs-content-model-types';
+
+const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -96,16 +96,7 @@ export class PastePlugin implements EditorPlugin {
             return;
         }
 
-        const { htmlAttributes, clipboardData, fragment } = event;
-
-        const pasteSource = getDocumentSource({
-            htmlAttributes,
-            fragment,
-            clipboardItemTypes: clipboardData.types,
-            htmlFirstLevelChildTags: clipboardData.htmlFirstLevelChildTags,
-            environment: this.editor.getEnvironment(),
-            rawHtml: clipboardData.rawHtml,
-        });
+        const pasteSource = event.pasteSource;
         const pasteType = event.pasteType;
 
         switch (pasteSource) {
@@ -134,7 +125,7 @@ export class PastePlugin implements EditorPlugin {
                 break;
             case 'googleSheets':
                 event.domToModelOption.additionalAllowedTags.push(
-                    PastePropertyNames.GOOGLE_SHEET_NODE_NAME as Lowercase<string>
+                    GOOGLE_SHEET_NODE_NAME as Lowercase<string>
                 );
                 break;
             case 'powerPointDesktop':

@@ -1,4 +1,5 @@
 import type { DomToModelOptionForSanitizing } from '../context/DomToModelOption';
+import type { KnownPasteSourceType } from '../enum/KnownPasteSourceType';
 import type { PasteType } from '../enum/PasteType';
 import type { ClipboardData } from '../parameter/ClipboardData';
 import type { BasePluginEvent } from './BasePluginEvent';
@@ -60,6 +61,11 @@ export interface BeforePasteEvent extends BasePluginEvent<'beforePaste'> {
      * Paste type option (as plain text, merge format, normal, as image)
      */
     readonly pasteType: PasteType;
+
+    /**
+     * The detected source of the pasted content (e.g. Word Desktop, Excel, Google Sheets)
+     */
+    readonly pasteSource?: KnownPasteSourceType;
 
     /**
      * domToModel Options to use when creating the content model from the paste fragment

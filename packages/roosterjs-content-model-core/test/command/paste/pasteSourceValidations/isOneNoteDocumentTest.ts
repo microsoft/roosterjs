@@ -1,5 +1,5 @@
-import { isOneNoteDesktopDocument } from '../../../lib/paste/pasteSourceValidations/isOneNoteDocument';
-import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
+import { isOneNoteDesktopDocument } from '../../../../lib/command/paste/pasteSourceValidations/isOneNoteDocument';
+import { PastePropertyNames } from '../../../../lib/command/paste/pasteSourceValidations/constants';
 
 describe('isOneNoteDesktopDocument', () => {
     it('should return true when the PROG_ID_NAME attribute matches OneNote.File', () => {

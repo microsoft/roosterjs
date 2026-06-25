@@ -1,5 +1,5 @@
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
-import { isWordDesktopDocument } from '../../../lib/paste/pasteSourceValidations/isWordDesktopDocument';
+import { GetSourceInputParams } from '../../../../lib/command/paste/pasteSourceValidations/getDocumentSource';
+import { isWordDesktopDocument } from '../../../../lib/command/paste/pasteSourceValidations/isWordDesktopDocument';
 import { WORD_ATTRIBUTE_VALUE } from './pasteTestUtils';
 
 const WORD_PROG_ID = 'Word.Document';

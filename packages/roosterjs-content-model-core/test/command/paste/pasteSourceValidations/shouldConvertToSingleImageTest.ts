@@ -1,5 +1,5 @@
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
-import { shouldConvertToSingleImage } from '../../../lib/paste/pasteSourceValidations/shouldConvertToSingleImage';
+import { GetSourceInputParams } from '../../../../lib/command/paste/pasteSourceValidations/getDocumentSource';
+import { shouldConvertToSingleImage } from '../../../../lib/command/paste/pasteSourceValidations/shouldConvertToSingleImage';
 
 describe('shouldConvertToSingleImage |', () => {
     it('Is Single Image', () => {

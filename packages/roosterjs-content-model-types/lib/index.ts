@@ -100,6 +100,7 @@ export {
     TableCellShiftOperation,
 } from './enum/TableOperation';
 export { PasteType } from './enum/PasteType';
+export { KnownPasteSourceType } from './enum/KnownPasteSourceType';
 export { BorderOperations } from './enum/BorderOperations';
 export { DeleteResult } from './enum/DeleteResult';
 export { InsertEntityPosition } from './enum/InsertEntityPosition';

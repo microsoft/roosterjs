@@ -1,5 +1,5 @@
 import * as addParserF from '../../../lib/paste/utils/addParser';
-import * as getDocumentSourceF from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
+import * as getDocumentSourceF from 'roosterjs-content-model-core/lib/command/paste/pasteSourceValidations/getDocumentSource';
 import * as oneNote from '../../../lib/paste/oneNote/processPastedContentFromOneNote';
 import * as setProcessorF from '../../../lib/paste/utils/setProcessor';
 import { expectEqual, initEditor } from './testUtils';

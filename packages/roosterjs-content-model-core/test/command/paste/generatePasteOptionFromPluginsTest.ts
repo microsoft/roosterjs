@@ -53,13 +53,15 @@ describe('generatePasteOptionFromPlugins', () => {
                 metadata: mockedMetadata,
                 globalCssRules: mockedCssRule,
             },
-            'normal'
+            'normal',
+            'wordDesktop'
         );
 
         expect(result).toEqual({
             fragment: 'FragmentResult',
             domToModelOption: 'OptionResult',
             pasteType: 'TypeResult',
+            pasteSource: 'wordDesktop',
             eventType: 'beforePaste',
             clipboardData: mockedClipboardData,
             htmlBefore,
@@ -77,6 +79,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter: htmlAfter,
             htmlAttributes: mockedMetadata,
             pasteType: 'normal',
+            pasteSource: 'wordDesktop',
             domToModelOption: createDefaultDomToModelContext(),
             containsBlockElements: false,
             globalCssRules: mockedCssRule,
@@ -91,6 +94,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 htmlAfter: htmlAfter,
                 htmlAttributes: mockedMetadata,
                 pasteType: 'TypeResult',
+                pasteSource: 'wordDesktop',
                 domToModelOption: 'OptionResult',
                 containsBlockElements: false,
                 globalCssRules: mockedCssRule,
@@ -121,7 +125,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 metadata: mockedMetadata,
                 globalCssRules: mockedCssRule,
             },
-            'asImage'
+            'asImage',
+            'singleImage'
         );
 
         expect(result).toEqual({
@@ -134,6 +139,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlBefore,
             htmlAfter,
             htmlAttributes: mockedMetadata,
+            pasteSource: 'singleImage',
             containsBlockElements: false,
             globalCssRules: mockedCssRule,
         } as any);
@@ -148,6 +154,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 htmlAfter: htmlAfter,
                 htmlAttributes: mockedMetadata,
                 pasteType: 'TypeResult',
+                pasteSource: 'singleImage',
                 domToModelOption: 'OptionResult',
                 customizedMerge: mockedCustomizedMerge,
                 containsBlockElements: false,
@@ -174,7 +181,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 metadata: mockedMetadata,
                 globalCssRules: mockedCssRule,
             },
-            'mergeFormat'
+            'mergeFormat',
+            'wacComponents'
         );
 
         expect(result).toEqual({
@@ -186,6 +194,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlBefore: '',
             htmlAfter: '',
             htmlAttributes: mockedMetadata,
+            pasteSource: 'wacComponents',
             containsBlockElements: false,
             globalCssRules: mockedCssRule,
         } as any);
@@ -200,6 +209,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 htmlAfter: '',
                 htmlAttributes: mockedMetadata,
                 pasteType: 'TypeResult',
+                pasteSource: 'wacComponents',
                 domToModelOption: 'OptionResult',
                 containsBlockElements: false,
                 globalCssRules: mockedCssRule,
@@ -214,6 +224,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter: '',
             htmlAttributes: mockedMetadata,
             pasteType: 'mergeFormat',
+            pasteSource: 'wacComponents',
             domToModelOption: createDefaultDomToModelContext(),
             containsBlockElements: false,
             globalCssRules: mockedCssRule,
@@ -236,7 +247,8 @@ describe('generatePasteOptionFromPlugins', () => {
                 metadata: mockedMetadata,
                 globalCssRules: mockedCssRule,
             },
-            'asPlainText'
+            'asPlainText',
+            'default'
         );
 
         expect(result).toEqual({
@@ -247,6 +259,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter: 'HTMLAFTER',
             htmlAttributes: 'METADATA' as any,
             pasteType: 'TypeResult' as any,
+            pasteSource: 'default',
             domToModelOption: 'OptionResult' as any,
             containsBlockElements: false,
             globalCssRules: mockedCssRule,

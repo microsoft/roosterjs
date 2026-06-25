@@ -1,6 +1,6 @@
 import { BeforePasteEvent, ClipboardData } from 'roosterjs-content-model-types';
-import { getDocumentSource } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
-import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
+import { getDocumentSource } from '../../../../lib/command/paste/pasteSourceValidations/getDocumentSource';
+import { PastePropertyNames } from '../../../../lib/command/paste/pasteSourceValidations/constants';
 
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';

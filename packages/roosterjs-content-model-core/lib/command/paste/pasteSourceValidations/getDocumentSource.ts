@@ -7,7 +7,7 @@ import { isOneNoteDesktopDocument } from './isOneNoteDocument';
 import { isPowerPointDesktopDocument } from './isPowerPointDesktopDocument';
 import { isWordDesktopDocument } from './isWordDesktopDocument';
 import { shouldConvertToSingleImage } from './shouldConvertToSingleImage';
-import type { EditorEnvironment } from 'roosterjs-content-model-types';
+import type { EditorEnvironment, KnownPasteSourceType } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -21,7 +21,7 @@ export type GetSourceInputParams = {
     /**
      * Document fragment of the checked content
      */
-    fragment: DocumentFragment | Document;
+    fragment: DocumentFragment | Document | HTMLElement;
     /**
      * Whether convert single image is enabled
      */
@@ -43,22 +43,6 @@ export type GetSourceInputParams = {
      */
     rawHtml?: string | null;
 };
-
-/**
- * @internal
- * Represent the types of sources to handle in the Paste Plugin
- */
-export type KnownPasteSourceType =
-    | 'wordDesktop'
-    | 'excelDesktop'
-    | 'excelOnline'
-    | 'powerPointDesktop'
-    | 'googleSheets'
-    | 'wacComponents'
-    | 'default'
-    | 'singleImage'
-    | 'excelNonNativeEvent'
-    | 'oneNoteDesktop';
 
 /**
  * @internal

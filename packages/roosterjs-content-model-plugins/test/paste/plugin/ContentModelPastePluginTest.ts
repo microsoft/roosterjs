@@ -1,6 +1,5 @@
 import * as addParser from '../../../lib/paste/utils/addParser';
 import * as ExcelFile from '../../../lib/paste/Excel/processPastedContentFromExcel';
-import * as getDocumentSource from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import * as oneNoteFile from '../../../lib/paste/oneNote/processPastedContentFromOneNote';
 import * as PowerPointFile from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessor from '../../../lib/paste/utils/setProcessor';
@@ -8,7 +7,7 @@ import * as WacFile from '../../../lib/paste/WacComponents/processPastedContentW
 import { BeforePasteEvent, DOMCreator, IEditor } from 'roosterjs-content-model-types';
 import { createDefaultDomToModelContext } from '../../TestHelper';
 import { PastePlugin } from '../../../lib/paste/PastePlugin';
-import { PastePropertyNames } from '../../../lib/paste/pasteSourceValidations/constants';
+import { PastePropertyNames } from 'roosterjs-content-model-core/lib/command/paste/pasteSourceValidations/constants';
 
 const trustedHTMLHandler = (val: string) => val;
 const domCreator: DOMCreator = {
@@ -54,7 +53,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('WordDesktop', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('wordDesktop');
+            (<any>event).pasteSource = 'wordDesktop';
 
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
@@ -64,7 +63,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Excel | merge format', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('excelDesktop');
+            (<any>event).pasteSource = 'excelDesktop';
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
             (<any>event).pasteType = 'mergeFormat';
@@ -82,7 +81,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Excel | image', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('excelDesktop');
+            (<any>event).pasteSource = 'excelDesktop';
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
             (<any>event).pasteType = 'asImage';
@@ -100,7 +99,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Excel', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('excelDesktop');
+            (<any>event).pasteSource = 'excelDesktop';
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
             plugin.initialize(editor);
@@ -117,7 +116,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Excel Online', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('excelOnline');
+            (<any>event).pasteSource = 'excelOnline';
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
             plugin.initialize(editor);
@@ -134,7 +133,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Power Point', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('powerPointDesktop');
+            (<any>event).pasteSource = 'powerPointDesktop';
             spyOn(PowerPointFile, 'processPastedContentFromPowerPoint').and.callThrough();
 
             plugin.initialize(editor);
@@ -149,7 +148,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Wac', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('wacComponents');
+            (<any>event).pasteSource = 'wacComponents';
             spyOn(WacFile, 'processPastedContentWacComponents').and.callThrough();
 
             plugin.initialize(editor);
@@ -161,7 +160,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Default', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('default');
+            (<any>event).pasteSource = 'default';
 
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
@@ -175,7 +174,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('excelNonNativeEvent', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('excelNonNativeEvent');
+            (<any>event).pasteSource = 'excelNonNativeEvent';
             spyOn(ExcelFile, 'processPastedContentFromExcel').and.callThrough();
 
             plugin.initialize(editor);
@@ -192,7 +191,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Default with customized Sanitizing option', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('default');
+            (<any>event).pasteSource = 'default';
 
             plugin = new PastePlugin(undefined, {
                 additionalAllowedTags: ['', '', ''],
@@ -219,7 +218,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Value set to undefined.', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('default');
+            (<any>event).pasteSource = 'default';
 
             plugin = new PastePlugin(undefined, undefined);
 
@@ -235,7 +234,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('Google Sheets', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('googleSheets');
+            (<any>event).pasteSource = 'googleSheets';
 
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
@@ -248,7 +247,7 @@ describe('Content Model Paste Plugin Test', () => {
         });
 
         it('One Note Desktop', () => {
-            spyOn(getDocumentSource, 'getDocumentSource').and.returnValue('oneNoteDesktop');
+            (<any>event).pasteSource = 'oneNoteDesktop';
             spyOn(oneNoteFile, 'processPastedContentFromOneNote').and.callThrough();
 
             plugin.initialize(editor);

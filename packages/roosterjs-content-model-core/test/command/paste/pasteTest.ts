@@ -3,7 +3,7 @@ import * as createPasteFragmentFile from '../../../lib/command/paste/createPaste
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
 import * as generatePasteOptionFromPluginsFile from '../../../lib/command/paste/generatePasteOptionFromPlugins';
-import * as getDocumentSourceF from 'roosterjs-content-model-plugins/lib/paste/pasteSourceValidations/getDocumentSource';
+import * as getDocumentSourceF from '../../../lib/command/paste/pasteSourceValidations/getDocumentSource';
 import * as getSelectedSegmentsF from 'roosterjs-content-model-dom/lib/modelApi/selection/collectSelections';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
 import * as mergePasteContentFile from '../../../lib/command/paste/mergePasteContent';
@@ -127,7 +127,8 @@ describe('Paste ', () => {
             jasmine.anything(),
             jasmine.anything(),
             jasmine.anything(),
-            'normal'
+            'normal',
+            'default'
         );
     });
 });

@@ -3,6 +3,7 @@ import type {
     BeforePasteEvent,
     ClipboardData,
     DomToModelOptionForSanitizing,
+    KnownPasteSourceType,
     PasteType,
     IEditor,
 } from 'roosterjs-content-model-types';
@@ -15,7 +16,8 @@ export function generatePasteOptionFromPlugins(
     clipboardData: ClipboardData,
     fragment: DocumentFragment,
     htmlFromClipboard: HtmlFromClipboard,
-    pasteType: PasteType
+    pasteType: PasteType,
+    pasteSource: KnownPasteSourceType
 ): BeforePasteEvent {
     const domToModelOption: DomToModelOptionForSanitizing = {
         additionalAllowedTags: [],
@@ -37,6 +39,7 @@ export function generatePasteOptionFromPlugins(
         htmlAfter: htmlFromClipboard.htmlAfter ?? '',
         htmlAttributes: htmlFromClipboard.metadata,
         pasteType: pasteType,
+        pasteSource: pasteSource,
         domToModelOption,
         containsBlockElements: !!htmlFromClipboard.containsBlockElements,
         globalCssRules: htmlFromClipboard.globalCssRules,

@@ -1,5 +1,5 @@
-import { GetSourceInputParams } from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
-import { isPowerPointDesktopDocument } from '../../../lib/paste/pasteSourceValidations/isPowerPointDesktopDocument';
+import { GetSourceInputParams } from '../../../../lib/command/paste/pasteSourceValidations/getDocumentSource';
+import { isPowerPointDesktopDocument } from '../../../../lib/command/paste/pasteSourceValidations/isPowerPointDesktopDocument';
 import { POWERPOINT_ATTRIBUTE_VALUE } from './pasteTestUtils';
 
 describe('isPowerPointDesktopDocument |', () => {

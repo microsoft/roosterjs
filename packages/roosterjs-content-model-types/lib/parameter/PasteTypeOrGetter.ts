@@ -1,4 +1,5 @@
 import type { ClipboardData } from './ClipboardData';
+import type { KnownPasteSourceType } from '../enum/KnownPasteSourceType';
 import type { PasteType } from '../enum/PasteType';
 
 /**
@@ -7,4 +8,8 @@ import type { PasteType } from '../enum/PasteType';
  */
 export type PasteTypeOrGetter =
     | PasteType
-    | ((document: Document | null, clipboardData: ClipboardData) => PasteType);
+    | ((
+          document: Document | null,
+          clipboardData: ClipboardData,
+          pasteSource: KnownPasteSourceType
+      ) => PasteType);
