@@ -2,36 +2,23 @@ import { createDomToModelContextForSanitizing } from '../createModelFromHtml/cre
 import {
     ChangeSource,
     EmptySegmentFormat,
-    cloneModel,
     domToContentModel,
     getSegmentTextFormat,
     getSelectedSegments,
     mergeModel,
+    cloneModelForPaste,
 } from 'roosterjs-content-model-dom';
 import type {
     BeforePasteEvent,
-    CloneModelOptions,
     ContentModelDocument,
     ContentModelSegmentFormat,
     IEditor,
     MergeModelOption,
     PasteType,
-    ReadonlyContentModelDocument,
     ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const BlackColor = 'rgb(0,0,0)';
-
-const CloneOption: CloneModelOptions = {
-    includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
-};
-
-/**
- * @internal
- */
-export function cloneModelForPaste(model: ReadonlyContentModelDocument) {
-    return cloneModel(model, CloneOption);
-}
 
 /**
  * @internal

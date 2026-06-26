@@ -62,6 +62,7 @@ const initialState: OptionState = {
     },
     markdownPasteOptions: {
         autoConversion: false,
+        undoConversion: false,
     },
     editPluginOptions: {
         handleTabKey: {

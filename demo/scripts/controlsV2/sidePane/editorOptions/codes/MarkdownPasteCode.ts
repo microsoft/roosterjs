@@ -9,6 +9,7 @@ export class MarkdownPasteCode extends CodeElement {
     getCode() {
         return `new roosterjs.MarkdownPastePlugin({
             autoConversion: ${this.markdownPasteOptions.autoConversion},
+            undoConversion: ${this.markdownPasteOptions.undoConversion},
         })`;
     }
 }
