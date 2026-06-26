@@ -9,7 +9,7 @@ import type { IEditor, Rect } from 'roosterjs-content-model-types';
 const DEG_PER_RAD = 180 / Math.PI;
 
 //this tests are not consistent
-xdescribe('updateRotateHandlePosition', () => {
+describe('updateRotateHandlePosition', () => {
     let editor: IEditor;
     const TEST_ID = 'imageEditTest_rotateHandlePosition';
     let plugin: ImageEditPlugin;
@@ -61,7 +61,7 @@ xdescribe('updateRotateHandlePosition', () => {
         const { wrapper } = createImageWrapper(editor, image, {}, imageInfo, options, ['rotate']);
         const rotateCenter = wrapper.querySelector('.r_rotateC')! as HTMLElement;
         const rotateHandle = wrapper.querySelector('.r_rotateH')! as HTMLElement;
-        spyOn(rotateHandle, 'getBoundingClientRect').and.returnValues(rotatePosition);
+        spyOn(rotateCenter, 'getBoundingClientRect').and.returnValues(rotatePosition);
         spyOn(wrapper, 'getBoundingClientRect').and.returnValues(wrapperPosition);
         const viewport: Rect = {
             top: 1,
@@ -81,10 +81,10 @@ xdescribe('updateRotateHandlePosition', () => {
         document.body.removeChild(imageSpan);
     }
 
-    xit('adjust rotate handle - ROTATOR HIDDEN ON TOP', () => {
+    it('adjust rotate handle - ROTATOR HIDDEN ON TOP', () => {
         runTest(
             {
-                top: 0,
+                top: 16,
                 bottom: 3,
                 left: 3,
                 right: 5,
@@ -96,7 +96,7 @@ xdescribe('updateRotateHandlePosition', () => {
             },
             '-21px',
             '15px',
-            '7px',
+            '0px',
             {
                 top: 2,
                 bottom: 3,
@@ -112,7 +112,7 @@ xdescribe('updateRotateHandlePosition', () => {
         );
     });
 
-    xit('adjust rotate handle - ROTATOR NOT HIDDEN', () => {
+    it('adjust rotate handle - ROTATOR NOT HIDDEN', () => {
         runTest(
             {
                 top: 2,
@@ -148,7 +148,7 @@ xdescribe('updateRotateHandlePosition', () => {
             {
                 top: 2,
                 bottom: 3,
-                left: 2,
+                left: 7,
                 right: 5,
                 height: 2,
                 width: 2,
@@ -174,11 +174,11 @@ xdescribe('updateRotateHandlePosition', () => {
         );
     });
 
-    xit('adjust rotate handle - ROTATOR HIDDEN ON BOTTOM', () => {
+    it('adjust rotate handle - ROTATOR HIDDEN ON BOTTOM', () => {
         runTest(
             {
                 top: 2,
-                bottom: 200,
+                bottom: 210,
                 left: 1,
                 right: 5,
                 height: 2,
@@ -205,7 +205,7 @@ xdescribe('updateRotateHandlePosition', () => {
         );
     });
 
-    xit('adjust rotate handle - ROTATOR HIDDEN ON RIGHT', () => {
+    it('adjust rotate handle - ROTATOR HIDDEN ON RIGHT', () => {
         runTest(
             {
                 top: 2,

@@ -1,8 +1,9 @@
 import { cleanHtmlComments } from './cleanHtmlComments';
-import { cloneModelForPaste, mergePasteContent } from './mergePasteContent';
+import { cloneModelForPaste } from 'roosterjs-content-model-dom';
 import { convertInlineCss } from '../createModelFromHtml/convertInlineCss';
 import { createPasteFragment } from './createPasteFragment';
 import { generatePasteOptionFromPlugins } from './generatePasteOptionFromPlugins';
+import { mergePasteContent } from './mergePasteContent';
 import { retrieveHtmlInfo } from './retrieveHtmlInfo';
 import type {
     PasteTypeOrGetter,

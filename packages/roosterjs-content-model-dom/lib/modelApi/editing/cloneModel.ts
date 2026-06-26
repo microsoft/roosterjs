@@ -48,6 +48,19 @@ import type {
     ReadonlyContentModelText,
 } from 'roosterjs-content-model-types';
 
+const CloneOption: CloneModelOptions = {
+    includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
+};
+
+/**
+ * Clone a content model for paste operations, ensuring that cached elements are handled appropriately.
+ * @param model The content model to clone
+ * @returns A cloned content model suitable for paste operations
+ */
+export function cloneModelForPaste(model: ReadonlyContentModelDocument) {
+    return cloneModel(model, CloneOption);
+}
+
 /**
  * Clone a content model
  * @param model The content model to clone
