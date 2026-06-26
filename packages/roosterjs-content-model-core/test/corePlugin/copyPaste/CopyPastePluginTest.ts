@@ -995,7 +995,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, undefined);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1025,7 +1026,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, undefined);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1056,7 +1058,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'mergeFormat');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1087,7 +1090,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'asImage');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1118,7 +1122,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'asPlainText');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1149,7 +1154,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'normal');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1179,7 +1185,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).not.toHaveBeenCalled();
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1210,7 +1217,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, cb);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });

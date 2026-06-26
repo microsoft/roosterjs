@@ -149,7 +149,7 @@ export { hasSelectionInSegment } from './modelApi/selection/hasSelectionInSegmen
 export { hasSelectionInBlockGroup } from './modelApi/selection/hasSelectionInBlockGroup';
 export { setSelection } from './modelApi/selection/setSelection';
 
-export { cloneModel } from './modelApi/editing/cloneModel';
+export { cloneModel, cloneModelForPaste } from './modelApi/editing/cloneModel';
 export { mergeModel } from './modelApi/editing/mergeModel';
 export { deleteSelection } from './modelApi/editing/deleteSelection';
 export { deleteSegment } from './modelApi/editing/deleteSegment';
