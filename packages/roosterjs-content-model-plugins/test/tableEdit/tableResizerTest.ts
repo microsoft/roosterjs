@@ -20,10 +20,14 @@ describe('Table Resizer tests', () => {
     let targetId = 'tableResizerTestId';
     let tableEdit: TableEditPlugin;
     let node: HTMLDivElement;
-    const cmTable: ContentModelTable = getModelTable(targetId);
+    // Recreated before each test. onDragging mutates this content model table in place
+    // (via mutateBlock), so a shared instance would leak resized widths/heights into later
+    // tests and make them order dependent (randomly failing).
+    let cmTable: ContentModelTable;
 
     beforeEach(() => {
         document.body.innerHTML = '';
+        cmTable = getModelTable(targetId);
         node = document.createElement('div');
         node.id = id;
         document.body.insertBefore(node, document.body.childNodes[0]);
@@ -94,7 +98,7 @@ describe('Table Resizer tests', () => {
         expect(initvalue.originalWidths).toEqual(editorCMTable.widths);
     });
 
-    xdescribe('Resize - onDragging', () => {
+    describe('Resize - onDragging', () => {
         function resizeWholeTableTest(growth: number, direction: resizeDirection) {
             //Arrange
             const nodeHeight = 1000;
@@ -200,9 +204,13 @@ describe('Table Resizer tests', () => {
             growth: number,
             direction: resizeDirection
         ) {
+            // Note: onDragging rewrites both width and height of every cell (switching to
+            // border-box), so resizing one axis incidentally shifts the other by the border
+            // width. Only assert the axis being resized, gated by growth sign, so that small
+            // cross-axis shifts don't flip the expected direction.
             switch (direction) {
                 case 'horizontal':
-                    if (rect1.top == rect2.top && rect1.bottom == rect2.bottom && growth > 0) {
+                    if (growth > 0) {
                         expect(rect1.left).toBeLessThanOrEqual(rect2.left);
                         expect(rect1.right).toBeLessThanOrEqual(rect2.right);
                     } else {
@@ -212,7 +220,7 @@ describe('Table Resizer tests', () => {
                     break;
 
                 case 'vertical':
-                    if (rect1.left == rect2.left && rect1.right == rect2.right && growth > 0) {
+                    if (growth > 0) {
                         expect(rect1.top).toBeLessThanOrEqual(rect2.top);
                         expect(rect1.bottom).toBeLessThanOrEqual(rect2.bottom);
                     } else {

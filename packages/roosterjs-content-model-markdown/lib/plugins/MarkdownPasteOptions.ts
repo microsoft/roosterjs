@@ -9,4 +9,10 @@ export interface MarkdownPasteOptions {
      * @default false
      */
     autoConversion: boolean;
+
+    /**
+     * When true, the plugin will undo the markdown conversion when the user undoes the action.
+     * @default false
+     */
+    undoConversion: boolean;
 }

@@ -124,3 +124,200 @@ describe('Content Model Custom Replace Plugin Test', () => {
         expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
     });
 });
+
+describe('CustomReplacePlugin guard branches and replacement callback', () => {
+    let editor: IEditor;
+    let getDOMSelectionSpy: jasmine.Spy;
+    let formatTextSegmentBeforeSelectionMarkerSpy: jasmine.Spy;
+    let plugin: CustomReplacePlugin;
+
+    const replacements: CustomReplace[] = [
+        {
+            stringToReplace: ':)',
+            replacementString: '😀',
+            replacementHandler: replaceEmojis,
+        },
+    ];
+
+    function collapsedRangeSelection() {
+        return {
+            type: 'range',
+            range: { collapsed: true },
+        } as any;
+    }
+
+    function inputEvent(data: string | null, inputType: string = 'insertText'): any {
+        return {
+            eventType: 'input',
+            rawEvent: {
+                inputType,
+                data,
+            } as any,
+        };
+    }
+
+    beforeEach(() => {
+        formatTextSegmentBeforeSelectionMarkerSpy = spyOn(
+            formatTextSegmentBeforeSelectionMarker,
+            'formatTextSegmentBeforeSelectionMarker'
+        );
+        getDOMSelectionSpy = jasmine
+            .createSpy('getDOMSelection')
+            .and.returnValue(collapsedRangeSelection());
+
+        editor = ({
+            getDOMSelection: getDOMSelectionSpy,
+            formatContentModel: () => {},
+        } as any) as IEditor;
+    });
+
+    afterEach(() => {
+        plugin?.dispose();
+    });
+
+    function createPlugin(rules: CustomReplace[] = replacements) {
+        plugin = new CustomReplacePlugin(rules);
+        plugin.initialize(editor);
+        return plugin;
+    }
+
+    it('getName', () => {
+        createPlugin();
+        expect(plugin.getName()).toBe('CustomReplace');
+    });
+
+    it('does nothing for non-input events', () => {
+        createPlugin();
+
+        plugin.onPluginEvent({ eventType: 'keyDown', rawEvent: {} as any });
+
+        expect(getDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
+    });
+
+    it('does nothing when editor is disposed', () => {
+        createPlugin();
+        plugin.dispose();
+
+        plugin.onPluginEvent(inputEvent(')'));
+
+        expect(getDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not replace when there are no custom replacements', () => {
+        createPlugin([]);
+
+        plugin.onPluginEvent(inputEvent(')'));
+
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not replace when inputType is not insertText', () => {
+        createPlugin();
+
+        plugin.onPluginEvent(inputEvent(')', 'deleteContentBackward'));
+
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not replace when there is no selection', () => {
+        createPlugin();
+        getDOMSelectionSpy.and.returnValue(null);
+
+        plugin.onPluginEvent(inputEvent(')'));
+
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not replace when selection is not a range', () => {
+        createPlugin();
+        getDOMSelectionSpy.and.returnValue({ type: 'image' } as any);
+
+        plugin.onPluginEvent(inputEvent(')'));
+
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not replace when range is not collapsed', () => {
+        createPlugin();
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: { collapsed: false },
+        } as any);
+
+        plugin.onPluginEvent(inputEvent(')'));
+
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not replace when key data is empty', () => {
+        createPlugin();
+
+        plugin.onPluginEvent(inputEvent(null));
+
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not replace when the typed key is not a trigger key', () => {
+        createPlugin();
+
+        plugin.onPluginEvent(inputEvent('a'));
+
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).not.toHaveBeenCalled();
+    });
+
+    it('invokes formatTextSegmentBeforeSelectionMarker on a trigger key', () => {
+        createPlugin();
+
+        plugin.onPluginEvent(inputEvent(')'));
+
+        expect(formatTextSegmentBeforeSelectionMarkerSpy).toHaveBeenCalledTimes(1);
+        expect(formatTextSegmentBeforeSelectionMarkerSpy.calls.argsFor(0)[0]).toBe(editor);
+    });
+
+    it('callback replaces matching text and sets canUndoByBackspace', () => {
+        createPlugin();
+
+        plugin.onPluginEvent(inputEvent(')'));
+
+        const callback = formatTextSegmentBeforeSelectionMarkerSpy.calls.argsFor(0)[1];
+        const previousSegment = { text: ':)' } as ContentModelText;
+        const paragraph = {} as ContentModelParagraph;
+        const context = {} as FormatContentModelContext;
+
+        const result = callback(
+            {} as ContentModelDocument,
+            previousSegment,
+            paragraph,
+            {} as ContentModelSegmentFormat,
+            context
+        );
+
+        expect(result).toBe(true);
+        expect(previousSegment.text).toBe('😀');
+        expect(context.canUndoByBackspace).toBe(true);
+    });
+
+    it('callback returns false when no replacement matches', () => {
+        createPlugin();
+
+        plugin.onPluginEvent(inputEvent(')'));
+
+        const callback = formatTextSegmentBeforeSelectionMarkerSpy.calls.argsFor(0)[1];
+        const previousSegment = { text: 'no match' } as ContentModelText;
+        const context = {} as FormatContentModelContext;
+
+        const result = callback(
+            {} as ContentModelDocument,
+            previousSegment,
+            {} as ContentModelParagraph,
+            {} as ContentModelSegmentFormat,
+            context
+        );
+
+        expect(result).toBe(false);
+        expect(previousSegment.text).toBe('no match');
+        expect(context.canUndoByBackspace).toBeUndefined();
+    });
+});
