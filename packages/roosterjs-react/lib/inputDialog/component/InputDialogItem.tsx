@@ -60,6 +60,11 @@ export function InputDialogItem<Strings extends string, ItemNames extends string
                 <TextField
                     role="textbox"
                     type="text"
+                    ariaLabel={
+                        labelKey
+                            ? getLocalizedString(strings, labelKey, unlocalizedLabel)
+                            : undefined
+                    }
                     className={classNames.inputBox}
                     value={value}
                     onChange={onValueChange}
