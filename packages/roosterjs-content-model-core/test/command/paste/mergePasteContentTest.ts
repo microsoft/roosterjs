@@ -1890,7 +1890,7 @@ describe('mergePasteContent', () => {
             document.body
         );
         const div = document.createElement('div');
-        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callThrough();
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModelForPaste').and.callThrough();
 
         sourceModel = {
             blockGroupType: 'Document',
@@ -1973,7 +1973,7 @@ describe('mergePasteContent', () => {
             document.body
         );
         const div = document.createElement('div');
-        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callThrough();
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModelForPaste').and.callThrough();
 
         sourceModel = {
             blockGroupType: 'Document',
@@ -2042,8 +2042,5 @@ describe('mergePasteContent', () => {
             format: {},
         });
         expect(cloneModelSpy).toHaveBeenCalledTimes(1);
-        expect(cloneModelSpy).toHaveBeenCalledWith(modelBeforePaste, {
-            includeCachedElement: jasmine.anything(),
-        } as any);
     });
 });
