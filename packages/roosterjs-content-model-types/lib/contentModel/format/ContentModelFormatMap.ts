@@ -1,5 +1,6 @@
 import type { SizeFormat } from './formatParts/SizeFormat';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
+import type { ContentModelDataFormat } from './ContentModelDataFormat';
 import type { ContentModelDividerFormat } from './ContentModelDividerFormat';
 import type { ContentModelEntityFormat } from './ContentModelEntityFormat';
 import type { ContentModelFormatContainerFormat } from './ContentModelFormatContainerFormat';
@@ -128,6 +129,11 @@ export interface ContentModelFormatMap {
      * Format type for code
      */
     code: FontFamilyFormat;
+
+    /**
+     * Format type for data, used by HTML &lt;data&gt; element
+     */
+    data: ContentModelDataFormat;
 
     /**
      * Format type for dataset

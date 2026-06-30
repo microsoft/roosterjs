@@ -16,7 +16,7 @@ export const handleSegmentDecorator: ContentModelSegmentHandler<ContentModelSegm
     segment,
     context
 ) => {
-    const { code, link } = segment;
+    const { code, link, data } = segment;
 
     if (isNodeOfType(parent, 'ELEMENT_NODE')) {
         if (link) {
@@ -37,6 +37,16 @@ export const handleSegmentDecorator: ContentModelSegmentHandler<ContentModelSegm
                 applyFormat(codeNode, context.formatAppliers.code, code.format, context);
 
                 context.onNodeCreated?.(code, codeNode);
+            });
+        }
+
+        if (data) {
+            stackFormat(context, 'data', () => {
+                const dataNode = wrapAllChildNodes(parent, 'data');
+
+                applyFormat(dataNode, context.formatAppliers.data, data.format, context);
+
+                context.onNodeCreated?.(data, dataNode);
             });
         }
     }

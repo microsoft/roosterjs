@@ -65,6 +65,7 @@ export { createTableRow } from './modelApi/creators/createTableRow';
 export { mutateBlock, mutateSegments, mutateSegment } from './modelApi/common/mutate';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
+export { addData } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
 export { addTextSegment } from './modelApi/common/addTextSegment';
 export { normalizeParagraph } from './modelApi/common/normalizeParagraph';

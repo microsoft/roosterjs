@@ -29,22 +29,25 @@ describe('dataProcessor', () => {
                         {
                             segmentType: 'Text',
                             text: 'Cherry Tomato',
-                            format: { dataValue: '21053' },
+                            format: {},
+                            data: {
+                                format: { dataValue: '21053' },
+                            },
                         },
                     ],
                     format: {},
                 },
             ],
         });
+        expect(context.data).toEqual({ format: {} });
     });
 
-    it('Data element combines multiple text child nodes', () => {
+    it('Data element with empty value attribute', () => {
         const doc = createContentModelDocument();
         const data = document.createElement('data');
 
-        data.setAttribute('value', '1');
-        data.appendChild(document.createTextNode('Hello'));
-        data.appendChild(document.createTextNode(' World'));
+        data.setAttribute('value', '');
+        data.textContent = 'test';
 
         dataProcessor(doc, data, context);
 
@@ -57,14 +60,46 @@ describe('dataProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'Hello World',
-                            format: { dataValue: '1' },
+                            text: 'test',
+                            format: {},
+                            data: {
+                                format: { dataValue: '' },
+                            },
                         },
                     ],
                     format: {},
                 },
             ],
         });
+        expect(context.data).toEqual({ format: {} });
+    });
+
+    it('Data element without value attribute', () => {
+        const doc = createContentModelDocument();
+        const data = document.createElement('data');
+
+        data.textContent = 'test';
+
+        dataProcessor(doc, data, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+        expect(context.data).toEqual({ format: {} });
     });
 
     it('Data element keeps segment format from element', () => {
@@ -87,7 +122,80 @@ describe('dataProcessor', () => {
                         {
                             segmentType: 'Text',
                             text: 'test',
-                            format: { dataValue: '5', textColor: 'red' },
+                            format: { textColor: 'red' },
+                            data: {
+                                format: { dataValue: '5' },
+                            },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Data element with multiple children', () => {
+        const doc = createContentModelDocument();
+        const data = document.createElement('data');
+
+        data.setAttribute('value', '1');
+        data.appendChild(document.createTextNode('Hello'));
+        data.appendChild(document.createElement('br'));
+
+        dataProcessor(doc, data, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Hello',
+                            format: {},
+                            data: {
+                                format: { dataValue: '1' },
+                            },
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Nested data element does not inherit parent value', () => {
+        const doc = createContentModelDocument();
+        const outer = document.createElement('data');
+        const inner = document.createElement('data');
+
+        outer.setAttribute('value', 'outer');
+        inner.setAttribute('value', 'inner');
+        inner.textContent = 'test';
+        outer.appendChild(inner);
+
+        dataProcessor(doc, outer, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                            data: {
+                                format: { dataValue: 'inner' },
+                            },
                         },
                     ],
                     format: {},
@@ -116,137 +224,11 @@ describe('dataProcessor', () => {
                         {
                             segmentType: 'Text',
                             text: 'test',
-                            format: { dataValue: '5' },
+                            format: {},
                             isSelected: true,
-                        },
-                    ],
-                    format: {},
-                },
-            ],
-        });
-    });
-
-    it('Data element calls domIndexer onSegment', () => {
-        const doc = createContentModelDocument();
-        const data = document.createElement('data');
-
-        data.setAttribute('value', '5');
-        data.textContent = 'test';
-
-        const onSegmentSpy = jasmine.createSpy('onSegment');
-        context.domIndexer = {
-            onParagraph: null!,
-            onSegment: onSegmentSpy,
-            onTable: null!,
-            reconcileSelection: null!,
-            reconcileChildList: null!,
-            onBlockEntity: null!,
-            reconcileElementId: null!,
-            reconcileImageAttribute: null!,
-            onMergeText: null!,
-            clearIndex: null!,
-        };
-
-        dataProcessor(doc, data, context);
-
-        const segment = {
-            segmentType: 'Text',
-            text: 'test',
-            format: { dataValue: '5' },
-        };
-        const paragraph = {
-            blockType: 'Paragraph',
-            isImplicit: true,
-            segments: [segment],
-            format: {},
-        };
-
-        expect(doc).toEqual({
-            blockGroupType: 'Document',
-            blocks: [paragraph as any],
-        });
-        expect(onSegmentSpy).toHaveBeenCalledWith(data, paragraph, [segment]);
-    });
-
-    it('Data element without value attribute falls back to general processor', () => {
-        const doc = createContentModelDocument();
-        const data = document.createElement('data');
-
-        data.textContent = 'test';
-
-        dataProcessor(doc, data, context);
-
-        expect(doc).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    isImplicit: true,
-                    segments: [
-                        {
-                            segmentType: 'General',
-                            element: data,
-                            blockType: 'BlockGroup',
-                            blockGroupType: 'General',
-                            blocks: [
-                                {
-                                    blockType: 'Paragraph',
-                                    isImplicit: true,
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'test',
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                },
-                            ],
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
-            ],
-        });
-    });
-
-    it('Data element with non-text child falls back to general processor', () => {
-        const doc = createContentModelDocument();
-        const data = document.createElement('data');
-
-        data.setAttribute('value', '5');
-        data.innerHTML = '<span>test</span>';
-
-        dataProcessor(doc, data, context);
-
-        expect(doc).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    isImplicit: true,
-                    segments: [
-                        {
-                            segmentType: 'General',
-                            element: data,
-                            blockType: 'BlockGroup',
-                            blockGroupType: 'General',
-                            blocks: [
-                                {
-                                    blockType: 'Paragraph',
-                                    isImplicit: true,
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'test',
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                },
-                            ],
-                            format: {},
+                            data: {
+                                format: { dataValue: '5' },
+                            },
                         },
                     ],
                     format: {},

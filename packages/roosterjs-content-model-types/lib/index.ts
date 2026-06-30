@@ -15,6 +15,7 @@ export { ContentModelListItemFormat } from './contentModel/format/ContentModelLi
 export { ContentModelListItemLevelFormat } from './contentModel/format/ContentModelListItemLevelFormat';
 export { ContentModelHyperLinkFormat } from './contentModel/format/ContentModelHyperLinkFormat';
 export { ContentModelCodeFormat } from './contentModel/format/ContentModelCodeFormat';
+export { ContentModelDataFormat } from './contentModel/format/ContentModelDataFormat';
 export { ContentModelFormatContainerFormat } from './contentModel/format/ContentModelFormatContainerFormat';
 export { ContentModelDividerFormat } from './contentModel/format/ContentModelDividerFormat';
 export { ContentModelFormatBase } from './contentModel/format/ContentModelFormatBase';
@@ -220,6 +221,10 @@ export {
     ContentModelCode,
     ReadonlyContentModelCode,
 } from './contentModel/decorator/ContentModelCode';
+export {
+    ContentModelData,
+    ReadonlyContentModelData,
+} from './contentModel/decorator/ContentModelData';
 export {
     ContentModelLink,
     ReadonlyContentModelLink,
