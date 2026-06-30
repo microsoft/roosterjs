@@ -748,7 +748,7 @@ export class DomIndexerImpl implements DomIndexer {
 
         if (copiedFormat) {
             getObjectKeys(copiedFormat).forEach(key => {
-                if (EmptySegmentFormat[key] === undefined) {
+                if (!(key in EmptySegmentFormat)) {
                     delete copiedFormat[key];
                 }
             });
