@@ -37,7 +37,9 @@ export function InputDialogItem<Strings extends string, ItemNames extends string
     const { itemName, strings, items, currentValues, onChanged, onEnterKey, rows } = props;
     const { labelKey, unlocalizedLabel, autoFocus } = items[itemName];
     const value = currentValues[itemName];
-    const label = labelKey ? getLocalizedString(strings, labelKey, unlocalizedLabel) : undefined;
+    const label =
+        (labelKey ? getLocalizedString(strings, labelKey, unlocalizedLabel) : undefined) ??
+        undefined;
     const onValueChange = React.useCallback(
         (_, newValue) => {
             onChanged(itemName, newValue);
