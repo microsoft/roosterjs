@@ -1,17 +1,22 @@
 import * as React from 'react';
+import { AriaFormatRenderers } from '../format/formatPart/AriaFormatRenderers';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelTable, ContentModelTableFormat } from 'roosterjs-content-model-types';
 import { ContentModelTableRowView } from './ContentModelTableRowView';
 import { ContentModelView } from '../ContentModelView';
+import { DirectionFormatRenderer } from '../format/formatPart/DirectionFormatRenderer';
 import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { hasSelectionInBlock, updateTableMetadata } from 'roosterjs-content-model-dom';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
+import { LegacyTableBorderFormatRenderers } from '../format/formatPart/LegacyTableBorderFormatRenderers';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
+import { RoleFormatRenderer } from '../format/formatPart/RoleFormatRenderer';
+import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
 import { TableLayoutFormatRenderer } from '../format/formatPart/TableLayoutFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
@@ -23,11 +28,16 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     IdFormatRenderer,
     SpacingFormatRenderer,
     BackgroundColorFormatRenderer,
+    DirectionFormatRenderer,
     MarginFormatRenderer,
     ...BorderFormatRenderers,
     BorderBoxFormatRenderer,
     DisplayFormatRenderer,
     TableLayoutFormatRenderer,
+    ...SizeFormatRenderers,
+    ...AriaFormatRenderers,
+    RoleFormatRenderer,
+    ...LegacyTableBorderFormatRenderers,
 ];
 
 export function ContentModelTableView(props: { table: ContentModelTable }) {

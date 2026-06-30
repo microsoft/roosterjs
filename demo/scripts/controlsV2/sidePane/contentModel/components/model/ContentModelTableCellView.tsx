@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { BlockGroupContentView } from './BlockGroupContentView';
+import { BoldFormatRenderer } from '../format/formatPart/BasicFormatRenderers';
 import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelTableCell, ContentModelTableCellFormat } from 'roosterjs-content-model-types';
@@ -33,6 +34,7 @@ const TableCellFormatRenderers: FormatRenderer<ContentModelTableCellFormat>[] = 
     VerticalAlignFormatRenderer,
     WordBreakFormatRenderer,
     TextColorFormatRenderer,
+    BoldFormatRenderer,
     ...SizeFormatRenderers,
 ];
 
