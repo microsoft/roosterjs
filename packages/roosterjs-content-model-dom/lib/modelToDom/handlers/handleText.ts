@@ -18,7 +18,12 @@ export const handleText: ContentModelSegmentHandler<ContentModelText> = (
             ? segment.text.slice(0, -1) + nonBreakingSpace
             : segment.text;
     const txt = doc.createTextNode(textContent);
-    const element = doc.createElement('span');
+    const dataValue = segment.format.dataValue;
+    const element = dataValue != undefined ? doc.createElement('data') : doc.createElement('span');
+
+    if (dataValue != undefined) {
+        (element as HTMLDataElement).value = dataValue;
+    }
 
     parent.appendChild(element);
     element.appendChild(txt);

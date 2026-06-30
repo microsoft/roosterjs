@@ -36,6 +36,42 @@ describe('handleText', () => {
         expect(parent.innerHTML).toBe('<span style="color: red;">test</span>');
     });
 
+    it('Text segment with dataValue uses data element', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'Cherry Tomato',
+            format: { dataValue: '21053' },
+        };
+
+        handleText(document, parent, text, context, []);
+
+        expect(parent.innerHTML).toBe('<data value="21053">Cherry Tomato</data>');
+    });
+
+    it('Text segment with dataValue and other format', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: { dataValue: '5', textColor: 'red' },
+        };
+
+        handleText(document, parent, text, context, []);
+
+        expect(parent.innerHTML).toBe('<data value="5" style="color: red;">test</data>');
+    });
+
+    it('Text segment with empty dataValue uses data element', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: { dataValue: '' },
+        };
+
+        handleText(document, parent, text, context, []);
+
+        expect(parent.innerHTML).toBe('<data value="">test</data>');
+    });
+
     it('Text segment with link', () => {
         const text: ContentModelText = {
             segmentType: 'Text',

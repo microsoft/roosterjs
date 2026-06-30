@@ -5,6 +5,7 @@ import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
  */
 export const EmptySegmentFormat: Readonly<Required<ContentModelSegmentFormat>> = {
     backgroundColor: '',
+    dataValue: '',
     fontFamily: '',
     fontSize: '',
     fontWeight: '',
