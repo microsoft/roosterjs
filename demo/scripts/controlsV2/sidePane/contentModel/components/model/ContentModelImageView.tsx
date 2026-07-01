@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { BoxShadowFormatRenderer } from '../format/formatPart/BoxShadowFormatRenderer';
 import { ContentModelCodeView } from './ContentModelCodeView';
+import { ContentModelDataView } from './ContentModelDataView';
 import { ContentModelImage, ContentModelImageFormat } from 'roosterjs-content-model-types';
 import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelView } from '../ContentModelView';
@@ -81,7 +82,8 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
                     Image selection
                 </div>
                 {image.link ? <ContentModelLinkView link={image.link} /> : null}{' '}
-                {image.code ? <ContentModelCodeView code={image.code} /> : null}
+                {image.code ? <ContentModelCodeView code={image.code} /> : null}{' '}
+                {image.data ? <ContentModelDataView data={image.data} /> : null}
             </>
         );
     }, [src, imageSelected, image.link, alt, title]);
