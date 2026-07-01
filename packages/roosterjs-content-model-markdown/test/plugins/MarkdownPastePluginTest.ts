@@ -33,14 +33,21 @@ describe('MarkdownPastePlugin', () => {
         } as unknown) as IEditor;
     });
 
-    function createPlugin(autoConversion?: boolean, undoConversion?: boolean): MarkdownPastePlugin {
+    function createPlugin(
+        autoConversion?: boolean,
+        undoConversion?: boolean,
+        onAutoConvert?: () => void
+    ): MarkdownPastePlugin {
         const plugin =
             autoConversion === undefined && undoConversion === undefined
                 ? new MarkdownPastePlugin()
-                : new MarkdownPastePlugin({
-                      autoConversion: !!autoConversion,
-                      undoConversion: !!undoConversion,
-                  });
+                : new MarkdownPastePlugin(
+                      {
+                          autoConversion: !!autoConversion,
+                          undoConversion: !!undoConversion,
+                      },
+                      onAutoConvert
+                  );
         plugin.initialize(editor);
         return plugin;
     }
@@ -341,6 +348,40 @@ describe('MarkdownPastePlugin', () => {
 
         expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        plugin.dispose();
+    });
+
+    it('calls the optional callback after auto conversion', () => {
+        const callback = jasmine.createSpy('onAutoConvert');
+        const plugin = createPlugin(true /*autoConversion*/, false /*undoConversion*/, callback);
+        const event = createContentChangedPasteEvent({
+            text: '# Heading',
+            rawHtml: '',
+            customValues: {},
+            pasteNativeEvent: true,
+            modelBeforePaste: createEmptyModel(),
+        });
+
+        plugin.onPluginEvent(event);
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        plugin.dispose();
+    });
+
+    it('does not call the optional callback when auto conversion does not run', () => {
+        const callback = jasmine.createSpy('onAutoConvert');
+        const plugin = createPlugin(true /*autoConversion*/, false /*undoConversion*/, callback);
+        const event = createContentChangedPasteEvent({
+            text: 'just plain text',
+            rawHtml: '',
+            customValues: {},
+            pasteNativeEvent: true,
+            modelBeforePaste: createEmptyModel(),
+        });
+
+        plugin.onPluginEvent(event);
+
+        expect(callback).not.toHaveBeenCalled();
         plugin.dispose();
     });
 
