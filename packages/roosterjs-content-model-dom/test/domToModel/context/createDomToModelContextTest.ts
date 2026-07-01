@@ -25,6 +25,9 @@ describe('createDomToModelContext', () => {
             code: {
                 format: {},
             },
+            data: {
+                format: {},
+            },
             blockDecorator: {
                 format: {},
                 tagName: '',
@@ -58,6 +61,9 @@ describe('createDomToModelContext', () => {
                 dataset: {},
             },
             code: {
+                format: {},
+            },
+            data: {
                 format: {},
             },
             blockDecorator: {
@@ -123,6 +129,9 @@ describe('createDomToModelContext', () => {
                 dataset: {},
             },
             code: {
+                format: {},
+            },
+            data: {
                 format: {},
             },
             blockDecorator: {

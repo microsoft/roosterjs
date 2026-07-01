@@ -77,6 +77,9 @@ function createDomToModelDecoratorContext(): DomToModelDecoratorContext {
         code: {
             format: {},
         },
+        data: {
+            format: {},
+        },
         blockDecorator: {
             format: {},
             tagName: '',
