@@ -6,6 +6,7 @@ import { borderColorFormatHandler } from './common/borderColorFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
+import { dataValueFormatHandler } from './segment/dataValueFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
 import { displayFormatHandler } from './block/displayFormatHandler';
 import { entityFormatHandler } from './entity/entityFormatHandler';
@@ -66,6 +67,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     borderColor: borderColorFormatHandler,
     boxShadow: boxShadowFormatHandler,
     dataset: datasetFormatHandler,
+    dataValue: dataValueFormatHandler,
     direction: directionFormatHandler,
     display: displayFormatHandler,
     float: floatFormatHandler,
@@ -218,6 +220,7 @@ export const defaultFormatKeysPerCategory: {
     ],
     segmentUnderLink: ['textColor'],
     code: ['fontFamily', 'display'],
+    data: ['dataValue'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display', 'id'],

@@ -15,6 +15,7 @@ export { ContentModelListItemFormat } from './contentModel/format/ContentModelLi
 export { ContentModelListItemLevelFormat } from './contentModel/format/ContentModelListItemLevelFormat';
 export { ContentModelHyperLinkFormat } from './contentModel/format/ContentModelHyperLinkFormat';
 export { ContentModelCodeFormat } from './contentModel/format/ContentModelCodeFormat';
+export { ContentModelDataFormat } from './contentModel/format/ContentModelDataFormat';
 export { ContentModelFormatContainerFormat } from './contentModel/format/ContentModelFormatContainerFormat';
 export { ContentModelDividerFormat } from './contentModel/format/ContentModelDividerFormat';
 export { ContentModelFormatBase } from './contentModel/format/ContentModelFormatBase';
@@ -30,6 +31,7 @@ export { FontFamilyFormat } from './contentModel/format/formatParts/FontFamilyFo
 export { FontSizeFormat } from './contentModel/format/formatParts/FontSizeFormat';
 export { ItalicFormat } from './contentModel/format/formatParts/ItalicFormat';
 export { LetterSpacingFormat } from './contentModel/format/formatParts/LetterSpacingFormat';
+export { DataValueFormat } from './contentModel/format/formatParts/DataValueFormat';
 export { LineHeightFormat } from './contentModel/format/formatParts/LineHeightFormat';
 export { StrikeFormat } from './contentModel/format/formatParts/StrikeFormat';
 export { SuperOrSubScriptFormat } from './contentModel/format/formatParts/SuperOrSubScriptFormat';
@@ -219,6 +221,10 @@ export {
     ContentModelCode,
     ReadonlyContentModelCode,
 } from './contentModel/decorator/ContentModelCode';
+export {
+    ContentModelData,
+    ReadonlyContentModelData,
+} from './contentModel/decorator/ContentModelData';
 export {
     ContentModelLink,
     ReadonlyContentModelLink,

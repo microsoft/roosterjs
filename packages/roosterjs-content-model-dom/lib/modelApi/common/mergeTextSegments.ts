@@ -2,6 +2,7 @@ import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import type {
     ContentModelText,
     ReadonlyContentModelCode,
+    ReadonlyContentModelData,
     ReadonlyContentModelLink,
     ReadonlyContentModelSegment,
     ShallowMutableContentModelParagraph,
@@ -37,7 +38,8 @@ function segmentsWithSameFormat(
         !!seg1.isSelected == !!seg2.isSelected &&
         areSameFormats(seg1.format, seg2.format) &&
         areSameLinks(seg1.link, seg2.link) &&
-        areSameCodes(seg1.code, seg2.code)
+        areSameCodes(seg1.code, seg2.code) &&
+        areSameData(seg1.data, seg2.data)
     );
 }
 
@@ -59,4 +61,11 @@ function areSameCodes(
     code2: ReadonlyContentModelCode | undefined
 ) {
     return (!code1 && !code2) || (code1 && code2 && areSameFormats(code1.format, code2.format));
+}
+
+function areSameData(
+    data1: ReadonlyContentModelData | undefined,
+    data2: ReadonlyContentModelData | undefined
+) {
+    return (!data1 && !data2) || (data1 && data2 && areSameFormats(data1.format, data2.format));
 }

@@ -37,6 +37,9 @@ export function InputDialogItem<Strings extends string, ItemNames extends string
     const { itemName, strings, items, currentValues, onChanged, onEnterKey, rows } = props;
     const { labelKey, unlocalizedLabel, autoFocus } = items[itemName];
     const value = currentValues[itemName];
+    const label =
+        (labelKey ? getLocalizedString(strings, labelKey, unlocalizedLabel) : undefined) ??
+        undefined;
     const onValueChange = React.useCallback(
         (_, newValue) => {
             onChanged(itemName, newValue);
@@ -55,11 +58,12 @@ export function InputDialogItem<Strings extends string, ItemNames extends string
 
     return (
         <div>
-            {labelKey ? <div>{getLocalizedString(strings, labelKey, unlocalizedLabel)}</div> : null}
+            {label ? <div>{label}</div> : null}
             <div>
                 <TextField
                     role="textbox"
                     type="text"
+                    ariaLabel={label}
                     className={classNames.inputBox}
                     value={value}
                     onChange={onValueChange}
