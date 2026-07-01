@@ -1,5 +1,6 @@
 import type { MutableMark, ReadonlyMark, ShallowMutableMark } from '../common/MutableMark';
 import type { ContentModelCode, ReadonlyContentModelCode } from '../decorator/ContentModelCode';
+import type { ContentModelData, ReadonlyContentModelData } from '../decorator/ContentModelData';
 import type { ContentModelLink, ReadonlyContentModelLink } from '../decorator/ContentModelLink';
 import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import type { ContentModelSegmentType } from './SegmentType';
@@ -43,6 +44,11 @@ export interface ContentModelSegmentBase<
      * Code info
      */
     code?: ContentModelCode;
+
+    /**
+     * Data info, used by HTML &lt;data&gt; element
+     */
+    data?: ContentModelData;
 }
 
 /**
@@ -65,6 +71,11 @@ export interface ReadonlyContentModelSegmentBase<
      * Code info
      */
     readonly code?: ReadonlyContentModelCode;
+
+    /**
+     * Data info, used by HTML &lt;data&gt; element
+     */
+    readonly data?: ReadonlyContentModelData;
 }
 
 /**
@@ -87,4 +98,9 @@ export interface ShallowMutableContentModelSegmentBase<
      * Code info
      */
     code?: ContentModelCode;
+
+    /**
+     * Data info, used by HTML &lt;data&gt; element
+     */
+    data?: ContentModelData;
 }

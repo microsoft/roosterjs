@@ -17,6 +17,7 @@ import { createTableRow } from '../../../lib/modelApi/creators/createTableRow';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import {
     ContentModelCode,
+    ContentModelData,
     ContentModelLink,
     ContentModelListLevel,
     ContentModelSegmentFormat,
@@ -230,6 +231,29 @@ describe('Creators', () => {
 
         expect(code).toEqual({
             format: { fontFamily: 'test' },
+        });
+    });
+
+    it('createText with data decorator', () => {
+        const format = { a: 1 } as any;
+        const text = 'test';
+        const data: ContentModelData = {
+            format: { dataValue: '123' },
+        };
+        const result = createText(text, format, undefined, undefined, data);
+
+        expect(result).toEqual({
+            segmentType: 'Text',
+            format: { a: 1 } as any,
+            text: text,
+            data,
+        });
+        expect(result.data).not.toBe(data);
+
+        result.data!.format.dataValue = '456';
+
+        expect(data).toEqual({
+            format: { dataValue: '123' },
         });
     });
 
