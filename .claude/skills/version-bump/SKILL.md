@@ -133,21 +133,43 @@ The grouping is defined in `/tools/buildTools/common.js` in the `buildConfig` ob
 
 **SemVer rules:**
 
--   **Patch bump** (0.0.x → 0.0.x+1): Only bug fixes, no API changes
--   **Minor bump** (0.x.0 → 0.x+1.0): New features/APIs added, but backward-compatible
--   **Major bump** (x.0.0 → x+1.0.0): Breaking changes to public interfaces
+-   **Patch bump** (0.0.x → 0.0.x+1): Only bug fixes, no public API changes
+-   **Minor bump** (0.x.0 → 0.x+1.0): New public exports added, but backward-compatible
+-   **Major bump** (x.0.0 → x+1.0.0): Public exports removed or existing exported signatures changed (breaking)
 
-To determine the bump level:
+The bump level is **determined by the public interface diff, not by request**. Do NOT default to a patch bump. You MUST run the procedure below and let its result decide the level. The only time you ask the user is the major-bump confirmation described at the end — there is no "patch bump per request" shortcut.
 
-1. Compare the exported types/interfaces between `release` and the merged code
-2. Look at the `lib/index.ts` barrel files in each package for added/removed/changed exports
-3. Check if any existing public interface signatures changed (breaking = major)
-4. Check if new exports were added (non-breaking addition = minor)
-5. If only implementation changes with no public API changes = patch
+**Determining the bump level (mandatory procedure):**
 
-**If a major version bump appears needed**, show the interface differences to the user and ask: "A major version bump seems needed due to these interface changes. Do you want to bump the major version, or just bump minor instead?"
+The public interface of every package is defined by its `lib/index.ts` barrel file. A change to the bump level can ONLY come from a change to one of these barrel files. Run this for each of the 8 `main`-group packages (and separately for `react` and `legacyAdapter`):
 
-Update `versions.json` with the new version numbers for each affected group.
+1. Diff every barrel file between `release` and the current branch. This is the single source of truth for the bump decision:
+
+    ```bash
+    git diff release -- "packages/*/lib/index.ts"
+    ```
+
+    If this diff is **empty** across all packages in a group → that group is a **patch** bump (implementation-only changes). Stop here for that group.
+
+2. If the diff is non-empty, classify each changed line:
+
+    - A line that only **adds** an `export` (a new `+export ...` line, or a new symbol added to an existing multi-symbol `export { ... }` block, or a new member added to a union/interface that is only additive) → candidate for **minor**.
+    - A line that **removes** an `export` (a `-export ...` line, or a symbol removed from an `export { ... }` block) → **major** (breaking).
+    - A line that **changes an existing exported signature** (e.g. a `-export function foo(a): X` replaced by `+export function foo(a, b): Y`, a renamed export, or a changed type alias that narrows/alters the existing shape) → **major** (breaking).
+
+3. Decide the level for the group using the highest-severity change found:
+
+    - Any removal or changed signature anywhere in the group's barrels → **major**.
+    - Otherwise, any added export → **minor**.
+    - Otherwise (barrels changed only in comments/formatting) → **patch**.
+
+4. Record, for the PR description and your reasoning, the concrete list of added/removed/changed exports that drove the decision. If you decided **patch** despite barrel files having changed, you must be able to point to the specific changed lines and explain why they are non-interface (comment/formatting only).
+
+**Worked example (why this matters):** if a merged PR adds `export interface ContentModelData`, `export { addData }`, and `export type DataValueFormat`, the barrel diff is non-empty and additive with no removals → this is a **minor** bump. Treating it as a patch bump would be incorrect.
+
+**If a major version bump appears needed** (any removal or changed signature detected in step 2), show the specific interface differences to the user and ask: "A major version bump seems needed due to these interface changes. Do you want to bump the major version, or just bump minor instead?"
+
+Update `versions.json` with the new version numbers for each affected group, applying the level determined by the procedure above.
 
 ### Step 12: Build and test
 
