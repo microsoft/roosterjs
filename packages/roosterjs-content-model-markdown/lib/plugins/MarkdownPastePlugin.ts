@@ -102,6 +102,7 @@ export class MarkdownPastePlugin implements EditorPlugin {
                     },
                     {
                         apiName: 'MarkdownConversion',
+                        changeSource: ChangeSource.AutoMarkdownConversion,
                         scrollCaretIntoView: true,
                     }
                 );

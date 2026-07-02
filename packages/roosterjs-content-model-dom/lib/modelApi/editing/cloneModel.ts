@@ -169,7 +169,7 @@ function cloneBlockGroupBase<T extends ContentModelBlockGroupType>(
 function cloneSegmentBase<T extends ContentModelSegmentType>(
     segment: ReadonlyContentModelSegmentBase<T>
 ): ContentModelSegmentBase<T> {
-    const { segmentType, isSelected, code, link } = segment;
+    const { segmentType, isSelected, code, link, data } = segment;
 
     const newSegment: ContentModelSegmentBase<T> = Object.assign(
         {
@@ -184,6 +184,9 @@ function cloneSegmentBase<T extends ContentModelSegmentType>(
     }
     if (link) {
         newSegment.link = Object.assign(cloneModelWithFormat(link), cloneModelWithDataset(link));
+    }
+    if (data) {
+        newSegment.data = cloneModelWithFormat(data);
     }
 
     return newSegment;

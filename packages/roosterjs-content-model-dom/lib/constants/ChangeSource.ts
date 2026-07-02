@@ -24,6 +24,10 @@ export const ChangeSource = {
      */
     Paste: 'Paste',
     /**
+     * Content changed by auto markdown conversion
+     */
+    AutoMarkdownConversion: 'AutoMarkdownConversion',
+    /**
      * Content changed by setContent API
      */
     SetContent: 'SetContent',

@@ -1328,6 +1328,106 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
         );
     });
 
+    it('Data element', () => {
+        runTest(
+            '<div>aaa<data value="1">bbb</data>ccc</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bbb',
+                                format: {},
+                                data: {
+                                    format: {
+                                        dataValue: '1',
+                                    },
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'ccc',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            'aaabbbccc',
+            '<div>aaa<data value="1">bbb</data>ccc</div>'
+        );
+    });
+
+    it('Data element with inner element', () => {
+        runTest(
+            '<div>aaa<data value="1">bb<b>cc</b>dd</data>eee</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bb',
+                                format: {},
+                                data: {
+                                    format: {
+                                        dataValue: '1',
+                                    },
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'cc',
+                                format: { fontWeight: 'bold' },
+                                data: {
+                                    format: {
+                                        dataValue: '1',
+                                    },
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'dd',
+                                format: {},
+                                data: {
+                                    format: {
+                                        dataValue: '1',
+                                    },
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'eee',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            'aaabbccddeee',
+            // The three child segments are each wrapped in their own <data value="1"> during
+            // Model => DOM, then mergeNode merges them back into a single <data> element.
+            '<div>aaa<data value="1">bb<b>cc</b>dd</data>eee</div>'
+        );
+    });
+
     it('BlockQuotes', () => {
         runTest(
             '<div style="color:red"><div>aaaa</div><blockquote style="color: rgb(102, 102, 102); border-left: 3px solid rgb(200, 200, 200); padding-left: 10px;"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">bbbbbb</span></div></blockquote><div>cccc</div><div>aaaa</div><blockquote style="color: rgb(102, 102, 102); margin: 0 40px"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">bbbbbb</span></div></blockquote><div>cccc</div></div>',
