@@ -1,4 +1,5 @@
 import { MarkdownPastePlugin } from '../../lib/plugins/MarkdownPastePlugin';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import type {
     BeforePasteEvent,
     ClipboardData,
@@ -90,7 +91,7 @@ describe('MarkdownPastePlugin', () => {
     ): ContentChangedEvent {
         return ({
             eventType: 'contentChanged',
-            source: 'Paste',
+            source: ChangeSource.Paste,
             data: clipboardData as ClipboardData,
         } as unknown) as ContentChangedEvent;
     }
@@ -171,7 +172,11 @@ describe('MarkdownPastePlugin', () => {
             (model: ContentModelDocument) => boolean,
             FormatContentModelOptions
         ];
-        expect(options).toEqual({ apiName: 'MarkdownConversion', scrollCaretIntoView: true });
+        expect(options).toEqual({
+            apiName: 'MarkdownConversion',
+            changeSource: ChangeSource.AutoMarkdownConversion,
+            scrollCaretIntoView: true,
+        });
 
         const target = createEmptyModel();
         expect(callback(target)).toBe(true);
