@@ -387,6 +387,80 @@ describe('mergeTextSegments', () => {
         );
     });
 
+    it('Two text segments, different data, not merged', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    data: {
+                        format: { dataValue: '1' },
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    data: {
+                        format: { dataValue: '2' },
+                    },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    data: {
+                        format: { dataValue: '1' },
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    data: {
+                        format: { dataValue: '2' },
+                    },
+                },
+            ]
+        );
+    });
+
+    it('Two text segments, both have same data, merged', () => {
+        runTest(
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abc',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    data: {
+                        format: { dataValue: '1' },
+                    },
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'def',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    data: {
+                        format: { dataValue: '1' },
+                    },
+                },
+            ],
+            [
+                {
+                    segmentType: 'Text',
+                    text: 'abcdef',
+                    format: { fontFamily: 'Aptos', fontSize: '12pt' },
+                    data: {
+                        format: { dataValue: '1' },
+                    },
+                },
+            ]
+        );
+    });
+
     it('Two text segments around selection marker', () => {
         runTest(
             [

@@ -74,4 +74,18 @@ describe('mergeNode', () => {
             '<span style="color:red"><b>test1</b></span><span style="color:green"><i>test2</i><u>test3</u></span>'
         );
     });
+
+    it('Node with 2 DATA children with same value, should merge', () => {
+        const node = document.createElement('div');
+        node.innerHTML = '<data value="1">test1</data><data value="1">test2</data>';
+        mergeNode(node);
+        expect(node.innerHTML).toBe('<data value="1">test1test2</data>');
+    });
+
+    it('Node with 2 DATA children with different value, should not merge', () => {
+        const node = document.createElement('div');
+        node.innerHTML = '<data value="1">test1</data><data value="2">test2</data>';
+        mergeNode(node);
+        expect(node.innerHTML).toBe('<data value="1">test1</data><data value="2">test2</data>');
+    });
 });
