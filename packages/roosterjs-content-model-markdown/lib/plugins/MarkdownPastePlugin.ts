@@ -28,16 +28,13 @@ const DefaultOptions: MarkdownPasteOptions = {
 export class MarkdownPastePlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private options: MarkdownPasteOptions;
-    private onAutoConvert?: () => void;
 
     /**
      * Construct a new instance of MarkdownPastePlugin
      * @param options Options to control the markdown paste behavior
-     * @param onAutoConvert Optional callback that runs after auto conversion is applied
      */
-    constructor(options?: MarkdownPasteOptions, onAutoConvert?: () => void) {
+    constructor(options?: MarkdownPasteOptions) {
         this.options = options ?? DefaultOptions;
-        this.onAutoConvert = onAutoConvert;
     }
 
     /**
@@ -105,10 +102,10 @@ export class MarkdownPastePlugin implements EditorPlugin {
                     },
                     {
                         apiName: 'MarkdownConversion',
+                        changeSource: ChangeSource.AutoMarkdownConversion,
                         scrollCaretIntoView: true,
                     }
                 );
-                this.onAutoConvert?.();
             }
         } else if (event.eventType === 'beforePaste' && !event.clipboardData.pasteNativeEvent) {
             const shouldConvert = event.pasteType === 'asMarkdown';

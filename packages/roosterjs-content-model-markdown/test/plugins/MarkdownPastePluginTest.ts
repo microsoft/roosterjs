@@ -1,4 +1,5 @@
 import { MarkdownPastePlugin } from '../../lib/plugins/MarkdownPastePlugin';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 import type {
     BeforePasteEvent,
     ClipboardData,
@@ -33,21 +34,14 @@ describe('MarkdownPastePlugin', () => {
         } as unknown) as IEditor;
     });
 
-    function createPlugin(
-        autoConversion?: boolean,
-        undoConversion?: boolean,
-        onAutoConvert?: () => void
-    ): MarkdownPastePlugin {
+    function createPlugin(autoConversion?: boolean, undoConversion?: boolean): MarkdownPastePlugin {
         const plugin =
             autoConversion === undefined && undoConversion === undefined
                 ? new MarkdownPastePlugin()
-                : new MarkdownPastePlugin(
-                      {
-                          autoConversion: !!autoConversion,
-                          undoConversion: !!undoConversion,
-                      },
-                      onAutoConvert
-                  );
+                : new MarkdownPastePlugin({
+                      autoConversion: !!autoConversion,
+                      undoConversion: !!undoConversion,
+                  });
         plugin.initialize(editor);
         return plugin;
     }
@@ -97,7 +91,7 @@ describe('MarkdownPastePlugin', () => {
     ): ContentChangedEvent {
         return ({
             eventType: 'contentChanged',
-            source: 'Paste',
+            source: ChangeSource.Paste,
             data: clipboardData as ClipboardData,
         } as unknown) as ContentChangedEvent;
     }
@@ -178,7 +172,11 @@ describe('MarkdownPastePlugin', () => {
             (model: ContentModelDocument) => boolean,
             FormatContentModelOptions
         ];
-        expect(options).toEqual({ apiName: 'MarkdownConversion', scrollCaretIntoView: true });
+        expect(options).toEqual({
+            apiName: 'MarkdownConversion',
+            changeSource: ChangeSource.AutoMarkdownConversion,
+            scrollCaretIntoView: true,
+        });
 
         const target = createEmptyModel();
         expect(callback(target)).toBe(true);
@@ -348,40 +346,6 @@ describe('MarkdownPastePlugin', () => {
 
         expect(takeSnapshotSpy).not.toHaveBeenCalled();
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-        plugin.dispose();
-    });
-
-    it('calls the optional callback after auto conversion', () => {
-        const callback = jasmine.createSpy('onAutoConvert');
-        const plugin = createPlugin(true /*autoConversion*/, false /*undoConversion*/, callback);
-        const event = createContentChangedPasteEvent({
-            text: '# Heading',
-            rawHtml: '',
-            customValues: {},
-            pasteNativeEvent: true,
-            modelBeforePaste: createEmptyModel(),
-        });
-
-        plugin.onPluginEvent(event);
-
-        expect(callback).toHaveBeenCalledTimes(1);
-        plugin.dispose();
-    });
-
-    it('does not call the optional callback when auto conversion does not run', () => {
-        const callback = jasmine.createSpy('onAutoConvert');
-        const plugin = createPlugin(true /*autoConversion*/, false /*undoConversion*/, callback);
-        const event = createContentChangedPasteEvent({
-            text: 'just plain text',
-            rawHtml: '',
-            customValues: {},
-            pasteNativeEvent: true,
-            modelBeforePaste: createEmptyModel(),
-        });
-
-        plugin.onPluginEvent(event);
-
-        expect(callback).not.toHaveBeenCalled();
         plugin.dispose();
     });
 
