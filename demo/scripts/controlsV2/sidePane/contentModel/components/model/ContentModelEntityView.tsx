@@ -12,10 +12,12 @@ export function ContentModelEntityView(props: { entity: ContentModelEntity }) {
 
     const [id, setId] = useProperty(entity.entityFormat.id);
     const [isReadonly, setIsReadonly] = useProperty(entity.entityFormat.isReadonly);
+    const [isFakeEntity, setIsFakeEntity] = useProperty(entity.entityFormat.isFakeEntity);
     const [type, setType] = useProperty(entity.entityFormat.entityType);
 
     const idTextBox = React.useRef<HTMLInputElement>(null);
     const isReadonlyCheckBox = React.useRef<HTMLInputElement>(null);
+    const isFakeEntityCheckBox = React.useRef<HTMLInputElement>(null);
     const typeTextBox = React.useRef<HTMLInputElement>(null);
 
     const onIdChange = React.useCallback(() => {
@@ -33,6 +35,11 @@ export function ContentModelEntityView(props: { entity: ContentModelEntity }) {
         entity.entityFormat.isReadonly = newValue;
         setIsReadonly(newValue);
     }, [id, setId]);
+    const onFakeEntityChange = React.useCallback(() => {
+        const newValue = isFakeEntityCheckBox.current.checked;
+        entity.entityFormat.isFakeEntity = newValue;
+        setIsFakeEntity(newValue);
+    }, [isFakeEntity, setIsFakeEntity]);
 
     const getContent = React.useCallback(() => {
         return (
@@ -53,9 +60,18 @@ export function ContentModelEntityView(props: { entity: ContentModelEntity }) {
                         onChange={onReadonlyChange}
                     />
                 </div>
+                <div>
+                    IsFakeEntity:
+                    <input
+                        type="checkbox"
+                        checked={isFakeEntity}
+                        ref={isFakeEntityCheckBox}
+                        onChange={onFakeEntityChange}
+                    />
+                </div>
             </>
         );
-    }, [type, isReadonly, id]);
+    }, [type, isReadonly, isFakeEntity, id]);
 
     const getFormat = React.useCallback(() => {
         return (
