@@ -19,6 +19,6 @@ export type PasteTypeGetter = (
 
 /**
  * Represents the PasteType parameter used to set the paste type to use.
- * It can be either the Paste Type value or a callback that retuns the Paste Type to use.
+ * It can be either the Paste Type value or a callback that returns the Paste Type to use.
  */
 export type PasteTypeOrGetter = PasteType | PasteTypeGetter;
