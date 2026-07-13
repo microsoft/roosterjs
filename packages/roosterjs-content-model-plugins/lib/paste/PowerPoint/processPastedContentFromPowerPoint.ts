@@ -18,6 +18,7 @@ const BulletSelector = '* > span > span[style*=mso-special-format]';
 const MsOfficeSpecialFormat = 'mso-special-format';
 const CssStyleKey = 'style';
 const MsoSpecialFormatRegex = /mso-special-format:\s*([^;]*)/;
+const TableElementTags = new Set(['TABLE', 'THEAD', 'TBODY', 'TFOOT', 'TR', 'TD', 'TH']);
 
 const clearListItemStyles = (format: ContentModelListItemLevelFormat): void => {
     delete format.textAlign;
@@ -52,7 +53,9 @@ export function processPastedContentFromPowerPoint(
         if (style.includes(MsOfficeSpecialFormat) && context.listFormat.levels.length > 0) {
             return;
         }
-        const bulletElement = element.querySelector(BulletSelector) as HTMLElement;
+        const bulletElement = !TableElementTags.has(element.tagName)
+            ? (element.querySelector(BulletSelector) as HTMLElement)
+            : null;
         if (bulletElement) {
             const {
                 depth,
@@ -95,6 +98,11 @@ export function processPastedContentFromPowerPoint(
                 }
                 clearListItemStyles(listItem.levels[listItem.levels.length - 1].format);
                 clearListItemStyles(listItem.format);
+
+                // Remove the font size from the list marker so it does not inherit the
+                // list's font size. Otherwise a large marker may be rendered outside of
+                // the table cell when the list is inside a table.
+                delete listItem.formatHolder.format.fontSize;
             });
         } else {
             context.defaultElementProcessors.element?.(group, element, context);
