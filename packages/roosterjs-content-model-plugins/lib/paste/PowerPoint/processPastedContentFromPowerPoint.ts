@@ -99,10 +99,12 @@ export function processPastedContentFromPowerPoint(
                 clearListItemStyles(listItem.levels[listItem.levels.length - 1].format);
                 clearListItemStyles(listItem.format);
 
-                // Remove the font size from the list marker so it does not inherit the
-                // list's font size. Otherwise a large marker may be rendered outside of
-                // the table cell when the list is inside a table.
-                delete listItem.formatHolder.format.fontSize;
+                // When the list is inside a table cell, remove the font size from the
+                // list marker so it does not inherit the list's font size. Otherwise a
+                // large marker may be rendered outside of the table cell.
+                if (element.closest('td,th')) {
+                    delete listItem.formatHolder.format.fontSize;
+                }
             });
         } else {
             context.defaultElementProcessors.element?.(group, element, context);
