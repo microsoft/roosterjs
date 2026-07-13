@@ -130,6 +130,30 @@ describe('Paste ', () => {
             'normal'
         );
     });
+
+    it('Execute | Callback receives all parameters defined', () => {
+        let receivedArgs: any[] | undefined;
+
+        const cb: PasteTypeOrGetter = (...args) => {
+            receivedArgs = args;
+            return 'normal';
+        };
+        paste(editor, clipboardData, cb);
+
+        expect(receivedArgs).toBeDefined();
+        expect(receivedArgs!.length).toBe(4);
+
+        const [doc, cbClipboardData, environment, htmlAttributes] = receivedArgs!;
+
+        expect(doc).toBeDefined();
+        expect(doc).not.toBeNull();
+        expect(cbClipboardData).toBeDefined();
+        expect(cbClipboardData).toBe(clipboardData);
+        expect(environment).toBeDefined();
+        expect(environment).not.toBeNull();
+        expect(htmlAttributes).toBeDefined();
+        expect(htmlAttributes).not.toBeNull();
+    });
 });
 
 describe('paste with content model & paste plugin', () => {
