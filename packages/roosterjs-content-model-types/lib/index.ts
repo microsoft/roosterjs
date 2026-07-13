@@ -414,7 +414,7 @@ export {
     ContentModelFormatter,
 } from './parameter/FormatContentModelOptions';
 export { ContentModelFormatState } from './parameter/ContentModelFormatState';
-export { PasteTypeOrGetter } from './parameter/PasteTypeOrGetter';
+export { PasteTypeOrGetter, PasteTypeGetter } from './parameter/PasteTypeOrGetter';
 export { ImageFormatState } from './parameter/ImageFormatState';
 export { Border } from './parameter/Border';
 export { InsertEntityOptions } from './parameter/InsertEntityOptions';
