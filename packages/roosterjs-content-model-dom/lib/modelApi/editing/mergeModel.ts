@@ -198,6 +198,12 @@ function mergeTables(
         const lastTargetColIndex = getTargetColIndex(table, rowIndex, colIndex, newTableColCount);
         const extraColsNeeded = lastTargetColIndex - table.rows[0].cells.length;
 
+        newTable.rows.forEach(row => {
+            row.cells.forEach(cell => {
+                cell.spanAbove = false;
+            });
+        });
+
         if (extraColsNeeded > 0) {
             const currentColCount = table.rows[0].cells.length;
             for (let col = 0; col < extraColsNeeded; col++) {
