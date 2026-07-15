@@ -217,7 +217,7 @@ describe('retrieveHtmlInfo', () => {
                     {
                         selectors: ['test'],
                         text:
-                            'border-width: medium; border-style: none; border-color: currentcolor; border-image: initial;',
+                            'border-width: medium; border-style: none; border-color: currentcolor; border-image: none;',
                     },
                 ],
                 metadata: {},

@@ -7,6 +7,8 @@ import {
     getSelectedSegments,
     mergeModel,
     cloneModelForPaste,
+    isNodeOfType,
+    isElementOfType,
 } from 'roosterjs-content-model-dom';
 import type {
     BeforePasteEvent,
@@ -36,6 +38,8 @@ export function mergePasteContent(
         clipboardData,
         containsBlockElements,
     } = eventResult;
+
+    const shouldScrollCaretIntoView = !isImageFragment(fragment);
 
     editor.formatContentModel(
         (model, context) => {
@@ -80,7 +84,7 @@ export function mergePasteContent(
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
-            scrollCaretIntoView: true,
+            scrollCaretIntoView: shouldScrollCaretIntoView,
             apiName: 'paste',
         }
     );
@@ -136,4 +140,23 @@ function getLastSegmentFormat(pasteModel: ContentModelDocument): ContentModelSeg
     }
 
     return {};
+}
+
+function isImageFragment(pasteFragment: DocumentFragment): boolean {
+    const childNodes = pasteFragment.childNodes;
+    if (childNodes.length === 1 && isNodeOfType(childNodes[0], 'ELEMENT_NODE')) {
+        if (isElementOfType(childNodes[0], 'img')) {
+            return true;
+        }
+        if (isElementOfType(childNodes[0], 'span') || isElementOfType(childNodes[0], 'div')) {
+            const child = childNodes[0];
+            return (
+                child.childNodes.length === 1 &&
+                isNodeOfType(child.childNodes[0], 'ELEMENT_NODE') &&
+                isElementOfType(child.childNodes[0], 'img')
+            );
+        }
+    }
+
+    return false;
 }

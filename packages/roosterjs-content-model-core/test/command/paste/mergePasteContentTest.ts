@@ -35,11 +35,18 @@ describe('mergePasteContent', () => {
     let editor: IEditor;
     let mockedClipboard: ClipboardData;
     let mockedDOMHelper: DOMHelper;
+    let formatOptions: FormatContentModelOptions | undefined;
 
     beforeEach(() => {
         formatResult = undefined;
         context = undefined;
-        mockedClipboard = 'CLIPBOARD' as any;
+        formatOptions = undefined;
+        mockedClipboard = {
+            fragment: {
+                childNodes: [],
+                length: 0,
+            },
+        } as any;
 
         formatContentModel = jasmine
             .createSpy('formatContentModel')
@@ -49,6 +56,7 @@ describe('mergePasteContent', () => {
                     deletedEntities: [],
                     newImages: [],
                 };
+                formatOptions = options;
                 formatResult = callback(sourceModel, context);
 
                 const changedData = options.getChangeData!();
@@ -379,7 +387,7 @@ describe('mergePasteContent', () => {
 
         const mockedDomToModelOptions = 'OPTION1' as any;
         const mockedDefaultDomToModelOptions = 'OPTIONS3' as any;
-        const mockedFragment = 'FRAGMENT' as any;
+        const mockedFragment = document.createDocumentFragment();
 
         (editor as any).getEnvironment = () => ({
             domToModelSettings: {
@@ -452,6 +460,7 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
             clipboardData: mockedClipboard,
             containsBlockElements: true,
+            fragment: document.createDocumentFragment(),
         } as any;
 
         mergePasteContent(editor, eventResult, true);
@@ -2042,5 +2051,103 @@ describe('mergePasteContent', () => {
             format: {},
         });
         expect(cloneModelSpy).toHaveBeenCalledTimes(1);
+    });
+
+    describe('scrollCaretIntoView based on paste fragment', () => {
+        function runTest(fragment: DocumentFragment, expectedScrollCaretIntoView: boolean) {
+            spyOn(mergeModelFile, 'mergeModel').and.callThrough();
+            sourceModel = createContentModelDocument();
+            const para = createParagraph();
+            para.segments.push(createSelectionMarker());
+            sourceModel.blocks.push(para);
+
+            mergePasteContent(
+                editor,
+                <any>{
+                    fragment,
+                    domToModelOption: <any>{},
+                    pasteType: 'normal',
+                    clipboardData: mockedClipboard,
+                },
+                true
+            );
+
+            expect(formatOptions).toBeDefined();
+            expect(formatOptions!.scrollCaretIntoView).toBe(expectedScrollCaretIntoView);
+        }
+
+        function createFragment(...nodes: Node[]): DocumentFragment {
+            const fragment = document.createDocumentFragment();
+            nodes.forEach(node => fragment.appendChild(node));
+            return fragment;
+        }
+
+        it('should not scroll caret into view when fragment is a single image', () => {
+            const img = document.createElement('img');
+            img.src = 'test.png';
+
+            runTest(createFragment(img), false);
+        });
+
+        it('should not scroll caret into view when fragment is a span wrapping an image', () => {
+            const span = document.createElement('span');
+            span.appendChild(document.createElement('img'));
+
+            runTest(createFragment(span), false);
+        });
+
+        it('should not scroll caret into view when fragment is a div wrapping an image', () => {
+            const div = document.createElement('div');
+            div.appendChild(document.createElement('img'));
+
+            runTest(createFragment(div), false);
+        });
+
+        it('should scroll caret into view when fragment is a single text node', () => {
+            runTest(createFragment(document.createTextNode('text')), true);
+        });
+
+        it('should scroll caret into view when fragment is a paragraph', () => {
+            const p = document.createElement('p');
+            p.textContent = 'text';
+
+            runTest(createFragment(p), true);
+        });
+
+        it('should scroll caret into view when fragment has multiple children', () => {
+            const img1 = document.createElement('img');
+            const img2 = document.createElement('img');
+
+            runTest(createFragment(img1, img2), true);
+        });
+
+        it('should scroll caret into view when span wraps multiple children', () => {
+            const span = document.createElement('span');
+            span.appendChild(document.createElement('img'));
+            span.appendChild(document.createElement('img'));
+
+            runTest(createFragment(span), true);
+        });
+
+        it('should scroll caret into view when span wraps a non-image element', () => {
+            const span = document.createElement('span');
+            span.appendChild(document.createElement('b'));
+
+            runTest(createFragment(span), true);
+        });
+
+        it('should scroll caret into view when span wraps a text node', () => {
+            const span = document.createElement('span');
+            span.appendChild(document.createTextNode('text'));
+
+            runTest(createFragment(span), true);
+        });
+
+        it('should scroll caret into view when fragment is a single element other than img/span/div', () => {
+            const anchor = document.createElement('a');
+            anchor.appendChild(document.createElement('img'));
+
+            runTest(createFragment(anchor), true);
+        });
     });
 });
