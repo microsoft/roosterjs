@@ -183,6 +183,7 @@ describe('mergePasteContent', () => {
             pasteType: 'normal',
             domToModelOption: { additionalAllowedTags: [] },
             clipboardData: mockedClipboard,
+            fragment: document.createDocumentFragment(),
         } as any;
 
         mergePasteContent(editor, eventResult, true);
@@ -290,6 +291,7 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
             customizedMerge,
             clipboardData: mockedClipboard,
+            fragment: document.createDocumentFragment(),
         } as any;
 
         mergePasteContent(editor, eventResult, true);
@@ -312,6 +314,7 @@ describe('mergePasteContent', () => {
             pasteType: 'mergeFormat',
             domToModelOption: { additionalAllowedTags: [] },
             clipboardData: mockedClipboard,
+            fragment: document.createDocumentFragment(),
         } as any;
 
         mergePasteContent(editor, eventResult, true);
