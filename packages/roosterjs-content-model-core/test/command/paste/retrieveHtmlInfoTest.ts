@@ -200,35 +200,59 @@ describe('retrieveHtmlInfo', () => {
     });
 
     itChromeOnly('Has global CSS rule', () => {
-        runTest(
-            '<style>.a {color:red} .b div, .c {font-size: 10pt}</style><div>test</div><style>test {border: none}</style>',
-            {
-                htmlBefore: '',
-                htmlAfter: '',
-                globalCssRules: [
-                    {
-                        selectors: ['.a'],
-                        text: 'color: red;',
-                    },
-                    {
-                        selectors: ['.b div', '.c'],
-                        text: 'font-size: 10pt;',
-                    },
-                    {
-                        selectors: ['test'],
-                        text:
-                            'border-width: medium; border-style: none; border-color: currentcolor; border-image: none;',
-                    },
-                ],
-                metadata: {},
-                containsBlockElements: true,
-            },
-            {
-                htmlFirstLevelChildTags: ['DIV'],
-                html:
-                    '<style>.a {color:red} .b div, .c {font-size: 10pt}</style><div>test</div><style>test {border: none}</style>',
-            },
-            '<div>test</div>'
-        );
+        const rawHtml =
+            '<style>.a {color:red} .b div, .c {font-size: 10pt}</style><div>test</div><style>test {border: none}</style>';
+        const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
+        const clipboardData: Partial<ClipboardData> = {
+            rawHtml,
+        };
+
+        const result = retrieveHtmlInfo(doc, clipboardData);
+
+        expect(result.metadata).toEqual({});
+        expect(result.containsBlockElements).toBe(true);
+        expect(result.htmlBefore).toBe('');
+        expect(result.htmlAfter).toBe('');
+        expect(clipboardData).toEqual({
+            rawHtml,
+            htmlFirstLevelChildTags: ['DIV'],
+            html: rawHtml,
+        });
+        expect(doc.body.innerHTML).toBe('<div>test</div>');
+
+        const rules = result.globalCssRules;
+
+        expect(rules.length).toBe(3);
+        expect(rules[0]).toEqual({ selectors: ['.a'], text: 'color: red;' });
+        expect(rules[1]).toEqual({ selectors: ['.b div', '.c'], text: 'font-size: 10pt;' });
+        expect(rules[2].selectors).toEqual(['test']);
+
+        // The border shorthand is serialized style-by-style, and different Chrome
+        // versions serialize the border-image longhand as either 'initial' or 'none'.
+        const declarations = rules[2].text
+            .split(';')
+            .map(declaration => declaration.trim())
+            .filter(declaration => !!declaration);
+        const expectedDeclarations: Record<string, string | string[]> = {
+            'border-width': 'medium',
+            'border-style': 'none',
+            'border-color': 'currentcolor',
+            'border-image': ['initial', 'none'],
+        };
+
+        expect(declarations.length).toBe(Object.keys(expectedDeclarations).length);
+
+        declarations.forEach(declaration => {
+            const separatorIndex = declaration.indexOf(':');
+            const name = declaration.substring(0, separatorIndex).trim();
+            const value = declaration.substring(separatorIndex + 1).trim();
+            const expected = expectedDeclarations[name];
+
+            if (Array.isArray(expected)) {
+                expect(expected).toContain(value);
+            } else {
+                expect(value).toBe(expected);
+            }
+        });
     });
 });

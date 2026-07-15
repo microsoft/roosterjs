@@ -738,11 +738,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             const newSelection = this.editor.getDOMSelection();
             const domHelper = this.editor.getDOMHelper();
 
-            //If am image selection changed to a wider range due a keyboard event, we should update the selection
+            // If an image selection changed to a wider range due to a keyboard event, we should update the selection
             const range = domHelper.getSelectionRange();
             if (range) {
                 const image = isSingleImageInSelection(range);
-                if (newSelection?.type == 'image' && !image) {
+                if (newSelection?.type == 'image' && !image && !range.collapsed) {
                     const sel = this.editor.getDocument().defaultView?.getSelection();
                     const isReverted = sel
                         ? sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset

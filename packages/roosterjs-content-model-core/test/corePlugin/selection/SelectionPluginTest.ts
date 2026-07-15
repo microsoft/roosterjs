@@ -3698,6 +3698,38 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('onSelectionChange on image | 5, keeps image selection when range is collapsed', () => {
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+
+        mockedRange = { startContainer: {}, collapsed: true } as any;
+
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'image',
+            image: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
 });
 
 describe('SelectionPlugin handle logical root change', () => {
