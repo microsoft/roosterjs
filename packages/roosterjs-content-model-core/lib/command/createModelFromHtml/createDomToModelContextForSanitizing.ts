@@ -34,7 +34,8 @@ export function createDomToModelContextForSanitizing(
     defaultFormat?: ContentModelSegmentFormat,
     defaultOption?: DomToModelOption,
     additionalSanitizingOption?: Partial<DomToModelOptionForSanitizing>,
-    domHelper?: DOMHelper
+    domHelper?: DOMHelper,
+    experimentalFeatures?: string[]
 ): DomToModelContext {
     const sanitizingOption: DomToModelOptionForSanitizing = {
         ...DefaultSanitizingOption,
@@ -45,7 +46,7 @@ export function createDomToModelContextForSanitizing(
         {
             defaultFormat,
             ...getRootComputedStyleForContext(document),
-            experimentalFeatures: [],
+            experimentalFeatures: experimentalFeatures ?? [],
             editorViewWidth: domHelper?.getClientWidth(),
         },
         defaultOption,
