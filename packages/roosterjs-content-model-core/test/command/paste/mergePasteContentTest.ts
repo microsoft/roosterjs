@@ -67,6 +67,7 @@ describe('mergePasteContent', () => {
             }),
             getDocument: () => document,
             getDOMHelper: () => mockedDOMHelper,
+            isExperimentalFeatureEnabled: () => false,
         } as any;
     });
 
@@ -428,7 +429,8 @@ describe('mergePasteContent', () => {
             undefined,
             mockedDomToModelOptions,
             mockedDefaultDomToModelOptions,
-            mockedDOMHelper
+            mockedDOMHelper,
+            undefined
         );
         expect(mockedDomToModelContext.segmentFormat).toEqual({ lineHeight: '1pt' });
     });
