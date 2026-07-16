@@ -2142,14 +2142,12 @@ describe('mergePasteContent', () => {
         it('should scroll caret into view when span wraps a text node', () => {
             const span = document.createElement('span');
             span.appendChild(document.createTextNode('text'));
-
             runTest(createFragment(span), true);
         });
 
         it('should scroll caret into view when fragment is a single element other than img/span/div', () => {
             const anchor = document.createElement('a');
             anchor.appendChild(document.createElement('img'));
-
             runTest(createFragment(anchor), true);
         });
     });
