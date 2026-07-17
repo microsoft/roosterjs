@@ -452,6 +452,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     }
                 },
                 apiName: IMAGE_EDIT_FORMAT_EVENT,
+                skipDOMSelection: true,
             },
             {
                 tryGetFromCache: true,
