@@ -2145,10 +2145,10 @@ describe('mergePasteContent', () => {
             runTest(createFragment(span), true);
         });
 
-        it('should scroll caret into view when fragment is a single element other than img/span/div', () => {
+        it('should not scroll caret into view when fragment is an anchor wrapping an image', () => {
             const anchor = document.createElement('a');
             anchor.appendChild(document.createElement('img'));
-            runTest(createFragment(anchor), true);
+            runTest(createFragment(anchor), false);
         });
     });
 });
