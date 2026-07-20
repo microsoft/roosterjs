@@ -13,7 +13,8 @@ describe('createListFromMarkdown', () => {
         text: string,
         patternName: 'OL' | 'UL',
         expectedBlockGroup: ContentModelListItem,
-        isRTL?: boolean
+        isRTL?: boolean,
+        list?: ContentModelListItem
     ) {
         const options: MarkdownToModelOptions = isRTL
             ? {
@@ -21,7 +22,7 @@ describe('createListFromMarkdown', () => {
               }
             : {};
         // Act
-        const result = createListFromMarkdown(text, patternName, options);
+        const result = createListFromMarkdown(text, patternName, options, list);
 
         // Assert
         expect(result.blocks).toEqual(expectedBlockGroup.blocks);
@@ -59,7 +60,7 @@ describe('createListFromMarkdown', () => {
     });
 
     it('should return list item for OL', () => {
-        const listItem = createListItem([createListLevel('OL')]);
+        const listItem = createListItem([createListLevel('OL', { startNumberOverride: 1 })]);
         const paragraph = createParagraph();
         const text = createText('text');
         paragraph.segments.push(text);
@@ -69,7 +70,10 @@ describe('createListFromMarkdown', () => {
     });
 
     it('should return a second level list item for OL', () => {
-        const listItem = createListItem([createListLevel('OL'), createListLevel('OL')]);
+        const listItem = createListItem([
+            createListLevel('OL', { startNumberOverride: 1 }),
+            createListLevel('OL', { startNumberOverride: 1 }),
+        ]);
         const paragraph = createParagraph();
         const text = createText('text');
         paragraph.segments.push(text);
@@ -126,7 +130,7 @@ describe('createListFromMarkdown', () => {
     });
 
     it('should return list item for OL', () => {
-        const listItem = createListItem([createListLevel('OL')]);
+        const listItem = createListItem([createListLevel('OL', { startNumberOverride: 1 })]);
         const paragraph = createParagraph();
         const text = createText('text');
         paragraph.segments.push(text);
@@ -142,7 +146,9 @@ describe('createListFromMarkdown', () => {
     });
 
     it('should return list item for OL - RTL', () => {
-        const listItem = createListItem([createListLevel('OL', { direction: 'rtl' })]);
+        const listItem = createListItem([
+            createListLevel('OL', { direction: 'rtl', startNumberOverride: 1 }),
+        ]);
         const paragraph = createParagraph();
         paragraph.format.direction = 'rtl';
         listItem.format.direction = 'rtl';
@@ -157,5 +163,26 @@ describe('createListFromMarkdown', () => {
         };
         listItem.blocks.push(paragraph);
         runTest('1. # text', 'OL', listItem, true /* isRTL */);
+    });
+
+    it('should use the marker number as startNumberOverride for OL', () => {
+        const listItem = createListItem([createListLevel('OL', { startNumberOverride: 3 })]);
+        const paragraph = createParagraph();
+        const text = createText('text');
+        paragraph.segments.push(text);
+
+        listItem.blocks.push(paragraph);
+        runTest('3. text', 'OL', listItem);
+    });
+
+    it('should not set startNumberOverride for OL when a list is provided', () => {
+        const listItem = createListItem([createListLevel('OL')]);
+        const paragraph = createParagraph();
+        const text = createText('text');
+        paragraph.segments.push(text);
+
+        listItem.blocks.push(paragraph);
+        const existingList = createListItem([createListLevel('OL', { startNumberOverride: 1 })]);
+        runTest('2. text', 'OL', listItem, undefined /* isRTL */, existingList);
     });
 });

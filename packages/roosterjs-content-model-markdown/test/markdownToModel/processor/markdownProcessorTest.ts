@@ -242,7 +242,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                         {
                             listType: 'OL',
                             dataset: {},
-                            format: {},
+                            format: { startNumberOverride: 1 },
                         },
                     ],
                     format: {},

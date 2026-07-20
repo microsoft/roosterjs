@@ -20,10 +20,16 @@ export function createBlockGroupFromMarkdown(
     text: string,
     patternName: string,
     options: MarkdownToModelOptions,
-    group?: ContentModelFormatContainer
+    group?: ContentModelFormatContainer,
+    list?: ContentModelListItem
 ): ContentModelFormatContainer | ContentModelListItem {
     if (MarkdownBlockGroupType[patternName] === 'ListItem') {
-        return createListFromMarkdown(text, patternName === 'ordered_list' ? 'OL' : 'UL', options);
+        return createListFromMarkdown(
+            text,
+            patternName === 'ordered_list' ? 'OL' : 'UL',
+            options,
+            list
+        );
     } else {
         return createBlockQuoteFromMarkdown(text, options, group);
     }
