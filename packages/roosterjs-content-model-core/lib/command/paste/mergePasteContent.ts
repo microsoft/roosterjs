@@ -50,9 +50,7 @@ export function mergePasteContent(
                 editor.getEnvironment().domToModelSettings.customized,
                 domToModelOption,
                 editor.getDOMHelper(),
-                editor.isExperimentalFeatureEnabled('TransformTableBorderColors')
-                    ? ['TransformTableBorderColors']
-                    : undefined
+                editor.getExperimentalFeatures()
             );
 
             domToModelContext.segmentFormat = getSegmentFormatForPaste(model, pasteType);

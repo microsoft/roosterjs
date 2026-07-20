@@ -1233,4 +1233,35 @@ describe('Editor', () => {
         expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.isExperimentalFeatureEnabled('Feature4')).toThrow();
     });
+
+    it('getExperimentalFeatures', () => {
+        const div = document.createElement('div');
+        const resetSpy = jasmine.createSpy('reset');
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: {
+                setContentModel: setContentModelSpy,
+            },
+            experimentalFeatures: ['Feature1', 'Feature2'],
+            format: {
+                defaultFormat: {},
+            },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+
+        const result = editor.getExperimentalFeatures();
+
+        expect(result).toEqual(['Feature1', 'Feature2']);
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.getExperimentalFeatures()).toThrow();
+    });
 });
