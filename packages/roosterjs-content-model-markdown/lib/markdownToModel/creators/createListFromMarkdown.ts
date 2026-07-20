@@ -9,13 +9,16 @@ import type { MarkdownToModelOptions } from '../types/MarkdownToModelOptions';
 export function createListFromMarkdown(
     text: string,
     listType: 'OL' | 'UL',
-    options: MarkdownToModelOptions
+    options: MarkdownToModelOptions,
+    list?: ContentModelListItem
 ): ContentModelListItem {
     const marker = text.trim().split(' ')[0];
     const isDummy = isDummyListItem(marker);
+    const startNumber = listType === 'OL' && !list ? parseInt(marker, 10) : undefined;
     const itemText = isDummy ? text : text.trim().substring(marker.length);
     const paragraph = createParagraphFromMarkdown(itemText.trim(), options);
-    const levels = createLevels(text, listType, isDummy, options);
+    const levels = createLevels(text, listType, isDummy, options, startNumber);
+
     const listModel = createListItem(levels);
     if (options.direction) {
         listModel.format.direction = options.direction;
@@ -29,12 +32,17 @@ function createLevels(
     text: string,
     listType: 'OL' | 'UL',
     isDummy: boolean,
-    options: MarkdownToModelOptions
+    options: MarkdownToModelOptions,
+    startNumberOverride?: number
 ) {
     const level = createListLevel(
         listType,
         options.direction ? { direction: options.direction } : undefined
     );
+    if (startNumberOverride) {
+        level.format.startNumberOverride = startNumberOverride;
+    }
+
     if (isDummy) {
         level.format.displayForDummyItem = 'block';
     }

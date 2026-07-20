@@ -175,7 +175,8 @@ function addMarkdownBlockToModel(
                 markdown,
                 patternName,
                 options,
-                markdownContext.lastQuote
+                markdownContext.lastQuote,
+                markdownContext.lastList
             );
             if (!markdownContext.lastQuote) {
                 model.blocks.push(blockGroup);
