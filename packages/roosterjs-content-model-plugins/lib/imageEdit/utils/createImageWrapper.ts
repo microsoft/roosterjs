@@ -11,8 +11,6 @@ import type {
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 
-const IMAGE_EDIT_SHADOW_ROOT = 'ImageEditShadowRoot';
-
 /**
  * @internal
  */
@@ -80,7 +78,6 @@ const createShadowSpan = (
     const shadowRoot = imageSpan.attachShadow({
         mode: 'open',
     });
-    imageSpan.id = IMAGE_EDIT_SHADOW_ROOT;
 
     if (imageWidth > 0 && imageHeight > 0) {
         imageSpan.style.display = 'inline-block';
