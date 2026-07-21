@@ -14,6 +14,7 @@ import {
     EditorCore,
     EditorOptions,
     Rect,
+    ExperimentalFeature,
 } from 'roosterjs-content-model-types';
 
 describe('Editor', () => {
@@ -1211,7 +1212,10 @@ describe('Editor', () => {
             api: {
                 setContentModel: setContentModelSpy,
             },
-            experimentalFeatures: ['Feature1', 'Feature2'],
+            experimentalFeatures: [
+                'TransformTableBorderColors',
+                'ShadowDom',
+            ] as ExperimentalFeature[],
             format: {
                 defaultFormat: {},
             },
@@ -1221,8 +1225,8 @@ describe('Editor', () => {
 
         const editor = new Editor(div);
 
-        const result1 = editor.isExperimentalFeatureEnabled('Feature1');
-        const result2 = editor.isExperimentalFeatureEnabled('Feature2');
+        const result1 = editor.isExperimentalFeatureEnabled('TransformTableBorderColors');
+        const result2 = editor.isExperimentalFeatureEnabled('ShadowDom');
         const result3 = editor.isExperimentalFeatureEnabled('Feature3');
 
         expect(result1).toBeTrue();
@@ -1246,7 +1250,10 @@ describe('Editor', () => {
             api: {
                 setContentModel: setContentModelSpy,
             },
-            experimentalFeatures: ['Feature1', 'Feature2'],
+            experimentalFeatures: [
+                'TransformTableBorderColors',
+                'ShadowDom',
+            ] as ExperimentalFeature[],
             format: {
                 defaultFormat: {},
             },
@@ -1258,7 +1265,7 @@ describe('Editor', () => {
 
         const result = editor.getExperimentalFeatures();
 
-        expect(result).toEqual(['Feature1', 'Feature2']);
+        expect(result).toEqual(['TransformTableBorderColors', 'ShadowDom']);
 
         editor.dispose();
         expect(resetSpy).toHaveBeenCalledWith();

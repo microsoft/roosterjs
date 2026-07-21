@@ -25,6 +25,7 @@ import {
     IEditor,
     ClipboardData,
     DOMHelper,
+    ExperimentalFeature,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
@@ -68,7 +69,9 @@ describe('mergePasteContent', () => {
             getDocument: () => document,
             getDOMHelper: () => mockedDOMHelper,
             isExperimentalFeatureEnabled: () => false,
-            getExperimentalFeatures: () => [],
+            getExperimentalFeatures: () => {
+                return [] as ExperimentalFeature[];
+            },
         } as any;
     });
 
