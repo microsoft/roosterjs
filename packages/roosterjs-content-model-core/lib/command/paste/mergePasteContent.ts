@@ -51,7 +51,8 @@ export function mergePasteContent(
                 undefined /*defaultFormat*/,
                 editor.getEnvironment().domToModelSettings.customized,
                 domToModelOption,
-                editor.getDOMHelper()
+                editor.getDOMHelper(),
+                editor.getExperimentalFeatures()
             );
 
             domToModelContext.segmentFormat = getSegmentFormatForPaste(model, pasteType);

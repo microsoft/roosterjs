@@ -118,4 +118,46 @@ describe('createDomToModelContextForSanitizing', () => {
         expect(createPasteGeneralProcessorSpy).toHaveBeenCalledWith(additionalOption);
         expect(createPasteEntityProcessorSpy).toHaveBeenCalledWith(additionalOption);
     });
+
+    it('with experimentalFeatures', () => {
+        const mockedExperimentalFeatures = ['feature1', 'feature2'] as any;
+
+        const context = createDomToModelContextForSanitizing(
+            document,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            mockedExperimentalFeatures
+        );
+
+        expect(context).toBe(mockedResult);
+        expect(createDomToModelContextSpy).toHaveBeenCalledWith(
+            {
+                defaultFormat: undefined,
+                rootFontSize: 16,
+                experimentalFeatures: mockedExperimentalFeatures,
+                editorViewWidth: undefined,
+            },
+            undefined,
+            {
+                processorOverride: {
+                    '#text': pasteTextProcessor,
+                    entity: mockedPasteEntityProcessor,
+                    '*': mockedPasteGeneralProcessor,
+                },
+                formatParserOverride: {
+                    display: pasteDisplayFormatParser,
+                    whiteSpace: pasteWhiteSpaceFormatParser,
+                },
+                additionalFormatParsers: {
+                    container: [containerSizeFormatParser],
+                    entity: [pasteBlockEntityParser],
+                },
+            },
+            defaultOptions
+        );
+        expect(createPasteGeneralProcessorSpy).toHaveBeenCalledWith(defaultOptions);
+        expect(createPasteEntityProcessorSpy).toHaveBeenCalledWith(defaultOptions);
+    });
 });
