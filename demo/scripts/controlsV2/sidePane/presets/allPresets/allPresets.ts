@@ -1,5 +1,13 @@
 import logicalRootPreset from './logicalRootPreset';
 import { allTextFormats } from './textPresets';
+import {
+    mathEuler,
+    mathIntegral,
+    mathMatrix,
+    mathQuadratic,
+    mathShowcase,
+    mathSummation,
+} from './mathPresets';
 import { htmlParagraphs, mixedParagraphs } from './paragraphPresets';
 import { image64x64Black, image64x64Gradient, image64x64White } from './imagePresets';
 import { mergedTableNoText, simpleTable, simpleTableWithHeader } from './tablePresets';
@@ -32,6 +40,12 @@ export const allPresets: Preset[] = [
     image64x64White,
     undeleteableText,
     logicalRootPreset,
+    mathQuadratic,
+    mathEuler,
+    mathIntegral,
+    mathSummation,
+    mathMatrix,
+    mathShowcase,
 ];
 
 export function getPresetModelById(id: string) {

@@ -12,6 +12,7 @@ import { EditorOptionsPlugin } from '../sidePane/editorOptions/EditorOptionsPlug
 import { EventViewPlugin } from '../sidePane/eventViewer/EventViewPlugin';
 import { exportContentButton } from '../demoButtons/exportContentButton';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
+import { katexMathRenderer } from '../plugins/mathRenderer';
 import { FormatStatePlugin } from '../sidePane/formatState/FormatStatePlugin';
 import { getButtons } from '../tabs/ribbonButtons';
 import { getDarkColor } from 'roosterjs-color-utils';
@@ -69,6 +70,7 @@ import {
     HyperlinkPlugin,
     ImageEditPlugin,
     MarkdownPlugin,
+    MathPlugin,
     PastePlugin,
     ShortcutPlugin,
     TableEditPlugin,
@@ -611,6 +613,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.touch && new TouchPlugin(),
             pluginList.announce && new AnnouncePlugin(),
             pluginList.dragAndDrop && new DragAndDropPlugin(),
+            pluginList.math && new MathPlugin({ renderer: katexMathRenderer }),
         ].filter(x => !!x);
     }
 }

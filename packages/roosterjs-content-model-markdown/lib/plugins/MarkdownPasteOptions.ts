@@ -15,4 +15,11 @@ export interface MarkdownPasteOptions {
      * @default false
      */
     undoConversion: boolean;
+
+    /**
+     * When true, math expressions embedded in the pasted markdown are recognized and converted
+     * into read-only "Math" entities (LaTeX stored in a `data-latex` attribute, not rendered).
+     * @default false
+     */
+    math?: boolean;
 }

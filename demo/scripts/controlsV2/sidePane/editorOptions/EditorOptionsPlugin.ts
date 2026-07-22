@@ -26,6 +26,7 @@ const initialState: OptionState = {
         touch: true,
         announce: true,
         dragAndDrop: true,
+        math: true,
     },
     defaultFormat: {
         fontFamily: 'Calibri',
@@ -61,8 +62,9 @@ const initialState: OptionState = {
         codeFormat: {},
     },
     markdownPasteOptions: {
-        autoConversion: false,
+        autoConversion: true,
         undoConversion: false,
+        math: true,
     },
     editPluginOptions: {
         handleTabKey: {

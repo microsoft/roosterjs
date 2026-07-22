@@ -10,6 +10,7 @@ import {
 import type { MarkdownPasteOptions } from './MarkdownPasteOptions';
 import type {
     ClipboardData,
+    ContentModelEntity,
     EditorPlugin,
     IEditor,
     PluginEvent,
@@ -73,8 +74,9 @@ export class MarkdownPastePlugin implements EditorPlugin {
         if (!this.editor) {
             return;
         }
+
         if (
-            event.eventType === 'contentChanged' &&
+            event.eventType == 'contentChanged' &&
             event.source === ChangeSource.Paste &&
             this.options.autoConversion &&
             event.data
@@ -88,16 +90,27 @@ export class MarkdownPastePlugin implements EditorPlugin {
                 clipboardData.modelBeforePaste
             ) {
                 const modelBeforePaste = cloneModelForPaste(clipboardData.modelBeforePaste);
+                const entities: ContentModelEntity[] = [];
+
                 mergeModel(
                     modelBeforePaste,
-                    convertMarkdownToContentModel(clipboardData.text, { emptyLine: 'merge' })
+                    convertMarkdownToContentModel(
+                        clipboardData.text,
+                        {
+                            emptyLine: 'merge',
+                            math: this.options.math,
+                            document: this.editor.getDocument(),
+                        },
+                        entities
+                    )
                 );
                 if (this.options.undoConversion) {
                     this.editor.takeSnapshot();
                 }
                 this.editor.formatContentModel(
-                    model => {
+                    (model, context) => {
                         model.blocks = modelBeforePaste.blocks;
+                        context.newEntities.push(...entities);
                         return true;
                     },
                     {
@@ -110,15 +123,27 @@ export class MarkdownPastePlugin implements EditorPlugin {
         } else if (event.eventType === 'beforePaste' && !event.clipboardData.pasteNativeEvent) {
             const shouldConvert = event.pasteType === 'asMarkdown';
             if (shouldConvert && isPastedContentMarkdown(this.editor, event.clipboardData)) {
-                convertPastedTextToMarkdown(this.editor, event.fragment, event.clipboardData.text);
+                convertPastedTextToMarkdown(
+                    this.editor,
+                    event.fragment,
+                    event.clipboardData.text,
+                    this.options.math
+                );
             }
         }
     }
 }
 
-function convertPastedTextToMarkdown(editor: IEditor, fragment: DocumentFragment, text: string) {
+function convertPastedTextToMarkdown(
+    editor: IEditor,
+    fragment: DocumentFragment,
+    text: string,
+    math?: boolean
+) {
     const model = convertMarkdownToContentModel(text, {
         emptyLine: 'merge',
+        math,
+        document: editor.getDocument(),
     });
 
     while (fragment.firstChild) {

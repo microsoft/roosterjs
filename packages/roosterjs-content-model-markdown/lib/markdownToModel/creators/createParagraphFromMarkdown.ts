@@ -20,6 +20,12 @@ export function createParagraphFromMarkdown(
     if (headingType) {
         paragraph.decorator = headingType;
     }
-    applySegmentFormatting(text, paragraph, headingType);
+    applySegmentFormatting(
+        text,
+        paragraph,
+        headingType,
+        options.math ? options.document : undefined,
+        options.entities
+    );
     return paragraph;
 }

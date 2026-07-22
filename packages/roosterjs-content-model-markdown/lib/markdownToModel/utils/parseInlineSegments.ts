@@ -1,7 +1,10 @@
 import { createImageSegment } from '../creators/createImageSegment';
+import { createMathEntity } from '../creators/createMathEntity';
 import { createText } from 'roosterjs-content-model-dom';
+import { matchInlineMath } from './mathUtils';
 
 import type {
+    ContentModelEntity,
     ContentModelLink,
     ContentModelSegment,
     ContentModelSegmentFormat,
@@ -40,7 +43,9 @@ export function parseInlineSegments(
     text: string,
     segments: ContentModelSegment[],
     state: FormattingState = { bold: false, italic: false, strikethrough: false },
-    link?: ContentModelLink
+    link?: ContentModelLink,
+    mathDocument?: Document,
+    entities?: ContentModelEntity[]
 ) {
     let buffer = '';
     let i = 0;
@@ -54,6 +59,20 @@ export function parseInlineSegments(
 
     while (i < text.length) {
         const remaining = text.substring(i);
+
+        // Inline math: $...$, $$...$$, \(...\), \[...\]. Checked before the escape branch so
+        // that "\(" / "\[" are not consumed as escaped punctuation.
+        if (mathDocument) {
+            const mathMatch = matchInlineMath(remaining);
+            if (mathMatch) {
+                flushBuffer();
+                segments.push(
+                    createMathEntity(mathMatch.latex, false /*isBlock*/, mathDocument, entities)
+                );
+                i += mathMatch.length;
+                continue;
+            }
+        }
 
         // Escaped character: a backslash followed by an ASCII punctuation character emits
         // that character literally (e.g. "\*" -> "*") and is never treated as a marker.
@@ -80,7 +99,7 @@ export function parseInlineSegments(
                 dataset: {},
                 format: { href: linkMatch[2], underline: true },
             };
-            parseInlineSegments(linkMatch[1], segments, state, innerLink);
+            parseInlineSegments(linkMatch[1], segments, state, innerLink, mathDocument, entities);
             i += linkMatch[0].length;
             continue;
         }

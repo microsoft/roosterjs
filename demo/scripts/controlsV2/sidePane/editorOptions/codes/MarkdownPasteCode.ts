@@ -10,6 +10,7 @@ export class MarkdownPasteCode extends CodeElement {
         return `new roosterjs.MarkdownPastePlugin({
             autoConversion: ${this.markdownPasteOptions.autoConversion},
             undoConversion: ${this.markdownPasteOptions.undoConversion},
+            math: ${!!this.markdownPasteOptions.math},
         })`;
     }
 }

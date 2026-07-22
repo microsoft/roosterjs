@@ -54,3 +54,5 @@ export { HighlightHelper } from './findReplace/types/HighlightHelper';
 export { FindReplaceHighlightOptions } from './findReplace/types/FindReplaceHighlightOptions';
 export { AnnouncePlugin } from './announce/AnnouncePlugin';
 export { DragAndDropPlugin, DragAndDropOptions } from './dragAndDrop/DragAndDropPlugin';
+export { MathPlugin, MathEntityType } from './math/MathPlugin';
+export { MathOptions, MathRenderer } from './math/MathOptions';

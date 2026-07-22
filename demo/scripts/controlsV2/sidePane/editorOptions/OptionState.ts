@@ -29,6 +29,7 @@ export interface BuildInPluginList {
     touch: boolean;
     announce: boolean;
     dragAndDrop: boolean;
+    math: boolean;
 }
 
 export interface OptionState {

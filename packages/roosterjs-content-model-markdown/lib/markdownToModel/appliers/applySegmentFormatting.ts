@@ -3,6 +3,7 @@ import { createBr } from 'roosterjs-content-model-dom';
 import { parseInlineSegments } from '../utils/parseInlineSegments';
 
 import type {
+    ContentModelEntity,
     ContentModelParagraph,
     ContentModelParagraphDecorator,
     ContentModelSegment,
@@ -14,14 +15,23 @@ import type {
 export function applySegmentFormatting(
     text: string,
     paragraph: ContentModelParagraph,
-    decorator?: ContentModelParagraphDecorator
+    decorator?: ContentModelParagraphDecorator,
+    mathDocument?: Document,
+    entities?: ContentModelEntity[]
 ): ContentModelParagraph | undefined {
     if (text.length === 0) {
         const br = createBr();
         paragraph.segments.push(br);
     } else {
         const segments: ContentModelSegment[] = [];
-        parseInlineSegments(text, segments);
+        parseInlineSegments(
+            text,
+            segments,
+            undefined /*state*/,
+            undefined /*link*/,
+            mathDocument,
+            entities
+        );
 
         // Apply heading adjustment to the first text-bearing segment, if any.
         let headingAdjusted = false;

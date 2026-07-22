@@ -1,7 +1,9 @@
 import { createBlockGroupFromMarkdown } from '../creators/createBlockGroupFromMarkdown';
 import { createContentModelDocument, createDivider } from 'roosterjs-content-model-dom';
+import { createMathEntity } from '../creators/createMathEntity';
 import { createParagraphFromMarkdown } from '../creators/createParagraphFromMarkdown';
 import { createTableFromMarkdown } from '../creators/createTableFromMarkdown';
+import { isBlockMathClose, parseBlockMathOpen } from '../utils/mathUtils';
 import { isMarkdownTable } from '../utils/isMarkdownTable';
 
 import type { MarkdownToModelOptions } from '../types/MarkdownToModelOptions';
@@ -18,6 +20,8 @@ interface MarkdownContext {
     lastList?: ContentModelListItem;
     emptyLineState?: 'notEmpty' | 'lineEnded' | 'empty';
     tableLines: string[];
+    mathCloseDelimiter?: string;
+    mathLines?: string[];
 }
 
 const MarkdownPattern: Record<string, RegExp> = {
@@ -52,8 +56,15 @@ const MarkdownBlockType: Record<string, ContentModelBlockType> = {
 
 export function markdownProcessor(
     text: string,
-    options: MarkdownToModelOptions
+    rawOptions: MarkdownToModelOptions
 ): ContentModelDocument {
+    // When math is enabled, ensure a Document is available for creating entity wrappers,
+    // without referencing the restricted global `document`.
+    const options: MarkdownToModelOptions =
+        rawOptions.math && !rawOptions.document
+            ? { ...rawOptions, document: new DOMParser().parseFromString('', 'text/html') }
+            : rawOptions;
+
     const splitLinesPattern = options.splitLinesPattern || /\r\n|\r|\\n|\n/;
     const emptyLine = options.emptyLine ?? 'merge';
     const markdownText = text.split(splitLinesPattern);
@@ -190,6 +201,13 @@ function addMarkdownBlockToModel(
             markdownContext.tableLines = markdownContext.tableLines || [];
             markdownContext.tableLines.push(markdown);
             break;
+        case 'Entity':
+            if (options.document) {
+                model.blocks.push(
+                    createMathEntity(markdown, true /*isBlock*/, options.document, options.entities)
+                );
+            }
+            break;
     }
 
     if (blockType !== 'BlockGroup') {
@@ -209,6 +227,10 @@ function convertMarkdownText(
         tableLines: [],
     };
     for (const line of lines) {
+        if (options.math && handleBlockMathLine(model, line, markdownContext, options)) {
+            continue;
+        }
+
         let matched = false;
         for (const patternName in MarkdownPattern) {
             if (MarkdownPattern.hasOwnProperty(patternName)) {
@@ -239,5 +261,72 @@ function convertMarkdownText(
             );
         }
     }
+
+    // Flush an unterminated math block, if any
+    if (markdownContext.mathCloseDelimiter != undefined) {
+        addMarkdownBlockToModel(
+            model,
+            'Entity',
+            (markdownContext.mathLines || []).join('\n'),
+            'math',
+            markdownContext,
+            options
+        );
+        markdownContext.mathCloseDelimiter = undefined;
+        markdownContext.mathLines = undefined;
+    }
+
     return model;
+}
+
+/**
+ * Handle a single line while tracking multi-line block math state.
+ * @returns true when the line was consumed as (part of) block math and needs no further processing
+ */
+function handleBlockMathLine(
+    model: ContentModelDocument,
+    line: string,
+    markdownContext: MarkdownContext,
+    options: MarkdownToModelOptions
+): boolean {
+    if (markdownContext.mathCloseDelimiter != undefined) {
+        if (isBlockMathClose(line, markdownContext.mathCloseDelimiter)) {
+            addMarkdownBlockToModel(
+                model,
+                'Entity',
+                (markdownContext.mathLines || []).join('\n'),
+                'math',
+                markdownContext,
+                options
+            );
+            markdownContext.mathCloseDelimiter = undefined;
+            markdownContext.mathLines = undefined;
+        } else {
+            (markdownContext.mathLines = markdownContext.mathLines || []).push(line);
+        }
+
+        return true;
+    }
+
+    const mathOpen = parseBlockMathOpen(line);
+
+    if (mathOpen) {
+        if (mathOpen.singleLineLatex != undefined) {
+            addMarkdownBlockToModel(
+                model,
+                'Entity',
+                mathOpen.singleLineLatex,
+                'math',
+                markdownContext,
+                options
+            );
+        } else {
+            markdownContext.mathCloseDelimiter = mathOpen.closeDelimiter;
+            markdownContext.mathLines = [];
+        }
+
+        return true;
+    }
+
+    return false;
 }

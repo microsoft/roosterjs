@@ -120,6 +120,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private markdownCode = React.createRef<HTMLInputElement>();
     private markdownPasteAutoConversion = React.createRef<HTMLInputElement>();
     private markdownPasteUndoConversion = React.createRef<HTMLInputElement>();
+    private markdownPasteMath = React.createRef<HTMLInputElement>();
     private linkTitle = React.createRef<HTMLInputElement>();
     private disableSideResize = React.createRef<HTMLInputElement>();
 
@@ -345,6 +346,12 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                                 (state, value) =>
                                     (state.markdownPasteOptions.undoConversion = value)
                             )}
+                            {this.renderCheckBox(
+                                'Recognize math (LaTeX)',
+                                this.markdownPasteMath,
+                                !!this.props.state.markdownPasteOptions.math,
+                                (state, value) => (state.markdownPasteOptions.math = value)
+                            )}
                         </>
                     )}
                     {this.renderPluginItem(
@@ -375,6 +382,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                     {this.renderPluginItem('touch', 'Touch')}
                     {this.renderPluginItem('announce', 'Announce')}
                     {this.renderPluginItem('dragAndDrop', 'DragAndDrop')}
+                    {this.renderPluginItem('math', 'Math (LaTeX via KaTeX)')}
                 </tbody>
             </table>
         );
