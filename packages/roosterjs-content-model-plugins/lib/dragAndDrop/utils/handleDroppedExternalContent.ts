@@ -11,7 +11,7 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * @internal
  * Handle dropped HTML content by inserting it at the drop position
  */
-export function handleDroppedContent(
+export function handleDroppedExternalContent(
     editor: IEditor,
     event: DragEvent,
     html: string,

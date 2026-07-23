@@ -1,6 +1,8 @@
-import * as handleDroppedContentFile from '../../lib/dragAndDrop/utils/handleDroppedContent';
+import * as handleDroppedContentFile from '../../lib/dragAndDrop/utils/handleDroppedExternalContent';
+import * as handleDroppedInternalContentFile from '../../lib/dragAndDrop/utils/handleDroppedInternalContent';
+import * as trimModelForSelectionFile from 'roosterjs-content-model-dom/lib/domUtils/selection/trimModelForSelection';
+import { ContentModelDocument, DOMSelection, IEditor } from 'roosterjs-content-model-types';
 import { DragAndDropPlugin } from '../../lib/dragAndDrop/DragAndDropPlugin';
-import { IEditor } from 'roosterjs-content-model-types';
 
 describe('DragAndDropPlugin', () => {
     let plugin: DragAndDropPlugin;
@@ -8,6 +10,8 @@ describe('DragAndDropPlugin', () => {
     let attachDomEventSpy: jasmine.Spy;
     let disposerSpy: jasmine.Spy;
     let eventMap: Record<string, any>;
+    let getContentModelCopySpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         disposerSpy = jasmine.createSpy('disposer');
@@ -15,9 +19,14 @@ describe('DragAndDropPlugin', () => {
             eventMap = map;
             return disposerSpy;
         });
+        getContentModelCopySpy = jasmine.createSpy('getContentModelCopy');
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
 
         editor = ({
             attachDomEvent: attachDomEventSpy,
+            isExperimentalFeatureEnabled: () => true,
+            getContentModelCopy: getContentModelCopySpy,
+            getDOMSelection: getDOMSelectionSpy,
         } as any) as IEditor;
     });
 
@@ -66,7 +75,10 @@ describe('DragAndDropPlugin', () => {
             eventMap.dragstart.beforeDispatch({ target } as any);
 
             // Verify by checking that beforeDrop event with HTML does not call handleDroppedContent
-            const handleDroppedContentSpy = spyOn(handleDroppedContentFile, 'handleDroppedContent');
+            const handleDroppedExternalContentSpy = spyOn(
+                handleDroppedContentFile,
+                'handleDroppedExternalContent'
+            );
 
             plugin.onPluginEvent({
                 eventType: 'beforeDrop',
@@ -77,15 +89,18 @@ describe('DragAndDropPlugin', () => {
                 } as any,
             });
 
-            expect(handleDroppedContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
         });
     });
 
     describe('onPluginEvent - beforeDrop', () => {
-        let handleDroppedContentSpy: jasmine.Spy;
+        let handleDroppedExternalContentSpy: jasmine.Spy;
 
         beforeEach(() => {
-            handleDroppedContentSpy = spyOn(handleDroppedContentFile, 'handleDroppedContent');
+            handleDroppedExternalContentSpy = spyOn(
+                handleDroppedContentFile,
+                'handleDroppedExternalContent'
+            );
             plugin = new DragAndDropPlugin();
             plugin.initialize(editor);
         });
@@ -103,7 +118,7 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
                 'iframe',
             ]);
         });
@@ -125,7 +140,7 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
                 'script',
                 'object',
             ]);
@@ -143,7 +158,7 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
         });
 
         it('should not call handleDroppedContent when dataTransfer is null', () => {
@@ -156,7 +171,7 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
         });
 
         it('should not call handleDroppedContent for internal drag and drop', () => {
@@ -176,7 +191,7 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
         });
 
         it('should ignore other event types', () => {
@@ -185,13 +200,155 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: {} as any,
             } as any);
 
-            expect(handleDroppedContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('onPluginEvent - beforeDrop - HandleDropInternalContent enabled', () => {
+        let handleDroppedInternalContentSpy: jasmine.Spy;
+        let handleDroppedExternalContentSpy: jasmine.Spy;
+        let trimModelForSelectionSpy: jasmine.Spy;
+        let draggedModel: ContentModelDocument;
+        let selection: DOMSelection;
+
+        beforeEach(() => {
+            handleDroppedInternalContentSpy = spyOn(
+                handleDroppedInternalContentFile,
+                'handleDroppedInternalContent'
+            );
+            handleDroppedExternalContentSpy = spyOn(
+                handleDroppedContentFile,
+                'handleDroppedExternalContent'
+            );
+            trimModelForSelectionSpy = spyOn(trimModelForSelectionFile, 'trimModelForSelection');
+
+            draggedModel = { blockGroupType: 'Document', blocks: [] } as ContentModelDocument;
+            selection = { type: 'range' } as any;
+
+            getContentModelCopySpy.and.returnValue(draggedModel);
+            getDOMSelectionSpy.and.returnValue(selection);
+
+            plugin = new DragAndDropPlugin();
+            plugin.initialize(editor);
+        });
+
+        it('should capture dragged model on dragstart and trim it for the selection', () => {
+            const target = document.createElement('div');
+
+            eventMap.dragstart.beforeDispatch({ target } as any);
+
+            expect(getContentModelCopySpy).toHaveBeenCalledWith('disconnected');
+            expect(getDOMSelectionSpy).toHaveBeenCalled();
+            expect(trimModelForSelectionSpy).toHaveBeenCalledWith(draggedModel, selection);
+        });
+
+        it('should call handleDroppedInternalContent with the dragged model on drop', () => {
+            const target = document.createElement('div');
+            eventMap.dragstart.beforeDispatch({ target } as any);
+
+            const dropEvent = {
+                dataTransfer: {
+                    getData: () => '<div>internal content</div>',
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(handleDroppedInternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                draggedModel
+            );
+            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
+        });
+
+        it('should clear the dragged model after a drop so it is only handled once', () => {
+            const target = document.createElement('div');
+            eventMap.dragstart.beforeDispatch({ target } as any);
+
+            const dropEvent = {
+                dataTransfer: {
+                    getData: () => '<div>internal content</div>',
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(handleDroppedInternalContentSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not capture a dragged model when there is no selection', () => {
+            getDOMSelectionSpy.and.returnValue(null);
+
+            const target = document.createElement('div');
+            eventMap.dragstart.beforeDispatch({ target } as any);
+
+            expect(trimModelForSelectionSpy).not.toHaveBeenCalled();
+
+            const dropEvent = {
+                dataTransfer: {
+                    getData: () => '',
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(handleDroppedInternalContentSpy).not.toHaveBeenCalled();
+        });
+
+        it('should not capture a dragged model when the feature is disabled', () => {
+            plugin.dispose();
+
+            editor = ({
+                attachDomEvent: attachDomEventSpy,
+                isExperimentalFeatureEnabled: () => false,
+                getContentModelCopy: getContentModelCopySpy,
+                getDOMSelection: getDOMSelectionSpy,
+            } as any) as IEditor;
+
+            plugin = new DragAndDropPlugin();
+            plugin.initialize(editor);
+
+            const target = document.createElement('div');
+            eventMap.dragstart.beforeDispatch({ target } as any);
+
+            expect(getContentModelCopySpy).not.toHaveBeenCalled();
+            expect(trimModelForSelectionSpy).not.toHaveBeenCalled();
+
+            const dropEvent = {
+                dataTransfer: {
+                    getData: () => '',
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(handleDroppedInternalContentSpy).not.toHaveBeenCalled();
         });
     });
 
     describe('edge cases', () => {
         it('should not process events when editor is null', () => {
-            const handleDroppedContentSpy = spyOn(handleDroppedContentFile, 'handleDroppedContent');
+            const handleDroppedExternalContentSpy = spyOn(
+                handleDroppedContentFile,
+                'handleDroppedExternalContent'
+            );
 
             plugin = new DragAndDropPlugin();
             // Don't initialize, so editor is null
@@ -205,11 +362,14 @@ describe('DragAndDropPlugin', () => {
                 } as any,
             });
 
-            expect(handleDroppedContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
         });
 
         it('should handle empty forbidden elements array', () => {
-            const handleDroppedContentSpy = spyOn(handleDroppedContentFile, 'handleDroppedContent');
+            const handleDroppedExternalContentSpy = spyOn(
+                handleDroppedContentFile,
+                'handleDroppedExternalContent'
+            );
 
             plugin = new DragAndDropPlugin({ forbiddenElements: [] });
             plugin.initialize(editor);
@@ -226,7 +386,12 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, []);
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                html,
+                []
+            );
         });
     });
 });
