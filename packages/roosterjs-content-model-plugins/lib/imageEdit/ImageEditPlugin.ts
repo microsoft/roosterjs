@@ -35,6 +35,7 @@ import type {
     ContentChangedEvent,
     ContentModelImage,
     EditorPlugin,
+    FormatContentModelOptions,
     IEditor,
     ImageEditOperation,
     ImageEditor,
@@ -338,8 +339,29 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         isApiOperation?: boolean
     ) {
         let editingImageModel: ContentModelImage | undefined;
+
         const selection = editor.getDOMSelection();
         let isRTL: boolean = false;
+        const formatContentModelOptions: FormatContentModelOptions = {
+            onNodeCreated: (model, node) => {
+                if (
+                    !isApiOperation &&
+                    editingImageModel &&
+                    editingImageModel == model &&
+                    editingImageModel.format.imageState == EDITING_MARKER &&
+                    isNodeOfType(node, 'ELEMENT_NODE') &&
+                    isElementOfType(node, 'img')
+                ) {
+                    if (this.isCropMode) {
+                        this.startCropMode(editor, node, isRTL);
+                    } else {
+                        this.startRotateAndResize(editor, node, isRTL);
+                    }
+                }
+            },
+            apiName: IMAGE_EDIT_FORMAT_EVENT,
+            skipDOMSelection: false,
+        };
 
         editor.formatContentModel(
             (model, context) => {
@@ -427,6 +449,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             this.imageEditInfo = updateImageEditInfo(image, selection.image);
                             image.format.imageState = 'isEditing';
                         });
+                        formatContentModelOptions.skipDOMSelection = !isCropMode;
 
                         result = true;
                     }
@@ -434,25 +457,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
                 return result;
             },
-            {
-                onNodeCreated: (model, node) => {
-                    if (
-                        !isApiOperation &&
-                        editingImageModel &&
-                        editingImageModel == model &&
-                        editingImageModel.format.imageState == EDITING_MARKER &&
-                        isNodeOfType(node, 'ELEMENT_NODE') &&
-                        isElementOfType(node, 'img')
-                    ) {
-                        if (isCropMode) {
-                            this.startCropMode(editor, node, isRTL);
-                        } else {
-                            this.startRotateAndResize(editor, node, isRTL);
-                        }
-                    }
-                },
-                apiName: IMAGE_EDIT_FORMAT_EVENT,
-            },
+            formatContentModelOptions,
             {
                 tryGetFromCache: true,
             }
