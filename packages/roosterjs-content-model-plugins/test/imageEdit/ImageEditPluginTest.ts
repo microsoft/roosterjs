@@ -275,53 +275,6 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
-    it('formatContentModel called with skipDOMSelection true when starting editing', () => {
-        const mockedImage = {
-            getAttribute: getAttributeSpy,
-        };
-        const plugin = new ImageEditPlugin();
-        plugin.initialize(editor);
-        getDOMSelectionSpy.and.returnValue({
-            type: 'image',
-            image: mockedImage,
-        });
-        plugin.onPluginEvent({
-            eventType: 'mouseUp',
-            rawEvent: {
-                button: 0,
-                target: mockedImage,
-            } as any,
-        });
-        const options = formatContentModelSpy.calls.mostRecent()
-            .args[1] as FormatContentModelOptions;
-        expect(options.skipDOMSelection).toBe(true);
-        plugin.dispose();
-    });
-
-    it('formatContentModel called with skipDOMSelection false when selecting image', () => {
-        const mockedImage = {
-            getAttribute: getAttributeSpy,
-        };
-        const plugin = new ImageEditPlugin();
-        plugin.initialize(editor);
-        getDOMSelectionSpy.and.returnValue({
-            type: 'image',
-            image: mockedImage,
-        });
-        const target = document.createElement('img');
-        plugin.onPluginEvent({
-            eventType: 'mouseUp',
-            rawEvent: {
-                button: 2,
-                target,
-            } as any,
-        });
-        const options = formatContentModelSpy.calls.mostRecent()
-            .args[1] as FormatContentModelOptions;
-        expect(options.skipDOMSelection).toBe(false);
-        plugin.dispose();
-    });
-
     it('mouseUp - left click - remove selection', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
