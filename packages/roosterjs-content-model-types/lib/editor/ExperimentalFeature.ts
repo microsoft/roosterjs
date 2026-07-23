@@ -78,4 +78,9 @@ export type ExperimentalFeature =
      * These characters can be used to hide text in HTML and may cause unexpected behavior.
      * @see https://embracethered.com/blog/posts/2024/hiding-and-finding-text-with-unicode-tags/
      */
-    | 'FilterInvisibleUnicode';
+    | 'FilterInvisibleUnicode'
+
+    /**
+     * Handle the drop event for content that is dropped from the same editor instance.
+     */
+    | 'HandleDropInternalContent';

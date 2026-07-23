@@ -1,5 +1,12 @@
-import { handleDroppedContent } from './utils/handleDroppedContent';
-import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import { trimModelForSelection } from 'roosterjs-content-model-dom';
+import { handleDroppedExternalContent } from './utils/handleDroppedExternalContent';
+import type {
+    ContentModelDocument,
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+} from 'roosterjs-content-model-types';
+import { handleDroppedInternalContent } from './utils/handleDroppedInternalContent';
 
 /**
  * Options for DragAndDrop plugin
@@ -23,7 +30,8 @@ const DefaultOptions = {
 export class DragAndDropPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private forbiddenElements: string[] = [];
-    private isInternalDragging: boolean = false;
+    private draggedModel: ContentModelDocument | null = null;
+    private internalDrag: boolean = false;
     private disposer: (() => void) | null = null;
 
     /**
@@ -51,7 +59,15 @@ export class DragAndDropPlugin implements EditorPlugin {
         this.disposer = editor.attachDomEvent({
             dragstart: {
                 beforeDispatch: _ev => {
-                    this.isInternalDragging = true;
+                    this.internalDrag = true;
+                    if (this.editor?.isExperimentalFeatureEnabled('HandleDropInternalContent')) {
+                        const model = editor.getContentModelCopy('disconnected');
+                        const selection = editor.getDOMSelection();
+                        if (selection) {
+                            trimModelForSelection(model, selection);
+                            this.draggedModel = model;
+                        }
+                    }
                 },
             },
         });
@@ -68,7 +84,7 @@ export class DragAndDropPlugin implements EditorPlugin {
             this.disposer();
             this.disposer = null;
         }
-        this.isInternalDragging = false;
+        this.draggedModel = null;
         this.forbiddenElements = [];
     }
 
@@ -80,17 +96,22 @@ export class DragAndDropPlugin implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (this.editor && event.eventType == 'beforeDrop') {
-            if (this.isInternalDragging) {
-                this.isInternalDragging = false;
-            } else {
-                const dropEvent = event.rawEvent;
+            const dropEvent = event.rawEvent;
+            if (this.draggedModel) {
+                handleDroppedInternalContent(this.editor, dropEvent, this.draggedModel);
+                this.draggedModel = null;
+            } else if (!this.internalDrag) {
                 const html = dropEvent.dataTransfer?.getData('text/html');
-
                 if (html) {
-                    handleDroppedContent(this.editor, dropEvent, html, this.forbiddenElements);
+                    handleDroppedExternalContent(
+                        this.editor,
+                        dropEvent,
+                        html,
+                        this.forbiddenElements
+                    );
                 }
             }
-            return;
+            this.internalDrag = false;
         }
     }
 }
