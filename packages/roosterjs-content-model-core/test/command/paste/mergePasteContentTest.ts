@@ -25,6 +25,7 @@ import {
     IEditor,
     ClipboardData,
     DOMHelper,
+    ExperimentalFeature,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
@@ -75,6 +76,10 @@ describe('mergePasteContent', () => {
             }),
             getDocument: () => document,
             getDOMHelper: () => mockedDOMHelper,
+            isExperimentalFeatureEnabled: () => false,
+            getExperimentalFeatures: () => {
+                return [] as ExperimentalFeature[];
+            },
         } as any;
     });
 
@@ -439,7 +444,8 @@ describe('mergePasteContent', () => {
             undefined,
             mockedDomToModelOptions,
             mockedDefaultDomToModelOptions,
-            mockedDOMHelper
+            mockedDOMHelper,
+            []
         );
         expect(mockedDomToModelContext.segmentFormat).toEqual({ lineHeight: '1pt' });
     });
