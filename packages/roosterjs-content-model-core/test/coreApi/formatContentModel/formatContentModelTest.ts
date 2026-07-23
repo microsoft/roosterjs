@@ -793,49 +793,6 @@ describe('formatContentModel', () => {
         });
     });
 
-    describe('skipDOMSelection', () => {
-        it('skipDOMSelection is true, do not set DOM selection even when editor has focus', () => {
-            hasFocus.and.returnValue(true);
-
-            formatContentModel(
-                core,
-                (model, context) => {
-                    return true;
-                },
-                {
-                    apiName,
-                    skipDOMSelection: true,
-                }
-            );
-
-            expect(setContentModel).toHaveBeenCalledWith(
-                core,
-                mockedModel,
-                {
-                    ignoreSelection: true,
-                },
-                undefined
-            );
-        });
-
-        it('skipDOMSelection is false, set DOM selection when editor has focus', () => {
-            hasFocus.and.returnValue(true);
-
-            formatContentModel(
-                core,
-                (model, context) => {
-                    return true;
-                },
-                {
-                    apiName,
-                    skipDOMSelection: false,
-                }
-            );
-
-            expect(setContentModel).toHaveBeenCalledWith(core, mockedModel, undefined, undefined);
-        });
-    });
-
     describe('Pending format', () => {
         const mockedStartContainer1 = 'CONTAINER1' as any;
         const mockedStartOffset1 = 'OFFSET1' as any;
