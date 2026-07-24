@@ -11,8 +11,6 @@ import type {
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 
-const IMAGE_EDIT_SHADOW_ROOT = 'ImageEditShadowRoot';
-
 /**
  * @internal
  */
@@ -80,7 +78,6 @@ const createShadowSpan = (
     const shadowRoot = imageSpan.attachShadow({
         mode: 'open',
     });
-    imageSpan.id = IMAGE_EDIT_SHADOW_ROOT;
 
     // Pin the shadow host to the original image's box so that wrapping the image does not grow the
     // surrounding line box. Without this, the taller edit wrapper enlarges the line and the browser
@@ -88,8 +85,6 @@ const createShadowSpan = (
     // overflow the host visually because overflow is left visible.
     if (imageWidth > 0 && imageHeight > 0) {
         imageSpan.style.display = 'inline-block';
-        imageSpan.style.width = `${imageWidth}px`;
-        imageSpan.style.height = `${imageHeight}px`;
         imageSpan.style.verticalAlign = 'bottom';
         imageSpan.style.overflow = 'visible';
     }
