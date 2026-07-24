@@ -436,6 +436,14 @@ export class Editor implements IEditor {
     }
 
     /**
+     * Get all experimental features enabled in this editor
+     * @returns An array of experimental feature names
+     * */
+    getExperimentalFeatures(): ExperimentalFeature[] {
+        return this.getCore().experimentalFeatures as ExperimentalFeature[];
+    }
+
+    /**
      * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */

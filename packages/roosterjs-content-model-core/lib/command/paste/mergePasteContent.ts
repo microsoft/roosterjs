@@ -37,6 +37,8 @@ export function mergePasteContent(
         containsBlockElements,
     } = eventResult;
 
+    const shouldScrollCaretIntoView = !isImageOnlyFragment(fragment);
+
     editor.formatContentModel(
         (model, context) => {
             if (!isFirstPaste && clipboardData.modelBeforePaste) {
@@ -49,7 +51,8 @@ export function mergePasteContent(
                 undefined /*defaultFormat*/,
                 editor.getEnvironment().domToModelSettings.customized,
                 domToModelOption,
-                editor.getDOMHelper()
+                editor.getDOMHelper(),
+                editor.getExperimentalFeatures()
             );
 
             domToModelContext.segmentFormat = getSegmentFormatForPaste(model, pasteType);
@@ -80,7 +83,7 @@ export function mergePasteContent(
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
-            scrollCaretIntoView: true,
+            scrollCaretIntoView: shouldScrollCaretIntoView,
             apiName: 'paste',
         }
     );
@@ -136,4 +139,13 @@ function getLastSegmentFormat(pasteModel: ContentModelDocument): ContentModelSeg
     }
 
     return {};
+}
+
+function isImageOnlyFragment(pasteFragment: DocumentFragment): boolean {
+    const images = pasteFragment.querySelectorAll('img');
+    return (
+        images.length === 1 &&
+        pasteFragment.childNodes.length === 1 &&
+        pasteFragment.textContent?.trim() === ''
+    );
 }
