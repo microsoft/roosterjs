@@ -1,6 +1,7 @@
 import { createImageCropper } from '../Cropper/createImageCropper';
 import { createImageResizer } from '../Resizer/createImageResizer';
 import { createImageRotator } from '../Rotator/createImageRotator';
+import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { wrap } from 'roosterjs-content-model-dom';
 
 import type {
@@ -12,6 +13,37 @@ import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 
 const IMAGE_EDIT_SHADOW_ROOT = 'ImageEditShadowRoot';
+const BORDER_COLOR_VARIABLE = '--rooster-image-border-color';
+
+// Static styling for the wrapper lives in a stylesheet injected into the shadow root instead of
+// inline styles, so appearance is driven by CSS classes. Only dynamic values (rotation angle,
+// border color and the Safari display override) stay inline.
+const WRAPPER_STYLESHEET = `
+.${ImageEditElementClass.Wrapper} {
+    font-size: 24px;
+    margin: 0;
+    display: inline-flex;
+    user-select: none;
+}
+.${ImageEditElementClass.ImageBox} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transform: scale(1);
+}
+.${ImageEditElementClass.Border} {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: solid 2px var(${BORDER_COLOR_VARIABLE});
+    pointer-events: none;
+}
+.${ImageEditElementClass.Wrapper}.${ImageEditElementClass.HideHandles} > *:not(.${ImageEditElementClass.ImageBox}) {
+    display: none !important;
+}`;
 
 /**
  * @internal
@@ -82,6 +114,10 @@ const createShadowSpan = (
     });
     imageSpan.id = IMAGE_EDIT_SHADOW_ROOT;
 
+    const style = imageSpan.ownerDocument.createElement('style');
+    style.textContent = WRAPPER_STYLESHEET;
+    shadowRoot.appendChild(style);
+
     // Pin the shadow host to the original image's box so that wrapping the image does not grow the
     // surrounding line box. Without this, the taller edit wrapper enlarges the line and the browser
     // scrolls the selection back into view, making the editor jump. The wrapper and handles still
@@ -111,23 +147,18 @@ const createWrapper = (
     const wrapper = doc.createElement('span');
     const imageBox = doc.createElement('div');
 
-    imageBox.setAttribute(
-        `style`,
-        `position:relative;width:100%;height:100%;overflow:hidden;transform:scale(1);`
-    );
+    imageBox.className = ImageEditElementClass.ImageBox;
     imageBox.appendChild(image);
-    wrapper.setAttribute(
-        'style',
-        `font-size: 24px; margin: 0px; transform: rotate(${editInfo.angleRad ?? 0}rad);`
-    );
-    wrapper.style.display = editor.getEnvironment().isSafari
-        ? '-webkit-inline-flex'
-        : 'inline-flex';
+
+    wrapper.className = ImageEditElementClass.Wrapper;
+    wrapper.style.transform = `rotate(${editInfo.angleRad ?? 0}rad)`;
+    if (editor.getEnvironment().isSafari) {
+        wrapper.style.display = '-webkit-inline-flex';
+    }
 
     const border = createBorder(editor, options.borderColor);
     wrapper.appendChild(imageBox);
     wrapper.appendChild(border);
-    wrapper.style.userSelect = 'none';
 
     if (resizers && resizers?.length > 0) {
         resizers.forEach(resizer => {
@@ -151,10 +182,8 @@ const createWrapper = (
 const createBorder = (editor: IEditor, borderColor?: string) => {
     const doc = editor.getDocument();
     const resizeBorder = doc.createElement('div');
-    resizeBorder.setAttribute(
-        `style`,
-        `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 2px ${borderColor};pointer-events:none;`
-    );
+    resizeBorder.className = ImageEditElementClass.Border;
+    resizeBorder.style.setProperty(BORDER_COLOR_VARIABLE, borderColor ?? '');
     return resizeBorder;
 };
 

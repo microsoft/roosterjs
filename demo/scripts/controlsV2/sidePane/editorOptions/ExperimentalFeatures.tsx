@@ -14,6 +14,7 @@ export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}
                 {this.renderFeature('KeepSelectionMarkerWhenEnteringTextNode')}
                 {this.renderFeature('TransformTableBorderColors')}
                 {this.renderFeature('ShadowDom')}
+                {this.renderFeature('ImageEditV2')}
             </>
         );
     }

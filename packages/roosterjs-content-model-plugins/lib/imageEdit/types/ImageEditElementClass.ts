@@ -4,6 +4,27 @@
  */
 export enum ImageEditElementClass {
     /**
+     * CSS class name for the image edit wrapper
+     */
+    Wrapper = 'r_wrapper',
+
+    /**
+     * CSS class name for the box that holds the image inside the wrapper
+     */
+    ImageBox = 'r_imageBox',
+
+    /**
+     * CSS class name for the selection border drawn around the image
+     */
+    Border = 'r_border',
+
+    /**
+     * State CSS class added to the wrapper to hide the editing decorations
+     * (border and handles) while keeping the image visible
+     */
+    HideHandles = 'r_hideHandles',
+
+    /**
      * CSS class name for resize handle
      */
     ResizeHandle = 'r_resizeH',

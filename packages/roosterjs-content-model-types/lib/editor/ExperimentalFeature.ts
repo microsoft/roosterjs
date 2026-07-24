@@ -78,4 +78,10 @@ export type ExperimentalFeature =
      * These characters can be used to hide text in HTML and may cause unexpected behavior.
      * @see https://embracethered.com/blog/posts/2024/hiding-and-finding-text-with-unicode-tags/
      */
-    | 'FilterInvisibleUnicode';
+    | 'FilterInvisibleUnicode'
+
+    /**
+     * Use the new Image Edit plugin (ImageEditPluginV2). When enabled, the image edit wrapper is
+     * rendered for all images but stays hidden until the image is selected.
+     */
+    | 'ImageEditV2';

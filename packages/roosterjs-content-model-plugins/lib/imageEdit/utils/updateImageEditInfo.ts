@@ -51,14 +51,14 @@ export function getSelectedImageMetadata(
     image: HTMLImageElement
 ): ImageMetadataFormat {
     let imageMetadata: ImageMetadataFormat = getInitialEditInfo(image);
+
     editor.formatContentModel(model => {
         const selectedImage = getSelectedImage(model);
         if (selectedImage?.image) {
             mutateSegment(selectedImage.paragraph, selectedImage?.image, modelImage => {
                 imageMetadata = updateImageEditInfo(modelImage, image);
             });
-
-            return true;
+            return false;
         }
         return false;
     });

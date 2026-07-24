@@ -21,7 +21,7 @@ export function areSameSelections(
 
     switch (sel1.type) {
         case 'image':
-            return sel2.type == 'image' && sel2.image == sel1.image;
+            return sel2.type == 'image' && sel2.image.isEqualNode?.(sel1.image);
 
         case 'table':
             return sel2.type == 'table' && areSameTableSelections(sel1, sel2);

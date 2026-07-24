@@ -3,7 +3,7 @@ import * as findImage from '../../lib/imageEdit/utils/findEditingImage';
 import * as getSelectedImage from '../../lib/imageEdit/utils/getSelectedImage';
 import * as normalizeImageSelection from '../../lib/imageEdit/utils/normalizeImageSelection';
 import { getSelectedImageMetadata } from '../../lib/imageEdit/utils/updateImageEditInfo';
-import { ImageEditPlugin } from '../../lib/imageEdit/ImageEditPlugin';
+import { LegacyImageEditPlugin as ImageEditPlugin } from '../../lib/imageEdit/LegacyImageEditPlugin';
 import { initEditor } from '../TestHelper';
 import {
     ChangeSource,
