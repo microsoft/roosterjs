@@ -747,6 +747,38 @@ describe('knownElementProcessor', () => {
         });
     });
 
+    it('Label with text content', () => {
+        const group = createContentModelDocument();
+        const label = document.createElement('label');
+
+        label.appendChild(document.createTextNode('test'));
+
+        knownElementProcessor(group, label, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
     it('inline-block div with id attribute should use forceFormatContainerProcessor', () => {
         const group = createContentModelDocument();
         const div = document.createElement('div');
