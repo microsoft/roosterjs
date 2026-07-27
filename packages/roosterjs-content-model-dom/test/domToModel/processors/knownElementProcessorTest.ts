@@ -761,6 +761,7 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
+                    isImplicit: true,
                     segments: [
                         {
                             segmentType: 'Text',
@@ -768,12 +769,6 @@ describe('knownElementProcessor', () => {
                             text: 'test',
                         },
                     ],
-                },
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                    isImplicit: true,
                 },
             ],
         });
