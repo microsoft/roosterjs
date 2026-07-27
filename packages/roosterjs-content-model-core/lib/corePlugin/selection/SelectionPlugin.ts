@@ -48,7 +48,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private disposer: (() => void) | null = null;
     private logicalRootDisposer: (() => void) | null = null;
     private isSafari = false;
-    private isMac = false;
+
     private scrollTopCache: number = 0;
 
     constructor(options: EditorOptions) {
@@ -99,7 +99,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const document = this.editor.getDocument();
 
         this.isSafari = !!env.isSafari;
-        this.isMac = !!env.isMac;
+
         document.addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
             this.disposer = this.editor.attachDomEvent({
@@ -691,7 +691,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         event: MouseEvent,
         previousSelection: DOMSelection | null
     ): HTMLImageElement | null => {
-        if (!this.isMac || !previousSelection || previousSelection.type !== 'image') {
+        if (!previousSelection || previousSelection.type !== 'image') {
             return null;
         }
 

@@ -76,7 +76,7 @@ const createShadowSpan = (
     imageHeight: number
 ) => {
     const shadowRoot = imageSpan.attachShadow({
-        mode: 'open',
+        mode: 'closed',
     });
 
     if (imageWidth > 0 && imageHeight > 0) {
