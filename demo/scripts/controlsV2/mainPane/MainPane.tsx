@@ -176,16 +176,15 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             },
             activeTab: 'all',
         };
+    }
 
+    render() {
+        const theme = getTheme(this.state.isDarkMode);
         this.imageEditPlugin = this.state.initState.pluginList.imageEditPlugin
             ? new ImageEditPlugin({
                   disableSideResize: this.state.initState.disableSideResize,
               })
             : undefined;
-    }
-
-    render() {
-        const theme = getTheme(this.state.isDarkMode);
 
         return (
             <ThemeProvider applyTo="body" theme={theme} className={styles.mainPane}>

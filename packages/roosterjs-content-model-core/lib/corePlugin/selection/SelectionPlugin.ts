@@ -32,6 +32,7 @@ const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
 const Right = 'ArrowRight';
 const Tab = 'Tab';
+const F10 = 'F10';
 
 /**
  * @internal
@@ -353,6 +354,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'range':
+                let image: HTMLImageElement | null;
+
                 if (key == Up || key == Down || key == Left || key == Right || key == Tab) {
                     const start = selection.range.startContainer;
                     this.state.tableSelection = this.parseTableSelection(
@@ -371,7 +374,20 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             );
                         }
                     }
+                } else if (
+                    key == F10 &&
+                    rawEvent.shiftKey &&
+                    (image = isSingleImageInSelection(selection.range))
+                ) {
+                    this.setDOMSelection(
+                        {
+                            type: 'image',
+                            image,
+                        },
+                        null /* tableSelection */
+                    );
                 }
+
                 break;
 
             case 'table':
