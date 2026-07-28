@@ -6478,5 +6478,79 @@ describe('mergeModel', () => {
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
     });
 
+    it('table to table, merge source table with spanAbove cells - should reset spanAbove on merged cells', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        // Create a simple 2x2 target table with selection in cell [0,0]
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell00 = createTableCell(false, false, false, { backgroundColor: '00' });
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell10 = createTableCell(false, false, false, { backgroundColor: '10' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const table1 = createTable(2);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell00.blocks.push(para1);
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell00, cell01] },
+            { format: {}, height: 0, cells: [cell10, cell11] },
+        ];
+
+        majorModel.blocks.push(table1);
+
+        // Source table is 2x2 where the second row cells are vertically merged (spanAbove)
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell00 = createTableCell(false, false, false, { backgroundColor: 'n00' });
+        const newCell01 = createTableCell(false, false, false, { backgroundColor: 'n01' });
+        const newCell10 = createTableCell(false, true, false, { backgroundColor: 'n10' }); // spanAbove
+        const newCell11 = createTableCell(false, true, false, { backgroundColor: 'n11' }); // spanAbove
+        const newTable1 = createTable(2);
+
+        newPara1.segments.push(newText1);
+        newCell00.blocks.push(newPara1);
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell00, newCell01] },
+            { format: {}, height: 0, cells: [newCell10, newCell11] },
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeTable: true,
+            }
+        );
+
+        const table = majorModel.blocks[0] as ContentModelTable;
+
+        // Target stays 2x2, all source cells are placed one-to-one
+        expect(table.rows.length).toEqual(2);
+        expect(table.rows[0].cells.length).toEqual(2);
+
+        expect(table.rows[0].cells[0]).toBe(newCell00);
+        expect(table.rows[0].cells[1]).toBe(newCell01);
+        expect(table.rows[1].cells[0]).toBe(newCell10);
+        expect(table.rows[1].cells[1]).toBe(newCell11);
+
+        // The spanAbove flag from the source table must be reset so the merged cells
+        // become standalone cells instead of continuations of a vertical merge
+        expect(newCell10.spanAbove).toBe(false);
+        expect(newCell11.spanAbove).toBe(false);
+        expect(newCell00.spanAbove).toBe(false);
+        expect(newCell01.spanAbove).toBe(false);
+
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+    });
+
     // #endregion
 });
