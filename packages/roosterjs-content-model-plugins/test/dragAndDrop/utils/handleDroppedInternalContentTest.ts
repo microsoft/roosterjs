@@ -712,7 +712,7 @@ describe('handleDroppedInternalContent - model verification', () => {
         // A partial selection that starts in the middle of a formatted run keeps its format
         const droppedModel = createContentModelDocument();
         const droppedParagraph = createParagraph();
-        droppedParagraph.segments.push(createText('lic text', { fontStyle: 'italic' }));
+        droppedParagraph.segments.push(createText('lic text', { italic: true }));
         droppedModel.blocks.push(droppedParagraph);
         cloneModelForPasteSpy.and.returnValue(droppedModel);
 
@@ -744,7 +744,7 @@ describe('handleDroppedInternalContent - model verification', () => {
 
         const partialSegment = textSegments.find(seg => seg.text === 'lic text');
         expect(partialSegment).toBeDefined();
-        expect(partialSegment?.format.italic).toBe('italic');
+        expect(partialSegment?.format.italic).toBe(true);
     });
 
     it('should merge dragged table cells into model', () => {
