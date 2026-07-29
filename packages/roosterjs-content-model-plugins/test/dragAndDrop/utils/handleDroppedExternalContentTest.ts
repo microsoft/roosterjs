@@ -1,6 +1,6 @@
 import * as cleanForbiddenElementsFile from '../../../lib/dragAndDrop/utils/cleanForbiddenElements';
 import * as getNodePositionFromEventFile from 'roosterjs-content-model-dom/lib/domUtils/event/getNodePositionFromEvent';
-import { handleDroppedContent } from '../../../lib/dragAndDrop/utils/handleDroppedContent';
+import { handleDroppedExternalContent } from '../../../lib/dragAndDrop/utils/handleDroppedExternalContent';
 import {
     ContentModelDocument,
     ContentModelParagraph,
@@ -14,7 +14,7 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-describe('handleDroppedContent', () => {
+describe('handleDroppedExternalContent', () => {
     let editor: IEditor;
     let doc: Document;
     let getNodePositionFromEventSpy: jasmine.Spy;
@@ -60,7 +60,7 @@ describe('handleDroppedContent', () => {
             stopPropagation: stopPropagationSpy,
         } as any;
 
-        handleDroppedContent(editor, event, '<p>test</p>', ['iframe']);
+        handleDroppedExternalContent(editor, event, '<p>test</p>', ['iframe']);
 
         expect(getNodePositionFromEventSpy).toHaveBeenCalledWith(doc, {}, 100, 200);
         expect(preventDefaultSpy).not.toHaveBeenCalled();
@@ -90,7 +90,7 @@ describe('handleDroppedContent', () => {
             stopPropagation: stopPropagationSpy,
         } as any;
 
-        handleDroppedContent(editor, event, '<p>dropped content</p>', ['iframe', 'script']);
+        handleDroppedExternalContent(editor, event, '<p>dropped content</p>', ['iframe', 'script']);
 
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(stopPropagationSpy).toHaveBeenCalled();
@@ -125,7 +125,7 @@ describe('handleDroppedContent', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedContent(editor, event, '<span>inserted</span>', []);
+        handleDroppedExternalContent(editor, event, '<span>inserted</span>', []);
 
         const formatCall = formatContentModelSpy.calls.mostRecent();
         const options = formatCall.args[1];
@@ -155,7 +155,12 @@ describe('handleDroppedContent', () => {
         } as any;
 
         const forbiddenElements = ['iframe', 'script', 'object'];
-        handleDroppedContent(editor, event, '<div><iframe></iframe></div>', forbiddenElements);
+        handleDroppedExternalContent(
+            editor,
+            event,
+            '<div><iframe></iframe></div>',
+            forbiddenElements
+        );
 
         expect(cleanForbiddenElementsSpy).toHaveBeenCalledWith(parsedDoc, forbiddenElements);
     });
@@ -178,14 +183,14 @@ describe('handleDroppedContent', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedContent(editor, event, '<p>content</p>', []);
+        handleDroppedExternalContent(editor, event, '<p>content</p>', []);
 
         expect(cleanForbiddenElementsSpy).toHaveBeenCalledWith(parsedDoc, []);
         expect(formatContentModelSpy).toHaveBeenCalled();
     });
 });
 
-describe('handleDroppedContent - model verification', () => {
+describe('handleDroppedExternalContent - model verification', () => {
     let editor: IEditor;
     let doc: Document;
     let getNodePositionFromEventSpy: jasmine.Spy;
@@ -237,7 +242,7 @@ describe('handleDroppedContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedContent(editor, event, '<p>dropped text</p>', []);
+        handleDroppedExternalContent(editor, event, '<p>dropped text</p>', []);
 
         // Create a model to merge into
         const model = createContentModelDocument();
@@ -287,7 +292,7 @@ describe('handleDroppedContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedContent(editor, event, '<p><b>bold text</b></p>', []);
+        handleDroppedExternalContent(editor, event, '<p><b>bold text</b></p>', []);
 
         // Create initial model with selection
         const model = createContentModelDocument();
@@ -336,7 +341,7 @@ describe('handleDroppedContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedContent(editor, event, '<p>new content</p>', []);
+        handleDroppedExternalContent(editor, event, '<p>new content</p>', []);
 
         // Create model with existing text
         const model = createContentModelDocument();
@@ -388,9 +393,12 @@ describe('handleDroppedContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedContent(editor, event, '<p>safe content</p><iframe src="bad.com"></iframe>', [
-            'iframe',
-        ]);
+        handleDroppedExternalContent(
+            editor,
+            event,
+            '<p>safe content</p><iframe src="bad.com"></iframe>',
+            ['iframe']
+        );
 
         // Create model
         const model = createContentModelDocument();
@@ -450,7 +458,12 @@ describe('handleDroppedContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedContent(editor, event, '<p>first paragraph</p><p>second paragraph</p>', []);
+        handleDroppedExternalContent(
+            editor,
+            event,
+            '<p>first paragraph</p><p>second paragraph</p>',
+            []
+        );
 
         // Create model
         const model = createContentModelDocument();
