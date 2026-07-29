@@ -744,7 +744,7 @@ describe('handleDroppedInternalContent - model verification', () => {
 
         const partialSegment = textSegments.find(seg => seg.text === 'lic text');
         expect(partialSegment).toBeDefined();
-        expect(partialSegment?.format.fontStyle).toBe('italic');
+        expect(partialSegment?.format.italic).toBe('italic');
     });
 
     it('should merge dragged table cells into model', () => {
