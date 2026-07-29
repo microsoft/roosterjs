@@ -180,11 +180,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     render() {
         const theme = getTheme(this.state.isDarkMode);
-        this.imageEditPlugin = this.state.initState.pluginList.imageEditPlugin
-            ? new ImageEditPlugin({
-                  disableSideResize: this.state.initState.disableSideResize,
-              })
-            : undefined;
 
         return (
             <ThemeProvider applyTo="body" theme={theme} className={styles.mainPane}>
@@ -237,10 +232,12 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     resetEditorPlugin(pluginState: OptionState) {
         this.updateContentPlugin.update();
-        this.setState({
-            initState: pluginState,
-        });
-        this.resetEditor();
+        this.setState(
+            {
+                initState: pluginState,
+            },
+            () => this.resetEditor()
+        );
     }
 
     setScale(scale: number): void {
@@ -354,6 +351,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     private shadowDomEditorDiv: HTMLDivElement | undefined;
     private resetEditor() {
+        this.createImageEditPlugin();
+
         const useShadowDom = this.editorOptionPlugin
             .getBuildInPluginState()
             .experimentalFeatures.has('ShadowDom');
@@ -554,6 +553,14 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.presetPlugin,
             this.markdownPanePlugin,
         ];
+    }
+
+    private createImageEditPlugin() {
+        this.imageEditPlugin = this.state.initState.pluginList.imageEditPlugin
+            ? new ImageEditPlugin({
+                  disableSideResize: this.state.initState.disableSideResize,
+              })
+            : undefined;
     }
 
     private getToggleablePlugins(): EditorPlugin[] {
