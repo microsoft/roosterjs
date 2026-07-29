@@ -1,11 +1,5 @@
-import { trimModelForSelection } from 'roosterjs-content-model-dom';
 import { handleDroppedExternalContent } from './utils/handleDroppedExternalContent';
-import type {
-    ContentModelDocument,
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-} from 'roosterjs-content-model-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { handleDroppedInternalContent } from './utils/handleDroppedInternalContent';
 
 /**
@@ -30,7 +24,6 @@ const DefaultOptions = {
 export class DragAndDropPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private forbiddenElements: string[] = [];
-    private draggedModel: ContentModelDocument | null = null;
     private internalDrag: boolean = false;
     private disposer: (() => void) | null = null;
 
@@ -60,14 +53,6 @@ export class DragAndDropPlugin implements EditorPlugin {
             dragstart: {
                 beforeDispatch: _ev => {
                     this.internalDrag = true;
-                    if (this.editor?.isExperimentalFeatureEnabled('HandleDropInternalContent')) {
-                        const model = editor.getContentModelCopy('disconnected');
-                        const selection = editor.getDOMSelection();
-                        if (selection) {
-                            trimModelForSelection(model, selection);
-                            this.draggedModel = model;
-                        }
-                    }
                 },
             },
         });
@@ -84,7 +69,6 @@ export class DragAndDropPlugin implements EditorPlugin {
             this.disposer();
             this.disposer = null;
         }
-        this.draggedModel = null;
         this.forbiddenElements = [];
     }
 
@@ -97,9 +81,8 @@ export class DragAndDropPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor && event.eventType == 'beforeDrop') {
             const dropEvent = event.rawEvent;
-            if (this.draggedModel) {
-                handleDroppedInternalContent(this.editor, dropEvent, this.draggedModel);
-                this.draggedModel = null;
+            if (this.internalDrag) {
+                handleDroppedInternalContent(this.editor, dropEvent);
             } else if (!this.internalDrag) {
                 const html = dropEvent.dataTransfer?.getData('text/html');
                 if (html) {

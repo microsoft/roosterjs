@@ -1,5 +1,6 @@
 import { formatInsertPointWithContentModel } from 'roosterjs-content-model-api';
 import {
+    cloneModelForPaste,
     createSelectionMarker,
     deleteSelection,
     getNodePositionFromEvent,
@@ -7,31 +8,27 @@ import {
     mutateBlock,
     normalizeContentModel,
     setSelection,
+    trimModelForSelection,
 } from 'roosterjs-content-model-dom';
-import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
+import type { IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  * Handle dropped internal HTML content by inserting it at the drop position
  */
-export function handleDroppedInternalContent(
-    editor: IEditor,
-    event: DragEvent,
-    droppedModel: ContentModelDocument
-): void {
+export function handleDroppedInternalContent(editor: IEditor, event: DragEvent): void {
     const doc = editor.getDocument();
     const domPosition = getNodePositionFromEvent(doc, editor.getDOMHelper(), event.x, event.y);
-
-    if (domPosition) {
+    const selection = editor.getDOMSelection();
+    if (domPosition && selection) {
         event.preventDefault();
         event.stopPropagation();
 
-        const range = doc.createRange();
-        range.setStart(domPosition.node, domPosition.offset);
-        range.collapse(true);
-
         formatInsertPointWithContentModel(editor, domPosition, (model, context, insertPoint) => {
             if (insertPoint) {
+                const cloneModel = cloneModelForPaste(model);
+                trimModelForSelection(cloneModel, selection);
+
                 if (deleteSelection(model, [], context).deleteResult == 'range') {
                     normalizeContentModel(model);
                 }
@@ -42,7 +39,7 @@ export function handleDroppedInternalContent(
 
                 startParagraph.segments.splice(startIndex, 0, startMarker);
 
-                const newInsertPoint = mergeModel(model, droppedModel, context, {
+                const newInsertPoint = mergeModel(model, cloneModel, context, {
                     insertPosition: insertPoint,
                 });
 
