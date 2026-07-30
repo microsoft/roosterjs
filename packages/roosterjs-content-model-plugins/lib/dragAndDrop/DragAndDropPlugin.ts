@@ -81,7 +81,10 @@ export class DragAndDropPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor && event.eventType == 'beforeDrop') {
             const dropEvent = event.rawEvent;
-            if (this.internalDrag) {
+            if (
+                this.internalDrag &&
+                this.editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
+            ) {
                 handleDroppedInternalContent(this.editor, dropEvent);
             } else if (!this.internalDrag) {
                 const html = dropEvent.dataTransfer?.getData('text/html');
