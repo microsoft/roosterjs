@@ -51,8 +51,14 @@ export class DragAndDropPlugin implements EditorPlugin {
         this.editor = editor;
         this.disposer = editor.attachDomEvent({
             dragstart: {
-                beforeDispatch: _ev => {
+                beforeDispatch: ev => {
                     this.internalDrag = true;
+                    if (
+                        this.editor &&
+                        this.editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
+                    ) {
+                        this.adjustDraggingCursor(this.editor, ev as DragEvent);
+                    }
                 },
             },
         });
@@ -79,7 +85,11 @@ export class DragAndDropPlugin implements EditorPlugin {
      * @param event The event to handle:
      */
     onPluginEvent(event: PluginEvent) {
-        if (this.editor && event.eventType == 'beforeDrop') {
+        if (
+            this.editor &&
+            event.eventType == 'beforeDrop' &&
+            this.editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
+        ) {
             const dropEvent = event.rawEvent;
             if (this.internalDrag) {
                 handleDroppedInternalContent(this.editor, dropEvent);
@@ -95,6 +105,20 @@ export class DragAndDropPlugin implements EditorPlugin {
                 }
             }
             this.internalDrag = false;
+        }
+    }
+
+    private adjustDraggingCursor(editor: IEditor, dragEvent: DragEvent) {
+        const selection = editor.getDOMSelection();
+        if (selection?.type == 'table') {
+            const doc = this.editor?.getDocument();
+            if (doc && dragEvent.dataTransfer) {
+                const ghost = doc.createElement('span');
+                ghost.textContent = '|';
+                doc.body.appendChild(ghost);
+                dragEvent.dataTransfer.setDragImage(ghost, 0, 0);
+                doc.defaultView?.requestAnimationFrame(() => ghost.remove());
+            }
         }
     }
 }

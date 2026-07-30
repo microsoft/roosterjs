@@ -3,6 +3,7 @@ import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCel
 import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
+    ChangeSource,
     getDOMInsertPointRect,
     getNodePositionFromEvent,
     isCharacterValue,
@@ -23,6 +24,7 @@ import type {
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
+    TableSelection,
 } from 'roosterjs-content-model-types';
 
 const MouseLeftButton = 0;
@@ -50,6 +52,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private logicalRootDisposer: (() => void) | null = null;
     private isSafari = false;
     private scrollTopCache: number = 0;
+    private isInsideSelection: boolean = false;
 
     constructor(options: EditorOptions) {
         this.state = {
@@ -152,6 +155,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'contentChanged':
+                if (event.source == ChangeSource.Drop && this.isInsideSelection) {
+                    this.setDOMSelection(null /* DOMSelection  */, null /* tableSelection */);
+                }
+
                 this.state.tableSelection = null;
                 break;
 
@@ -211,18 +218,31 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
 
         // Table selection
+        const target = rawEvent.target as Node;
+        let tableSelection: TableSelectionInfo | null = this.parseTableSelection(
+            target,
+            target,
+            editor.getDOMHelper()
+        );
+
+        this.isInsideSelection = false;
+
+        if (
+            selection?.type == 'table' &&
+            tableSelection &&
+            this.isInsideTableSelection(selection, tableSelection) &&
+            rawEvent.detail == 1
+        ) {
+            this.isInsideSelection = true;
+            this.setTableDragSelection(editor, rawEvent);
+            return;
+        }
+
         if (selection?.type == 'table' && rawEvent.button == MouseLeftButton) {
             this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
         }
 
-        let tableSelection: TableSelectionInfo | null;
-        const target = rawEvent.target as Node;
-
-        if (
-            target &&
-            rawEvent.button == MouseLeftButton &&
-            (tableSelection = this.parseTableSelection(target, target, editor.getDOMHelper()))
-        ) {
+        if (target && rawEvent.button == MouseLeftButton && tableSelection) {
             this.state.tableSelection = tableSelection;
 
             if (rawEvent.detail >= 3) {
@@ -310,6 +330,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     };
 
     private onMouseUp() {
+        if (this.isInsideSelection) {
+            this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+            this.isInsideSelection = false;
+        }
+
         this.detachMouseEvent();
     }
 
@@ -580,6 +605,33 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 this.state.tableSelection = tableSel;
                 this.updateTableSelection(lastCo);
             }
+        }
+    }
+
+    private isInsideTableSelection(
+        prevSelection: TableSelection,
+        tableSelection: TableSelectionInfo
+    ) {
+        const selectedCell = tableSelection.firstCo;
+
+        return (
+            selectedCell.row >= prevSelection.firstRow &&
+            selectedCell.row <= prevSelection.lastRow &&
+            selectedCell.col >= prevSelection.firstColumn &&
+            selectedCell.col <= prevSelection.lastColumn
+        );
+    }
+
+    private setTableDragSelection(editor: IEditor, rawEvent: MouseEvent) {
+        const doc = editor.getDocument();
+        const cell = editor
+            .getDOMHelper()
+            .findClosestElementAncestor(rawEvent.target as Node, 'td,th');
+        if (cell) {
+            const range = doc.createRange();
+            console.log(cell);
+            range.selectNodeContents(cell);
+            editor.getDOMHelper().setSelectionRange(range);
         }
     }
 
