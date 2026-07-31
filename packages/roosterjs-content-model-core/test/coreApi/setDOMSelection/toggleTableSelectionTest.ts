@@ -1,7 +1,7 @@
 import { EditorCore, TableSelection } from 'roosterjs-content-model-types';
 import { toggleTableSelection } from '../../../lib/coreApi/setDOMSelection/toggleTableSelection';
 
-export const DOM_SELECTION_CSS_KEY = '_DOMSelection';
+const DOM_SELECTION_CSS_KEY = '_DOMSelection';
 
 describe('toggleTableSelection', () => {
     let core: EditorCore;
