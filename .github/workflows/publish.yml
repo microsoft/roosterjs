@@ -28,5 +28,12 @@ jobs:
             - name: Build
               run: npm run-script build:ci
 
+            - name: Verify npm token
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: npm whoami
+
             - name: Publish
-              run: node tools/build.js publish --token ${{ secrets.NPM_TOKEN }}
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: node tools/build.js publish

@@ -6,7 +6,8 @@ const exec = require('child_process').execSync;
 const { distPath, readPackageJson, packages } = require('./common');
 
 const VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
-const NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=';
+
+const provenance = process.env.ACTIONS_ID_TOKEN_REQUEST_URL ? ' --provenance' : '';
 
 function publish(options) {
     packages.forEach(packageName => {
@@ -29,15 +30,15 @@ function publish(options) {
                 `Skip publishing package ${packageName}, because version (${npmVersion}) is not changed`
             );
         } else {
-            const targetNpmrc = path.join(distPath, packageName, '.npmrc');
+            // const targetNpmrc = path.join(distPath, packageName, '.npmrc');
 
             try {
-                const npmrcContent = `${NpmrcContent}${options.token}\n`;
+                // const npmrcContent = `${NpmrcContent}${options.token}\n`;
 
-                fs.writeFileSync(targetNpmrc, npmrcContent);
+                // fs.writeFileSync(targetNpmrc, npmrcContent);
 
                 const basePublishString = `npm publish`;
-                const publishString = basePublishString + ` --tag ${tagname}`;
+                const publishString = basePublishString + ` --tag ${tagname}${provenance}`;
                 exec(publishString, {
                     stdio: 'inherit',
                     cwd: path.join(distPath, packageName),
@@ -47,9 +48,9 @@ function publish(options) {
                 console.log(e);
             } finally {
                 // Clean up the temporary .npmrc file
-                if (fs.existsSync(targetNpmrc)) {
-                    fs.unlinkSync(targetNpmrc);
-                }
+                // if (fs.existsSync(targetNpmrc)) {
+                //     fs.unlinkSync(targetNpmrc);
+                // }
             }
         }
     });
