@@ -19,6 +19,8 @@ describe('DragAndDropPlugin', () => {
 
         editor = ({
             attachDomEvent: attachDomEventSpy,
+            isExperimentalFeatureEnabled: () => true,
+            getDOMSelection: () => null,
         } as any) as IEditor;
     });
 

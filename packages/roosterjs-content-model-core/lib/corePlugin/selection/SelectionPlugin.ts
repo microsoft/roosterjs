@@ -26,6 +26,8 @@ import type {
     TableCellCoordinate,
     TableSelection,
 } from 'roosterjs-content-model-types';
+import { DOM_SELECTION_CSS_KEY } from '../../coreApi/setDOMSelection/setTableCellsStyle';
+import { HIDE_CURSOR_CSS_KEY } from '../../coreApi/setDOMSelection/toggleCaret';
 
 const MouseLeftButton = 0;
 const MouseRightButton = 2;
@@ -157,8 +159,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             case 'contentChanged':
                 if (event.source == ChangeSource.Drop && this.isInsideSelection) {
                     this.setDOMSelection(null /* DOMSelection  */, null /* tableSelection */);
+                    this.isInsideSelection = false;
                 }
-
                 this.state.tableSelection = null;
                 break;
 
@@ -219,13 +221,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
         // Table selection
         const target = rawEvent.target as Node;
-        let tableSelection: TableSelectionInfo | null = this.parseTableSelection(
-            target,
-            target,
-            editor.getDOMHelper()
-        );
-
-        this.isInsideSelection = false;
+        const tableSelection: TableSelectionInfo | null = target
+            ? this.parseTableSelection(target, target, editor.getDOMHelper())
+            : null;
 
         if (
             selection?.type == 'table' &&
@@ -628,8 +626,14 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             .getDOMHelper()
             .findClosestElementAncestor(rawEvent.target as Node, 'td,th');
         if (cell) {
+            // Hide the table cell selection styles (grey cell background applied by
+            // setDOMSelection) and the native selection highlight so that only the
+            // dragged content is visible while dragging. Also restore the caret which
+            // is hidden while a table selection is active.
+            editor.setEditorStyle(DOM_SELECTION_CSS_KEY, null /*cssRule*/);
+            editor.setEditorStyle(HIDE_CURSOR_CSS_KEY, null /*cssRule*/);
+
             const range = doc.createRange();
-            console.log(cell);
             range.selectNodeContents(cell);
             editor.getDOMHelper().setSelectionRange(range);
         }
