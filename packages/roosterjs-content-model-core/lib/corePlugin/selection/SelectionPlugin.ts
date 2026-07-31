@@ -32,6 +32,7 @@ const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
 const Right = 'ArrowRight';
 const Tab = 'Tab';
+const F10 = 'F10';
 
 /**
  * @internal
@@ -48,7 +49,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private disposer: (() => void) | null = null;
     private logicalRootDisposer: (() => void) | null = null;
     private isSafari = false;
-    private isMac = false;
     private scrollTopCache: number = 0;
 
     constructor(options: EditorOptions) {
@@ -99,7 +99,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const document = this.editor.getDocument();
 
         this.isSafari = !!env.isSafari;
-        this.isMac = !!env.isMac;
         document.addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
             this.disposer = this.editor.attachDomEvent({
@@ -353,6 +352,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'range':
+                let image: HTMLImageElement | null;
+
                 if (key == Up || key == Down || key == Left || key == Right || key == Tab) {
                     const start = selection.range.startContainer;
                     this.state.tableSelection = this.parseTableSelection(
@@ -371,7 +372,20 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             );
                         }
                     }
+                } else if (
+                    key == F10 &&
+                    rawEvent.shiftKey &&
+                    (image = isSingleImageInSelection(selection.range))
+                ) {
+                    this.setDOMSelection(
+                        {
+                            type: 'image',
+                            image,
+                        },
+                        null /* tableSelection */
+                    );
                 }
+
                 break;
 
             case 'table':
@@ -691,7 +705,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         event: MouseEvent,
         previousSelection: DOMSelection | null
     ): HTMLImageElement | null => {
-        if (!this.isMac || !previousSelection || previousSelection.type !== 'image') {
+        if (!previousSelection || previousSelection.type !== 'image') {
             return null;
         }
 
@@ -738,11 +752,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             const newSelection = this.editor.getDOMSelection();
             const domHelper = this.editor.getDOMHelper();
 
-            //If am image selection changed to a wider range due a keyboard event, we should update the selection
+            // If an image selection changed to a wider range due to a keyboard event, we should update the selection
             const range = domHelper.getSelectionRange();
             if (range) {
                 const image = isSingleImageInSelection(range);
-                if (newSelection?.type == 'image' && !image) {
+                if (newSelection?.type == 'image' && !image && !range.collapsed) {
                     const sel = this.editor.getDocument().defaultView?.getSelection();
                     const isReverted = sel
                         ? sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset

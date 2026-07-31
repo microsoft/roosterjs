@@ -13,6 +13,7 @@ import type {
     DomToModelContext,
     DomToModelOption,
     DomToModelOptionForSanitizing,
+    ExperimentalFeature,
 } from 'roosterjs-content-model-types';
 
 const DefaultSanitizingOption: DomToModelOptionForSanitizing = {
@@ -34,7 +35,8 @@ export function createDomToModelContextForSanitizing(
     defaultFormat?: ContentModelSegmentFormat,
     defaultOption?: DomToModelOption,
     additionalSanitizingOption?: Partial<DomToModelOptionForSanitizing>,
-    domHelper?: DOMHelper
+    domHelper?: DOMHelper,
+    experimentalFeatures?: ExperimentalFeature[]
 ): DomToModelContext {
     const sanitizingOption: DomToModelOptionForSanitizing = {
         ...DefaultSanitizingOption,
@@ -45,7 +47,7 @@ export function createDomToModelContextForSanitizing(
         {
             defaultFormat,
             ...getRootComputedStyleForContext(document),
-            experimentalFeatures: [],
+            experimentalFeatures: experimentalFeatures ?? [],
             editorViewWidth: domHelper?.getClientWidth(),
         },
         defaultOption,

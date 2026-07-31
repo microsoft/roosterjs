@@ -3226,6 +3226,101 @@ describe('SelectionPlugin handle table selection', () => {
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
         });
+
+        it('From Range, Press Shift+F10 with a single image in selection', () => {
+            const image = document.createElement('img');
+            const mockedRange = {
+                startContainer: div,
+                startOffset: 0,
+                endContainer: div,
+                endOffset: 0,
+            } as any;
+
+            spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(image);
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: mockedRange,
+                isReverted: false,
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'F10',
+                    shiftKey: true,
+                } as any,
+            });
+
+            expect(isSingleImageInSelection.isSingleImageInSelection).toHaveBeenCalledWith(
+                mockedRange
+            );
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'image',
+                image,
+            });
+        });
+
+        it('From Range, Press Shift+F10 without a single image in selection', () => {
+            const mockedRange = {
+                startContainer: div,
+                startOffset: 0,
+                endContainer: div,
+                endOffset: 0,
+            } as any;
+
+            spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: mockedRange,
+                isReverted: false,
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'F10',
+                    shiftKey: true,
+                } as any,
+            });
+
+            expect(isSingleImageInSelection.isSingleImageInSelection).toHaveBeenCalledWith(
+                mockedRange
+            );
+            expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        });
+
+        it('From Range, Press F10 without shift key does not set image selection', () => {
+            const image = document.createElement('img');
+            const isSingleImageSpy = spyOn(
+                isSingleImageInSelection,
+                'isSingleImageInSelection'
+            ).and.returnValue(image);
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: div,
+                    startOffset: 0,
+                    endContainer: div,
+                    endOffset: 0,
+                } as any,
+                isReverted: false,
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'F10',
+                    shiftKey: false,
+                } as any,
+            });
+
+            expect(isSingleImageSpy).not.toHaveBeenCalled();
+            expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        });
     });
 });
 
@@ -3696,6 +3791,38 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             type: 'image',
             image,
         });
+        expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('onSelectionChange on image | 5, keeps image selection when range is collapsed', () => {
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+
+        mockedRange = { startContainer: {}, collapsed: true } as any;
+
+        const plugin = createSelectionPlugin({});
+        const state = plugin.getState();
+        const mockedOldSelection = {
+            type: 'image',
+            image: {} as any,
+        } as DOMSelection;
+
+        state.selection = mockedOldSelection;
+
+        plugin.initialize(editor);
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as Function;
+        const mockedNewSelection = {
+            type: 'image',
+            image: {} as any,
+        } as any;
+
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        getDOMSelectionSpy.and.returnValue(mockedNewSelection);
+
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
     });
 });
