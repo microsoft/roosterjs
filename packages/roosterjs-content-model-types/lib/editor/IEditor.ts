@@ -243,4 +243,10 @@ export interface IEditor {
      * @param featureName The name of feature to check
      */
     isExperimentalFeatureEnabled(featureName: ExperimentalFeature | string): boolean;
+
+    /**
+     * Get all experimental features enabled in this editor
+     * @returns An array of experimental feature names
+     */
+    getExperimentalFeatures(): ExperimentalFeature[];
 }

@@ -57,8 +57,20 @@ describe('applyChange', () => {
     let img: HTMLImageElement;
     let editor: IEditor;
     let triggerEvent: jasmine.Spy;
+    let originalDevicePixelRatio: PropertyDescriptor | undefined;
 
     beforeEach(async () => {
+        // generateDataURL sizes the output canvas as targetWidth/Height * window.devicePixelRatio
+        // ("Adjust the canvas size and scaling for high display resolution"). The expected newSrc
+        // values below were captured at 100% screen scale (devicePixelRatio === 1), so on a host
+        // running at any other scale the generated PNG would be larger and the dimension assertions
+        // would fail. Pin devicePixelRatio to 1 so these tests are deterministic at any screen scale.
+        originalDevicePixelRatio = Object.getOwnPropertyDescriptor(window, 'devicePixelRatio');
+        Object.defineProperty(window, 'devicePixelRatio', {
+            configurable: true,
+            get: () => 1,
+        });
+
         // Create a fresh model image per test. It is otherwise shared module-level state, and
         // applyChange persists/clears editingInfo on it, so a stale rotation/crop from a prior
         // test would make checkEditInfoState misclassify the next one (flaky across spec order).
@@ -80,6 +92,12 @@ describe('applyChange', () => {
 
     afterEach(() => {
         img?.parentNode?.removeChild(img);
+
+        if (originalDevicePixelRatio) {
+            Object.defineProperty(window, 'devicePixelRatio', originalDevicePixelRatio);
+        } else {
+            delete (window as any).devicePixelRatio;
+        }
     });
 
     function runTest(input: ContentModelDocument, callback: () => boolean) {

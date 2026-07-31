@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { BackgroundColorFormatRenderer } from './formatPart/BackgroundColorFormatRenderer';
+import { BorderFormatRenderers } from './formatPart/BorderFormatRenderers';
 import { ContentModelHyperLinkFormat, LinkFormat } from 'roosterjs-content-model-types';
 import { createTextFormatRenderer } from './utils/createTextFormatRenderer';
 import { DisplayFormatRenderer } from './formatPart/DisplayFormatRenderer';
@@ -6,7 +8,10 @@ import { FormatRenderer } from './utils/FormatRenderer';
 import { FormatView } from './FormatView';
 import { MarginFormatRenderer } from './formatPart/MarginFormatRenderer';
 import { PaddingFormatRenderer } from './formatPart/PaddingFormatRenderer';
+import { SizeFormatRenderers } from './formatPart/SizeFormatRenderers';
+import { TextAlignFormatRenderer } from './formatPart/TextAlignFormatRenderer';
 import { TextColorFormatRenderer } from './formatPart/TextColorFormatRenderer';
+import { UndeletableFormatRenderer } from './formatPart/UndeletableFormatRenderer';
 import { UnderlineFormatRenderer } from './formatPart/BasicFormatRenderers';
 
 const LinkFormatRenderers: FormatRenderer<ContentModelHyperLinkFormat>[] = [
@@ -46,10 +51,15 @@ const LinkFormatRenderers: FormatRenderer<ContentModelHyperLinkFormat>[] = [
         (format, value) => (format.relationship = value)
     ),
     TextColorFormatRenderer,
+    BackgroundColorFormatRenderer,
     UnderlineFormatRenderer,
     DisplayFormatRenderer,
+    TextAlignFormatRenderer,
     MarginFormatRenderer,
     PaddingFormatRenderer,
+    ...BorderFormatRenderers,
+    ...SizeFormatRenderers,
+    UndeletableFormatRenderer,
 ];
 
 export function LinkFormatView(props: { format: LinkFormat }) {
