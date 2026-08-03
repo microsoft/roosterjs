@@ -791,6 +791,7 @@ describe('SelectionPlugin handle table selection', () => {
             isExperimentalFeatureEnabled: () => {
                 return false;
             },
+            setEditorStyle: jasmine.createSpy('setEditorStyle'),
             getSnapshotsManager: () => {
                 return { hasNewContent: false };
             },

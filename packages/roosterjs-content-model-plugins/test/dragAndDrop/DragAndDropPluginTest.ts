@@ -10,6 +10,7 @@ describe('DragAndDropPlugin', () => {
     let disposerSpy: jasmine.Spy;
     let isExperimentalFeatureEnabledSpy: jasmine.Spy;
     let eventMap: Record<string, any>;
+    let getDOMSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         disposerSpy = jasmine.createSpy('disposer');
@@ -20,10 +21,12 @@ describe('DragAndDropPlugin', () => {
         isExperimentalFeatureEnabledSpy = jasmine
             .createSpy('isExperimentalFeatureEnabled')
             .and.returnValue(true);
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
 
         editor = ({
             attachDomEvent: attachDomEventSpy,
             isExperimentalFeatureEnabled: isExperimentalFeatureEnabledSpy,
+            getDOMSelection: getDOMSelectionSpy,
         } as any) as IEditor;
     });
 
