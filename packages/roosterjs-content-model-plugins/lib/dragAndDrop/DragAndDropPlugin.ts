@@ -61,6 +61,14 @@ export class DragAndDropPlugin implements EditorPlugin {
                     }
                 },
             },
+            blur: {
+                beforeDispatch: _ev => {
+                    if (this.internalDrag) {
+                        this.editor?.takeSnapshot();
+                        this.internalDrag = false;
+                    }
+                },
+            },
         });
     }
 
