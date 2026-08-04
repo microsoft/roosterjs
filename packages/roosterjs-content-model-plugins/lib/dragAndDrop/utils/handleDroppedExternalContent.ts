@@ -1,12 +1,15 @@
 import { cleanForbiddenElements } from './cleanForbiddenElements';
 import {
+    createContentModelDocument,
     createDomToModelContext,
+    createImage,
+    createParagraph,
     domToContentModel,
     getNodePositionFromEvent,
     mergeModel,
     textToFragment,
 } from 'roosterjs-content-model-dom';
-import type { IEditor } from 'roosterjs-content-model-types';
+import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -15,10 +18,12 @@ import type { IEditor } from 'roosterjs-content-model-types';
 export function handleDroppedExternalContent(
     editor: IEditor,
     event: DragEvent,
-    droppedContent: string,
-    forbiddenElements: string[],
-    isPlainText: boolean
+    forbiddenElements: string[]
 ): void {
+    const droppedModel = getDroppedModel(editor, event, forbiddenElements);
+    if (!droppedModel) {
+        return;
+    }
     const doc = editor.getDocument();
     const domPosition = getNodePositionFromEvent(doc, editor.getDOMHelper(), event.x, event.y);
 
@@ -29,16 +34,6 @@ export function handleDroppedExternalContent(
         const range = doc.createRange();
         range.setStart(domPosition.node, domPosition.offset);
         range.collapse(true);
-        let droppedHTML: HTMLElement | DocumentFragment;
-        if (isPlainText) {
-            droppedHTML = textToFragment(droppedContent, doc);
-        } else {
-            const parsedHtml = editor.getDOMCreator().htmlToDOM(droppedContent);
-            cleanForbiddenElements(parsedHtml, forbiddenElements);
-            droppedHTML = parsedHtml.body;
-        }
-
-        const droppedModel = domToContentModel(droppedHTML, createDomToModelContext());
 
         editor.formatContentModel(
             (model, context) => {
@@ -54,4 +49,44 @@ export function handleDroppedExternalContent(
             }
         );
     }
+}
+
+function getDroppedModel(
+    editor: IEditor,
+    dragEvent: DragEvent,
+    forbiddenElements: string[]
+): ContentModelDocument | undefined {
+    const dataTransfer = dragEvent.dataTransfer;
+    const types = dataTransfer?.types;
+
+    if (!dataTransfer || !types) {
+        return undefined;
+    }
+
+    if (types.some(type => type === 'text/html')) {
+        const html = dataTransfer.getData('text/html');
+        if (html) {
+            const parsedHtml = editor.getDOMCreator().htmlToDOM(html);
+            cleanForbiddenElements(parsedHtml, forbiddenElements);
+            return domToContentModel(parsedHtml.body, createDomToModelContext());
+        }
+    } else if (types.some(type => type === 'text/plain')) {
+        const text = dataTransfer.getData('text/plain');
+        if (text) {
+            const textFragment = textToFragment(text, editor.getDocument());
+            return domToContentModel(textFragment, createDomToModelContext());
+        }
+    } else if (types.some(type => type === 'Files')) {
+        const files = dataTransfer.files;
+        const file = files?.length === 1 ? files[0] : undefined;
+        if (file?.type.startsWith('image/')) {
+            const model = createContentModelDocument();
+            const paragraph = createParagraph();
+            paragraph.segments.push(createImage(URL.createObjectURL(file)));
+            model.blocks.push(paragraph);
+            return model;
+        }
+    }
+
+    return undefined;
 }

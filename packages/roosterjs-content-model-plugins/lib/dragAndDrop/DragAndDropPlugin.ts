@@ -93,19 +93,7 @@ export class DragAndDropPlugin implements EditorPlugin {
             ) {
                 handleDroppedInternalContent(this.editor, dropEvent);
             } else if (!this.internalDrag) {
-                const html = dropEvent.dataTransfer?.getData('text/html');
-                const text = html ? undefined : dropEvent.dataTransfer?.getData('text/plain');
-                const droppedRoot = html || text;
-
-                if (droppedRoot) {
-                    handleDroppedExternalContent(
-                        this.editor,
-                        dropEvent,
-                        droppedRoot,
-                        this.forbiddenElements,
-                        !!text
-                    );
-                }
+                handleDroppedExternalContent(this.editor, dropEvent, this.forbiddenElements);
             }
             this.internalDrag = false;
         }
