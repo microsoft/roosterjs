@@ -84,6 +84,7 @@ export class DragAndDropPlugin implements EditorPlugin {
             this.disposer = null;
         }
         this.forbiddenElements = [];
+        this.internalDrag = false;
     }
 
     /**
