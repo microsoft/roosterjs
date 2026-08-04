@@ -40,6 +40,7 @@ export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
 export { scrollRectIntoView } from './domUtils/scrollRectIntoView';
+export { textToFragment } from './domUtils/textToFragment';
 
 export { setLinkUndeletable, isLinkUndeletable } from './domUtils/hiddenProperties/undeletableLink';
 

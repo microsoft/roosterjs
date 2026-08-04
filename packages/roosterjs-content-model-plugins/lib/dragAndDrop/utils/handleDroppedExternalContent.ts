@@ -4,6 +4,7 @@ import {
     domToContentModel,
     getNodePositionFromEvent,
     mergeModel,
+    textToFragment,
 } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
 
@@ -14,8 +15,9 @@ import type { IEditor } from 'roosterjs-content-model-types';
 export function handleDroppedExternalContent(
     editor: IEditor,
     event: DragEvent,
-    html: string,
-    forbiddenElements: string[]
+    droppedContent: string,
+    forbiddenElements: string[],
+    isPlainText: boolean
 ): void {
     const doc = editor.getDocument();
     const domPosition = getNodePositionFromEvent(doc, editor.getDOMHelper(), event.x, event.y);
@@ -27,11 +29,16 @@ export function handleDroppedExternalContent(
         const range = doc.createRange();
         range.setStart(domPosition.node, domPosition.offset);
         range.collapse(true);
+        let droppedHTML: HTMLElement | DocumentFragment;
+        if (isPlainText) {
+            droppedHTML = textToFragment(droppedContent, doc);
+        } else {
+            const parsedHtml = editor.getDOMCreator().htmlToDOM(droppedContent);
+            cleanForbiddenElements(parsedHtml, forbiddenElements);
+            droppedHTML = parsedHtml.body;
+        }
 
-        const parsedHtml = editor.getDOMCreator().htmlToDOM(html);
-        cleanForbiddenElements(parsedHtml, forbiddenElements);
-
-        const droppedModel = domToContentModel(parsedHtml.body, createDomToModelContext());
+        const droppedModel = domToContentModel(droppedHTML, createDomToModelContext());
 
         editor.formatContentModel(
             (model, context) => {

@@ -60,7 +60,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: stopPropagationSpy,
         } as any;
 
-        handleDroppedExternalContent(editor, event, '<p>test</p>', ['iframe']);
+        handleDroppedExternalContent(editor, event, '<p>test</p>', ['iframe'], false);
 
         expect(getNodePositionFromEventSpy).toHaveBeenCalledWith(doc, {}, 100, 200);
         expect(preventDefaultSpy).not.toHaveBeenCalled();
@@ -90,7 +90,13 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: stopPropagationSpy,
         } as any;
 
-        handleDroppedExternalContent(editor, event, '<p>dropped content</p>', ['iframe', 'script']);
+        handleDroppedExternalContent(
+            editor,
+            event,
+            '<p>dropped content</p>',
+            ['iframe', 'script'],
+            false
+        );
 
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(stopPropagationSpy).toHaveBeenCalled();
@@ -125,7 +131,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, '<span>inserted</span>', []);
+        handleDroppedExternalContent(editor, event, '<span>inserted</span>', [], false);
 
         const formatCall = formatContentModelSpy.calls.mostRecent();
         const options = formatCall.args[1];
@@ -159,10 +165,42 @@ describe('handleDroppedExternalContent', () => {
             editor,
             event,
             '<div><iframe></iframe></div>',
-            forbiddenElements
+            forbiddenElements,
+            false
         );
 
         expect(cleanForbiddenElementsSpy).toHaveBeenCalledWith(parsedDoc, forbiddenElements);
+    });
+
+    it('should insert plain text content when isPlainText is true', () => {
+        const textNode = document.createTextNode('test');
+        getNodePositionFromEventSpy.and.returnValue({
+            node: textNode,
+            offset: 0,
+        });
+
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+
+        const event = {
+            x: 100,
+            y: 200,
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+        } as any;
+
+        handleDroppedExternalContent(editor, event, 'plain text content', ['iframe'], true);
+
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(stopPropagationSpy).toHaveBeenCalled();
+        expect(htmlToDOMSpy).not.toHaveBeenCalled();
+        expect(cleanForbiddenElementsSpy).not.toHaveBeenCalled();
+        expect(formatContentModelSpy).toHaveBeenCalled();
+
+        const formatCall = formatContentModelSpy.calls.mostRecent();
+        const options = formatCall.args[1];
+        expect(options.selectionOverride.type).toBe('range');
+        expect(options.selectionOverride.isReverted).toBe(false);
     });
 
     it('should handle empty forbidden elements list', () => {
@@ -183,7 +221,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, '<p>content</p>', []);
+        handleDroppedExternalContent(editor, event, '<p>content</p>', [], false);
 
         expect(cleanForbiddenElementsSpy).toHaveBeenCalledWith(parsedDoc, []);
         expect(formatContentModelSpy).toHaveBeenCalled();
@@ -242,7 +280,7 @@ describe('handleDroppedExternalContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, '<p>dropped text</p>', []);
+        handleDroppedExternalContent(editor, event, '<p>dropped text</p>', [], false);
 
         // Create a model to merge into
         const model = createContentModelDocument();
@@ -292,7 +330,7 @@ describe('handleDroppedExternalContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, '<p><b>bold text</b></p>', []);
+        handleDroppedExternalContent(editor, event, '<p><b>bold text</b></p>', [], false);
 
         // Create initial model with selection
         const model = createContentModelDocument();
@@ -341,7 +379,7 @@ describe('handleDroppedExternalContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, '<p>new content</p>', []);
+        handleDroppedExternalContent(editor, event, '<p>new content</p>', [], false);
 
         // Create model with existing text
         const model = createContentModelDocument();
@@ -397,7 +435,8 @@ describe('handleDroppedExternalContent - model verification', () => {
             editor,
             event,
             '<p>safe content</p><iframe src="bad.com"></iframe>',
-            ['iframe']
+            ['iframe'],
+            false
         );
 
         // Create model
@@ -462,7 +501,8 @@ describe('handleDroppedExternalContent - model verification', () => {
             editor,
             event,
             '<p>first paragraph</p><p>second paragraph</p>',
-            []
+            [],
+            false
         );
 
         // Create model
@@ -491,5 +531,51 @@ describe('handleDroppedExternalContent - model verification', () => {
 
         expect(allText.some(text => text === 'first paragraph')).toBe(true);
         expect(allText.some(text => text === 'second paragraph')).toBe(true);
+    });
+
+    it('should merge dropped plain text into model when isPlainText is true', () => {
+        const textNode = document.createTextNode('existing');
+        getNodePositionFromEventSpy.and.returnValue({
+            node: textNode,
+            offset: 0,
+        });
+
+        const event = {
+            x: 0,
+            y: 0,
+            preventDefault: jasmine.createSpy('preventDefault'),
+            stopPropagation: jasmine.createSpy('stopPropagation'),
+        } as any;
+
+        handleDroppedExternalContent(editor, event, 'plain dropped text', ['iframe'], true);
+
+        // htmlToDOM should not be used for plain text
+        expect(htmlToDOMSpy).not.toHaveBeenCalled();
+
+        // Create a model to merge into
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        para.segments.push(createSelectionMarker());
+        model.blocks.push(para);
+
+        // Execute the captured callback
+        expect(capturedCallback).not.toBeNull();
+        const result = capturedCallback!(model, {});
+
+        expect(result).toBe(true);
+
+        // Find text segments in the model
+        const textSegments: ContentModelText[] = [];
+        model.blocks.forEach(block => {
+            if (block.blockType === 'Paragraph') {
+                (block as ContentModelParagraph).segments.forEach(segment => {
+                    if (segment.segmentType === 'Text') {
+                        textSegments.push(segment as ContentModelText);
+                    }
+                });
+            }
+        });
+
+        expect(textSegments.some(seg => seg.text === 'plain dropped text')).toBe(true);
     });
 });
