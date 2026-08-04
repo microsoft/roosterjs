@@ -15,7 +15,7 @@ export function createPasteFragment(
     }
 
     const { imageDataUri, text } = clipboardData;
-    let fragment = document.createDocumentFragment();
+    const fragment = document.createDocumentFragment();
 
     if (
         (pasteType == 'asImage' && imageDataUri) ||
@@ -29,7 +29,7 @@ export function createPasteFragment(
     } else if (pasteType != 'asPlainText' && root) {
         moveChildNodes(fragment, root);
     } else if (text) {
-        fragment = textToFragment(text, document);
+        return textToFragment(text, document);
     }
 
     return fragment;
