@@ -627,6 +627,7 @@ const AnnounceStringMap: Record<KnownAnnounceStrings, string> = {
     announceUnderlineOff: 'Underline Off',
     selected: '{0}, selected',
     unselected: '{0}, unselected',
+    newLineInserted: 'New line',
 };
 
 function getAnnouncingString(key: KnownAnnounceStrings) {
