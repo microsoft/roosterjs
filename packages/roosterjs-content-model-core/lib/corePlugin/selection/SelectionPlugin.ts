@@ -3,6 +3,7 @@ import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCel
 import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
+    ChangeSource,
     getDOMInsertPointRect,
     getNodePositionFromEvent,
     isCharacterValue,
@@ -23,7 +24,10 @@ import type {
     ParsedTable,
     TableSelectionInfo,
     TableCellCoordinate,
+    TableSelection,
 } from 'roosterjs-content-model-types';
+import { DOM_SELECTION_CSS_KEY } from '../../coreApi/setDOMSelection/setTableCellsStyle';
+import { HIDE_CURSOR_CSS_KEY } from '../../coreApi/setDOMSelection/toggleCaret';
 
 const MouseLeftButton = 0;
 const MouseRightButton = 2;
@@ -32,6 +36,7 @@ const Down = 'ArrowDown';
 const Left = 'ArrowLeft';
 const Right = 'ArrowRight';
 const Tab = 'Tab';
+const F10 = 'F10';
 
 /**
  * @internal
@@ -48,8 +53,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     private disposer: (() => void) | null = null;
     private logicalRootDisposer: (() => void) | null = null;
     private isSafari = false;
-    private isMac = false;
     private scrollTopCache: number = 0;
+    private isInsideSelection: boolean = false;
 
     constructor(options: EditorOptions) {
         this.state = {
@@ -99,7 +104,6 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         const document = this.editor.getDocument();
 
         this.isSafari = !!env.isSafari;
-        this.isMac = !!env.isMac;
         document.addEventListener('selectionchange', this.onSelectionChange);
         if (this.isSafari) {
             this.disposer = this.editor.attachDomEvent({
@@ -153,6 +157,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'contentChanged':
+                if (event.source == ChangeSource.Drop && this.isInsideSelection) {
+                    this.setDOMSelection(null /* DOMSelection  */, null /* tableSelection */);
+                    this.isInsideSelection = false;
+                }
                 this.state.tableSelection = null;
                 break;
 
@@ -212,18 +220,27 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
 
         // Table selection
+        const target = rawEvent.target as Node;
+        const tableSelection: TableSelectionInfo | null = target
+            ? this.parseTableSelection(target, target, editor.getDOMHelper())
+            : null;
+
+        if (
+            selection?.type == 'table' &&
+            tableSelection &&
+            this.isInsideTableSelection(selection, tableSelection) &&
+            rawEvent.detail == 1
+        ) {
+            this.isInsideSelection = true;
+            this.setTableDragSelection(editor, rawEvent);
+            return;
+        }
+
         if (selection?.type == 'table' && rawEvent.button == MouseLeftButton) {
             this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
         }
 
-        let tableSelection: TableSelectionInfo | null;
-        const target = rawEvent.target as Node;
-
-        if (
-            target &&
-            rawEvent.button == MouseLeftButton &&
-            (tableSelection = this.parseTableSelection(target, target, editor.getDOMHelper()))
-        ) {
+        if (target && rawEvent.button == MouseLeftButton && tableSelection) {
             this.state.tableSelection = tableSelection;
 
             if (rawEvent.detail >= 3) {
@@ -311,6 +328,11 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
     };
 
     private onMouseUp() {
+        if (this.isInsideSelection) {
+            this.setDOMSelection(null /*domSelection*/, null /*tableSelection*/);
+            this.isInsideSelection = false;
+        }
+
         this.detachMouseEvent();
     }
 
@@ -353,6 +375,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 break;
 
             case 'range':
+                let image: HTMLImageElement | null;
+
                 if (key == Up || key == Down || key == Left || key == Right || key == Tab) {
                     const start = selection.range.startContainer;
                     this.state.tableSelection = this.parseTableSelection(
@@ -371,7 +395,20 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                             );
                         }
                     }
+                } else if (
+                    key == F10 &&
+                    rawEvent.shiftKey &&
+                    (image = isSingleImageInSelection(selection.range))
+                ) {
+                    this.setDOMSelection(
+                        {
+                            type: 'image',
+                            image,
+                        },
+                        null /* tableSelection */
+                    );
                 }
+
                 break;
 
             case 'table':
@@ -569,6 +606,39 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         }
     }
 
+    private isInsideTableSelection(
+        prevSelection: TableSelection,
+        tableSelection: TableSelectionInfo
+    ) {
+        const selectedCell = tableSelection.firstCo;
+
+        return (
+            selectedCell.row >= prevSelection.firstRow &&
+            selectedCell.row <= prevSelection.lastRow &&
+            selectedCell.col >= prevSelection.firstColumn &&
+            selectedCell.col <= prevSelection.lastColumn
+        );
+    }
+
+    private setTableDragSelection(editor: IEditor, rawEvent: MouseEvent) {
+        const doc = editor.getDocument();
+        const cell = editor
+            .getDOMHelper()
+            .findClosestElementAncestor(rawEvent.target as Node, 'td,th');
+        if (cell) {
+            // Hide the table cell selection styles (grey cell background applied by
+            // setDOMSelection) and the native selection highlight so that only the
+            // dragged content is visible while dragging. Also restore the caret which
+            // is hidden while a table selection is active.
+            editor.setEditorStyle(DOM_SELECTION_CSS_KEY, null /*cssRule*/);
+            editor.setEditorStyle(HIDE_CURSOR_CSS_KEY, null /*cssRule*/);
+
+            const range = doc.createRange();
+            range.selectNodeContents(cell);
+            editor.getDOMHelper().setSelectionRange(range);
+        }
+    }
+
     private getTextOffset(editor: IEditor, range: Range, td: HTMLElement, isKeyUp: boolean) {
         const doc = editor.getDocument();
         const cursorRect = range
@@ -691,7 +761,7 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
         event: MouseEvent,
         previousSelection: DOMSelection | null
     ): HTMLImageElement | null => {
-        if (!this.isMac || !previousSelection || previousSelection.type !== 'image') {
+        if (!previousSelection || previousSelection.type !== 'image') {
             return null;
         }
 

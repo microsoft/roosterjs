@@ -1,5 +1,6 @@
-import { handleDroppedContent } from './utils/handleDroppedContent';
+import { handleDroppedExternalContent } from './utils/handleDroppedExternalContent';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import { handleDroppedInternalContent } from './utils/handleDroppedInternalContent';
 
 /**
  * Options for DragAndDrop plugin
@@ -23,7 +24,7 @@ const DefaultOptions = {
 export class DragAndDropPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private forbiddenElements: string[] = [];
-    private isInternalDragging: boolean = false;
+    private internalDrag: boolean = false;
     private disposer: (() => void) | null = null;
 
     /**
@@ -50,8 +51,14 @@ export class DragAndDropPlugin implements EditorPlugin {
         this.editor = editor;
         this.disposer = editor.attachDomEvent({
             dragstart: {
-                beforeDispatch: _ev => {
-                    this.isInternalDragging = true;
+                beforeDispatch: ev => {
+                    this.internalDrag = true;
+                    if (
+                        this.editor &&
+                        this.editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
+                    ) {
+                        this.adjustDraggingCursor(this.editor, ev as DragEvent);
+                    }
                 },
             },
         });
@@ -68,7 +75,6 @@ export class DragAndDropPlugin implements EditorPlugin {
             this.disposer();
             this.disposer = null;
         }
-        this.isInternalDragging = false;
         this.forbiddenElements = [];
     }
 
@@ -80,17 +86,38 @@ export class DragAndDropPlugin implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (this.editor && event.eventType == 'beforeDrop') {
-            if (this.isInternalDragging) {
-                this.isInternalDragging = false;
-            } else {
-                const dropEvent = event.rawEvent;
+            const dropEvent = event.rawEvent;
+            if (
+                this.internalDrag &&
+                this.editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
+            ) {
+                handleDroppedInternalContent(this.editor, dropEvent);
+            } else if (!this.internalDrag) {
                 const html = dropEvent.dataTransfer?.getData('text/html');
-
                 if (html) {
-                    handleDroppedContent(this.editor, dropEvent, html, this.forbiddenElements);
+                    handleDroppedExternalContent(
+                        this.editor,
+                        dropEvent,
+                        html,
+                        this.forbiddenElements
+                    );
                 }
             }
-            return;
+            this.internalDrag = false;
+        }
+    }
+
+    private adjustDraggingCursor(editor: IEditor, dragEvent: DragEvent) {
+        const selection = editor.getDOMSelection();
+        if (selection?.type == 'table') {
+            const doc = this.editor?.getDocument();
+            if (doc && dragEvent.dataTransfer) {
+                const ghost = doc.createElement('span');
+                ghost.textContent = '|';
+                doc.body.appendChild(ghost);
+                dragEvent.dataTransfer.setDragImage(ghost, 0, 0);
+                doc.defaultView?.requestAnimationFrame(() => ghost.remove());
+            }
         }
     }
 }
