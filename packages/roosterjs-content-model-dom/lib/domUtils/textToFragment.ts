@@ -4,8 +4,8 @@ const NBSP_HTML = '\u00A0';
 const ENSP_HTML = '\u2002';
 const TAB_SPACES = 6;
 /**
- * Wrap plain text content in a Document Fragment
- * @param text the text content to wrapped
+ * Wrap plain text content in a DocumentFragment
+ * @param text the text content to wrap
  * @param doc the document to create the fragment
  */
 export function textToFragment(text: string, doc: Document): DocumentFragment {
