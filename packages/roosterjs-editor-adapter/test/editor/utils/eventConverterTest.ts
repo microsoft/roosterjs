@@ -874,10 +874,12 @@ describe('newEventToOldEvent', () => {
     });
 
     it('ContentChanged with unsupported announce string', () => {
+        const mockedSource = 'SOURCE';
         const result = runTest(
             {
                 eventType: 'contentChanged',
                 eventDataCache: mockedDataCache,
+                source: mockedSource,
                 announceData: {
                     defaultStrings: 'newLineInserted',
                 },
@@ -892,7 +894,7 @@ describe('newEventToOldEvent', () => {
                     getEntityState: undefined,
                 },
                 data: undefined,
-                source: undefined,
+                source: mockedSource,
             }
         ) as ContentChangedEvent;
 
