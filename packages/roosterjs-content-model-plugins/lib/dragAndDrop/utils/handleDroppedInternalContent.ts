@@ -29,8 +29,10 @@ export function handleDroppedInternalContent(editor: IEditor, event: DragEvent):
                 const cloneModel = cloneModelForPaste(model);
                 trimModelForSelection(cloneModel, selection);
 
-                if (deleteSelection(model, [], context).deleteResult == 'range') {
-                    normalizeContentModel(model);
+                if (!event.ctrlKey) {
+                    if (deleteSelection(model, [], context).deleteResult == 'range') {
+                        normalizeContentModel(model);
+                    }
                 }
 
                 const startMarker = createSelectionMarker(insertPoint.marker.format);
