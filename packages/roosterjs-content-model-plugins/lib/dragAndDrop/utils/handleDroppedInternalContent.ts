@@ -29,7 +29,7 @@ export function handleDroppedInternalContent(editor: IEditor, event: DragEvent):
                 const cloneModel = cloneModelForPaste(model);
                 trimModelForSelection(cloneModel, selection);
 
-                if (!event.ctrlKey || !event.metaKey) {
+                if (!event.ctrlKey && !event.metaKey) {
                     if (deleteSelection(model, [], context).deleteResult == 'range') {
                         normalizeContentModel(model);
                     }
