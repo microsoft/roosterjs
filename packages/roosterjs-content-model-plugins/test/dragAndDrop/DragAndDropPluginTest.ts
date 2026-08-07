@@ -1,7 +1,8 @@
 import * as handleDroppedContentFile from '../../lib/dragAndDrop/utils/handleDroppedExternalContent';
 import * as handleDroppedInternalContentFile from '../../lib/dragAndDrop/utils/handleDroppedInternalContent';
 import { DragAndDropPlugin } from '../../lib/dragAndDrop/DragAndDropPlugin';
-import { IEditor } from 'roosterjs-content-model-types';
+import { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 
 describe('DragAndDropPlugin', () => {
     let plugin: DragAndDropPlugin;
@@ -12,6 +13,8 @@ describe('DragAndDropPlugin', () => {
     let eventMap: Record<string, any>;
     let getDOMSelectionSpy: jasmine.Spy;
     let takeSnapshotSpy: jasmine.Spy;
+    let triggerEventSpy: jasmine.Spy;
+    let contentModel: ContentModelDocument;
 
     beforeEach(() => {
         disposerSpy = jasmine.createSpy('disposer');
@@ -24,12 +27,20 @@ describe('DragAndDropPlugin', () => {
             .and.returnValue(true);
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
+        triggerEventSpy = jasmine.createSpy('triggerEvent');
+        contentModel = {
+            blockGroupType: 'Document',
+            blocks: [],
+        };
 
         editor = ({
             attachDomEvent: attachDomEventSpy,
             isExperimentalFeatureEnabled: isExperimentalFeatureEnabledSpy,
             getDOMSelection: getDOMSelectionSpy,
             takeSnapshot: takeSnapshotSpy,
+            triggerEvent: triggerEventSpy,
+            formatContentModel: (callback: (model: ContentModelDocument) => void) =>
+                callback(contentModel),
         } as any) as IEditor;
     });
 
@@ -49,7 +60,7 @@ describe('DragAndDropPlugin', () => {
 
             expect(attachDomEventSpy).toHaveBeenCalled();
             expect(eventMap.dragstart).toBeDefined();
-            expect(eventMap.blur).toBeDefined();
+            expect(eventMap.dragend).toBeDefined();
         });
 
         it('should initialize with custom forbidden elements', () => {
@@ -98,57 +109,55 @@ describe('DragAndDropPlugin', () => {
         });
     });
 
-    describe('blur event', () => {
-        it('should take a snapshot and reset the internal drag flag when blurred during an internal drag', () => {
+    describe('dragend event', () => {
+        it('should trigger contentChanged and take a snapshot when the model changed', () => {
             spyOn(handleDroppedInternalContentFile, 'handleDroppedInternalContent');
             plugin = new DragAndDropPlugin();
             plugin.initialize(editor);
 
-            const target = document.createElement('div');
-            eventMap.dragstart.beforeDispatch({ target } as any);
-
-            eventMap.blur.beforeDispatch({} as any);
-
-            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
-
-            // Internal drag flag should be reset, so a subsequent drop is treated as external
-            const handleDroppedExternalContentSpy = spyOn(
-                handleDroppedContentFile,
-                'handleDroppedExternalContent'
-            );
-
-            plugin.onPluginEvent({
-                eventType: 'beforeDrop',
-                rawEvent: {
-                    dataTransfer: {
-                        getData: () => '<div>test</div>',
+            contentModel.blocks.push({
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        text: 'test',
+                        format: {},
+                        isSelected: true,
                     },
-                } as any,
+                ],
+                format: {},
             });
+            eventMap.dragstart.beforeDispatch({} as DragEvent);
+            contentModel.blocks = [];
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalled();
+            eventMap.dragend.beforeDispatch({} as DragEvent);
+
+            expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
+                source: ChangeSource.DragOutOfEditor,
+            });
+            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('should not take a snapshot when blurred without an internal drag', () => {
+        it('should not take a snapshot when the model did not change', () => {
             plugin = new DragAndDropPlugin();
             plugin.initialize(editor);
 
-            eventMap.blur.beforeDispatch({} as any);
+            const target = document.createElement('div');
+            eventMap.dragstart.beforeDispatch({ target } as any);
+            eventMap.dragend.beforeDispatch({} as any);
 
+            expect(triggerEventSpy).not.toHaveBeenCalled();
             expect(takeSnapshotSpy).not.toHaveBeenCalled();
         });
 
-        it('should only take a snapshot once for consecutive blur events during a single internal drag', () => {
+        it('should not take a snapshot when drag ends without an internal drag', () => {
             plugin = new DragAndDropPlugin();
             plugin.initialize(editor);
 
-            const target = document.createElement('div');
-            eventMap.dragstart.beforeDispatch({ target } as any);
+            eventMap.dragend.beforeDispatch({} as any);
 
-            eventMap.blur.beforeDispatch({} as any);
-            eventMap.blur.beforeDispatch({} as any);
-
-            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(triggerEventSpy).not.toHaveBeenCalled();
+            expect(takeSnapshotSpy).not.toHaveBeenCalled();
         });
     });
 

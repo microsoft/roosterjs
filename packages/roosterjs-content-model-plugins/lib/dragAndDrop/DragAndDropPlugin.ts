@@ -1,6 +1,16 @@
 import { handleDroppedExternalContent } from './utils/handleDroppedExternalContent';
-import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import type {
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+    ReadonlyContentModelSegment,
+} from 'roosterjs-content-model-types';
 import { handleDroppedInternalContent } from './utils/handleDroppedInternalContent';
+import {
+    ChangeSource,
+    getNodePositionFromEvent,
+    getSelectedSegments,
+} from 'roosterjs-content-model-dom';
 
 /**
  * Options for DragAndDrop plugin
@@ -26,6 +36,7 @@ export class DragAndDropPlugin implements EditorPlugin {
     private forbiddenElements: string[] = [];
     private internalDrag: boolean = false;
     private disposer: (() => void) | null = null;
+    private lastSelectSegments: ReadonlyContentModelSegment[] = [];
 
     /**
      * Construct a new instance of DragAndDropPlugin
@@ -59,13 +70,17 @@ export class DragAndDropPlugin implements EditorPlugin {
                     ) {
                         this.adjustDraggingCursor(this.editor, ev as DragEvent);
                     }
+                    editor.formatContentModel(model => {
+                        this.lastSelectSegments = getSelectedSegments(model, false);
+                        return false;
+                    });
                 },
             },
-            blur: {
-                beforeDispatch: _ev => {
+            dragend: {
+                beforeDispatch: ev => {
                     if (this.internalDrag) {
-                        this.editor?.takeSnapshot();
-                        this.internalDrag = false;
+                        const dropEvent = ev as DragEvent;
+                        this.triggerDragOutOfTheEditor(editor, dropEvent);
                     }
                 },
             },
@@ -85,6 +100,7 @@ export class DragAndDropPlugin implements EditorPlugin {
         }
         this.forbiddenElements = [];
         this.internalDrag = false;
+        this.lastSelectSegments = [];
     }
 
     /**
@@ -101,6 +117,7 @@ export class DragAndDropPlugin implements EditorPlugin {
                 this.editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
             ) {
                 handleDroppedInternalContent(this.editor, dropEvent);
+                this.lastSelectSegments = [];
             } else if (!this.internalDrag) {
                 const html = dropEvent.dataTransfer?.getData('text/html');
                 if (html) {
@@ -127,6 +144,33 @@ export class DragAndDropPlugin implements EditorPlugin {
                 dragEvent.dataTransfer.setDragImage(ghost, 0, 0);
                 doc.defaultView?.requestAnimationFrame(() => ghost.remove());
             }
+        }
+    }
+
+    private triggerDragOutOfTheEditor(editor: IEditor, dropEvent: DragEvent) {
+        const dropPosition = editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
+            ? undefined
+            : getNodePositionFromEvent(
+                  editor.getDocument(),
+                  editor.getDOMHelper(),
+                  dropEvent.clientX,
+                  dropEvent.clientY
+              );
+        let modelChanged: boolean = false;
+        editor.formatContentModel(model => {
+            const selectedSegments = getSelectedSegments(model, false);
+            modelChanged = modelChanged =
+                this.lastSelectSegments.length !== selectedSegments.length ||
+                this.lastSelectSegments.some(
+                    (segment, index) => segment !== selectedSegments[index]
+                );
+            return false;
+        });
+        if (!dropPosition && modelChanged) {
+            editor.triggerEvent('contentChanged', {
+                source: ChangeSource.DragOutOfEditor,
+            });
+            editor.takeSnapshot();
         }
     }
 }
