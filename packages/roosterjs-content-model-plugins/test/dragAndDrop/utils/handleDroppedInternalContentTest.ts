@@ -1,4 +1,5 @@
 import * as cloneModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/cloneModel';
+import * as deleteSelectionFile from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import * as formatInsertPointWithContentModelFile from 'roosterjs-content-model-api/lib/publicApi/utils/formatInsertPointWithContentModel';
 import * as getNodePositionFromEventFile from 'roosterjs-content-model-dom/lib/domUtils/event/getNodePositionFromEvent';
 import * as trimModelForSelectionFile from 'roosterjs-content-model-dom/lib/domUtils/selection/trimModelForSelection';
@@ -894,5 +895,115 @@ describe('handleDroppedInternalContent - model verification', () => {
         const allText = getAllTextDeep(model);
         expect(allText).toContain('trailing text');
         expect(allText).toContain('cell content');
+    });
+});
+
+describe('handleDroppedInternalContent - ctrl key', () => {
+    let editor: IEditor;
+    let doc: Document;
+    let getNodePositionFromEventSpy: jasmine.Spy;
+    let getDOMHelperSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
+    let deleteSelectionSpy: jasmine.Spy;
+    let selection: DOMSelection;
+    let capturedCallback:
+        | ((
+              model: ContentModelDocument,
+              context: FormatContentModelContext,
+              insertPoint?: InsertPoint
+          ) => void)
+        | null;
+
+    beforeEach(() => {
+        doc = document;
+        capturedCallback = null;
+        selection = { type: 'range' } as any;
+
+        getNodePositionFromEventSpy = spyOn(
+            getNodePositionFromEventFile,
+            'getNodePositionFromEvent'
+        );
+
+        spyOn(
+            formatInsertPointWithContentModelFile,
+            'formatInsertPointWithContentModel'
+        ).and.callFake((_editor: any, _insertPoint: any, callback: any) => {
+            capturedCallback = callback;
+        });
+
+        // Stub the clone/trim helpers so the merge does not depend on real content, and
+        // spy on the delete helpers to verify whether the original selection is removed.
+        spyOn(cloneModelFile, 'cloneModelForPaste').and.returnValue(createContentModelDocument());
+        spyOn(trimModelForSelectionFile, 'trimModelForSelection');
+        deleteSelectionSpy = spyOn(deleteSelectionFile, 'deleteSelection').and.returnValue({
+            deleteResult: 'range',
+        } as any);
+
+        getDOMHelperSpy = jasmine.createSpy('getDOMHelper').and.returnValue({});
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue(selection);
+
+        editor = ({
+            getDocument: () => doc,
+            getDOMHelper: getDOMHelperSpy,
+            getDOMSelection: getDOMSelectionSpy,
+        } as any) as IEditor;
+    });
+
+    function createInsertPointModel(): {
+        model: ContentModelDocument;
+        insertPoint: InsertPoint;
+    } {
+        const model = createContentModelDocument();
+        const paragraph = createParagraph();
+        const marker = createSelectionMarker();
+
+        paragraph.segments.push(marker);
+        model.blocks.push(paragraph);
+
+        const insertPoint: InsertPoint = {
+            marker,
+            paragraph,
+            path: [model],
+        };
+
+        return { model, insertPoint };
+    }
+
+    function runWithCtrlKey(ctrlKey: boolean): ContentModelDocument {
+        const textNode = document.createTextNode('existing');
+        getNodePositionFromEventSpy.and.returnValue({
+            node: textNode,
+            offset: 0,
+        });
+
+        const event = {
+            x: 0,
+            y: 0,
+            ctrlKey,
+            preventDefault: jasmine.createSpy('preventDefault'),
+            stopPropagation: jasmine.createSpy('stopPropagation'),
+        } as any;
+
+        handleDroppedInternalContent(editor, event);
+
+        expect(capturedCallback).not.toBeNull();
+
+        const { model, insertPoint } = createInsertPointModel();
+
+        capturedCallback!(model, {} as FormatContentModelContext, insertPoint);
+
+        return model;
+    }
+
+    it('should not delete the original selection when ctrl key is pressed', () => {
+        runWithCtrlKey(true);
+
+        expect(deleteSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    it('should delete the original selection when ctrl key is not pressed', () => {
+        const model = runWithCtrlKey(false);
+
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(model, [], jasmine.anything());
     });
 });
