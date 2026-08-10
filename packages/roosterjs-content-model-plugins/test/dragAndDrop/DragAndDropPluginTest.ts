@@ -8,7 +8,9 @@ describe('DragAndDropPlugin', () => {
     let editor: IEditor;
     let attachDomEventSpy: jasmine.Spy;
     let disposerSpy: jasmine.Spy;
+    let isExperimentalFeatureEnabledSpy: jasmine.Spy;
     let eventMap: Record<string, any>;
+    let getDOMSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         disposerSpy = jasmine.createSpy('disposer');
@@ -16,9 +18,15 @@ describe('DragAndDropPlugin', () => {
             eventMap = map;
             return disposerSpy;
         });
+        isExperimentalFeatureEnabledSpy = jasmine
+            .createSpy('isExperimentalFeatureEnabled')
+            .and.returnValue(true);
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
 
         editor = ({
             attachDomEvent: attachDomEventSpy,
+            isExperimentalFeatureEnabled: isExperimentalFeatureEnabledSpy,
+            getDOMSelection: getDOMSelectionSpy,
         } as any) as IEditor;
     });
 
@@ -231,7 +239,34 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
+            expect(isExperimentalFeatureEnabledSpy).toHaveBeenCalledWith(
+                'HandleDropInternalContent'
+            );
             expect(handleDroppedInternalContentSpy).toHaveBeenCalledWith(editor, dropEvent);
+            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
+        });
+
+        it('should not call handleDroppedInternalContent when the experiment is disabled', () => {
+            isExperimentalFeatureEnabledSpy.and.returnValue(false);
+
+            const target = document.createElement('div');
+            eventMap.dragstart.beforeDispatch({ target } as any);
+
+            const dropEvent = {
+                dataTransfer: {
+                    getData: () => '<div>internal content</div>',
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(isExperimentalFeatureEnabledSpy).toHaveBeenCalledWith(
+                'HandleDropInternalContent'
+            );
+            expect(handleDroppedInternalContentSpy).not.toHaveBeenCalled();
             expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
         });
 

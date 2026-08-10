@@ -23,5 +23,10 @@ export const handleEnterOnParagraph: (
         context.deleteResult = 'range';
         context.lastParagraph = newPara;
         context.insertPoint.paragraph = newPara;
+        if (context.formatContext) {
+            context.formatContext.announceData = {
+                defaultStrings: 'newLineInserted',
+            };
+        }
     }
 };
