@@ -47,6 +47,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
     h5: headingProcessor,
     h6: headingProcessor,
     hr: hrProcessor,
+    label: knownElementProcessor,
     li: listItemProcessor,
     ol: listProcessor,
     p: pProcessor,
