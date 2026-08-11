@@ -71,7 +71,10 @@ export class DragAndDropPlugin implements EditorPlugin {
                         this.adjustDraggingCursor(this.editor, ev as DragEvent);
                     }
                     editor.formatContentModel(model => {
-                        this.lastSelectSegments = getSelectedSegments(model, false);
+                        this.lastSelectSegments = getSelectedSegments(
+                            model,
+                            false /* includingFormatHolder */
+                        );
                         return false;
                     });
                 },
@@ -158,8 +161,8 @@ export class DragAndDropPlugin implements EditorPlugin {
               );
         let modelChanged: boolean = false;
         editor.formatContentModel(model => {
-            const selectedSegments = getSelectedSegments(model, false);
-            modelChanged = modelChanged =
+            const selectedSegments = getSelectedSegments(model, false /* includingFormatHolder */);
+            modelChanged =
                 this.lastSelectSegments.length !== selectedSegments.length ||
                 this.lastSelectSegments.some(
                     (segment, index) => segment !== selectedSegments[index]
