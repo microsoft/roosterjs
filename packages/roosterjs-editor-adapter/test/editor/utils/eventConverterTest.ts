@@ -873,6 +873,34 @@ describe('newEventToOldEvent', () => {
         expect(result.additionalData!.getEntityState!()).toEqual(mockedEntityState);
     });
 
+    it('ContentChanged with unsupported announce string', () => {
+        const mockedSource = 'SOURCE';
+        const result = runTest(
+            {
+                eventType: 'contentChanged',
+                eventDataCache: mockedDataCache,
+                source: mockedSource,
+                announceData: {
+                    defaultStrings: 'newLineInserted',
+                },
+            },
+            undefined,
+            {
+                eventType: PluginEventType.ContentChanged,
+                eventDataCache: mockedDataCache,
+                additionalData: {
+                    formatApiName: undefined,
+                    getAnnounceData: jasmine.anything() as any,
+                    getEntityState: undefined,
+                },
+                data: undefined,
+                source: mockedSource,
+            }
+        ) as ContentChangedEvent;
+
+        expect(result.additionalData!.getAnnounceData!()).toBeUndefined();
+    });
+
     it('ContextMenu', () => {
         const mockedItems = 'ITEMS' as any;
 
