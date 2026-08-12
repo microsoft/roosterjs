@@ -496,6 +496,49 @@ describe('mergePasteContent', () => {
         });
     });
 
+    it('Merge paste content | Paste Type = normal | Paste an image only should not force text color to black', () => {
+        const pasteModel = createContentModelDocument();
+        sourceModel = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        marker.format = {
+            textColor: 'rgb(102, 51, 153)',
+        };
+        para.segments.push(marker);
+        addBlock(sourceModel, para);
+
+        const mockedDomToModelContext = {
+            name: 'DOMTOMODELCONTEXT',
+        } as any;
+
+        spyOn(mergeModelFile, 'mergeModel').and.returnValue(null);
+        spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
+        spyOn(
+            createDomToModelContextForSanitizing,
+            'createDomToModelContextForSanitizing'
+        ).and.returnValue(mockedDomToModelContext);
+
+        const img = document.createElement('img');
+        img.src = 'test.png';
+        const fragment = document.createDocumentFragment();
+        fragment.appendChild(img);
+
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                domToModelOption: <any>{},
+                pasteType: 'normal',
+                clipboardData: mockedClipboard,
+            },
+            true
+        );
+
+        expect(mockedDomToModelContext.segmentFormat).toEqual({
+            textColor: 'rgb(102, 51, 153)',
+        });
+    });
+
     it('Merge paste content | Paste Type = normal | Make undefined text color equal to black', () => {
         const html = new DOMParser().parseFromString(template, 'text/html');
         const fragment = document.createDocumentFragment();
