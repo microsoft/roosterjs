@@ -62,22 +62,18 @@ function getDroppedModel(
     if (!dataTransfer || !types) {
         return undefined;
     }
+    const html = dataTransfer.getData('text/html');
+    let text = '';
+    const files = dataTransfer.files;
 
-    if (types.some(type => type === 'text/html')) {
-        const html = dataTransfer.getData('text/html');
-        if (html) {
-            const parsedHtml = editor.getDOMCreator().htmlToDOM(html);
-            cleanForbiddenElements(parsedHtml, forbiddenElements);
-            return domToContentModel(parsedHtml.body, createDomToModelContext());
-        }
-    } else if (types.some(type => type === 'text/plain')) {
-        const text = dataTransfer.getData('text/plain');
-        if (text) {
-            const textFragment = textToFragment(text, editor.getDocument());
-            return domToContentModel(textFragment, createDomToModelContext());
-        }
-    } else if (types.some(type => type === 'Files')) {
-        const files = dataTransfer.files;
+    if (html) {
+        const parsedHtml = editor.getDOMCreator().htmlToDOM(html);
+        cleanForbiddenElements(parsedHtml, forbiddenElements);
+        return domToContentModel(parsedHtml.body, createDomToModelContext());
+    } else if ((text = dataTransfer.getData('text/plain'))) {
+        const textFragment = textToFragment(text, editor.getDocument());
+        return domToContentModel(textFragment, createDomToModelContext());
+    } else if (files) {
         const file = files?.length === 1 ? files[0] : undefined;
         if (file?.type.startsWith('image/')) {
             const model = createContentModelDocument();

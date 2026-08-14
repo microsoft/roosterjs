@@ -250,6 +250,8 @@ describe('handleDroppedExternalContent', () => {
         });
 
         const file = new File(['data'], 'image.png', { type: 'image/png' });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
 
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
         const stopPropagationSpy = jasmine.createSpy('stopPropagation');
@@ -257,7 +259,7 @@ describe('handleDroppedExternalContent', () => {
         const event = {
             x: 100,
             y: 200,
-            dataTransfer: createFilesDataTransfer([file]),
+            dataTransfer,
             preventDefault: preventDefaultSpy,
             stopPropagation: stopPropagationSpy,
         } as any;
