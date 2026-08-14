@@ -37,7 +37,8 @@ export function mergePasteContent(
         containsBlockElements,
     } = eventResult;
 
-    const shouldScrollCaretIntoView = !isImageOnlyFragment(fragment);
+    const isImageOnly = isImageOnlyFragment(fragment);
+    const shouldScrollCaretIntoView = !isImageOnly;
 
     editor.formatContentModel(
         (model, context) => {
@@ -55,7 +56,11 @@ export function mergePasteContent(
                 editor.getExperimentalFeatures()
             );
 
-            domToModelContext.segmentFormat = getSegmentFormatForPaste(model, pasteType);
+            domToModelContext.segmentFormat = getSegmentFormatForPaste(
+                model,
+                pasteType,
+                isImageOnly
+            );
 
             const pasteModel = domToContentModel(fragment, domToModelContext);
             const mergeOption: MergeModelOption = {
@@ -91,16 +96,19 @@ export function mergePasteContent(
 
 function getSegmentFormatForPaste(
     model: ShallowMutableContentModelDocument,
-    pasteType: PasteType
+    pasteType: PasteType,
+    isImageOnly: boolean
 ): ContentModelSegmentFormat {
     const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
 
     if (selectedSegment) {
         const result = getSegmentTextFormat(selectedSegment);
-        if (pasteType == 'normal') {
+        if (pasteType == 'normal' && !isImageOnly) {
             // When using normal paste (Keep source formatting) set the default text color to black when creating the
             // Model from the clipboard content, so the elements that do not contain any text color in their style
             // Are set to black. Otherwise, These segments would get the selected segments format or the default text set in the content.
+            // Skip this when pasting an image only, since there is no text to apply the default color to, and forcing
+            // black here would incorrectly become the pending format used for text typed right after the pasted image.
             result.textColor = BlackColor;
         }
 
