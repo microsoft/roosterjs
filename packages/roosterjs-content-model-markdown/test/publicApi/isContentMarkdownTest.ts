@@ -61,6 +61,10 @@ describe('isContentMarkdown', () => {
         runTest('---', true);
     });
 
+    it('should not detect more than three dashes as a horizontal rule', () => {
+        runTest('----', false);
+    });
+
     it('should detect table row', () => {
         runTest('| col1 | col2 |', true);
     });
