@@ -28,13 +28,6 @@ function createPlainTextDataTransfer(text: string): DataTransfer {
     } as any) as DataTransfer;
 }
 
-function createFilesDataTransfer(files: File[]): DataTransfer {
-    return ({
-        types: ['Files'],
-        files,
-    } as any) as DataTransfer;
-}
-
 describe('handleDroppedExternalContent', () => {
     let editor: IEditor;
     let doc: Document;
