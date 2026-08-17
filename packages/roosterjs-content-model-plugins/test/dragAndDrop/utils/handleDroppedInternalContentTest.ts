@@ -461,6 +461,62 @@ describe('handleDroppedInternalContent - model verification', () => {
         expect(allText.some(text => text === 'second paragraph')).toBe(true);
     });
 
+    it('should reorder list items when moving a list item out of the list', () => {
+        const textNode = document.createTextNode('existing');
+        getNodePositionFromEventSpy.and.returnValue({
+            node: textNode,
+            offset: 0,
+        });
+
+        const droppedModel = createContentModelDocument();
+        const droppedListItem = createListItem([createListLevel('UL')]);
+        const droppedParagraph = createParagraph();
+
+        droppedParagraph.segments.push(createText('item 2'));
+        droppedListItem.blocks.push(droppedParagraph);
+        droppedModel.blocks.push(droppedListItem);
+        cloneModelForPasteSpy.and.returnValue(droppedModel);
+
+        const event = {
+            x: 0,
+            y: 0,
+            preventDefault: jasmine.createSpy('preventDefault'),
+            stopPropagation: jasmine.createSpy('stopPropagation'),
+        } as any;
+
+        handleDroppedInternalContent(editor, event);
+
+        expect(capturedCallback).not.toBeNull();
+
+        const model = createContentModelDocument();
+        const firstListItem = createListItem([createListLevel('UL')]);
+        const secondListItem = createListItem([createListLevel('UL')]);
+        const firstParagraph = createParagraph();
+        const secondParagraph = createParagraph();
+        const targetParagraph = createParagraph();
+        const marker = createSelectionMarker();
+        const selectedText = createText('item 2');
+
+        marker.isSelected = false;
+        selectedText.isSelected = true;
+        firstParagraph.segments.push(createText('item 1'));
+        secondParagraph.segments.push(selectedText);
+        targetParagraph.segments.push(createText('outside list'), marker, createBr());
+        firstListItem.blocks.push(firstParagraph);
+        secondListItem.blocks.push(secondParagraph);
+        model.blocks.push(firstListItem, secondListItem, targetParagraph);
+
+        const insertPoint: InsertPoint = {
+            marker,
+            paragraph: targetParagraph,
+            path: [model],
+        };
+
+        capturedCallback!(model, createMergeContext(), insertPoint);
+
+        expect(getAllTextDeep(model)).toEqual(['item 1', 'outside list', 'item 2']);
+    });
+
     it('should set selection after merging dropped content', () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({
