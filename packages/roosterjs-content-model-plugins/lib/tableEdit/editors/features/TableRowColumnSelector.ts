@@ -2,7 +2,10 @@ import { createElement } from '../../../pluginUtils/CreateElement/createElement'
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { normalizeRect, parseTableCells } from 'roosterjs-content-model-dom';
 import type { CreateElementData } from '../../../pluginUtils/CreateElement/CreateElementData';
-import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
+import type {
+    DragAndDropEvent,
+    DragAndDropHandler,
+} from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { Disposable } from '../../../pluginUtils/Disposable';
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
@@ -71,7 +74,7 @@ export function createTableRowColumnSelector(
                 },
                 zoomScale,
                 onTableEditorCreated,
-                editor.getEnvironment().isMobileOrTablet
+                true
             );
             handlers.push(handler);
         }
@@ -181,7 +184,7 @@ function getCurrentIndexFromMouse(
  */
 export function onDragStart(
     context: TableRowColumnSelectorContext,
-    event: MouseEvent
+    event: DragAndDropEvent
 ): TableRowColumnSelectorInitValue {
     const { table, editor, isRow } = context;
     editor.setDOMSelection(null);
@@ -235,7 +238,7 @@ export function onDragStart(
  */
 export function onDragging(
     context: TableRowColumnSelectorContext,
-    event: MouseEvent,
+    event: DragAndDropEvent,
     initValue: TableRowColumnSelectorInitValue | undefined
 ): boolean {
     if (!initValue) {
@@ -284,7 +287,7 @@ export function onDragging(
  */
 export function onDragEnd(
     context: TableRowColumnSelectorContext,
-    event: MouseEvent,
+    event: DragAndDropEvent,
     initValue: TableRowColumnSelectorInitValue | undefined
 ): boolean {
     if (!initValue) {

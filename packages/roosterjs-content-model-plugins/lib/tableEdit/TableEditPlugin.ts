@@ -53,6 +53,7 @@ export class TableEditPlugin implements EditorPlugin {
         this.editor = editor;
         this.onMouseMoveDisposer = this.editor.attachDomEvent({
             mousemove: { beforeDispatch: this.onMouseMove },
+            touchstart: { beforeDispatch: this.onTouchStart },
         });
         const scrollContainer = this.editor.getScrollContainer();
         scrollContainer.addEventListener('mouseout', this.onMouseOut);
@@ -110,10 +111,28 @@ export class TableEditPlugin implements EditorPlugin {
             return;
         }
 
-        this.ensureTableRects();
-
         const x = e.pageX - editorWindow.scrollX;
         const y = e.pageY - editorWindow.scrollY;
+        this.updateTableEditor(x, y, event, true /* updateHoveredFeature */);
+    };
+
+    private onTouchStart = (event: Event) => {
+        const touchEvent = event as TouchEvent;
+        const touch = touchEvent.targetTouches[0] ?? touchEvent.changedTouches[0];
+
+        if (touch) {
+            this.updateTableEditor(
+                touch.clientX,
+                touch.clientY,
+                event,
+                false /* updateHoveredFeature */
+            );
+        }
+    };
+
+    private updateTableEditor(x: number, y: number, event: Event, updateHoveredFeature: boolean) {
+        this.ensureTableRects();
+
         let currentTable: TableWithRoot | null = null;
 
         //Find table in range of mouse
@@ -134,16 +153,18 @@ export class TableEditPlugin implements EditorPlugin {
             }
         }
 
-        this.setTableEditor(currentTable, e);
-        this.tableEditor?.onMouseMove(x, y);
-    };
+        this.setTableEditor(currentTable, event);
+        if (updateHoveredFeature) {
+            this.tableEditor?.onMouseMove(x, y);
+        }
+    }
 
     /**
      * @internal Public only for unit test
      * @param entry Table to use when setting the Editors
      * @param event (Optional) Mouse event
      */
-    public setTableEditor(entry: TableWithRoot | null, event?: MouseEvent) {
+    public setTableEditor(entry: TableWithRoot | null, event?: Event) {
         if (
             this.tableEditor &&
             !this.tableEditor.isEditing() &&

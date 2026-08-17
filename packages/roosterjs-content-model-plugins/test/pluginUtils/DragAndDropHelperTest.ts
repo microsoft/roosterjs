@@ -1,4 +1,5 @@
 import { DragAndDropHelper } from '../../lib/pluginUtils/DragAndDrop/DragAndDropHelper';
+import type { DragAndDropEvent } from '../../lib/pluginUtils/DragAndDrop/DragAndDropHandler';
 
 interface DragAndDropContext {
     node: HTMLElement;
@@ -11,6 +12,9 @@ interface DragAndDropInitValue {
 describe('DragAndDropHelper |', () => {
     let id = 'DragAndDropHelperId';
     let dndHelper: DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>;
+    let dragStartEvent: DragAndDropEvent | undefined;
+    let draggingEvent: DragAndDropEvent | undefined;
+    let dragEndEvent: DragAndDropEvent | undefined;
 
     beforeEach(() => {
         //Empty Div for dragging
@@ -35,21 +39,24 @@ describe('DragAndDropHelper |', () => {
             { node },
             () => {},
             {
-                onDragEnd(context: DragAndDropContext) {
+                onDragEnd(context: DragAndDropContext, event: DragAndDropEvent) {
                     //Red indicates dragging stopped
                     context.node.style.backgroundColor = 'red';
+                    dragEndEvent = event;
                     return true;
                 },
-                onDragStart(context: DragAndDropContext) {
+                onDragStart(context: DragAndDropContext, event: DragAndDropEvent) {
                     //Green indicates dragging started
                     context.node.style.backgroundColor = 'green';
+                    dragStartEvent = event;
                     return { originalRect: context.node.getBoundingClientRect() };
                 },
-                onDragging(context: DragAndDropContext, event: MouseEvent) {
+                onDragging(context: DragAndDropContext, event: DragAndDropEvent) {
                     //Yellow indicates dragging is happening
                     context.node.style.backgroundColor = 'yellow';
                     context.node.style.left = event.pageX + 'px';
                     context.node.style.top = event.pageY + 'px';
+                    draggingEvent = event;
                     return true;
                 },
             },
@@ -94,30 +101,49 @@ describe('DragAndDropHelper |', () => {
     it('touch movement', () => {
         // Arrange
         const target = document.getElementById(id);
+        const dropTarget = document.createElement('div');
+        document.body.appendChild(dropTarget);
         createDnD(target, true);
-        let targetEnd = target;
-        targetEnd.style.left = 50 + 'px';
+        spyOn(document, 'elementFromPoint').and.returnValue(dropTarget);
 
         // Assert
         expect(dndHelper.mouseType).toBe('touch');
+        expect(target.style.touchAction).toBe('none');
 
         // Act
-        simulateTouchEvent('touchstart', target);
+        const startEvent = simulateTouchEvent('touchstart', target, 10, 20);
 
         // Assert
+        expect(startEvent.defaultPrevented).toBe(true);
         expect(target?.style.backgroundColor).toBe('green');
+        expect(dragStartEvent).toEqual(
+            jasmine.objectContaining({ clientX: 10, clientY: 20, pageX: 10, pageY: 20 })
+        );
 
         // Act
-        simulateTouchEvent('touchmove', targetEnd);
+        const moveEvent = simulateTouchEvent('touchmove', target, 30, 40);
 
         // Assert
+        expect(moveEvent.defaultPrevented).toBe(true);
         expect(target?.style.backgroundColor).toBe('yellow');
+        expect(draggingEvent).toEqual(
+            jasmine.objectContaining({ clientX: 30, clientY: 40, pageX: 30, pageY: 40 })
+        );
 
         // Act
-        simulateTouchEvent('touchend', targetEnd);
+        simulateTouchEvent('touchend', target, 50, 60);
 
         // Assert
         expect(target?.style.backgroundColor).toBe('red');
+        expect(dragEndEvent).toEqual(
+            jasmine.objectContaining({
+                clientX: 50,
+                clientY: 60,
+                pageX: 50,
+                pageY: 60,
+                target: dropTarget,
+            })
+        );
     });
 });
 
@@ -134,8 +160,15 @@ function simulateMouseEvent(type: string, target: HTMLElement, shiftKey: boolean
     target.dispatchEvent(event);
 }
 
-function simulateTouchEvent(type: string, target: HTMLElement) {
-    var event = (new Event(type) as any) as TouchEvent;
+function simulateTouchEvent(type: string, target: HTMLElement, clientX: number, clientY: number) {
+    const event = new Event(type, { bubbles: true, cancelable: true }) as TouchEvent;
+    const touch = { clientX, clientY, pageX: clientX, pageY: clientY } as Touch;
+
+    Object.defineProperties(event, {
+        targetTouches: { value: type == 'touchend' ? [] : [touch] },
+        changedTouches: { value: [touch] },
+    });
 
     target.dispatchEvent(event);
+    return event;
 }

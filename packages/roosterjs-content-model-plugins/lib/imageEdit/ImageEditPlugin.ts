@@ -580,7 +580,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             }
                         },
                         this.zoomScale,
-                        isMobileOrTable
+                        true //isMobileOrTable
                     ),
                     ...getDropAndDragHelpers(
                         this.wrapper,
