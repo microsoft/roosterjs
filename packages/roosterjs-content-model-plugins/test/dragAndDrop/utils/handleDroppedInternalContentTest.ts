@@ -17,14 +17,18 @@ import {
     InsertPoint,
 } from 'roosterjs-content-model-types';
 import {
+    createBr,
     createContentModelDocument,
     createEntity,
+    createListItem,
+    createListLevel,
     createParagraph,
     createSelectionMarker,
     createTable,
     createTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
+import { reorderList } from '../../../lib/dragAndDrop/utils/reorderList';
 
 describe('handleDroppedInternalContent', () => {
     let editor: IEditor;
@@ -1004,6 +1008,6 @@ describe('handleDroppedInternalContent - ctrl key', () => {
     it('should delete the original selection when ctrl key is not pressed', () => {
         const model = runWithCtrlKey(false);
 
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(model, [], jasmine.anything());
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(model, [reorderList], jasmine.anything());
     });
 });
