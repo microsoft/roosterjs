@@ -8,6 +8,7 @@ import {
     ContentModelBlockGroup,
     ContentModelDocument,
     ContentModelEntity,
+    ContentModelListItem,
     ContentModelParagraph,
     ContentModelTable,
     ContentModelText,
@@ -459,6 +460,57 @@ describe('handleDroppedInternalContent - model verification', () => {
         const allText = getAllText(model);
         expect(allText.some(text => text === 'first paragraph')).toBe(true);
         expect(allText.some(text => text === 'second paragraph')).toBe(true);
+    });
+
+    it('should merge dropped content on an empty line after a list as the last list item', () => {
+        const textNode = document.createTextNode('existing');
+        getNodePositionFromEventSpy.and.returnValue({
+            node: textNode,
+            offset: 0,
+        });
+
+        const droppedModel = createContentModelDocument();
+        const droppedParagraph = createParagraph();
+
+        droppedParagraph.segments.push(createText('dropped text'));
+        droppedModel.blocks.push(droppedParagraph);
+        cloneModelForPasteSpy.and.returnValue(droppedModel);
+
+        const event = {
+            x: 0,
+            y: 0,
+            ctrlKey: true,
+            preventDefault: jasmine.createSpy('preventDefault'),
+            stopPropagation: jasmine.createSpy('stopPropagation'),
+        } as any;
+
+        handleDroppedInternalContent(editor, event);
+
+        const model = createContentModelDocument();
+        const listItem = createListItem([createListLevel('UL')]);
+        const listParagraph = createParagraph();
+        const paragraphAfterList = createParagraph();
+        const marker = createSelectionMarker();
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(marker);
+        model.blocks.push(listItem, paragraphAfterList);
+
+        const insertPoint: InsertPoint = {
+            marker,
+            paragraph: paragraphAfterList,
+            path: [model],
+        };
+
+        expect(capturedCallback).not.toBeNull();
+        capturedCallback!(model, createMergeContext(), insertPoint);
+
+        const newListItem = model.blocks[1] as ContentModelListItem;
+
+        expect(newListItem.blockGroupType).toBe('ListItem');
+        expect(newListItem.levels).toEqual(listItem.levels);
+        expect(getAllTextDeep(model)).toEqual(['existing item', 'dropped text']);
     });
 
     it('should reorder list items when moving a list item out of the list', () => {

@@ -53,7 +53,12 @@ export function mergeModel(
     const insertPosition =
         options?.insertPosition ?? deleteSelection(target, [], context).insertPoint;
 
-    const { addParagraphAfterMergedContent, mergeFormat, mergeTable } = options || {};
+    const { addParagraphAfterMergedContent, mergeFormat, mergeParagraphAfterList, mergeTable } =
+        options || {};
+
+    if (mergeParagraphAfterList && insertPosition && source.blocks[0]?.blockType == 'Paragraph') {
+        moveParagraphAfterListIntoList(insertPosition);
+    }
 
     if (addParagraphAfterMergedContent && !mergeTable) {
         const { paragraph, marker } = insertPosition || {};
@@ -114,6 +119,27 @@ export function mergeModel(
     normalizeContentModel(target);
 
     return insertPosition;
+}
+
+function moveParagraphAfterListIntoList(insertPosition: InsertPoint) {
+    const { paragraph, path } = insertPosition;
+    const parent = path[0];
+    const paragraphIndex = parent.blocks.indexOf(paragraph);
+    const previousBlock = parent.blocks[paragraphIndex - 1];
+
+    if (
+        paragraph.segments.every(
+            segment => segment.segmentType == 'SelectionMarker' || segment.segmentType == 'Br'
+        ) &&
+        previousBlock?.blockType == 'BlockGroup' &&
+        previousBlock.blockGroupType == 'ListItem'
+    ) {
+        const newListItem = createListItem(previousBlock.levels, previousBlock.formatHolder.format);
+
+        newListItem.blocks.push(paragraph as ContentModelBlock);
+        mutateBlock(parent).blocks.splice(paragraphIndex, 1, newListItem);
+        path.unshift(newListItem);
+    }
 }
 
 function mergeParagraph(

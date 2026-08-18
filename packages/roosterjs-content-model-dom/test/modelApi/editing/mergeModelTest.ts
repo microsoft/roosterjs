@@ -126,6 +126,119 @@ describe('mergeModel', () => {
         });
     });
 
+    it('adds merged content right after a list as the last list item', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const listItem = createListItem([createListLevel('OL')]);
+        const listParagraph = createParagraph();
+        const paragraphAfterList = createParagraph();
+        const marker = createSelectionMarker();
+        const sourceParagraph = createParagraph();
+        const sourceText = createText('new item');
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(marker);
+        majorModel.blocks.push(listItem, paragraphAfterList);
+        sourceParagraph.segments.push(sourceText);
+        sourceModel.blocks.push(sourceParagraph);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker,
+                    paragraph: paragraphAfterList,
+                    path: [majorModel],
+                },
+                mergeParagraphAfterList: true,
+            }
+        );
+
+        const newListItem = majorModel.blocks[1] as ContentModelListItem;
+
+        expect(newListItem.blockGroupType).toBe('ListItem');
+        expect(newListItem.levels).toEqual(listItem.levels);
+        expect(newListItem.blocks).toEqual([paragraphAfterList]);
+        expect(paragraphAfterList.segments).toEqual([sourceText, marker]);
+        expect(result?.path).toEqual([newListItem, majorModel]);
+    });
+
+    it('keeps merged content outside a list when mergeParagraphAfterList is not enabled', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const listItem = createListItem([createListLevel('OL')]);
+        const paragraphAfterList = createParagraph();
+        const marker = createSelectionMarker();
+        const sourceParagraph = createParagraph();
+        const sourceText = createText('new text');
+
+        const listParagraph = createParagraph();
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(marker);
+        majorModel.blocks.push(listItem, paragraphAfterList);
+        sourceParagraph.segments.push(sourceText);
+        sourceModel.blocks.push(sourceParagraph);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker,
+                    paragraph: paragraphAfterList,
+                    path: [majorModel],
+                },
+            }
+        );
+
+        expect(majorModel.blocks).toEqual([listItem, paragraphAfterList]);
+        expect(paragraphAfterList.segments).toEqual([sourceText, marker]);
+        expect(result?.path).toEqual([majorModel]);
+    });
+
+    it('keeps merged content outside a list when the line after the list is not empty', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const listItem = createListItem([createListLevel('OL')]);
+        const listParagraph = createParagraph();
+        const paragraphAfterList = createParagraph();
+        const existingText = createText('existing text');
+        const marker = createSelectionMarker();
+        const sourceParagraph = createParagraph();
+        const sourceText = createText('new text');
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(existingText, marker);
+        majorModel.blocks.push(listItem, paragraphAfterList);
+        sourceParagraph.segments.push(sourceText);
+        sourceModel.blocks.push(sourceParagraph);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker,
+                    paragraph: paragraphAfterList,
+                    path: [majorModel],
+                },
+                mergeParagraphAfterList: true,
+            }
+        );
+
+        expect(majorModel.blocks).toEqual([listItem, paragraphAfterList]);
+        expect(paragraphAfterList.segments).toEqual([existingText, sourceText, marker]);
+        expect(result?.path).toEqual([majorModel]);
+    });
+
     it('para to para with text selection, with format', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();

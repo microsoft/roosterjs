@@ -3,12 +3,15 @@ import * as getNodePositionFromEventFile from 'roosterjs-content-model-dom/lib/d
 import { handleDroppedExternalContent } from '../../../lib/dragAndDrop/utils/handleDroppedExternalContent';
 import {
     ContentModelDocument,
+    ContentModelListItem,
     ContentModelParagraph,
     ContentModelText,
     IEditor,
 } from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
+    createListItem,
+    createListLevel,
     createParagraph,
     createSelectionMarker,
     createText,
@@ -272,6 +275,52 @@ describe('handleDroppedExternalContent - model verification', () => {
 
         expect(textSegments.length).toBeGreaterThan(0);
         expect(textSegments.some(seg => seg.text === 'dropped text')).toBe(true);
+    });
+
+    it('should merge dropped content on an empty line after a list as the last list item', () => {
+        const textNode = document.createTextNode('existing');
+        getNodePositionFromEventSpy.and.returnValue({
+            node: textNode,
+            offset: 0,
+        });
+
+        const parsedDoc = document.implementation.createHTMLDocument();
+        parsedDoc.body.innerHTML = '<p>dropped text</p>';
+        htmlToDOMSpy.and.returnValue(parsedDoc);
+
+        const event = {
+            x: 0,
+            y: 0,
+            preventDefault: jasmine.createSpy('preventDefault'),
+            stopPropagation: jasmine.createSpy('stopPropagation'),
+        } as any;
+
+        handleDroppedExternalContent(editor, event, '<p>dropped text</p>', []);
+
+        const model = createContentModelDocument();
+        const listItem = createListItem([createListLevel('UL')]);
+        const listParagraph = createParagraph();
+        const paragraphAfterList = createParagraph();
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(createSelectionMarker());
+        model.blocks.push(listItem, paragraphAfterList);
+
+        expect(capturedCallback).not.toBeNull();
+        capturedCallback!(model, {});
+
+        const newListItem = model.blocks[1] as ContentModelListItem;
+
+        expect(newListItem.blockGroupType).toBe('ListItem');
+        expect(newListItem.levels).toEqual(listItem.levels);
+        expect(newListItem.blocks[0].blockType).toBe('Paragraph');
+        expect((newListItem.blocks[0] as ContentModelParagraph).segments).toContain(
+            jasmine.objectContaining({
+                segmentType: 'Text',
+                text: 'dropped text',
+            })
+        );
     });
 
     it('should merge dropped bold text into model', () => {
