@@ -1,6 +1,5 @@
 import { cleanForbiddenElements } from './cleanForbiddenElements';
 import {
-    createDOMFromHtml,
     createDomToModelContext,
     createPasteFragment,
     domToContentModel,
@@ -64,7 +63,8 @@ async function getDroppedModel(
     const clipboardData = await extractClipboardItems(items, undefined);
     const domCreator = editor.getDOMCreator();
 
-    const doc = createDOMFromHtml(clipboardData.rawHtml, domCreator);
+    const doc = clipboardData.rawHtml ? domCreator.htmlToDOM(clipboardData.rawHtml) : null;
+
     if (doc) {
         cleanForbiddenElements(doc, forbiddenElements);
     }

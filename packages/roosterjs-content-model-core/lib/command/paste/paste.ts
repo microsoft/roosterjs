@@ -1,14 +1,15 @@
 import { cleanHtmlComments } from './cleanHtmlComments';
-import {
-    cloneModelForPaste,
-    createDOMFromHtml,
-    createPasteFragment,
-} from 'roosterjs-content-model-dom';
+import { cloneModelForPaste, createPasteFragment } from 'roosterjs-content-model-dom';
 import { convertInlineCss } from '../createModelFromHtml/convertInlineCss';
 import { generatePasteOptionFromPlugins } from './generatePasteOptionFromPlugins';
 import { mergePasteContent } from './mergePasteContent';
 import { retrieveHtmlInfo } from './retrieveHtmlInfo';
-import type { PasteTypeOrGetter, ClipboardData, IEditor } from 'roosterjs-content-model-types';
+import type {
+    PasteTypeOrGetter,
+    ClipboardData,
+    IEditor,
+    DOMCreator,
+} from 'roosterjs-content-model-types';
 
 /**
  * Paste into editor using a clipboardData object
@@ -79,4 +80,11 @@ export function paste(
 
     // 6. Merge pasted content into main Content Model
     mergePasteContent(editor, eventResult, isFirstPaste);
+}
+
+function createDOMFromHtml(
+    html: string | null | undefined,
+    domCreator: DOMCreator
+): Document | null {
+    return html ? domCreator.htmlToDOM(html) : null;
 }
