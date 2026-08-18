@@ -138,7 +138,7 @@ function moveParagraphAfterListIntoList(insertPosition: InsertPoint) {
         const newListItem = createListItem(previousBlock.levels, previousBlock.formatHolder.format);
         const paragraphAfterList = createParagraph(false, paragraph.format);
 
-        newListItem.blocks.push(paragraph as ContentModelBlock);
+        addBlock(newListItem, paragraph);
         paragraphAfterList.segments.push(createBr());
         mutateBlock(parent).blocks.splice(paragraphIndex, 1, newListItem, paragraphAfterList);
         path.unshift(newListItem);
