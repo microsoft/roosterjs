@@ -1,6 +1,7 @@
 import { addBlock } from '../common/addBlock';
 import { addSegment } from '../common/addSegment';
 import { applyTableFormat } from './applyTableFormat';
+import { createBr } from '../creators/createBr';
 import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
@@ -135,9 +136,11 @@ function moveParagraphAfterListIntoList(insertPosition: InsertPoint) {
         previousBlock.blockGroupType == 'ListItem'
     ) {
         const newListItem = createListItem(previousBlock.levels, previousBlock.formatHolder.format);
+        const paragraphAfterList = createParagraph(false, paragraph.format);
 
         newListItem.blocks.push(paragraph as ContentModelBlock);
-        mutateBlock(parent).blocks.splice(paragraphIndex, 1, newListItem);
+        paragraphAfterList.segments.push(createBr());
+        mutateBlock(parent).blocks.splice(paragraphIndex, 1, newListItem, paragraphAfterList);
         path.unshift(newListItem);
     }
 }

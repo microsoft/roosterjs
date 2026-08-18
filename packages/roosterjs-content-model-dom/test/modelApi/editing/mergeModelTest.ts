@@ -135,11 +135,15 @@ describe('mergeModel', () => {
         const marker = createSelectionMarker();
         const sourceParagraph = createParagraph();
         const sourceText = createText('new item');
+        const nextListItem = createListItem([createListLevel('OL')]);
+        const nextListParagraph = createParagraph();
 
         listParagraph.segments.push(createText('existing item'));
         listItem.blocks.push(listParagraph);
         paragraphAfterList.segments.push(marker);
-        majorModel.blocks.push(listItem, paragraphAfterList);
+        nextListParagraph.segments.push(createText('next item'));
+        nextListItem.blocks.push(nextListParagraph);
+        majorModel.blocks.push(listItem, paragraphAfterList, nextListItem);
         sourceParagraph.segments.push(sourceText);
         sourceModel.blocks.push(sourceParagraph);
 
@@ -163,6 +167,17 @@ describe('mergeModel', () => {
         expect(newListItem.levels).toEqual(listItem.levels);
         expect(newListItem.blocks).toEqual([paragraphAfterList]);
         expect(paragraphAfterList.segments).toEqual([sourceText, marker]);
+        expect(majorModel.blocks[2]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+        expect(majorModel.blocks[3]).toBe(nextListItem);
         expect(result?.path).toEqual([newListItem, majorModel]);
     });
 

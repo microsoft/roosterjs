@@ -434,7 +434,7 @@ describe('handleDroppedExternalContent - model verification', () => {
         expect(textSegments.some(seg => seg.text === 'dropped text')).toBe(true);
     });
 
-    it('should merge dropped content on an empty line after a list as the last list item', () => {
+    it('should merge dropped content on an empty line after a list as the last list item', async () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -448,11 +448,12 @@ describe('handleDroppedExternalContent - model verification', () => {
         const event = {
             x: 0,
             y: 0,
+            dataTransfer: createHtmlDataTransfer('<p>dropped text</p>'),
             preventDefault: jasmine.createSpy('preventDefault'),
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, '<p>dropped text</p>', []);
+        await handleDroppedExternalContent(editor, event, []);
 
         const model = createContentModelDocument();
         const listItem = createListItem([createListLevel('UL')]);
@@ -478,9 +479,19 @@ describe('handleDroppedExternalContent - model verification', () => {
                 text: 'dropped text',
             })
         );
+        expect(model.blocks[2]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        });
     });
 
-    it('should merge dropped bold text into model', () => {
+    it('should merge dropped bold text into model', async () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,

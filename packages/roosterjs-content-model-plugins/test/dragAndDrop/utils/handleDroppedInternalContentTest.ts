@@ -510,6 +510,16 @@ describe('handleDroppedInternalContent - model verification', () => {
 
         expect(newListItem.blockGroupType).toBe('ListItem');
         expect(newListItem.levels).toEqual(listItem.levels);
+        expect(model.blocks[2]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        });
         expect(getAllTextDeep(model)).toEqual(['existing item', 'dropped text']);
     });
 
