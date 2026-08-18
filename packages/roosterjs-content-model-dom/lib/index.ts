@@ -40,7 +40,7 @@ export { reuseCachedElement } from './domUtils/reuseCachedElement';
 export { isWhiteSpacePreserved } from './domUtils/isWhiteSpacePreserved';
 export { normalizeRect } from './domUtils/normalizeRect';
 export { scrollRectIntoView } from './domUtils/scrollRectIntoView';
-export { textToFragment } from './domUtils/textToFragment';
+export { createDOMFromHtml } from './domUtils/createDOMFromHtml';
 
 export { setLinkUndeletable, isLinkUndeletable } from './domUtils/hiddenProperties/undeletableLink';
 
@@ -126,6 +126,7 @@ export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
 export { transformColor, TransformColorOptions } from './domUtils/style/transformColor';
 export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
+export { createPasteFragment } from './domUtils/event/createPasteFragment';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 export {
     setParagraphMarker,

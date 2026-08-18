@@ -17,6 +17,13 @@ import {
 function createHtmlDataTransfer(html: string): DataTransfer {
     return ({
         types: ['text/html'],
+        items: [
+            {
+                kind: 'string',
+                type: 'text/html',
+                getAsString: (callback: (value: string) => void) => callback(html),
+            },
+        ],
         getData: (type: string) => (type === 'text/html' ? html : ''),
     } as any) as DataTransfer;
 }
@@ -24,6 +31,13 @@ function createHtmlDataTransfer(html: string): DataTransfer {
 function createPlainTextDataTransfer(text: string): DataTransfer {
     return ({
         types: ['text/plain'],
+        items: [
+            {
+                kind: 'string',
+                type: 'text/plain',
+                getAsString: (callback: (value: string) => void) => callback(text),
+            },
+        ],
         getData: (type: string) => (type === 'text/plain' ? text : ''),
     } as any) as DataTransfer;
 }
@@ -62,7 +76,7 @@ describe('handleDroppedExternalContent', () => {
         } as any) as IEditor;
     });
 
-    it('should do nothing when dataTransfer is missing', () => {
+    it('should do nothing when dataTransfer is missing', async () => {
         const preventDefaultSpy = jasmine.createSpy('preventDefault');
         const stopPropagationSpy = jasmine.createSpy('stopPropagation');
 
@@ -74,7 +88,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: stopPropagationSpy,
         } as any;
 
-        handleDroppedExternalContent(editor, event, ['iframe']);
+        await handleDroppedExternalContent(editor, event, ['iframe']);
 
         expect(getNodePositionFromEventSpy).not.toHaveBeenCalled();
         expect(htmlToDOMSpy).not.toHaveBeenCalled();
@@ -83,7 +97,7 @@ describe('handleDroppedExternalContent', () => {
         expect(stopPropagationSpy).not.toHaveBeenCalled();
     });
 
-    it('should do nothing when domPosition is null', () => {
+    it('should do nothing when domPosition is null', async () => {
         getNodePositionFromEventSpy.and.returnValue(null);
 
         const parsedDoc = document.implementation.createHTMLDocument();
@@ -101,7 +115,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: stopPropagationSpy,
         } as any;
 
-        handleDroppedExternalContent(editor, event, ['iframe']);
+        await handleDroppedExternalContent(editor, event, ['iframe']);
 
         expect(getNodePositionFromEventSpy).toHaveBeenCalledWith(doc, {}, 100, 200);
         expect(preventDefaultSpy).not.toHaveBeenCalled();
@@ -109,7 +123,47 @@ describe('handleDroppedExternalContent', () => {
         expect(formatContentModelSpy).not.toHaveBeenCalled();
     });
 
-    it('should insert dropped content at the correct position', () => {
+    it('should prevent native insertion before dropped content is extracted', async () => {
+        const textNode = document.createTextNode('test');
+        getNodePositionFromEventSpy.and.returnValue({
+            node: textNode,
+            offset: 0,
+        });
+
+        let extractContent: (() => void) | undefined;
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        const stopPropagationSpy = jasmine.createSpy('stopPropagation');
+        const event = {
+            x: 100,
+            y: 200,
+            dataTransfer: {
+                items: [
+                    {
+                        kind: 'string',
+                        type: 'text/plain',
+                        getAsString: (callback: (value: string) => void) => {
+                            extractContent = () => callback('dropped content');
+                        },
+                    },
+                ],
+            },
+            preventDefault: preventDefaultSpy,
+            stopPropagation: stopPropagationSpy,
+        } as any;
+
+        const dropPromise = handleDroppedExternalContent(editor, event, ['iframe']);
+
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(stopPropagationSpy).toHaveBeenCalled();
+        expect(formatContentModelSpy).not.toHaveBeenCalled();
+
+        extractContent!();
+        await dropPromise;
+
+        expect(formatContentModelSpy).toHaveBeenCalled();
+    });
+
+    it('should insert dropped content at the correct position', async () => {
         const textNode = document.createTextNode('test');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -131,7 +185,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: stopPropagationSpy,
         } as any;
 
-        handleDroppedExternalContent(editor, event, ['iframe', 'script']);
+        await handleDroppedExternalContent(editor, event, ['iframe', 'script']);
 
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(stopPropagationSpy).toHaveBeenCalled();
@@ -145,7 +199,7 @@ describe('handleDroppedExternalContent', () => {
         expect(options.selectionOverride.isReverted).toBe(false);
     });
 
-    it('should create range at correct position', () => {
+    it('should create range at correct position', async () => {
         const container = document.createElement('div');
         container.innerHTML = 'hello world';
         const textNode = container.firstChild!;
@@ -167,7 +221,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, []);
+        await handleDroppedExternalContent(editor, event, []);
 
         const formatCall = formatContentModelSpy.calls.mostRecent();
         const options = formatCall.args[1];
@@ -178,7 +232,7 @@ describe('handleDroppedExternalContent', () => {
         expect(range.collapsed).toBe(true);
     });
 
-    it('should call cleanForbiddenElements with correct parameters', () => {
+    it('should call cleanForbiddenElements with correct parameters', async () => {
         const textNode = document.createTextNode('test');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -198,12 +252,12 @@ describe('handleDroppedExternalContent', () => {
         } as any;
 
         const forbiddenElements = ['iframe', 'script', 'object'];
-        handleDroppedExternalContent(editor, event, forbiddenElements);
+        await handleDroppedExternalContent(editor, event, forbiddenElements);
 
         expect(cleanForbiddenElementsSpy).toHaveBeenCalledWith(parsedDoc, forbiddenElements);
     });
 
-    it('should insert plain text content when only plain text is available', () => {
+    it('should insert plain text content when only plain text is available', async () => {
         const textNode = document.createTextNode('test');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -221,7 +275,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: stopPropagationSpy,
         } as any;
 
-        handleDroppedExternalContent(editor, event, ['iframe']);
+        await handleDroppedExternalContent(editor, event, ['iframe']);
 
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(stopPropagationSpy).toHaveBeenCalled();
@@ -235,7 +289,7 @@ describe('handleDroppedExternalContent', () => {
         expect(options.selectionOverride.isReverted).toBe(false);
     });
 
-    it('should insert an image when a single image file is dropped', () => {
+    it('should insert an image when a single image file is dropped', async () => {
         const textNode = document.createTextNode('test');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -257,7 +311,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: stopPropagationSpy,
         } as any;
 
-        handleDroppedExternalContent(editor, event, ['iframe']);
+        await handleDroppedExternalContent(editor, event, ['iframe']);
 
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(stopPropagationSpy).toHaveBeenCalled();
@@ -266,7 +320,7 @@ describe('handleDroppedExternalContent', () => {
         expect(formatContentModelSpy).toHaveBeenCalled();
     });
 
-    it('should handle empty forbidden elements list', () => {
+    it('should handle empty forbidden elements list', async () => {
         const textNode = document.createTextNode('test');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -285,7 +339,7 @@ describe('handleDroppedExternalContent', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, []);
+        await handleDroppedExternalContent(editor, event, []);
 
         expect(cleanForbiddenElementsSpy).toHaveBeenCalledWith(parsedDoc, []);
         expect(formatContentModelSpy).toHaveBeenCalled();
@@ -326,7 +380,7 @@ describe('handleDroppedExternalContent - model verification', () => {
         } as any) as IEditor;
     });
 
-    it('should merge dropped paragraph with text into model', () => {
+    it('should merge dropped paragraph with text into model', async () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -345,7 +399,7 @@ describe('handleDroppedExternalContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, []);
+        await handleDroppedExternalContent(editor, event, []);
 
         // Create a model to merge into
         const model = createContentModelDocument();
@@ -377,7 +431,7 @@ describe('handleDroppedExternalContent - model verification', () => {
         expect(textSegments.some(seg => seg.text === 'dropped text')).toBe(true);
     });
 
-    it('should merge dropped bold text into model', () => {
+    it('should merge dropped bold text into model', async () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -396,7 +450,7 @@ describe('handleDroppedExternalContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, []);
+        await handleDroppedExternalContent(editor, event, []);
 
         // Create initial model with selection
         const model = createContentModelDocument();
@@ -427,7 +481,7 @@ describe('handleDroppedExternalContent - model verification', () => {
         expect(boldSegment?.format.fontWeight).toBe('bold');
     });
 
-    it('should merge dropped content into existing model with text', () => {
+    it('should merge dropped content into existing model with text', async () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -446,7 +500,7 @@ describe('handleDroppedExternalContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, []);
+        await handleDroppedExternalContent(editor, event, []);
 
         // Create model with existing text
         const model = createContentModelDocument();
@@ -480,7 +534,7 @@ describe('handleDroppedExternalContent - model verification', () => {
         expect(allText.some(text => text === 'new content')).toBe(true);
     });
 
-    it('should remove forbidden elements before merging into model', () => {
+    it('should remove forbidden elements before merging into model', async () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -501,7 +555,7 @@ describe('handleDroppedExternalContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, ['iframe']);
+        await handleDroppedExternalContent(editor, event, ['iframe']);
 
         // Create model
         const model = createContentModelDocument();
@@ -543,7 +597,7 @@ describe('handleDroppedExternalContent - model verification', () => {
         expect(textSegments.some(seg => seg.text === 'safe content')).toBe(true);
     });
 
-    it('should merge multiple paragraphs into model', () => {
+    it('should merge multiple paragraphs into model', async () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -562,7 +616,7 @@ describe('handleDroppedExternalContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, []);
+        await handleDroppedExternalContent(editor, event, []);
 
         // Create model
         const model = createContentModelDocument();
@@ -592,7 +646,7 @@ describe('handleDroppedExternalContent - model verification', () => {
         expect(allText.some(text => text === 'second paragraph')).toBe(true);
     });
 
-    it('should merge dropped plain text into model when only plain text is available', () => {
+    it('should merge dropped plain text into model when only plain text is available', async () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({
             node: textNode,
@@ -607,7 +661,7 @@ describe('handleDroppedExternalContent - model verification', () => {
             stopPropagation: jasmine.createSpy('stopPropagation'),
         } as any;
 
-        handleDroppedExternalContent(editor, event, ['iframe']);
+        await handleDroppedExternalContent(editor, event, ['iframe']);
 
         // htmlToDOM should not be used for plain text
         expect(htmlToDOMSpy).not.toHaveBeenCalled();

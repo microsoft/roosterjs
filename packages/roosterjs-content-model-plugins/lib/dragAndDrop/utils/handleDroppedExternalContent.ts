@@ -1,13 +1,12 @@
 import { cleanForbiddenElements } from './cleanForbiddenElements';
 import {
-    createContentModelDocument,
+    createDOMFromHtml,
     createDomToModelContext,
-    createImage,
-    createParagraph,
+    createPasteFragment,
     domToContentModel,
+    extractClipboardItems,
     getNodePositionFromEvent,
     mergeModel,
-    textToFragment,
 } from 'roosterjs-content-model-dom';
 import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
 
@@ -15,21 +14,27 @@ import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-type
  * @internal
  * Handle dropped HTML content by inserting it at the drop position
  */
-export function handleDroppedExternalContent(
+export async function handleDroppedExternalContent(
     editor: IEditor,
     event: DragEvent,
     forbiddenElements: string[]
-): void {
-    const droppedModel = getDroppedModel(editor, event, forbiddenElements);
-    if (!droppedModel) {
+): Promise<void> {
+    const items = getSupportedItems(event.dataTransfer);
+    if (items.length == 0) {
         return;
     }
+
     const doc = editor.getDocument();
     const domPosition = getNodePositionFromEvent(doc, editor.getDOMHelper(), event.x, event.y);
 
     if (domPosition) {
         event.preventDefault();
         event.stopPropagation();
+
+        const droppedModel = await getDroppedModel(editor, items, forbiddenElements);
+        if (!droppedModel) {
+            return;
+        }
 
         const range = doc.createRange();
         range.setStart(domPosition.node, domPosition.offset);
@@ -51,38 +56,39 @@ export function handleDroppedExternalContent(
     }
 }
 
-function getDroppedModel(
+async function getDroppedModel(
     editor: IEditor,
-    dragEvent: DragEvent,
+    items: DataTransferItem[],
     forbiddenElements: string[]
-): ContentModelDocument | undefined {
-    const dataTransfer = dragEvent.dataTransfer;
-    const types = dataTransfer?.types;
+): Promise<ContentModelDocument | undefined> {
+    const clipboardData = await extractClipboardItems(items, undefined);
+    const domCreator = editor.getDOMCreator();
 
-    if (!dataTransfer || !types) {
-        return undefined;
+    const doc = createDOMFromHtml(clipboardData.rawHtml, domCreator);
+    if (doc) {
+        cleanForbiddenElements(doc, forbiddenElements);
     }
-    const html = dataTransfer.getData('text/html');
-    let text = '';
-    const files = dataTransfer.files;
 
-    if (html) {
-        const parsedHtml = editor.getDOMCreator().htmlToDOM(html);
-        cleanForbiddenElements(parsedHtml, forbiddenElements);
-        return domToContentModel(parsedHtml.body, createDomToModelContext());
-    } else if ((text = dataTransfer.getData('text/plain'))) {
-        const textFragment = textToFragment(text, editor.getDocument());
-        return domToContentModel(textFragment, createDomToModelContext());
-    } else if (files) {
-        const file = files?.length === 1 ? files[0] : undefined;
-        if (file?.type.startsWith('image/')) {
-            const model = createContentModelDocument();
-            const paragraph = createParagraph();
-            paragraph.segments.push(createImage(URL.createObjectURL(file)));
-            model.blocks.push(paragraph);
-            return model;
+    const fragment = createPasteFragment(editor.getDocument(), clipboardData, 'normal', doc?.body);
+
+    return domToContentModel(fragment, createDomToModelContext());
+}
+
+function getSupportedItems(dataTransfer: DataTransfer | null): DataTransferItem[] {
+    const result: DataTransferItem[] = [];
+
+    for (let i = 0; i < (dataTransfer?.items.length ?? 0); i++) {
+        const item = dataTransfer!.items[i];
+        if (
+            (item.kind == 'string' &&
+                (item.type == 'text/html' ||
+                    item.type == 'text/plain' ||
+                    item.type == 'text/uri-list')) ||
+            (item.kind == 'file' && item.type.indexOf('image/') == 0)
+        ) {
+            result.push(item);
         }
     }
 
-    return undefined;
+    return result;
 }

@@ -1,8 +1,14 @@
-import { moveChildNodes, textToFragment } from 'roosterjs-content-model-dom';
 import type { ClipboardData, PasteType } from 'roosterjs-content-model-types';
+import { moveChildNodes } from '../moveChildNodes';
+import { textToFragment } from '../textToFragment';
 
 /**
- * @internal
+ * Create a document fragment from clipboard content using the specified paste type
+ * @param document The document used to create the fragment
+ * @param clipboardData The clipboard data to convert
+ * @param pasteType The paste type that determines which clipboard content to use
+ * @param root The optional root element containing the parsed HTML content
+ * @returns A document fragment containing the content to paste
  */
 export function createPasteFragment(
     document: Document,
