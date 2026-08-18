@@ -1,7 +1,13 @@
 import * as handleDroppedContentFile from '../../lib/dragAndDrop/utils/handleDroppedExternalContent';
 import * as handleDroppedInternalContentFile from '../../lib/dragAndDrop/utils/handleDroppedInternalContent';
+import * as deleteSelectionFile from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import { DragAndDropPlugin } from '../../lib/dragAndDrop/DragAndDropPlugin';
-import { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
+import {
+    ContentModelDocument,
+    ContentModelFormatter,
+    FormatContentModelContext,
+    IEditor,
+} from 'roosterjs-content-model-types';
 import { ChangeSource } from 'roosterjs-content-model-dom';
 
 describe('DragAndDropPlugin', () => {
@@ -12,9 +18,10 @@ describe('DragAndDropPlugin', () => {
     let isExperimentalFeatureEnabledSpy: jasmine.Spy;
     let eventMap: Record<string, any>;
     let getDOMSelectionSpy: jasmine.Spy;
-    let takeSnapshotSpy: jasmine.Spy;
-    let triggerEventSpy: jasmine.Spy;
+    let formatContentModelSpy: jasmine.Spy;
+    let deleteSelectionSpy: jasmine.Spy;
     let contentModel: ContentModelDocument;
+    let formatContext: FormatContentModelContext;
 
     beforeEach(() => {
         disposerSpy = jasmine.createSpy('disposer');
@@ -26,21 +33,27 @@ describe('DragAndDropPlugin', () => {
             .createSpy('isExperimentalFeatureEnabled')
             .and.returnValue(true);
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
-        takeSnapshotSpy = jasmine.createSpy('takeSnapshot');
-        triggerEventSpy = jasmine.createSpy('triggerEvent');
+        deleteSelectionSpy = spyOn(deleteSelectionFile, 'deleteSelection');
         contentModel = {
             blockGroupType: 'Document',
             blocks: [],
         };
+        formatContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
+        formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((callback: ContentModelFormatter) =>
+                callback(contentModel, formatContext)
+            );
 
         editor = ({
             attachDomEvent: attachDomEventSpy,
             isExperimentalFeatureEnabled: isExperimentalFeatureEnabledSpy,
             getDOMSelection: getDOMSelectionSpy,
-            takeSnapshot: takeSnapshotSpy,
-            triggerEvent: triggerEventSpy,
-            formatContentModel: (callback: (model: ContentModelDocument) => void) =>
-                callback(contentModel),
+            formatContentModel: formatContentModelSpy,
         } as any) as IEditor;
     });
 
@@ -60,7 +73,7 @@ describe('DragAndDropPlugin', () => {
 
             expect(attachDomEventSpy).toHaveBeenCalled();
             expect(eventMap.dragstart).toBeDefined();
-            expect(eventMap.dragend).toBeDefined();
+            expect(eventMap.beforeinput).toBeDefined();
         });
 
         it('should initialize with custom forbidden elements', () => {
@@ -109,55 +122,74 @@ describe('DragAndDropPlugin', () => {
         });
     });
 
-    describe('dragend event', () => {
-        it('should trigger contentChanged and take a snapshot when the model changed', () => {
-            spyOn(handleDroppedInternalContentFile, 'handleDroppedInternalContent');
+    describe('beforeinput event', () => {
+        it('should delete the selection for deleteByDrag after an internal drag', () => {
             plugin = new DragAndDropPlugin();
             plugin.initialize(editor);
 
-            contentModel.blocks.push({
-                blockType: 'Paragraph',
-                segments: [
-                    {
-                        segmentType: 'Text',
-                        text: 'test',
-                        format: {},
-                        isSelected: true,
-                    },
-                ],
-                format: {},
-            });
             eventMap.dragstart.beforeDispatch({} as DragEvent);
-            contentModel.blocks = [];
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            eventMap.dragend.beforeDispatch({} as DragEvent);
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'deleteByDrag',
+                preventDefault: preventDefaultSpy,
+            } as any);
 
-            expect(triggerEventSpy).toHaveBeenCalledWith('contentChanged', {
-                source: ChangeSource.DragOutOfEditor,
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(deleteSelectionSpy).toHaveBeenCalledWith(contentModel, [], formatContext);
+            expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.any(Function), {
+                changeSource: ChangeSource.DragOutOfEditor,
             });
-            expect(takeSnapshotSpy).toHaveBeenCalledTimes(1);
+            expect(formatContentModelSpy.calls.mostRecent().returnValue).toBeTrue();
         });
 
-        it('should not take a snapshot when the model did not change', () => {
+        it('should not delete the selection for another input type', () => {
             plugin = new DragAndDropPlugin();
             plugin.initialize(editor);
 
-            const target = document.createElement('div');
-            eventMap.dragstart.beforeDispatch({ target } as any);
-            eventMap.dragend.beforeDispatch({} as any);
+            eventMap.dragstart.beforeDispatch({} as DragEvent);
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
 
-            expect(triggerEventSpy).not.toHaveBeenCalled();
-            expect(takeSnapshotSpy).not.toHaveBeenCalled();
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'insertText',
+                preventDefault: preventDefaultSpy,
+            } as any);
+
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(deleteSelectionSpy).not.toHaveBeenCalled();
+            expect(formatContentModelSpy).not.toHaveBeenCalled();
         });
 
-        it('should not take a snapshot when drag ends without an internal drag', () => {
+        it('should not delete the selection without an internal drag', () => {
+            plugin = new DragAndDropPlugin();
+            plugin.initialize(editor);
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'deleteByDrag',
+                preventDefault: preventDefaultSpy,
+            } as any);
+
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(deleteSelectionSpy).not.toHaveBeenCalled();
+            expect(formatContentModelSpy).not.toHaveBeenCalled();
+        });
+
+        it('should reset the internal drag flag after beforeinput', () => {
             plugin = new DragAndDropPlugin();
             plugin.initialize(editor);
 
-            eventMap.dragend.beforeDispatch({} as any);
+            eventMap.dragstart.beforeDispatch({} as DragEvent);
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'insertText',
+            } as any);
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'deleteByDrag',
+                preventDefault: jasmine.createSpy('preventDefault'),
+            } as any);
 
-            expect(triggerEventSpy).not.toHaveBeenCalled();
-            expect(takeSnapshotSpy).not.toHaveBeenCalled();
+            expect(deleteSelectionSpy).not.toHaveBeenCalled();
+            expect(formatContentModelSpy).not.toHaveBeenCalled();
         });
     });
 

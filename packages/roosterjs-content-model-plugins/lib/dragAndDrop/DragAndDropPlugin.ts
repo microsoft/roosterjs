@@ -1,16 +1,7 @@
 import { handleDroppedExternalContent } from './utils/handleDroppedExternalContent';
-import type {
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    ReadonlyContentModelSegment,
-} from 'roosterjs-content-model-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { handleDroppedInternalContent } from './utils/handleDroppedInternalContent';
-import {
-    ChangeSource,
-    getNodePositionFromEvent,
-    getSelectedSegments,
-} from 'roosterjs-content-model-dom';
+import { ChangeSource, deleteSelection } from 'roosterjs-content-model-dom';
 
 /**
  * Options for DragAndDrop plugin
@@ -27,6 +18,8 @@ const DefaultOptions = {
     forbiddenElements: ['iframe'],
 };
 
+const DeleteByDragInputType = 'deleteByDrag';
+
 /**
  * DragAndDrop plugin, handles ContentChanged event when change source is "Drop"
  * to sanitize dropped content, similar to how PastePlugin sanitizes pasted content.
@@ -36,7 +29,6 @@ export class DragAndDropPlugin implements EditorPlugin {
     private forbiddenElements: string[] = [];
     private internalDrag: boolean = false;
     private disposer: (() => void) | null = null;
-    private lastSelectSegments: ReadonlyContentModelSegment[] = [];
 
     /**
      * Construct a new instance of DragAndDropPlugin
@@ -70,20 +62,14 @@ export class DragAndDropPlugin implements EditorPlugin {
                     ) {
                         this.adjustDraggingCursor(this.editor, ev as DragEvent);
                     }
-                    editor.formatContentModel(model => {
-                        this.lastSelectSegments = getSelectedSegments(
-                            model,
-                            false /* includingFormatHolder */
-                        );
-                        return false;
-                    });
                 },
             },
-            dragend: {
-                beforeDispatch: ev => {
+            beforeinput: {
+                beforeDispatch: (event: Event) => {
+                    const ev = event as InputEvent;
                     if (this.internalDrag) {
-                        const dropEvent = ev as DragEvent;
-                        this.triggerDragOutOfTheEditor(editor, dropEvent);
+                        this.handleDragOutOfTheEditor(editor, ev);
+                        this.internalDrag = false;
                     }
                 },
             },
@@ -103,7 +89,6 @@ export class DragAndDropPlugin implements EditorPlugin {
         }
         this.forbiddenElements = [];
         this.internalDrag = false;
-        this.lastSelectSegments = [];
     }
 
     /**
@@ -120,7 +105,6 @@ export class DragAndDropPlugin implements EditorPlugin {
                 this.editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
             ) {
                 handleDroppedInternalContent(this.editor, dropEvent);
-                this.lastSelectSegments = [];
             } else if (!this.internalDrag) {
                 const html = dropEvent.dataTransfer?.getData('text/html');
                 if (html) {
@@ -150,30 +134,18 @@ export class DragAndDropPlugin implements EditorPlugin {
         }
     }
 
-    private triggerDragOutOfTheEditor(editor: IEditor, dropEvent: DragEvent) {
-        const dropPosition = editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
-            ? undefined
-            : getNodePositionFromEvent(
-                  editor.getDocument(),
-                  editor.getDOMHelper(),
-                  dropEvent.clientX,
-                  dropEvent.clientY
-              );
-        let modelChanged: boolean = false;
-        editor.formatContentModel(model => {
-            const selectedSegments = getSelectedSegments(model, false /* includingFormatHolder */);
-            modelChanged =
-                this.lastSelectSegments.length !== selectedSegments.length ||
-                this.lastSelectSegments.some(
-                    (segment, index) => segment !== selectedSegments[index]
-                );
-            return false;
-        });
-        if (!dropPosition && modelChanged) {
-            editor.triggerEvent('contentChanged', {
-                source: ChangeSource.DragOutOfEditor,
-            });
-            editor.takeSnapshot();
+    private handleDragOutOfTheEditor(editor: IEditor, inputEvent: InputEvent) {
+        if (inputEvent.inputType == DeleteByDragInputType) {
+            inputEvent.preventDefault();
+            editor.formatContentModel(
+                (model, context) => {
+                    deleteSelection(model, [], context);
+                    return true;
+                },
+                {
+                    changeSource: ChangeSource.DragOutOfEditor,
+                }
+            );
         }
     }
 }
