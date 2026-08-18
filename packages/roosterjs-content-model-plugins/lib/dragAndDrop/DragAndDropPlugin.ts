@@ -2,6 +2,7 @@ import { handleDroppedExternalContent } from './utils/handleDroppedExternalConte
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { handleDroppedInternalContent } from './utils/handleDroppedInternalContent';
 import { ChangeSource, deleteSelection } from 'roosterjs-content-model-dom';
+import { reorderList } from './utils/reorderList';
 
 /**
  * Options for DragAndDrop plugin
@@ -139,7 +140,7 @@ export class DragAndDropPlugin implements EditorPlugin {
             inputEvent.preventDefault();
             editor.formatContentModel(
                 (model, context) => {
-                    deleteSelection(model, [], context);
+                    deleteSelection(model, [reorderList], context);
                     return true;
                 },
                 {

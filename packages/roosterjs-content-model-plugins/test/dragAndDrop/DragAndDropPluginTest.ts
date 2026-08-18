@@ -2,6 +2,7 @@ import * as handleDroppedContentFile from '../../lib/dragAndDrop/utils/handleDro
 import * as handleDroppedInternalContentFile from '../../lib/dragAndDrop/utils/handleDroppedInternalContent';
 import * as deleteSelectionFile from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import { DragAndDropPlugin } from '../../lib/dragAndDrop/DragAndDropPlugin';
+import { reorderList } from '../../lib/dragAndDrop/utils/reorderList';
 import {
     ContentModelDocument,
     ContentModelFormatter,
@@ -136,11 +137,28 @@ describe('DragAndDropPlugin', () => {
             } as any);
 
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
-            expect(deleteSelectionSpy).toHaveBeenCalledWith(contentModel, [], formatContext);
+            expect(deleteSelectionSpy).toHaveBeenCalled();
             expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.any(Function), {
                 changeSource: ChangeSource.DragOutOfEditor,
             });
             expect(formatContentModelSpy.calls.mostRecent().returnValue).toBeTrue();
+        });
+
+        it('should reorder the list when dragging a list item out of the editor', () => {
+            plugin = new DragAndDropPlugin();
+            plugin.initialize(editor);
+
+            eventMap.dragstart.beforeDispatch({} as DragEvent);
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'deleteByDrag',
+                preventDefault: jasmine.createSpy('preventDefault'),
+            } as any);
+
+            expect(deleteSelectionSpy).toHaveBeenCalledWith(
+                contentModel,
+                [reorderList],
+                formatContext
+            );
         });
 
         it('should not delete the selection for another input type', () => {
