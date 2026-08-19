@@ -120,7 +120,7 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
                 'iframe',
             ]);
         });
@@ -142,13 +142,13 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
                 'script',
                 'object',
             ]);
         });
 
-        it('should not call handleDroppedContent when no HTML in dataTransfer', () => {
+        it('should call handleDroppedContent even when dataTransfer has no HTML', () => {
             const dropEvent = {
                 dataTransfer: {
                     getData: () => '',
@@ -160,10 +160,49 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
+                'iframe',
+            ]);
         });
 
-        it('should not call handleDroppedContent when dataTransfer is null', () => {
+        it('should call handleDroppedContent when only plain text is dropped', () => {
+            const text = 'dropped plain text';
+            const dropEvent = {
+                dataTransfer: {
+                    getData: (format: string) => (format == 'text/plain' ? text : ''),
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
+                'iframe',
+            ]);
+        });
+
+        it('should call handleDroppedContent when both HTML and plain text are present', () => {
+            const html = '<div>dropped html</div>';
+            const text = 'dropped plain text';
+            const dropEvent = {
+                dataTransfer: {
+                    getData: (format: string) => (format == 'text/html' ? html : text),
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
+                'iframe',
+            ]);
+        });
+
+        it('should call handleDroppedContent even when dataTransfer is null', () => {
             const dropEvent = {
                 dataTransfer: null,
             } as any;
@@ -173,7 +212,9 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
+                'iframe',
+            ]);
         });
 
         it('should not call handleDroppedContent for internal drag and drop', () => {
@@ -338,12 +379,7 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
-                editor,
-                dropEvent,
-                html,
-                []
-            );
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, []);
         });
     });
 });
