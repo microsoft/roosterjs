@@ -1,7 +1,7 @@
-import * as moveChildNodes from 'roosterjs-content-model-dom/lib/domUtils/moveChildNodes';
+import * as moveChildNodes from '../../../lib/domUtils/moveChildNodes';
 import { ClipboardData, PasteType } from 'roosterjs-content-model-types';
-import { createPasteFragment } from '../../../lib/command/paste/createPasteFragment';
-import { expectHtml } from 'roosterjs-content-model-dom/test/testUtils';
+import { createPasteFragment } from '../../../lib/domUtils/event/createPasteFragment';
+import { expectHtml } from '../../testUtils';
 
 describe('createPasteFragment', () => {
     let moveChildNodesSpy: jasmine.Spy;

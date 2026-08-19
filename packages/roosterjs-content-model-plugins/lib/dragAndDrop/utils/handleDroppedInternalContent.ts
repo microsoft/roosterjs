@@ -11,6 +11,7 @@ import {
     trimModelForSelection,
 } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
+import { reorderList } from './reorderList';
 
 /**
  * @internal
@@ -30,7 +31,7 @@ export function handleDroppedInternalContent(editor: IEditor, event: DragEvent):
                 trimModelForSelection(cloneModel, selection);
 
                 if (!event.ctrlKey && !event.metaKey) {
-                    if (deleteSelection(model, [], context).deleteResult == 'range') {
+                    if (deleteSelection(model, [reorderList], context).deleteResult == 'range') {
                         normalizeContentModel(model);
                     }
                 }
