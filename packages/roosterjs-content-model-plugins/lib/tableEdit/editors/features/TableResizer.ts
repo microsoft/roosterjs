@@ -80,7 +80,8 @@ export function createTableResizer(
             onDragEnd,
         },
         zoomScale,
-        true, //editor.getEnvironment().isMobileOrTablet,
+        editor.getEnvironment().isMobileOrTablet,
+        editor.getEnvironment().isTouchSupported,
         onTableEditorCreated
     );
 
@@ -97,9 +98,10 @@ class TableResizer extends DragAndDropHelper<TableResizerContext, TableResizerIn
         handler: DragAndDropHandler<TableResizerContext, TableResizerInitValue>,
         zoomScale: number,
         forceMobile?: boolean,
+        isTouchSupported?: boolean,
         onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {
-        super(trigger, context, onSubmit, handler, zoomScale, forceMobile);
+        super(trigger, context, onSubmit, handler, zoomScale, forceMobile, isTouchSupported);
         this.disposer = onTableEditorCreated?.('TableResizer', trigger);
     }
 

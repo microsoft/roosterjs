@@ -74,7 +74,8 @@ export function createTableRowColumnSelector(
                 },
                 zoomScale,
                 onTableEditorCreated,
-                true
+                editor.getEnvironment().isMobileOrTablet,
+                editor.getEnvironment().isTouchSupported
             );
             handlers.push(handler);
         }
@@ -124,9 +125,10 @@ class TableRowColumnSelectorHandler
         handler: DragAndDropHandler<TableRowColumnSelectorContext, TableRowColumnSelectorInitValue>,
         zoomScale: number,
         onTableEditorCreated?: OnTableEditorCreatedCallback,
-        forceMobile?: boolean | undefined
+        forceMobile?: boolean | undefined,
+        isTouchSupported?: boolean | undefined
     ) {
-        super(div, context, () => {}, handler, zoomScale, forceMobile);
+        super(div, context, () => {}, handler, zoomScale, forceMobile, isTouchSupported);
         this.disposer = onTableEditorCreated?.(
             this.isRow ? 'TableRowSelector' : 'TableColumnSelector',
             div

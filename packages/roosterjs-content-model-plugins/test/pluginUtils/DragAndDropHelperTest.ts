@@ -33,7 +33,7 @@ describe('DragAndDropHelper |', () => {
     });
 
     //Creates the DragAndDropHelper for testing
-    function createDnD(node: HTMLElement, mobile: boolean) {
+    function createDnD(node: HTMLElement, forceMobile: boolean, isTouchSupported: boolean = false) {
         dndHelper = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
             node,
             { node },
@@ -61,7 +61,8 @@ describe('DragAndDropHelper |', () => {
                 },
             },
             1,
-            mobile
+            forceMobile,
+            isTouchSupported
         );
     }
 
@@ -78,6 +79,9 @@ describe('DragAndDropHelper |', () => {
 
         // Assert
         expect(dndHelper.mouseType).toBe('mouse');
+
+        simulateTouchEvent('touchstart', target, 10, 20);
+        expect(target?.style.backgroundColor).toBe('black');
 
         // Act
         simulateMouseEvent('mousedown', target);
@@ -109,6 +113,9 @@ describe('DragAndDropHelper |', () => {
         // Assert
         expect(dndHelper.mouseType).toBe('touch');
         expect(target.style.touchAction).toBe('none');
+
+        simulateMouseEvent('mousedown', target);
+        expect(target?.style.backgroundColor).toBe('black');
 
         // Act
         const startEvent = simulateTouchEvent('touchstart', target, 10, 20);
@@ -144,6 +151,25 @@ describe('DragAndDropHelper |', () => {
                 target: dropTarget,
             })
         );
+    });
+
+    it('mouse and touch movement on a touch-supported device', () => {
+        const target = document.getElementById(id);
+        createDnD(target, false, true);
+
+        simulateMouseEvent('mousedown', target);
+        simulateMouseEvent('mousemove', target);
+        simulateMouseEvent('mouseup', target);
+
+        expect(target?.style.backgroundColor).toBe('red');
+        expect(dndHelper.mouseType).toBe('mouse');
+
+        simulateTouchEvent('touchstart', target, 10, 20);
+        simulateTouchEvent('touchmove', target, 30, 40);
+        simulateTouchEvent('touchend', target, 50, 60);
+
+        expect(target?.style.backgroundColor).toBe('red');
+        expect(dndHelper.mouseType).toBe('touch');
     });
 });
 

@@ -76,7 +76,8 @@ export function createCellResizer(
         setPosition,
         handler,
         zoomScale,
-        true,
+        editor.getEnvironment().isMobileOrTablet,
+        editor.getEnvironment().isTouchSupported,
         onTableEditorCreated
     );
 
@@ -93,9 +94,10 @@ class CellResizer extends DragAndDropHelper<CellResizerContext, CellResizerInitV
         handler: DragAndDropHandler<CellResizerContext, CellResizerInitValue>,
         zoomScale: number,
         forceMobile?: boolean,
+        isTouchSupported?: boolean,
         onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {
-        super(trigger, context, onSubmit, handler, zoomScale, forceMobile);
+        super(trigger, context, onSubmit, handler, zoomScale, forceMobile, isTouchSupported);
         this.disposer = onTableEditorCreated?.('CellResizer', trigger);
     }
 

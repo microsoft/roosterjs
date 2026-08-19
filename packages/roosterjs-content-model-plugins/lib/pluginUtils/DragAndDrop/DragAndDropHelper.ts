@@ -78,7 +78,9 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
     private initX: number = 0;
     private initY: number = 0;
     private initValue: TInitValue | undefined = undefined;
-    private dndMouse: DragEventInfo;
+    private dndMouse: DragEventInfo = MOUSE_EVENT_INFO_DESKTOP;
+    private readonly dndMouseList: DragEventInfo[];
+    private readonly originalTouchAction: string;
 
     /**
      * Create a new instance of DragAndDropHelper class
@@ -90,6 +92,7 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
      * @param handler The event handler object, see DragAndDropHandler interface for more information
      * @param zoomScale The zoom scale of the editor
      * @param forceMobile A boolean to force the use of touch controls for the helper
+     * @param isTouchSupported Whether the current browser supports touch input
      */
     constructor(
         private trigger: HTMLElement,
@@ -97,17 +100,32 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
         private onSubmit: (context: TContext, trigger: HTMLElement) => void,
         private handler: DragAndDropHandler<TContext, TInitValue>,
         private zoomScale: number,
-        forceMobile?: boolean
+        forceMobile?: boolean,
+        isTouchSupported?: boolean
     ) {
-        this.dndMouse = forceMobile ? MOUSE_EVENT_INFO_MOBILE : MOUSE_EVENT_INFO_DESKTOP;
-        trigger.addEventListener(this.dndMouse.MOUSEDOWN, this.onMouseDown, { passive: false });
+        this.dndMouseList = forceMobile
+            ? [MOUSE_EVENT_INFO_MOBILE]
+            : isTouchSupported
+            ? [MOUSE_EVENT_INFO_DESKTOP, MOUSE_EVENT_INFO_MOBILE]
+            : [MOUSE_EVENT_INFO_DESKTOP];
+        this.dndMouse = this.dndMouseList[0];
+        this.originalTouchAction = trigger.style.touchAction;
+        if (this.dndMouseList.indexOf(MOUSE_EVENT_INFO_MOBILE) >= 0) {
+            trigger.style.touchAction = 'none';
+        }
+        this.dndMouseList.forEach(eventInfo =>
+            trigger.addEventListener(eventInfo.MOUSEDOWN, this.onMouseDown, { passive: false })
+        );
     }
 
     /**
      * Dispose this object, remove all event listeners that has been attached
      */
     dispose() {
-        this.trigger.removeEventListener(this.dndMouse.MOUSEDOWN, this.onMouseDown);
+        this.dndMouseList.forEach(eventInfo =>
+            this.trigger.removeEventListener(eventInfo.MOUSEDOWN, this.onMouseDown)
+        );
+        this.trigger.style.touchAction = this.originalTouchAction;
         this.removeDocumentEvents();
     }
 
@@ -136,6 +154,10 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
     private onMouseDown = (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
+        this.dndMouse =
+            e.type == MOUSE_EVENT_INFO_MOBILE.MOUSEDOWN
+                ? MOUSE_EVENT_INFO_MOBILE
+                : MOUSE_EVENT_INFO_DESKTOP;
         this.addDocumentEvents();
         const event = this.dndMouse.normalizeEvent(e);
         [this.initX, this.initY] = [event.pageX, event.pageY];

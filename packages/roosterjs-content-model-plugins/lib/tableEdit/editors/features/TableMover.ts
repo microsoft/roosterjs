@@ -102,7 +102,8 @@ export function createTableMover(
               },
         context.zoomScale,
         onTableEditorCreated,
-        true
+        editor.getEnvironment().isMobileOrTablet,
+        editor.getEnvironment().isTouchSupported
     );
 
     return { node: table, div, featureHandler };
@@ -149,9 +150,10 @@ class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverI
         handler: DragAndDropHandler<TableMoverContext, TableMoverInitValue>,
         zoomScale: number,
         onTableEditorCreated?: OnTableEditorCreatedCallback,
-        forceMobile?: boolean | undefined
+        forceMobile?: boolean | undefined,
+        isTouchSupported?: boolean | undefined
     ) {
-        super(div, context, onSubmit, handler, zoomScale, forceMobile);
+        super(div, context, onSubmit, handler, zoomScale, forceMobile, isTouchSupported);
         this.disposer = onTableEditorCreated?.('TableMover', div);
     }
 

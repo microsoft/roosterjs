@@ -156,6 +156,8 @@ export class TableEditPlugin implements EditorPlugin {
         this.setTableEditor(currentTable, event);
         if (updateHoveredFeature) {
             this.tableEditor?.onMouseMove(x, y);
+        } else {
+            this.tableEditor?.onTouchStart(x, y);
         }
     }
 
