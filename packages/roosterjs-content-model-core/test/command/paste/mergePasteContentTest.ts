@@ -3,7 +3,7 @@ import * as createDomToModelContextForSanitizing from '../../../lib/command/crea
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as getSegmentTextFormatFile from 'roosterjs-content-model-dom/lib/modelApi/editing/getSegmentTextFormat';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
-import { createPasteFragment } from '../../../lib/command/paste/createPasteFragment';
+import { createPasteFragment } from 'roosterjs-content-model-dom/lib/domUtils/event/createPasteFragment';
 import { inlineTemplate, template } from './htmlTemplates/ClipboardContent1';
 import { mergePasteContent } from '../../../lib/command/paste/mergePasteContent';
 

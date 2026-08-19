@@ -6,12 +6,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v2.3.1
+              uses: actions/checkout@28c7f3d2b5162b5ddd3dfd9a45aa55eaf396478b # v2.3.1
               with:
                   persist-credentials: false
 
             - name: Set Node Version
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2.5.2
               with:
                   node-version: 'v18.16.0'
 
@@ -24,12 +24,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v2.3.1
+              uses: actions/checkout@28c7f3d2b5162b5ddd3dfd9a45aa55eaf396478b # v2.3.1
               with:
                   persist-credentials: false
 
             - name: Set Node Version
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2.5.2
               with:
                   node-version: 'v18.16.0'
 
@@ -40,19 +40,19 @@ jobs:
               uses: browser-actions/setup-chrome@latest
 
             - name: Test with Chrome
-              uses: GabrielBB/xvfb-action@v1
+              uses: GabrielBB/xvfb-action@86d97bde4a65fe9b290c0b3fb92c2c4ed0e5302d # v1.6
               with:
                   run: npm run-script test
     test-on-firefox:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v2.3.1
+              uses: actions/checkout@28c7f3d2b5162b5ddd3dfd9a45aa55eaf396478b # v2.3.1
               with:
                   persist-credentials: false
 
             - name: Set Node Version
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2.5.2
               with:
                   node-version: 'v18.16.0'
 
@@ -63,6 +63,6 @@ jobs:
               uses: browser-actions/setup-firefox@latest
 
             - name: Test with Firefox
-              uses: GabrielBB/xvfb-action@v1
+              uses: GabrielBB/xvfb-action@86d97bde4a65fe9b290c0b3fb92c2c4ed0e5302d # v1.6
               with:
                   run: npm run-script test:firefox
