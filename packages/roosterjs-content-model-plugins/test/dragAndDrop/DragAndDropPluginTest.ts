@@ -1,7 +1,15 @@
 import * as handleDroppedContentFile from '../../lib/dragAndDrop/utils/handleDroppedExternalContent';
 import * as handleDroppedInternalContentFile from '../../lib/dragAndDrop/utils/handleDroppedInternalContent';
+import * as deleteSelectionFile from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
 import { DragAndDropPlugin } from '../../lib/dragAndDrop/DragAndDropPlugin';
-import { IEditor } from 'roosterjs-content-model-types';
+import { reorderList } from '../../lib/dragAndDrop/utils/reorderList';
+import {
+    ContentModelDocument,
+    ContentModelFormatter,
+    FormatContentModelContext,
+    IEditor,
+} from 'roosterjs-content-model-types';
+import { ChangeSource } from 'roosterjs-content-model-dom';
 
 describe('DragAndDropPlugin', () => {
     let plugin: DragAndDropPlugin;
@@ -11,6 +19,10 @@ describe('DragAndDropPlugin', () => {
     let isExperimentalFeatureEnabledSpy: jasmine.Spy;
     let eventMap: Record<string, any>;
     let getDOMSelectionSpy: jasmine.Spy;
+    let formatContentModelSpy: jasmine.Spy;
+    let deleteSelectionSpy: jasmine.Spy;
+    let contentModel: ContentModelDocument;
+    let formatContext: FormatContentModelContext;
 
     beforeEach(() => {
         disposerSpy = jasmine.createSpy('disposer');
@@ -22,11 +34,27 @@ describe('DragAndDropPlugin', () => {
             .createSpy('isExperimentalFeatureEnabled')
             .and.returnValue(true);
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
+        deleteSelectionSpy = spyOn(deleteSelectionFile, 'deleteSelection');
+        contentModel = {
+            blockGroupType: 'Document',
+            blocks: [],
+        };
+        formatContext = {
+            deletedEntities: [],
+            newEntities: [],
+            newImages: [],
+        };
+        formatContentModelSpy = jasmine
+            .createSpy('formatContentModel')
+            .and.callFake((callback: ContentModelFormatter) =>
+                callback(contentModel, formatContext)
+            );
 
         editor = ({
             attachDomEvent: attachDomEventSpy,
             isExperimentalFeatureEnabled: isExperimentalFeatureEnabledSpy,
             getDOMSelection: getDOMSelectionSpy,
+            formatContentModel: formatContentModelSpy,
         } as any) as IEditor;
     });
 
@@ -46,6 +74,7 @@ describe('DragAndDropPlugin', () => {
 
             expect(attachDomEventSpy).toHaveBeenCalled();
             expect(eventMap.dragstart).toBeDefined();
+            expect(eventMap.beforeinput).toBeDefined();
         });
 
         it('should initialize with custom forbidden elements', () => {
@@ -94,6 +123,94 @@ describe('DragAndDropPlugin', () => {
         });
     });
 
+    describe('beforeinput event', () => {
+        it('should delete the selection for deleteByDrag after an internal drag', () => {
+            plugin = new DragAndDropPlugin();
+            plugin.initialize(editor);
+
+            eventMap.dragstart.beforeDispatch({} as DragEvent);
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'deleteByDrag',
+                preventDefault: preventDefaultSpy,
+            } as any);
+
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(deleteSelectionSpy).toHaveBeenCalled();
+            expect(formatContentModelSpy).toHaveBeenCalledWith(jasmine.any(Function), {
+                changeSource: ChangeSource.DragOutOfEditor,
+            });
+            expect(formatContentModelSpy.calls.mostRecent().returnValue).toBeTrue();
+        });
+
+        it('should reorder the list when dragging a list item out of the editor', () => {
+            plugin = new DragAndDropPlugin();
+            plugin.initialize(editor);
+
+            eventMap.dragstart.beforeDispatch({} as DragEvent);
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'deleteByDrag',
+                preventDefault: jasmine.createSpy('preventDefault'),
+            } as any);
+
+            expect(deleteSelectionSpy).toHaveBeenCalledWith(
+                contentModel,
+                [reorderList],
+                formatContext
+            );
+        });
+
+        it('should not delete the selection for another input type', () => {
+            plugin = new DragAndDropPlugin();
+            plugin.initialize(editor);
+
+            eventMap.dragstart.beforeDispatch({} as DragEvent);
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'insertText',
+                preventDefault: preventDefaultSpy,
+            } as any);
+
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(deleteSelectionSpy).not.toHaveBeenCalled();
+            expect(formatContentModelSpy).not.toHaveBeenCalled();
+        });
+
+        it('should not delete the selection without an internal drag', () => {
+            plugin = new DragAndDropPlugin();
+            plugin.initialize(editor);
+            const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'deleteByDrag',
+                preventDefault: preventDefaultSpy,
+            } as any);
+
+            expect(preventDefaultSpy).not.toHaveBeenCalled();
+            expect(deleteSelectionSpy).not.toHaveBeenCalled();
+            expect(formatContentModelSpy).not.toHaveBeenCalled();
+        });
+
+        it('should reset the internal drag flag after beforeinput', () => {
+            plugin = new DragAndDropPlugin();
+            plugin.initialize(editor);
+
+            eventMap.dragstart.beforeDispatch({} as DragEvent);
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'insertText',
+            } as any);
+            eventMap.beforeinput.beforeDispatch({
+                inputType: 'deleteByDrag',
+                preventDefault: jasmine.createSpy('preventDefault'),
+            } as any);
+
+            expect(deleteSelectionSpy).not.toHaveBeenCalled();
+            expect(formatContentModelSpy).not.toHaveBeenCalled();
+        });
+    });
+
     describe('onPluginEvent - beforeDrop', () => {
         let handleDroppedExternalContentSpy: jasmine.Spy;
 
@@ -120,7 +237,7 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
                 'iframe',
             ]);
         });
@@ -142,13 +259,13 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, html, [
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
                 'script',
                 'object',
             ]);
         });
 
-        it('should not call handleDroppedContent when no HTML in dataTransfer', () => {
+        it('should call handleDroppedContent even when dataTransfer has no HTML', () => {
             const dropEvent = {
                 dataTransfer: {
                     getData: () => '',
@@ -160,10 +277,49 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
+                'iframe',
+            ]);
         });
 
-        it('should not call handleDroppedContent when dataTransfer is null', () => {
+        it('should call handleDroppedContent when only plain text is dropped', () => {
+            const text = 'dropped plain text';
+            const dropEvent = {
+                dataTransfer: {
+                    getData: (format: string) => (format == 'text/plain' ? text : ''),
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
+                'iframe',
+            ]);
+        });
+
+        it('should call handleDroppedContent when both HTML and plain text are present', () => {
+            const html = '<div>dropped html</div>';
+            const text = 'dropped plain text';
+            const dropEvent = {
+                dataTransfer: {
+                    getData: (format: string) => (format == 'text/html' ? html : text),
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
+                'iframe',
+            ]);
+        });
+
+        it('should call handleDroppedContent even when dataTransfer is null', () => {
             const dropEvent = {
                 dataTransfer: null,
             } as any;
@@ -173,7 +329,9 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).not.toHaveBeenCalled();
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
+                'iframe',
+            ]);
         });
 
         it('should not call handleDroppedContent for internal drag and drop', () => {
@@ -338,12 +496,7 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
-                editor,
-                dropEvent,
-                html,
-                []
-            );
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, []);
         });
     });
 });

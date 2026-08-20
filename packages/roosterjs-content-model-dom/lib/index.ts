@@ -125,6 +125,7 @@ export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
 export { transformColor, TransformColorOptions } from './domUtils/style/transformColor';
 export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
+export { createPasteFragment } from './domUtils/event/createPasteFragment';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 export {
     setParagraphMarker,
