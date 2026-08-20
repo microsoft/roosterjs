@@ -8,6 +8,7 @@ export { EditPlugin } from './edit/EditPlugin';
 export { EditOptions, HandleTabOptions } from './edit/EditOptions';
 export { AutoFormatPlugin } from './autoFormat/AutoFormatPlugin';
 export { AutoFormatOptions } from './autoFormat/interface/AutoFormatOptions';
+export { AutoDirectionPlugin } from './autoDirection/AutoDirectionPlugin';
 
 export {
     ShortcutBold,

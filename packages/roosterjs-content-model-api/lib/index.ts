@@ -58,6 +58,7 @@ export { setModelListStyle } from './modelApi/list/setModelListStyle';
 export { setModelListStartNumber } from './modelApi/list/setModelListStartNumber';
 export { findListItemsInSameThread } from './modelApi/list/findListItemsInSameThread';
 export { setModelIndentation } from './modelApi/block/setModelIndentation';
+export { setModelDirection } from './modelApi/block/setModelDirection';
 export { matchLink } from './modelApi/link/matchLink';
 export { promoteLink, getPromoteLink } from './modelApi/link/promoteLink';
 export { getListAnnounceData } from './modelApi/list/getListAnnounceData';

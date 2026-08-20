@@ -36,6 +36,114 @@ describe('setModelDirection', () => {
         );
     });
 
+    function runAutoDirectionTest(
+        textSegments: string[],
+        currentDirection: 'ltr' | 'rtl' | undefined,
+        expectedDirection: 'ltr' | 'rtl'
+    ) {
+        const paragraph = {
+            blockType: 'Paragraph' as const,
+            format: currentDirection ? { direction: currentDirection } : {},
+            segments: [
+                ...textSegments.map(text => ({
+                    segmentType: 'Text' as const,
+                    text,
+                    format: {},
+                })),
+                {
+                    segmentType: 'SelectionMarker' as const,
+                    format: {},
+                    isSelected: true,
+                },
+            ],
+        };
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        };
+
+        setModelDirection(model, 'auto');
+
+        expect(model.blocks[0].format.direction).toBe(expectedDirection);
+
+        return { model, paragraph };
+    }
+
+    it('uses RTL when the first strong character is RTL', () => {
+        runAutoDirectionTest(['א', 'English text'], undefined, 'rtl');
+    });
+
+    it('uses LTR when the first strong character is LTR', () => {
+        runAutoDirectionTest(['A', 'טקסט בעברית'], 'rtl', 'ltr');
+    });
+
+    it('ignores numbers and punctuation before the first strong character', () => {
+        runAutoDirectionTest(['123 !? ', 'مرحبا'], undefined, 'rtl');
+    });
+
+    it('does not treat LTR supplementary-plane letters as RTL', () => {
+        runAutoDirectionTest(['𐠀 עברית'], undefined, 'ltr');
+    });
+
+    it('does not update the direction when it already matches', () => {
+        const { model, paragraph } = runAutoDirectionTest(['עברית', ' English'], 'rtl', 'rtl');
+
+        expect(model.blocks[0]).toBe(paragraph);
+    });
+
+    it('uses the first strong character in a list item', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    format: {},
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: false,
+                    },
+                    levels: [
+                        {
+                            listType: 'UL',
+                            dataset: {},
+                            format: {},
+                        },
+                    ],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'עברית',
+                                    format: {},
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        };
+
+        setModelDirection(model, 'auto');
+
+        const listItem = model.blocks[0];
+
+        expect(listItem.blockType).toBe('BlockGroup');
+        if (listItem.blockType === 'BlockGroup' && listItem.blockGroupType === 'ListItem') {
+            expect(listItem.levels[0].format.direction).toBe('rtl');
+            expect(listItem.blocks[0].format.direction).toBe('rtl');
+        }
+    });
+
     it('set direction for paragraph', () => {
         runTest(
             {

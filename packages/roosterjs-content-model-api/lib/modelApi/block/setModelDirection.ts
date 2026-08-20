@@ -14,14 +14,13 @@ import type {
     PaddingFormat,
     ReadonlyContentModelBlock,
     ReadonlyContentModelDocument,
-    ReadonlyContentModelText,
 } from 'roosterjs-content-model-types';
 
-// Regexes for character direction detection
-// Strongly typed RTL character ranges. Referenced unicode's DerivedBidiClass.txt, excluding things in the 2 bit range.
-const RTL_CHAR_REGEX = /[\u0590-\u05FF\u0600-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/g;
-const URL_CHAR_REGEX = /http\S+|www\S+|https\S+|<a\s+(?:[^>]*?\s+)?href=(["']).*?\1.*?>.*?<\/a>/g;
-const WHITESPACE_REGEX = /\s/g;
+const FIRST_STRONG_CHAR_REGEX = new RegExp('[\\p{L}\\u200E\\u200F]', 'u');
+const RTL_CHAR_REGEX = new RegExp(
+    '[\\u0590-\\u08FF\\u200F\\uFB1D-\\uFDFF\\uFE70-\\uFEFF\\u{10840}-\\u{10FFF}\\u{1E800}-\\u{1E95F}]',
+    'u'
+);
 
 /**
  * @internal
@@ -124,31 +123,20 @@ function setProperty(
 
 // Designed to match browser's 'auto' detection, by scanning over the inner text until it hits a strong LTR/RTL character
 function determineTextDirection(block: ReadonlyContentModelBlock): 'ltr' | 'rtl' {
+    const firstStrongChar = getTextContent(block).match(FIRST_STRONG_CHAR_REGEX)?.[0];
+
+    return firstStrongChar && RTL_CHAR_REGEX.test(firstStrongChar) ? 'rtl' : 'ltr';
+}
+
+function getTextContent(block: ReadonlyContentModelBlock): string {
     if (block.blockType === 'Paragraph') {
-        const findTextSegements: ReadonlyContentModelText[] = block.segments.filter(
-            (seg): seg is ReadonlyContentModelText => seg.segmentType === 'Text'
+        return block.segments.reduce(
+            (text, segment) => text + (segment.segmentType === 'Text' ? segment.text : ''),
+            ''
         );
-        let innerText =
-            findTextSegements.length > 0
-                ? findTextSegements.reduce((prev, seg) => prev + seg.text, '')
-                : undefined;
-        if (!!innerText) {
-            // Remove links
-            innerText = innerText.replace(URL_CHAR_REGEX, '');
-
-            // Remove whitespace
-            innerText = innerText.replace(WHITESPACE_REGEX, '');
-
-            const rtlMatches = innerText.match(RTL_CHAR_REGEX);
-            const rtlCount = rtlMatches ? rtlMatches.length : 0;
-
-            const ltrCount = innerText.length - rtlCount;
-
-            return rtlCount > ltrCount ? 'rtl' : 'ltr';
-        } else {
-            return 'ltr'; // Default to LTR if no text is found
-        }
+    } else if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
+        return block.blocks.reduce((text, childBlock) => text + getTextContent(childBlock), '');
     } else {
-        return 'ltr';
+        return '';
     }
 }
