@@ -98,12 +98,11 @@ export class MarkdownPastePlugin implements EditorPlugin {
                         mergeFormat: 'preferTarget',
                     }
                 );
-
                 if (this.options.undoConversion) {
                     this.editor.takeSnapshot();
                 }
                 this.editor.formatContentModel(
-                    (model, context) => {
+                    model => {
                         model.blocks = modelBeforePaste.blocks;
                         return true;
                     },
