@@ -100,6 +100,6 @@
         "@types/color-convert": "2.0.0",
         "@types/minimatch": "3.0.3",
         "@types/react": "16.8.22",
-        "@types/ws": "8.5.12"
+        "socket.io": "4.7.5"
     }
 }

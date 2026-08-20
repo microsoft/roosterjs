@@ -481,6 +481,11 @@
   dependencies:
     "@types/color-convert" "*"
 
+"@types/cookie@^0.4.1":
+  version "0.4.1"
+  resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@types/cookie/-/cookie-0.4.1.tgz#bfd02c1f2224567676c1545199f87c3a861d878d"
+  integrity sha1-v9AsHyIkVnZ2wVRRmfh8OoYdh40=
+
 "@types/cors@^2.8.12":
   version "2.8.19"
   resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@types/cors/-/cors-2.8.19.tgz#d93ea2673fd8c9f697367f5eeefc2bbfa94f0342"
@@ -595,13 +600,6 @@
   version "2.0.7"
   resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@types/trusted-types/-/trusted-types-2.0.7.tgz#baccb07a970b91707df3a3e8ba6896c57ead2d11"
   integrity sha1-usywepcLkXB986PoumiWxX6tLRE=
-
-"@types/ws@8.5.12", "@types/ws@^8.5.12":
-  version "8.5.12"
-  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@types/ws/-/ws-8.5.12.tgz#619475fe98f35ccca2a2f6c137702d85ec247b7e"
-  integrity sha1-YZR1/pjzXMyiovbBN3Athewke34=
-  dependencies:
-    "@types/node" "*"
 
 "@types/yargs-parser@*":
   version "21.0.3"
@@ -1768,7 +1766,12 @@ cookie-signature@~1.0.6:
   resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/cookie-signature/-/cookie-signature-1.0.7.tgz#ab5dd7ab757c54e60f37ef6550f481c426d10454"
   integrity sha1-q13Xq3V8VOYPN+9lUPSBxCbRBFQ=
 
-cookie@~0.7.1, cookie@~0.7.2:
+cookie@~0.4.1:
+  version "0.4.2"
+  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
+  integrity sha1-DkHyTeXs8xeUfIL8eJ4GqISCRDI=
+
+cookie@~0.7.1:
   version "0.7.2"
   resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/cookie/-/cookie-0.7.2.tgz#556369c472a2ba910f2979891b526b3436237ed7"
   integrity sha1-VWNpxHKiupEPKXmJG1JrNDYjftc=
@@ -1938,6 +1941,13 @@ debug@^3.2.5, debug@^3.2.7:
   integrity sha1-clgLfpFF+zm2Z2+cXl+xALk0F5o=
   dependencies:
     ms "^2.1.1"
+
+debug@~4.3.1, debug@~4.3.2:
+  version "4.3.7"
+  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/debug/-/debug-4.3.7.tgz#87945b4151a011d76d95a198d7111c865c360a52"
+  integrity sha1-h5RbQVGgEddtlaGY1xEchlw2ClI=
+  dependencies:
+    ms "^2.1.3"
 
 decamelize@^1.2.0:
   version "1.2.0"
@@ -2209,21 +2219,21 @@ engine.io-parser@~5.2.1:
   resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/engine.io-parser/-/engine.io-parser-5.2.3.tgz#00dc5b97b1f233a23c9398d0209504cf5f94d92f"
   integrity sha1-ANxbl7HyM6I8k5jQIJUEz1+U2S8=
 
-engine.io@~6.6.0:
-  version "6.6.9"
-  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/engine.io/-/engine.io-6.6.9.tgz#fd17e9f4e3a256423592574b60ac262e91af4b82"
-  integrity sha1-/Rfp9OOiVkI1kldLYKwmLpGvS4I=
+engine.io@~6.5.2:
+  version "6.5.5"
+  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/engine.io/-/engine.io-6.5.5.tgz#430b80d8840caab91a50e9e23cb551455195fc93"
+  integrity sha1-QwuA2IQMqrkaUOniPLVRRVGV/JM=
   dependencies:
+    "@types/cookie" "^0.4.1"
     "@types/cors" "^2.8.12"
     "@types/node" ">=10.0.0"
-    "@types/ws" "^8.5.12"
     accepts "~1.3.4"
     base64id "2.0.0"
-    cookie "~0.7.2"
+    cookie "~0.4.1"
     cors "~2.8.5"
-    debug "~4.4.1"
+    debug "~4.3.1"
     engine.io-parser "~5.2.1"
-    ws "~8.21.0"
+    ws "~8.17.1"
 
 enhanced-resolve@4.1.0:
   version "4.1.0"
@@ -6077,16 +6087,16 @@ socket.io-parser@~4.2.4:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.4.1"
 
-socket.io@^4.2.0:
-  version "4.8.3"
-  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/socket.io/-/socket.io-4.8.3.tgz#ca6ba1431c69532e1e0a6f496deebeb601dbc4df"
-  integrity sha1-ymuhQxxpUy4eCm9Jbe6+tgHbxN8=
+socket.io@4.7.5, socket.io@^4.2.0:
+  version "4.7.5"
+  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/socket.io/-/socket.io-4.7.5.tgz#56eb2d976aef9d1445f373a62d781a41c7add8f8"
+  integrity sha1-Vustl2rvnRRF83OmLXgaQcet2Pg=
   dependencies:
     accepts "~1.3.4"
     base64id "~2.0.0"
     cors "~2.8.5"
-    debug "~4.4.1"
-    engine.io "~6.6.0"
+    debug "~4.3.2"
+    engine.io "~6.5.2"
     socket.io-adapter "~2.5.2"
     socket.io-parser "~4.2.4"
 
@@ -7172,6 +7182,11 @@ ws@^6.2.1:
   integrity sha1-VFpqkVsAtmCTf38sMITWI/svxZ8=
   dependencies:
     async-limiter "~1.0.0"
+
+ws@~8.17.1:
+  version "8.17.1"
+  resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/ws/-/ws-8.17.1.tgz#9293da530bb548febc95371d90f9c878727d919b"
+  integrity sha1-kpPaUwu1SP68lTcdkPnIeHJ9kZs=
 
 ws@~8.21.0:
   version "8.21.3"
