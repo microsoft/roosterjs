@@ -1,12 +1,14 @@
+@use 'sass:color';
+
 $primaryColor: #cc6688;
-$primaryLighter: lighten($primaryColor, 5%);
-$primaryLighter2: lighten($primaryColor, 50%);
+$primaryLighter: color.adjust($primaryColor, $lightness: 5%);
+$primaryLighter2: color.adjust($primaryColor, $lightness: 50%);
 $primaryBorder: #cc6688;
 $primaryBackgroundColor: white;
 
 $primaryColorDark: #cb6587;
-$primaryLighterDark: lighten($primaryColorDark, 5%);
-$primaryLighter2Dark: lighten($primaryColorDark, 50%);
+$primaryLighterDark: color.adjust($primaryColorDark, $lightness: 5%);
+$primaryLighter2Dark: color.adjust($primaryColorDark, $lightness: 50%);
 $primaryBorderDark: #cb6587;
 $primaryBackgroundColorDark: #333333;
 

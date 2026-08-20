@@ -1,4 +1,4 @@
-@import '../../../../theme/theme.scss';
+@use '../../../../theme/theme.scss' as *;
 
 .json {
     margin: 0;
