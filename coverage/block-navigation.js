@@ -9,7 +9,7 @@ var jumpToCode = (function init() {
     // We don't want to select elements that are direct descendants of another match
     var notSelector = ':not(' + missingCoverageClasses.join('):not(') + ') > '; // becomes `:not(a):not(b) > `
 
-    // Selecter that finds elements on the page to which we can jump
+    // Selector that finds elements on the page to which we can jump
     var selector =
         fileListingElements.join(', ') +
         ', ' +
@@ -63,6 +63,14 @@ var jumpToCode = (function init() {
     }
 
     return function jump(event) {
+        if (
+            document.getElementById('fileSearch') === document.activeElement &&
+            document.activeElement != null
+        ) {
+            // if we're currently focused on the search input, we don't want to navigate
+            return;
+        }
+
         switch (event.which) {
             case 78: // n
             case 74: // j
