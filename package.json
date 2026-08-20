@@ -70,7 +70,7 @@
         "pretty-quick": "^2.0.1",
         "progress": "2.0.3",
         "rimraf": "3.0.2",
-        "sass": "^1.49.8",
+        "sass": "1.49.8",
         "sass-loader": "8.0.2",
         "toposort": "2.0.2",
         "ts-loader": "9.4.4",
@@ -100,6 +100,6 @@
         "@types/color-convert": "2.0.0",
         "@types/minimatch": "3.0.3",
         "@types/react": "16.8.22",
-        "@types/ws": "8.5.4"
+        "@types/ws": "8.5.12"
     }
 }
