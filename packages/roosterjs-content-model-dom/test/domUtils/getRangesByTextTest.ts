@@ -134,6 +134,7 @@ describe('getRangesByText', () => {
         const container = document.createElement('div');
         container.innerHTML =
             '<p contenteditable="true">This is a test.</p><p>This test should not be found.</p><div contenteditable="true">Another test here.</div>';
+        document.body.appendChild(container);
         const ranges = getRangesByText(container, 'test', false, false, true);
         const p1 = container.firstChild!.firstChild as Node;
         const p3 = container.lastChild!.firstChild as Node;
@@ -151,6 +152,8 @@ describe('getRangesByText', () => {
         expect(ranges[1].startOffset).toBe(8);
         expect(ranges[1].endContainer).toBe(p3);
         expect(ranges[1].endOffset).toBe(12);
+
+        container.remove();
     });
 
     it('Find text across multiple text nodes', () => {
