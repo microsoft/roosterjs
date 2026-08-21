@@ -34,6 +34,8 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
         const stackLevel = nodeStack[layer + 1];
         const itemLevel = listItem.levels[layer];
 
+        context.listFormat.currentLevel = layer;
+
         if (
             stackLevel.listType != itemLevel.listType ||
             stackLevel.dataset?.editingInfo != itemLevel.dataset.editingInfo ||
@@ -43,26 +45,23 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
                 itemLevel.format.listStyleType != stackLevel.format?.listStyleType)
         ) {
             break;
+        } else if (itemLevel.listType == 'UL') {
+            // Apply metadata to list level to make sure list style is correct after rendering
+            applyMetadata(itemLevel, context.metadataAppliers.listLevel, itemLevel.format, context);
         }
 
-        if (
-            context.allowCacheListItem &&
-            parentLevel.refNode &&
-            itemLevel.cachedElement == parentLevel.refNode
-        ) {
+        if (parentLevel.refNode && itemLevel.cachedElement == parentLevel.refNode) {
             // Move refNode to next node since we are reusing this cached element
             parentLevel.refNode = parentLevel.refNode.nextSibling;
         }
     }
 
     // Cut off remained list levels that we can't reuse
-    if (context.allowCacheListItem) {
-        // Clean up all rest nodes in the reused list levels
-        for (let i = layer + 1; i < nodeStack.length; i++) {
-            const stackLevel = nodeStack[i];
+    // Clean up all rest nodes in the reused list levels
+    for (let i = layer + 1; i < nodeStack.length; i++) {
+        const stackLevel = nodeStack[i];
 
-            cleanUpRestNodes(stackLevel.refNode, context.rewriteFromModel);
-        }
+        cleanUpRestNodes(stackLevel.refNode, context.rewriteFromModel);
     }
 
     nodeStack.splice(layer + 1);
@@ -76,7 +75,9 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
         let isNewlyCreated = false;
         const levelRefNode = nodeStack[layer].refNode ?? null;
 
-        if (context.allowCacheListItem && level.cachedElement) {
+        context.listFormat.currentLevel = layer;
+
+        if (level.cachedElement) {
             newList = level.cachedElement;
 
             nodeStack[layer].refNode = reuseCachedElement(
@@ -105,9 +106,7 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
                 dataset: { ...level.dataset },
             });
 
-            if (context.allowCacheListItem) {
-                level.cachedElement = newList;
-            }
+            level.cachedElement = newList;
         }
 
         applyFormat(newList, context.formatAppliers.listLevelThread, level.format, context);

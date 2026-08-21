@@ -48,6 +48,14 @@ export interface DomToModelOptionForCreateModel extends DomToModelOption {
      * When this option is passed, "tryGetFromCache" will be ignored.
      */
     recalculateTableSize?: boolean | 'all' | 'selected' | 'none';
+
+    /**
+     * When set to true, if a container element could be represented by a FormatContainer, always keep the
+     * FormatContainer and never fall back to a paragraph, even when it only has a single child.
+     * Set this when the intermediate FormatContainer is persisted during DOM to Content Model conversion
+     * and is later used during formatting.
+     */
+    skipFormatContainerFallbackCheck?: boolean;
 }
 
 /**

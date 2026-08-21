@@ -70,7 +70,7 @@ describe('createBlockGroupFromMarkdown', () => {
     });
 
     it('should return list item for ordered_list', () => {
-        const listItem = createListItem([createListLevel('OL')]);
+        const listItem = createListItem([createListLevel('OL', { startNumberOverride: 1 })]);
         const paragraph = createParagraph();
         const text = createText('text');
         paragraph.segments.push(text);
@@ -80,7 +80,10 @@ describe('createBlockGroupFromMarkdown', () => {
     });
 
     it('should return a second level list item for ordered_list', () => {
-        const listItem = createListItem([createListLevel('OL'), createListLevel('OL')]);
+        const listItem = createListItem([
+            createListLevel('OL', { startNumberOverride: 1 }),
+            createListLevel('OL', { startNumberOverride: 1 }),
+        ]);
         const paragraph = createParagraph();
         const text = createText('text');
         paragraph.segments.push(text);

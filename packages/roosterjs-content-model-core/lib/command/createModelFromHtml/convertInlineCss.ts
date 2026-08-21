@@ -1,12 +1,5 @@
 import { toArray } from 'roosterjs-content-model-dom';
-
-/**
- * @internal
- */
-export interface CssRule {
-    selectors: string[];
-    text: string;
-}
+import type { CssRule } from 'roosterjs-content-model-types';
 
 /**
  * @internal

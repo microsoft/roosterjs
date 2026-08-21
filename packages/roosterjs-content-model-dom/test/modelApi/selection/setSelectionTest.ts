@@ -1004,4 +1004,173 @@ describe('setSelection', () => {
             blocks: [],
         });
     });
+
+    it('Remove leading and trailing markers when paragraph has a real selected segment in between', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker1 = createSelectionMarker();
+        const text = createText('test');
+        const marker2 = createSelectionMarker();
+
+        para.segments.push(marker1, text, marker2);
+        model.blocks.push(para);
+
+        setSelection(model, marker1, marker2);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Keep leading marker at end of paragraph when selected content is in the next paragraph', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('test1');
+        const marker = createSelectionMarker();
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker);
+        para2.segments.push(text2);
+        model.blocks.push(para1, para2);
+
+        setSelection(model, marker, text2);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test2',
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Keep trailing marker at start of paragraph when selected content is in the previous paragraph', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('test1');
+        const marker = createSelectionMarker();
+        const text2 = createText('test2');
+
+        para1.segments.push(text1);
+        para2.segments.push(marker, text2);
+        model.blocks.push(para1, para2);
+
+        setSelection(model, text1, marker);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                            isSelected: true,
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test2',
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Keep collapsed selection marker when there is no other selected segment', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const marker = createSelectionMarker();
+        const text2 = createText('test2');
+
+        para.segments.push(text1, marker, text2);
+        model.blocks.push(para);
+
+        setSelection(model, marker);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test2',
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });

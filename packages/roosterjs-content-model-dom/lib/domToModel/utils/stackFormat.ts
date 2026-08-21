@@ -2,6 +2,7 @@ import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import type {
     ContentModelBlockFormat,
     ContentModelCode,
+    ContentModelData,
     ContentModelFormatBase,
     ContentModelLink,
     ContentModelParagraphDecorator,
@@ -18,6 +19,7 @@ export interface StackFormatOptions {
     blockDecorator?: 'empty';
     link?: 'linkDefault' | 'cloneFormat' | 'empty';
     code?: 'codeDefault' | 'empty';
+    data?: 'empty';
 }
 
 // Some styles, such as background color, won't be inherited by block element if it was originally
@@ -50,15 +52,17 @@ export function stackFormat(
         blockFormat,
         link: linkFormat,
         code: codeFormat,
+        data: dataFormat,
         blockDecorator: decoratorFormat,
     } = context;
-    const { segment, paragraph, link, code, blockDecorator } = options;
+    const { segment, paragraph, link, code, data, blockDecorator } = options;
 
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
         context.link = stackLinkInternal(linkFormat, link);
         context.code = stackCodeInternal(codeFormat, code);
+        context.data = stackDataInternal(dataFormat, data);
         context.blockDecorator = stackDecoratorInternal(decoratorFormat, blockDecorator);
 
         callback();
@@ -67,6 +71,7 @@ export function stackFormat(
         context.blockFormat = blockFormat;
         context.link = linkFormat;
         context.code = codeFormat;
+        context.data = dataFormat;
         context.blockDecorator = decoratorFormat;
     }
 }
@@ -113,6 +118,17 @@ function stackCodeInternal(codeFormat: ContentModelCode, code?: 'codeDefault' | 
             };
         default:
             return codeFormat;
+    }
+}
+
+function stackDataInternal(dataFormat: ContentModelData, data?: 'empty') {
+    switch (data) {
+        case 'empty':
+            return {
+                format: {},
+            };
+        default:
+            return dataFormat;
     }
 }
 

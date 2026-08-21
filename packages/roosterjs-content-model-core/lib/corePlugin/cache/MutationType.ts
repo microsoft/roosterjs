@@ -11,6 +11,10 @@ export type MutationType =
      */
     | 'elementId'
     /**
+     * An attribute (such as src or data-*) is changed on an element
+     */
+    | 'attribute'
+    /**
      * Only text is changed
      */
     | 'text'
@@ -41,6 +45,14 @@ export interface ElementIdMutation extends MutationBase<'elementId'> {
 /**
  * @internal
  */
+export interface AttributeMutation extends MutationBase<'attribute'> {
+    element: HTMLElement;
+    attributeName: string;
+}
+
+/**
+ * @internal
+ */
 export interface TextMutation extends MutationBase<'text'> {}
 
 /**
@@ -54,4 +66,9 @@ export interface ChildListMutation extends MutationBase<'childList'> {
 /**
  * @internal
  */
-export type Mutation = UnknownMutation | ElementIdMutation | TextMutation | ChildListMutation;
+export type Mutation =
+    | UnknownMutation
+    | ElementIdMutation
+    | AttributeMutation
+    | TextMutation
+    | ChildListMutation;

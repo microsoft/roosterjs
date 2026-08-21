@@ -36,7 +36,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     let li: HTMLLIElement;
     let isNewlyCreated = false;
 
-    if (context.allowCacheListItem && listItem.cachedElement) {
+    if (listItem.cachedElement) {
         li = listItem.cachedElement;
 
         // Check if the cached LI is used as refNode under another list level,
@@ -62,10 +62,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
         // This happens when outdent a list item to cause it has no list level
         listParent.insertBefore(li, itemRefNode?.parentNode == listParent ? itemRefNode : null);
         context.rewriteFromModel.addedBlockElements.push(li);
-
-        if (context.allowCacheListItem) {
-            listItem.cachedElement = li;
-        }
+        listItem.cachedElement = li;
     }
 
     if (level) {
@@ -79,7 +76,13 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
         applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
 
         stackFormat(context, listItem.formatHolder.format, () => {
-            context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+            stackFormat(
+                context,
+                listItem.format.direction ? { direction: listItem.format.direction } : null,
+                () => {
+                    context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+                }
+            );
         });
     } else {
         // There is no level for this list item, that means it should be moved out of the list

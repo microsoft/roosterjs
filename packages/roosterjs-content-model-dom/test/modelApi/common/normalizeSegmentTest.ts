@@ -97,11 +97,11 @@ describe('normalizeSegment', () => {
         });
 
         expect(context).toEqual({
-            textSegments: [text],
-            ignoreLeadingSpaces: false,
+            textSegments: [],
+            ignoreLeadingSpaces: true,
             ignoreTrailingSpaces: true,
-            lastInlineSegment: text,
-            lastTextSegment: text,
+            lastInlineSegment: undefined,
+            lastTextSegment: undefined,
         });
     });
 
@@ -167,7 +167,7 @@ describe('normalizeSegment', () => {
         expect(text).toEqual({
             segmentType: 'Text',
             format: {},
-            text: '\u00A0aa ',
+            text: ' aa ',
         });
 
         expect(context).toEqual({

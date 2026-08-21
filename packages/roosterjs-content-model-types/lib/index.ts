@@ -15,6 +15,7 @@ export { ContentModelListItemFormat } from './contentModel/format/ContentModelLi
 export { ContentModelListItemLevelFormat } from './contentModel/format/ContentModelListItemLevelFormat';
 export { ContentModelHyperLinkFormat } from './contentModel/format/ContentModelHyperLinkFormat';
 export { ContentModelCodeFormat } from './contentModel/format/ContentModelCodeFormat';
+export { ContentModelDataFormat } from './contentModel/format/ContentModelDataFormat';
 export { ContentModelFormatContainerFormat } from './contentModel/format/ContentModelFormatContainerFormat';
 export { ContentModelDividerFormat } from './contentModel/format/ContentModelDividerFormat';
 export { ContentModelFormatBase } from './contentModel/format/ContentModelFormatBase';
@@ -30,6 +31,7 @@ export { FontFamilyFormat } from './contentModel/format/formatParts/FontFamilyFo
 export { FontSizeFormat } from './contentModel/format/formatParts/FontSizeFormat';
 export { ItalicFormat } from './contentModel/format/formatParts/ItalicFormat';
 export { LetterSpacingFormat } from './contentModel/format/formatParts/LetterSpacingFormat';
+export { DataValueFormat } from './contentModel/format/formatParts/DataValueFormat';
 export { LineHeightFormat } from './contentModel/format/formatParts/LineHeightFormat';
 export { StrikeFormat } from './contentModel/format/formatParts/StrikeFormat';
 export { SuperOrSubScriptFormat } from './contentModel/format/formatParts/SuperOrSubScriptFormat';
@@ -64,6 +66,7 @@ export { LegacyTableBorderFormat } from './contentModel/format/formatParts/Legac
 
 export { DatasetFormat, ReadonlyDatasetFormat } from './contentModel/format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './contentModel/format/metadata/TableMetadataFormat';
+export { TableSpecialCellMetadataFormat } from './contentModel/format/metadata/TableSpecialCellMetadataFormat';
 export { ListMetadataFormat } from './contentModel/format/metadata/ListMetadataFormat';
 export {
     ImageResizeMetadataFormat,
@@ -96,6 +99,7 @@ export {
     TableAlignOperation,
     TableCellHorizontalAlignOperation,
     TableCellVerticalAlignOperation,
+    TableCellShiftOperation,
 } from './enum/TableOperation';
 export { PasteType } from './enum/PasteType';
 export { BorderOperations } from './enum/BorderOperations';
@@ -218,6 +222,10 @@ export {
     ReadonlyContentModelCode,
 } from './contentModel/decorator/ContentModelCode';
 export {
+    ContentModelData,
+    ReadonlyContentModelData,
+} from './contentModel/decorator/ContentModelData';
+export {
     ContentModelLink,
     ReadonlyContentModelLink,
 } from './contentModel/decorator/ContentModelLink';
@@ -293,7 +301,7 @@ export {
     DomToModelDecoratorContext,
     DomToModelListFormat,
 } from './context/DomToModelFormatContext';
-export { ModelToDomContext } from './context/ModelToDomContext';
+export { ModelToDomContext, ModelToDomSegmentContext } from './context/ModelToDomContext';
 export {
     ModelToDomBlockAndSegmentNode,
     ModelToDomRegularSelection,
@@ -406,7 +414,7 @@ export {
     ContentModelFormatter,
 } from './parameter/FormatContentModelOptions';
 export { ContentModelFormatState } from './parameter/ContentModelFormatState';
-export { PasteTypeOrGetter } from './parameter/PasteTypeOrGetter';
+export { PasteTypeOrGetter, PasteTypeGetter } from './parameter/PasteTypeOrGetter';
 export { ImageFormatState } from './parameter/ImageFormatState';
 export { Border } from './parameter/Border';
 export { InsertEntityOptions } from './parameter/InsertEntityOptions';
@@ -467,8 +475,9 @@ export { BasePluginEvent, BasePluginDomEvent } from './event/BasePluginEvent';
 export { BeforeAddUndoSnapshotEvent } from './event/BeforeAddUndoSnapshotEvent';
 export { BeforeCutCopyEvent } from './event/BeforeCutCopyEvent';
 export { BeforeDisposeEvent } from './event/BeforeDisposeEvent';
+export { BeforeDropEvent } from './event/BeforeDropEvent';
 export { BeforeKeyboardEditingEvent } from './event/BeforeKeyboardEditingEvent';
-export { BeforePasteEvent, MergePastedContentFunc } from './event/BeforePasteEvent';
+export { BeforePasteEvent, CssRule, MergePastedContentFunc } from './event/BeforePasteEvent';
 export { BeforeSetContentEvent } from './event/BeforeSetContentEvent';
 export { ContentChangedEvent, ChangedEntity } from './event/ContentChangedEvent';
 export { ContextMenuEvent } from './event/ContextMenuEvent';

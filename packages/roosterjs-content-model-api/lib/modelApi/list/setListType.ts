@@ -110,6 +110,11 @@ export function setListType(
                         }
                     );
 
+                    if (removeMargins) {
+                        newListItem.format.marginBottom = '0px';
+                        newListItem.format.marginTop = '0px';
+                    }
+
                     if (block.blockType == 'Paragraph') {
                         setParagraphNotImplicit(block);
                     }

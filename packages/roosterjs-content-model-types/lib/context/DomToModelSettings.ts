@@ -152,4 +152,12 @@ export interface DomToModelSettings {
      * If true elements that has display:none style will be processed
      */
     processNonVisibleElements?: boolean;
+
+    /**
+     * When set to true, if a container element could be represented by a FormatContainer, always keep the
+     * FormatContainer and never fall back to a paragraph, even when it only has a single child.
+     * Set this when the intermediate FormatContainer is persisted during DOM to Content Model conversion
+     * and is later used during formatting.
+     */
+    skipFormatContainerFallbackCheck?: boolean;
 }

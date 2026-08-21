@@ -1,4 +1,3 @@
-import * as addRangeToSelection from '../../../lib/coreApi/setDOMSelection/addRangeToSelection';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as copyPasteEntityOverride from '../../../lib/override/pasteCopyBlockEntityParser';
 import * as deleteSelectionsFile from 'roosterjs-content-model-dom/lib/modelApi/editing/deleteSelection';
@@ -10,7 +9,7 @@ import { adjustSelectionForCopyCut } from '../../../lib/command/cutCopy/adjustSe
 import { createModelToDomContext, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-content-model-dom/test/testUtils';
 import { onNodeCreated } from '../../../lib/command/cutCopy/getContentForCopy';
-import { preprocessTable } from '../../../lib/command/cutCopy/preprocessTable';
+import { preprocessTable } from 'roosterjs-content-model-dom/lib/domUtils/selection/preprocessTable';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import {
     ContentModelDocument,
@@ -125,8 +124,6 @@ describe('CopyPastePlugin |', () => {
                     newImages: [],
                 });
             });
-
-        spyOn(addRangeToSelection, 'addRangeToSelection');
 
         plugin = createCopyPastePlugin({
             allowedCustomPasteType,
@@ -532,7 +529,7 @@ describe('CopyPastePlugin |', () => {
                     'text/html',
                     '<img id="image">'
                 );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', ' ');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).not.toHaveBeenCalled();
@@ -956,7 +953,7 @@ describe('CopyPastePlugin |', () => {
                     'text/html',
                     '<img id="image">'
                 );
-                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', '');
+                expect(event.clipboardData?.setData).toHaveBeenCalledWith('text/plain', ' ');
 
                 // On Cut Spy
                 expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
@@ -998,7 +995,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, undefined);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1028,7 +1026,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, undefined);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1059,7 +1058,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'mergeFormat');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1090,7 +1090,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'asImage');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1121,7 +1122,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'asPlainText');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1152,7 +1154,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, 'normal');
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1182,7 +1185,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).not.toHaveBeenCalled();
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -1213,7 +1217,8 @@ describe('CopyPastePlugin |', () => {
             expect(pasteSpy).toHaveBeenCalledWith(editor, clipboardData, cb);
             expect(extractClipboardItemsFile.extractClipboardItems).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
-                allowedCustomPasteType
+                allowedCustomPasteType,
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });

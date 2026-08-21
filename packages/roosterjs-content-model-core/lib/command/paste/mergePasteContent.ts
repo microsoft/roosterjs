@@ -2,36 +2,23 @@ import { createDomToModelContextForSanitizing } from '../createModelFromHtml/cre
 import {
     ChangeSource,
     EmptySegmentFormat,
-    cloneModel,
     domToContentModel,
     getSegmentTextFormat,
     getSelectedSegments,
     mergeModel,
+    cloneModelForPaste,
 } from 'roosterjs-content-model-dom';
 import type {
     BeforePasteEvent,
-    CloneModelOptions,
     ContentModelDocument,
     ContentModelSegmentFormat,
     IEditor,
     MergeModelOption,
     PasteType,
-    ReadonlyContentModelDocument,
     ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
 
 const BlackColor = 'rgb(0,0,0)';
-
-const CloneOption: CloneModelOptions = {
-    includeCachedElement: (node, type) => (type == 'cache' ? undefined : node),
-};
-
-/**
- * @internal
- */
-export function cloneModelForPaste(model: ReadonlyContentModelDocument) {
-    return cloneModel(model, CloneOption);
-}
 
 /**
  * @internal
@@ -50,6 +37,9 @@ export function mergePasteContent(
         containsBlockElements,
     } = eventResult;
 
+    const isImageOnly = isImageOnlyFragment(fragment);
+    const shouldScrollCaretIntoView = !isImageOnly;
+
     editor.formatContentModel(
         (model, context) => {
             if (!isFirstPaste && clipboardData.modelBeforePaste) {
@@ -62,10 +52,15 @@ export function mergePasteContent(
                 undefined /*defaultFormat*/,
                 editor.getEnvironment().domToModelSettings.customized,
                 domToModelOption,
-                editor.getDOMHelper()
+                editor.getDOMHelper(),
+                editor.getExperimentalFeatures()
             );
 
-            domToModelContext.segmentFormat = getSegmentFormatForPaste(model, pasteType);
+            domToModelContext.segmentFormat = getSegmentFormatForPaste(
+                model,
+                pasteType,
+                isImageOnly
+            );
 
             const pasteModel = domToContentModel(fragment, domToModelContext);
             const mergeOption: MergeModelOption = {
@@ -93,7 +88,7 @@ export function mergePasteContent(
         {
             changeSource: ChangeSource.Paste,
             getChangeData: () => clipboardData,
-            scrollCaretIntoView: true,
+            scrollCaretIntoView: shouldScrollCaretIntoView,
             apiName: 'paste',
         }
     );
@@ -101,16 +96,19 @@ export function mergePasteContent(
 
 function getSegmentFormatForPaste(
     model: ShallowMutableContentModelDocument,
-    pasteType: PasteType
+    pasteType: PasteType,
+    isImageOnly: boolean
 ): ContentModelSegmentFormat {
     const selectedSegment = getSelectedSegments(model, true /*includeFormatHolder*/)[0];
 
     if (selectedSegment) {
         const result = getSegmentTextFormat(selectedSegment);
-        if (pasteType == 'normal') {
+        if (pasteType == 'normal' && !isImageOnly) {
             // When using normal paste (Keep source formatting) set the default text color to black when creating the
             // Model from the clipboard content, so the elements that do not contain any text color in their style
             // Are set to black. Otherwise, These segments would get the selected segments format or the default text set in the content.
+            // Skip this when pasting an image only, since there is no text to apply the default color to, and forcing
+            // black here would incorrectly become the pending format used for text typed right after the pasted image.
             result.textColor = BlackColor;
         }
 
@@ -149,4 +147,13 @@ function getLastSegmentFormat(pasteModel: ContentModelDocument): ContentModelSeg
     }
 
     return {};
+}
+
+function isImageOnlyFragment(pasteFragment: DocumentFragment): boolean {
+    const images = pasteFragment.querySelectorAll('img');
+    return (
+        images.length === 1 &&
+        pasteFragment.childNodes.length === 1 &&
+        pasteFragment.textContent?.trim() === ''
+    );
 }

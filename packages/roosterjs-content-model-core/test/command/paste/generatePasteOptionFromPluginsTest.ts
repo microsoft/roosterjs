@@ -66,6 +66,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter,
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
+            globalCssRules: mockedCssRule,
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(originalEvent).toEqual({
@@ -78,6 +79,7 @@ describe('generatePasteOptionFromPlugins', () => {
             pasteType: 'normal',
             domToModelOption: createDefaultDomToModelContext(),
             containsBlockElements: false,
+            globalCssRules: mockedCssRule,
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
             'beforePaste',
@@ -91,6 +93,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 pasteType: 'TypeResult',
                 domToModelOption: 'OptionResult',
                 containsBlockElements: false,
+                globalCssRules: mockedCssRule,
             },
             true
         );
@@ -132,6 +135,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter,
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
+            globalCssRules: mockedCssRule,
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
@@ -147,6 +151,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 domToModelOption: 'OptionResult',
                 customizedMerge: mockedCustomizedMerge,
                 containsBlockElements: false,
+                globalCssRules: mockedCssRule,
             },
             true
         );
@@ -182,6 +187,7 @@ describe('generatePasteOptionFromPlugins', () => {
             htmlAfter: '',
             htmlAttributes: mockedMetadata,
             containsBlockElements: false,
+            globalCssRules: mockedCssRule,
         } as any);
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
         expect(triggerPluginEventSpy).toHaveBeenCalledWith(
@@ -196,6 +202,7 @@ describe('generatePasteOptionFromPlugins', () => {
                 pasteType: 'TypeResult',
                 domToModelOption: 'OptionResult',
                 containsBlockElements: false,
+                globalCssRules: mockedCssRule,
             },
             true
         );
@@ -209,6 +216,7 @@ describe('generatePasteOptionFromPlugins', () => {
             pasteType: 'mergeFormat',
             domToModelOption: createDefaultDomToModelContext(),
             containsBlockElements: false,
+            globalCssRules: mockedCssRule,
         });
     });
 
@@ -241,6 +249,7 @@ describe('generatePasteOptionFromPlugins', () => {
             pasteType: 'TypeResult' as any,
             domToModelOption: 'OptionResult' as any,
             containsBlockElements: false,
+            globalCssRules: mockedCssRule,
         });
         expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
     });

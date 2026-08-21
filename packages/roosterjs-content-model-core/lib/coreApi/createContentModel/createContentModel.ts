@@ -45,6 +45,10 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
         ? createDomToModelContext(editorContext, settings.builtIn, settings.customized, option)
         : createDomToModelContextWithConfig(settings.calculated, editorContext);
 
+    if (option?.skipFormatContainerFallbackCheck) {
+        domToModelContext.skipFormatContainerFallbackCheck = true;
+    }
+
     if (selection) {
         domToModelContext.selection = selection;
     }

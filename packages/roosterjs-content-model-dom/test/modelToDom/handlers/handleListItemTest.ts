@@ -66,6 +66,7 @@ describe('handleListItem without format handler', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -119,6 +120,7 @@ describe('handleListItem without format handler', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -190,6 +192,7 @@ describe('handleListItem without format handler', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -433,6 +436,40 @@ describe('handleListItem without format handler', () => {
             '<ol start="1"><li><div role="presentation">test1</div><div role="presentation">test2</div><div role="presentation">test3</div><table><tbody><tr><td></td><td></td></tr></tbody></table><div role="presentation">test4</div></li></ol>'
         );
     });
+
+    it('List item with RTL direction propagates direction into implicitFormat for children', () => {
+        const parent = document.createElement('div');
+        const listItem = createListItem([createListLevel('OL')]);
+        listItem.format.direction = 'rtl';
+        listItem.blocks.push(createParagraph());
+
+        let capturedDirection: string | undefined;
+        handleBlockGroupChildrenSpy.and.callFake((_doc, _node, _group, ctx) => {
+            capturedDirection = ctx.implicitFormat.direction;
+        });
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(capturedDirection).toBe('rtl');
+        // implicitFormat must be restored after stackFormat
+        expect(context.implicitFormat.direction).toBeUndefined();
+    });
+
+    it('List item without direction does not change implicitFormat for children', () => {
+        const parent = document.createElement('div');
+        const listItem = createListItem([createListLevel('OL')]);
+        listItem.blocks.push(createParagraph());
+
+        let capturedDirection: string | undefined;
+        context.implicitFormat.direction = 'rtl';
+        handleBlockGroupChildrenSpy.and.callFake((_doc, _node, _group, ctx) => {
+            capturedDirection = ctx.implicitFormat.direction;
+        });
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(capturedDirection).toBe('rtl');
+    });
 });
 
 describe('handleListItem with cache', () => {
@@ -462,7 +499,6 @@ describe('handleListItem with cache', () => {
                 listItem: { applierFunction: listItemMetadataApplier },
             },
         });
-        context.allowCacheListItem = true;
         context.onNodeCreated = onNodeCreatedSpy;
         spyOn(applyFormat, 'applyFormat').and.callThrough();
     });
@@ -503,6 +539,7 @@ describe('handleListItem with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -574,6 +611,7 @@ describe('handleListItem with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleListSpy).toHaveBeenCalledTimes(1);
         expect(handleListSpy).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -651,6 +689,7 @@ describe('handleListItem with cache', () => {
                     refNode: cachedLI.nextSibling,
                 },
             ],
+            currentLevel: 0,
         });
 
         expect(handleListSpy).toHaveBeenCalledTimes(1);
@@ -730,6 +769,7 @@ describe('handleListItem with cache', () => {
                     refNode: cachedLI.nextSibling,
                 },
             ],
+            currentLevel: 0,
         });
 
         expect(handleListSpy).toHaveBeenCalledTimes(1);
@@ -799,6 +839,7 @@ describe('handleListItem with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
 
         expect(handleListSpy).toHaveBeenCalledTimes(1);

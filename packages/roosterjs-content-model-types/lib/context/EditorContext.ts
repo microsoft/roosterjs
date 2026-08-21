@@ -50,6 +50,7 @@ export interface EditorContext {
     allowCacheElement?: boolean;
 
     /**
+     * @deprecated This is now always be treated as true
      * Whether to allow caching list item elements separately.
      */
     allowCacheListItem?: boolean;

@@ -18,10 +18,8 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
             paragraph: 'shallowCloneForGroup',
         },
         () => {
-            const level: ContentModelListLevel = createListLevel(
-                element.tagName as 'OL' | 'UL',
-                context.blockFormat
-            );
+            const tagName = element.tagName as 'OL' | 'UL';
+            const level: ContentModelListLevel = createListLevel(tagName, context.blockFormat);
             const { listFormat } = context;
 
             parseFormat(element, context.formatParsers.dataset, level.dataset, context);
@@ -31,6 +29,7 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
 
             const originalListParent = listFormat.listParent;
 
+            listFormat.potentialListType = tagName;
             listFormat.listParent = listFormat.listParent || group;
             listFormat.levels.push(level);
 

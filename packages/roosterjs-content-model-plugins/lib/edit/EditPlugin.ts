@@ -55,7 +55,6 @@ export class EditPlugin implements EditorPlugin {
     private disposer: (() => void) | null = null;
     private shouldHandleNextInputEvent = false;
     private selectionAfterDelete: DOMSelection | null = null;
-    private handleNormalEnter: (editor: IEditor) => boolean = () => false;
     private options: EditOptions & { handleTabKey: Required<HandleTabOptions> };
 
     /**
@@ -70,23 +69,6 @@ export class EditPlugin implements EditorPlugin {
                 ? DefaultHandleTabOptions
                 : { ...DefaultHandleTabOptions, ...options.handleTabKey };
         this.options = { ...DefaultOptions, ...options, handleTabKey: tabOptions };
-    }
-
-    private createNormalEnterChecker(result: boolean) {
-        return result ? () => true : () => false;
-    }
-
-    private getHandleNormalEnter(editor: IEditor) {
-        switch (typeof this.options.shouldHandleEnterKey) {
-            case 'function':
-                return this.options.shouldHandleEnterKey;
-            case 'boolean':
-                return this.createNormalEnterChecker(this.options.shouldHandleEnterKey);
-            default:
-                return this.createNormalEnterChecker(
-                    editor.isExperimentalFeatureEnabled('HandleEnterKey')
-                );
-        }
     }
 
     /**
@@ -104,7 +86,6 @@ export class EditPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.handleNormalEnter = this.getHandleNormalEnter(editor);
 
         if (editor.getEnvironment().isAndroid) {
             this.disposer = this.editor.attachDomEvent({
@@ -204,10 +185,7 @@ export class EditPlugin implements EditorPlugin {
                 case 'Delete':
                     // Use our API to handle BACKSPACE/DELETE key.
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
-                    // And leave it to browser when shift key is pressed so that browser will trigger cut event
-                    if (!event.rawEvent.shiftKey) {
-                        keyboardDelete(editor, rawEvent, this.options);
-                    }
+                    keyboardDelete(editor, rawEvent, this.options);
                     break;
 
                 case 'Tab':
@@ -227,10 +205,16 @@ export class EditPlugin implements EditorPlugin {
                         !event.rawEvent.isComposing &&
                         event.rawEvent.keyCode !== DEAD_KEY
                     ) {
+                        const { shouldHandleEnterKey } = this.options;
+                        const handleNormalEnter =
+                            typeof shouldHandleEnterKey === 'function'
+                                ? shouldHandleEnterKey(editor)
+                                : shouldHandleEnterKey !== false;
+
                         keyboardEnter(
                             editor,
                             rawEvent,
-                            this.handleNormalEnter(editor),
+                            handleNormalEnter,
                             this.options.formatsToPreserveOnMerge
                         );
                     }

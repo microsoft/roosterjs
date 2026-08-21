@@ -1,10 +1,12 @@
 import { AutoFormatCode } from './AutoFormatCode';
 import { CodeElement } from './CodeElement';
 import { MarkdownCode } from './MarkdownCode';
+import { MarkdownPasteCode } from './MarkdownPasteCode';
 import { OptionState } from '../OptionState';
 import { WatermarkCode } from './WatermarkCode';
 
 import {
+    DragAndDropPluginCode,
     EditPluginCode,
     PastePluginCode,
     TableEditPluginCode,
@@ -44,7 +46,9 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.shortcut && new ShortcutPluginCode(),
             pluginList.watermark && new WatermarkCode(state.watermarkText),
             pluginList.markdown && new MarkdownCode(state.markdownOptions),
+            pluginList.markdownPaste && new MarkdownPasteCode(state.markdownPasteOptions),
             pluginList.imageEditPlugin && new ImageEditPluginCode(),
+            pluginList.dragAndDrop && new DragAndDropPluginCode(),
         ]);
     }
 }

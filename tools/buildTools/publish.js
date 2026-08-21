@@ -1,13 +1,14 @@
 'use strict';
 
 const path = require('path');
+const fs = require('fs');
 const exec = require('child_process').execSync;
 const { distPath, readPackageJson, packages } = require('./common');
 
 const VersionRegex = /\d+\.\d+\.\d+(-([^\.]+)(\.\d+)?)?/;
 const NpmrcContent = 'registry=https://registry.npmjs.com/\n//registry.npmjs.com/:_authToken=';
 
-function publish() {
+function publish(options) {
     packages.forEach(packageName => {
         const json = readPackageJson(packageName, false /*readFromSourceFolder*/);
         const localVersion = json.version;

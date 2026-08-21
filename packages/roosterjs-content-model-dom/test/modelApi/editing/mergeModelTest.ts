@@ -126,6 +126,134 @@ describe('mergeModel', () => {
         });
     });
 
+    it('adds merged content right after a list as the last list item', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const listItem = createListItem([createListLevel('OL')]);
+        const listParagraph = createParagraph();
+        const paragraphAfterList = createParagraph();
+        const marker = createSelectionMarker();
+        const sourceParagraph = createParagraph();
+        const sourceText = createText('new item');
+        const nextListItem = createListItem([createListLevel('OL')]);
+        const nextListParagraph = createParagraph();
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(marker);
+        nextListParagraph.segments.push(createText('next item'));
+        nextListItem.blocks.push(nextListParagraph);
+        majorModel.blocks.push(listItem, paragraphAfterList, nextListItem);
+        sourceParagraph.segments.push(sourceText);
+        sourceModel.blocks.push(sourceParagraph);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker,
+                    paragraph: paragraphAfterList,
+                    path: [majorModel],
+                },
+                mergeParagraphAfterList: true,
+            }
+        );
+
+        const newListItem = majorModel.blocks[1] as ContentModelListItem;
+
+        expect(newListItem.blockGroupType).toBe('ListItem');
+        expect(newListItem.levels).toEqual(listItem.levels);
+        expect(newListItem.blocks).toEqual([paragraphAfterList]);
+        expect(paragraphAfterList.segments).toEqual([sourceText, marker]);
+        expect(majorModel.blocks[2]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+        expect(majorModel.blocks[3]).toBe(nextListItem);
+        expect(result?.path).toEqual([newListItem, majorModel]);
+    });
+
+    it('keeps merged content outside a list when mergeParagraphAfterList is not enabled', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const listItem = createListItem([createListLevel('OL')]);
+        const paragraphAfterList = createParagraph();
+        const marker = createSelectionMarker();
+        const sourceParagraph = createParagraph();
+        const sourceText = createText('new text');
+
+        const listParagraph = createParagraph();
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(marker);
+        majorModel.blocks.push(listItem, paragraphAfterList);
+        sourceParagraph.segments.push(sourceText);
+        sourceModel.blocks.push(sourceParagraph);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker,
+                    paragraph: paragraphAfterList,
+                    path: [majorModel],
+                },
+            }
+        );
+
+        expect(majorModel.blocks).toEqual([listItem, paragraphAfterList]);
+        expect(paragraphAfterList.segments).toEqual([sourceText, marker]);
+        expect(result?.path).toEqual([majorModel]);
+    });
+
+    it('keeps merged content outside a list when the line after the list is not empty', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const listItem = createListItem([createListLevel('OL')]);
+        const listParagraph = createParagraph();
+        const paragraphAfterList = createParagraph();
+        const existingText = createText('existing text');
+        const marker = createSelectionMarker();
+        const sourceParagraph = createParagraph();
+        const sourceText = createText('new text');
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(existingText, marker);
+        majorModel.blocks.push(listItem, paragraphAfterList);
+        sourceParagraph.segments.push(sourceText);
+        sourceModel.blocks.push(sourceParagraph);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker,
+                    paragraph: paragraphAfterList,
+                    path: [majorModel],
+                },
+                mergeParagraphAfterList: true,
+            }
+        );
+
+        expect(majorModel.blocks).toEqual([listItem, paragraphAfterList]);
+        expect(paragraphAfterList.segments).toEqual([existingText, sourceText, marker]);
+        expect(result?.path).toEqual([majorModel]);
+    });
+
     it('para to para with text selection, with format', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();
@@ -6038,6 +6166,518 @@ describe('mergeModel', () => {
             },
             dataset: {},
         });
+    });
+
+    // #endregion
+
+    // #region Merge table with spanLeft and spanAbove
+
+    it('table to table, merge table with spanLeft cell - should skip span cells', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        // Create a 2x3 table where columns 1-2 are merged (spanLeft)
+        // Selection is in cell12 (which is spanLeft, part of merged cell01-02)
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(true, false, false, { backgroundColor: '02' }); // spanLeft
+        const cell03 = createTableCell(false, false, false, { backgroundColor: '03' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const cell12 = createTableCell(true, false, false, { backgroundColor: '12' }); // spanLeft
+        const cell13 = createTableCell(false, false, false, { backgroundColor: '13' });
+        const table1 = createTable(2);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell12.blocks.push(para1);
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell01, cell02, cell03] },
+            { format: {}, height: 0, cells: [cell11, cell12, cell13] },
+        ];
+
+        majorModel.blocks.push(table1);
+
+        // Source table has 2 cells - they should be placed at positions 1 and 2 (skipping span)
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell11 = createTableCell(false, false, false, { backgroundColor: 'n11' });
+        const newCell12 = createTableCell(false, false, false, { backgroundColor: 'n12' });
+        const newTable1 = createTable(1);
+
+        newPara1.segments.push(newText1);
+        newCell11.blocks.push(newPara1);
+        newTable1.rows = [{ format: {}, height: 0, cells: [newCell11, newCell12] }];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeTable: true,
+            }
+        );
+
+        const table = majorModel.blocks[0] as ContentModelTable;
+
+        // The first new cell should replace cell12 (at index 1), second should go to index 2
+        expect(table.rows[1].cells[1]).toBe(newCell11);
+        expect(table.rows[1].cells[2]).toBe(newCell12);
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+    });
+
+    it('table to table, merge table with spanAbove cell - should skip span cells', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        // Create a 3x2 table where rows 0-1 are merged (spanAbove) at column 1
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(false, false, false, { backgroundColor: '02' });
+        const cell11 = createTableCell(false, true, false, { backgroundColor: '11' }); // spanAbove
+        const cell12 = createTableCell(false, true, false, { backgroundColor: '12' }); // spanAbove
+        const cell21 = createTableCell(false, false, false, { backgroundColor: '21' });
+        const cell22 = createTableCell(false, false, false, { backgroundColor: '22' });
+        const table1 = createTable(3);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell12.blocks.push(para1);
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell01, cell02] },
+            { format: {}, height: 0, cells: [cell11, cell12] },
+            { format: {}, height: 0, cells: [cell21, cell22] },
+        ];
+
+        majorModel.blocks.push(table1);
+
+        // Source table has 2 rows - they should be placed at row 1 and 2 (skipping spanAbove)
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell11 = createTableCell(false, false, false, { backgroundColor: 'n11' });
+        const newCell21 = createTableCell(false, false, false, { backgroundColor: 'n21' });
+        const newTable1 = createTable(2);
+
+        newPara1.segments.push(newText1);
+        newCell11.blocks.push(newPara1);
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell11] },
+            { format: {}, height: 0, cells: [newCell21] },
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeTable: true,
+            }
+        );
+
+        const table = majorModel.blocks[0] as ContentModelTable;
+
+        // First new cell should replace cell12 at row 1, second should go to row 2
+        expect(table.rows[1].cells[1]).toBe(newCell11);
+        expect(table.rows[2].cells[1]).toBe(newCell21);
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+    });
+
+    it('table to table, merge 2x2 table into cell with spanLeft - should expand and skip spans', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        // Create a 2x3 table where columns 1-2 are merged (spanLeft)
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(true, false, false, { backgroundColor: '02' }); // spanLeft
+        const cell03 = createTableCell(false, false, false, { backgroundColor: '03' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const cell12 = createTableCell(true, false, false, { backgroundColor: '12' }); // spanLeft
+        const cell13 = createTableCell(false, false, false, { backgroundColor: '13' });
+        const table1 = createTable(2);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell12.blocks.push(para1);
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell01, cell02, cell03] },
+            { format: {}, height: 0, cells: [cell11, cell12, cell13] },
+        ];
+
+        majorModel.blocks.push(table1);
+
+        // Source table is 2x2
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell11 = createTableCell(false, false, false, { backgroundColor: 'n11' });
+        const newCell12 = createTableCell(false, false, false, { backgroundColor: 'n12' });
+        const newCell21 = createTableCell(false, false, false, { backgroundColor: 'n21' });
+        const newCell22 = createTableCell(false, false, false, { backgroundColor: 'n22' });
+        const newTable1 = createTable(2);
+
+        newPara1.segments.push(newText1);
+        newCell11.blocks.push(newPara1);
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell11, newCell12] },
+            { format: {}, height: 0, cells: [newCell21, newCell22] },
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeTable: true,
+            }
+        );
+
+        const table = majorModel.blocks[0] as ContentModelTable;
+
+        // New cells should be placed correctly, skipping the spanLeft cell
+        expect(table.rows[1].cells[1]).toBe(newCell11);
+        expect(table.rows[1].cells[2]).toBe(newCell12);
+        // Second row of pasted table should go to row 2
+        expect(table.rows.length).toBe(3);
+        expect(table.rows[2].cells[1]).toBe(newCell21);
+        expect(table.rows[2].cells[2]).toBe(newCell22);
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+    });
+
+    it('table to table, merge 2x2 table into cell with spanAbove - should expand and skip spans', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        // Create a 3x2 table where rows 0-1 are merged (spanAbove) at column 1
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(false, false, false, { backgroundColor: '02' });
+        const cell11 = createTableCell(false, true, false, { backgroundColor: '11' }); // spanAbove
+        const cell12 = createTableCell(false, true, false, { backgroundColor: '12' }); // spanAbove
+        const cell21 = createTableCell(false, false, false, { backgroundColor: '21' });
+        const cell22 = createTableCell(false, false, false, { backgroundColor: '22' });
+        const table1 = createTable(3);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell12.blocks.push(para1);
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell01, cell02] },
+            { format: {}, height: 0, cells: [cell11, cell12] },
+            { format: {}, height: 0, cells: [cell21, cell22] },
+        ];
+
+        majorModel.blocks.push(table1);
+
+        // Source table is 2x2
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell11 = createTableCell(false, false, false, { backgroundColor: 'n11' });
+        const newCell12 = createTableCell(false, false, false, { backgroundColor: 'n12' });
+        const newCell21 = createTableCell(false, false, false, { backgroundColor: 'n21' });
+        const newCell22 = createTableCell(false, false, false, { backgroundColor: 'n22' });
+        const newTable1 = createTable(2);
+
+        newPara1.segments.push(newText1);
+        newCell11.blocks.push(newPara1);
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell11, newCell12] },
+            { format: {}, height: 0, cells: [newCell21, newCell22] },
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeTable: true,
+            }
+        );
+
+        const table = majorModel.blocks[0] as ContentModelTable;
+
+        // New cells should be placed correctly, skipping the spanAbove cell
+        // Table should have expanded to 3 columns
+        expect(table.rows[0].cells.length).toBe(3);
+        expect(table.rows[1].cells[1]).toBe(newCell11);
+        expect(table.rows[1].cells[2]).toBe(newCell12);
+        expect(table.rows[2].cells[1]).toBe(newCell21);
+        expect(table.rows[2].cells[2]).toBe(newCell22);
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+    });
+
+    it('table to table, merge table where source has spanAbove cells - should use logical offsets', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        // Create a simple 3x3 target table with selection in cell [2,2]
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell00 = createTableCell(false, false, false, { backgroundColor: '00' });
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(false, false, false, { backgroundColor: '02' });
+        const cell10 = createTableCell(false, false, false, { backgroundColor: '10' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const cell12 = createTableCell(false, false, false, { backgroundColor: '12' });
+        const cell20 = createTableCell(false, false, false, { backgroundColor: '20' });
+        const cell21 = createTableCell(false, false, false, { backgroundColor: '21' });
+        const cell22 = createTableCell(false, false, false, { backgroundColor: '22' });
+        const table1 = createTable(3);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell22.blocks.push(para1);
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell00, cell01, cell02] },
+            { format: {}, height: 0, cells: [cell10, cell11, cell12] },
+            { format: {}, height: 0, cells: [cell20, cell21, cell22] },
+        ];
+
+        majorModel.blocks.push(table1);
+
+        // Source table has 5 physical rows but only 2 logical rows due to spanAbove
+        // Row 0: actual content cells
+        // Rows 1-3: spanAbove cells (continuation of vertical merge)
+        // Row 4: actual content cells
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell00 = createTableCell(false, false, false, { backgroundColor: 'n00' });
+        const newCell01 = createTableCell(false, false, false, { backgroundColor: 'n01' });
+        // Rows with spanAbove (part of vertical merge from row 0)
+        const newCell10 = createTableCell(false, true, false, { backgroundColor: 'n10' }); // spanAbove
+        const newCell11 = createTableCell(false, true, false, { backgroundColor: 'n11' }); // spanAbove
+        const newCell20 = createTableCell(false, true, false, { backgroundColor: 'n20' }); // spanAbove
+        const newCell21 = createTableCell(false, true, false, { backgroundColor: 'n21' }); // spanAbove
+        const newCell30 = createTableCell(false, true, false, { backgroundColor: 'n30' }); // spanAbove
+        const newCell31 = createTableCell(false, true, false, { backgroundColor: 'n31' }); // spanAbove
+        // Row 4: actual content cells (second logical row)
+        const newCell40 = createTableCell(false, false, false, { backgroundColor: 'n40' });
+        const newCell41 = createTableCell(false, false, false, { backgroundColor: 'n41' });
+        const newTable1 = createTable(5);
+
+        newPara1.segments.push(newText1);
+        newCell00.blocks.push(newPara1);
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell00, newCell01] },
+            { format: {}, height: 0, cells: [newCell10, newCell11] },
+            { format: {}, height: 0, cells: [newCell20, newCell21] },
+            { format: {}, height: 0, cells: [newCell30, newCell31] },
+            { format: {}, height: 0, cells: [newCell40, newCell41] },
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        // Main test: this should not crash when pasting table with spanAbove cells
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeTable: true,
+            }
+        );
+
+        const table = majorModel.blocks[0] as ContentModelTable;
+
+        // Target table: started with 3 rows × 3 cols
+        // Source table: 5 rows × 2 cols, pasting at row 2, col 2
+        // getTargetColIndex(table, 2, 2, 2) = 4, extraCols = 4 - 3 = 1 → 4 cols
+        // getTargetRowIndex(table, 2, 5, 2) = 7, extraRows = 7 - 3 = 4 → 7 rows
+        expect(table.rows.length).toEqual(7);
+        expect(table.rows[0].cells.length).toEqual(4);
+
+        // Verify first row of source table was placed correctly at target [2,2]
+        // logicalRowOffsets[0] = 0, so targetRowIndex = getTargetRowIndex(table, 2, 0, 2) = 2
+        // logicalColOffsets[0] = 0, so targetColIndex = getTargetColIndex(table, 2, 2, 0) = 2
+        expect(table.rows[2].cells[2]).toEqual(newCell00);
+
+        // Second column of first row goes to col 3
+        // logicalColOffsets[1] = 1, so targetColIndex = getTargetColIndex(table, 2, 2, 1) = 3
+        expect(table.rows[2].cells[3]).toEqual(newCell01);
+
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+    });
+
+    it('table to table, merge table where source has spanLeft cells - should use logical offsets', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        // Create a simple 2x3 target table with selection in cell [1,1]
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell00 = createTableCell(false, false, false, { backgroundColor: '00' });
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(false, false, false, { backgroundColor: '02' });
+        const cell10 = createTableCell(false, false, false, { backgroundColor: '10' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const cell12 = createTableCell(false, false, false, { backgroundColor: '12' });
+        const table1 = createTable(2);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell11.blocks.push(para1);
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell00, cell01, cell02] },
+            { format: {}, height: 0, cells: [cell10, cell11, cell12] },
+        ];
+
+        majorModel.blocks.push(table1);
+
+        // Source table has 4 physical columns but only 2 logical columns due to spanLeft
+        // Col 0: actual content cell
+        // Cols 1-2: spanLeft cells (continuation of horizontal merge)
+        // Col 3: actual content cell
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell00 = createTableCell(false, false, false, { backgroundColor: 'n00' });
+        const newCell01 = createTableCell(true, false, false, { backgroundColor: 'n01' }); // spanLeft
+        const newCell02 = createTableCell(true, false, false, { backgroundColor: 'n02' }); // spanLeft
+        const newCell03 = createTableCell(false, false, false, { backgroundColor: 'n03' });
+        const newTable1 = createTable(1);
+
+        newPara1.segments.push(newText1);
+        newCell00.blocks.push(newPara1);
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell00, newCell01, newCell02, newCell03] },
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        // Main test: this should not crash when pasting table with spanLeft cells
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeTable: true,
+            }
+        );
+
+        const table = majorModel.blocks[0] as ContentModelTable;
+
+        // Target table: started with 2 rows × 3 cols
+        // Source table: 1 row × 4 cols, pasting at row 1, col 1
+        // getTargetColIndex(table, 1, 1, 4) = 5, extraCols = 5 - 3 = 2 → 5 cols
+        // getTargetRowIndex(table, 1, 1, 1) = 2, extraRows = 2 - 2 = 0 → 2 rows
+        expect(table.rows.length).toEqual(2);
+        expect(table.rows[0].cells.length).toEqual(5);
+
+        // Verify first cell of source table was placed correctly at target [1,1]
+        // logicalColOffsets = [0, 1, 1, 1] for source cols [0, 1, 2, 3]
+        expect(table.rows[1].cells[1]).toEqual(newCell00);
+
+        // When spanLeft cells from source are placed in target, getTargetColIndex
+        // sees them as span cells on subsequent iterations and skips over them:
+        // j=1: offset=1, col 1->2 (newCell01 placed, has spanLeft=true)
+        // j=2: offset=1, col 1->2 (spanLeft)->3 (newCell02 placed, has spanLeft=true)
+        // j=3: offset=1, col 1->2 (spanLeft)->3 (spanLeft)->4 (newCell03 placed)
+        expect(table.rows[1].cells[2]).toEqual(newCell01);
+        expect(table.rows[1].cells[3]).toEqual(newCell02);
+        expect(table.rows[1].cells[4]).toEqual(newCell03);
+
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+    });
+
+    it('table to table, merge source table with spanAbove cells - should reset spanAbove on merged cells', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        // Create a simple 2x2 target table with selection in cell [0,0]
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell00 = createTableCell(false, false, false, { backgroundColor: '00' });
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell10 = createTableCell(false, false, false, { backgroundColor: '10' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const table1 = createTable(2);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell00.blocks.push(para1);
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell00, cell01] },
+            { format: {}, height: 0, cells: [cell10, cell11] },
+        ];
+
+        majorModel.blocks.push(table1);
+
+        // Source table is 2x2 where the second row cells are vertically merged (spanAbove)
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell00 = createTableCell(false, false, false, { backgroundColor: 'n00' });
+        const newCell01 = createTableCell(false, false, false, { backgroundColor: 'n01' });
+        const newCell10 = createTableCell(false, true, false, { backgroundColor: 'n10' }); // spanAbove
+        const newCell11 = createTableCell(false, true, false, { backgroundColor: 'n11' }); // spanAbove
+        const newTable1 = createTable(2);
+
+        newPara1.segments.push(newText1);
+        newCell00.blocks.push(newPara1);
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell00, newCell01] },
+            { format: {}, height: 0, cells: [newCell10, newCell11] },
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                mergeTable: true,
+            }
+        );
+
+        const table = majorModel.blocks[0] as ContentModelTable;
+
+        // Target stays 2x2, all source cells are placed one-to-one
+        expect(table.rows.length).toEqual(2);
+        expect(table.rows[0].cells.length).toEqual(2);
+
+        expect(table.rows[0].cells[0]).toBe(newCell00);
+        expect(table.rows[0].cells[1]).toBe(newCell01);
+        expect(table.rows[1].cells[0]).toBe(newCell10);
+        expect(table.rows[1].cells[1]).toBe(newCell11);
+
+        // The spanAbove flag from the source table must be reset so the merged cells
+        // become standalone cells instead of continuations of a vertical merge
+        expect(newCell10.spanAbove).toBe(false);
+        expect(newCell11.spanAbove).toBe(false);
+        expect(newCell00.spanAbove).toBe(false);
+        expect(newCell01.spanAbove).toBe(false);
+
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
     });
 
     // #endregion

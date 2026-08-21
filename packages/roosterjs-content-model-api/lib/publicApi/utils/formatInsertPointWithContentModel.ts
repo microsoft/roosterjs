@@ -60,6 +60,15 @@ export function formatInsertPointWithContentModel(
                 textWithSelection: getShadowTextProcessor(bundle),
             },
             tryGetFromCache: false,
+            // When an element carries "container level" styles such as margin or padding, we first
+            // wrap it in a FormatContainer. After all its child nodes are processed, we decide whether
+            // to keep the FormatContainer or fall back to a plain paragraph when it only wraps a single
+            // paragraph. However, formatInsertPointWithContentModel persists the Content Model group path
+            // during processing so the later formatting callback can still use it (see the
+            // DomToModelContextWithPath interface below). If the FormatContainer falls back to a paragraph,
+            // it is removed from the model and the persisted path becomes invalid. To keep the path valid,
+            // we skip the fallback check here and always keep the FormatContainer when one is needed.
+            skipFormatContainerFallbackCheck: true,
         }
     );
 }

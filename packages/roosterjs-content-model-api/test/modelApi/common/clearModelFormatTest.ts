@@ -830,7 +830,6 @@ describe('clearModelFormat', () => {
                                 {
                                     blockGroupType: 'TableCell',
                                     format: {
-                                        useBorderBox: undefined,
                                         borderTop: '1px solid #ABABAB',
                                         borderRight: '1px solid #ABABAB',
                                         borderBottom: '1px solid #ABABAB',
@@ -846,7 +845,6 @@ describe('clearModelFormat', () => {
                                 {
                                     blockGroupType: 'TableCell',
                                     format: {
-                                        useBorderBox: undefined,
                                         borderTop: '1px solid #ABABAB',
                                         borderRight: '1px solid #ABABAB',
                                         borderBottom: '1px solid #ABABAB',
@@ -865,6 +863,364 @@ describe('clearModelFormat', () => {
                 },
             ],
         });
+        expect(blocks).toEqual([]);
+        expect(segments).toEqual([]);
+        expect(tables).toEqual([[table, true]]);
+        expect(result).toBeFalse();
+    });
+
+    it('Model with selection under table should preserve verticalAlign', () => {
+        const model = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell(false, false, false, {
+            backgroundColor: 'green',
+            verticalAlign: 'middle',
+            useBorderBox: true,
+        });
+        const cell2 = createTableCell(false, false, false, {
+            backgroundColor: 'blue',
+            verticalAlign: 'bottom',
+            useBorderBox: true,
+        });
+
+        table.format.backgroundColor = 'red';
+
+        cell1.isSelected = true;
+        cell2.isSelected = true;
+
+        table.rows[0].cells.push(cell1, cell2);
+        model.blocks.push(table);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        const result = clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    format: { useBorderBox: undefined, borderCollapse: undefined },
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                    },
+                    widths: [],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {
+                                        useBorderBox: true,
+                                        verticalAlign: 'middle',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    dataset: {},
+                                    blocks: [],
+                                    isSelected: true,
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {
+                                        useBorderBox: true,
+                                        verticalAlign: 'bottom',
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    dataset: {},
+                                    blocks: [],
+                                    isSelected: true,
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(blocks).toEqual([]);
+        expect(segments).toEqual([]);
+        expect(tables).toEqual([[table, true]]);
+        expect(result).toBeFalse();
+    });
+
+    it('Model with selection under table should preserve height and width', () => {
+        const model = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell(false, false, false, {
+            backgroundColor: 'green',
+            height: '100px',
+            width: '200px',
+            borderTop: '2px solid red',
+            borderBottom: '2px solid red',
+            borderLeft: '2px solid red',
+            borderRight: '2px solid red',
+        });
+
+        // Set borderOverride so applyTableFormat doesn't overwrite borders
+        cell1.dataset = {
+            editingInfo: '{"borderOverride":true}',
+        };
+
+        table.format.backgroundColor = 'red';
+
+        cell1.isSelected = true;
+
+        table.rows[0].cells.push(cell1);
+        model.blocks.push(table);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        const result = clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    format: { useBorderBox: undefined, borderCollapse: undefined },
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                    },
+                    widths: [],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {
+                                        height: '100px',
+                                        width: '200px',
+                                        borderTop: '2px solid red',
+                                        borderRight: '2px solid red',
+                                        borderBottom: '2px solid red',
+                                        borderLeft: '2px solid red',
+                                    },
+                                    dataset: {
+                                        editingInfo: '{"borderOverride":true}',
+                                    },
+                                    blocks: [],
+                                    isSelected: true,
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(blocks).toEqual([]);
+        expect(segments).toEqual([]);
+        expect(tables).toEqual([[table, true]]);
+        expect(result).toBeFalse();
+    });
+
+    it('Model with selection under table should clear textAlign', () => {
+        const model = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell(false, false, false, {
+            backgroundColor: 'green',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+        });
+
+        // Set vAlignOverride so applyTableFormat doesn't overwrite verticalAlign
+        cell1.dataset = {
+            editingInfo: '{"vAlignOverride":true}',
+        };
+
+        table.format.backgroundColor = 'red';
+
+        cell1.isSelected = true;
+
+        table.rows[0].cells.push(cell1);
+        model.blocks.push(table);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        const result = clearModelFormat(model, blocks, segments, tables);
+
+        // textAlign should be cleared, verticalAlign should be preserved
+        const resultTable = model.blocks[0] as any;
+        expect(resultTable.rows[0].cells[0].format.textAlign).toBeUndefined();
+        expect(resultTable.rows[0].cells[0].format.verticalAlign).toBe('middle');
+
+        expect(blocks).toEqual([]);
+        expect(segments).toEqual([]);
+        expect(tables).toEqual([[table, true]]);
+        expect(result).toBeFalse();
+    });
+
+    it('Model with selection under table should preserve useBorderBox', () => {
+        const model = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell(false, false, false, {
+            backgroundColor: 'green',
+            useBorderBox: true,
+        });
+
+        table.format.backgroundColor = 'red';
+
+        cell1.isSelected = true;
+
+        table.rows[0].cells.push(cell1);
+        model.blocks.push(table);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        const result = clearModelFormat(model, blocks, segments, tables);
+
+        const resultTable = model.blocks[0] as any;
+        expect(resultTable.rows[0].cells[0].format.useBorderBox).toBe(true);
+        expect(resultTable.rows[0].cells[0].format.backgroundColor).toBeUndefined();
+
+        expect(blocks).toEqual([]);
+        expect(segments).toEqual([]);
+        expect(tables).toEqual([[table, true]]);
+        expect(result).toBeFalse();
+    });
+
+    it('Model with selection under table should preserve borders', () => {
+        const model = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell(false, false, false, {
+            backgroundColor: 'green',
+            borderTop: '3px solid blue',
+            borderBottom: '3px solid blue',
+            borderLeft: '3px solid blue',
+            borderRight: '3px solid blue',
+        });
+
+        // Set borderOverride so applyTableFormat doesn't overwrite borders
+        cell1.dataset = {
+            editingInfo: '{"borderOverride":true}',
+        };
+
+        table.format.backgroundColor = 'red';
+
+        cell1.isSelected = true;
+
+        table.rows[0].cells.push(cell1);
+        model.blocks.push(table);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        const result = clearModelFormat(model, blocks, segments, tables);
+
+        const resultTable = model.blocks[0] as any;
+        expect(resultTable.rows[0].cells[0].format.borderTop).toBe('3px solid blue');
+        expect(resultTable.rows[0].cells[0].format.borderBottom).toBe('3px solid blue');
+        expect(resultTable.rows[0].cells[0].format.borderLeft).toBe('3px solid blue');
+        expect(resultTable.rows[0].cells[0].format.borderRight).toBe('3px solid blue');
+        expect(resultTable.rows[0].cells[0].format.backgroundColor).toBeUndefined();
+
+        expect(blocks).toEqual([]);
+        expect(segments).toEqual([]);
+        expect(tables).toEqual([[table, true]]);
+        expect(result).toBeFalse();
+    });
+
+    it('Model with selection under table should clear non-preserved properties and keep preserved ones', () => {
+        const model = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell(false, false, false, {
+            // Properties that should be preserved
+            useBorderBox: true,
+            verticalAlign: 'middle',
+            height: '50px',
+            width: '100px',
+            borderTop: '2px solid black',
+            borderBottom: '2px solid black',
+            borderLeft: '2px solid black',
+            borderRight: '2px solid black',
+            // Properties that should be cleared
+            backgroundColor: 'green',
+            textAlign: 'center',
+            direction: 'rtl',
+            htmlAlign: 'center',
+            marginTop: '10px',
+            marginBottom: '10px',
+            marginLeft: '10px',
+            marginRight: '10px',
+            paddingTop: '5px',
+            paddingBottom: '5px',
+            paddingLeft: '5px',
+            paddingRight: '5px',
+        });
+
+        // Set overrides so applyTableFormat doesn't overwrite preserved values
+        cell1.dataset = {
+            editingInfo: '{"vAlignOverride":true,"borderOverride":true}',
+        };
+
+        table.format.backgroundColor = 'red';
+
+        cell1.isSelected = true;
+
+        table.rows[0].cells.push(cell1);
+        model.blocks.push(table);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        const result = clearModelFormat(model, blocks, segments, tables);
+
+        const resultTable = model.blocks[0] as any;
+        const cellFormat = resultTable.rows[0].cells[0].format;
+
+        // Preserved properties should exist
+        expect(cellFormat.useBorderBox).toBe(true);
+        expect(cellFormat.verticalAlign).toBe('middle');
+        expect(cellFormat.height).toBe('50px');
+        expect(cellFormat.width).toBe('100px');
+        expect(cellFormat.borderTop).toBe('2px solid black');
+        expect(cellFormat.borderBottom).toBe('2px solid black');
+        expect(cellFormat.borderLeft).toBe('2px solid black');
+        expect(cellFormat.borderRight).toBe('2px solid black');
+
+        // Cleared properties should not exist
+        expect(cellFormat.backgroundColor).toBeUndefined();
+        expect(cellFormat.textAlign).toBeUndefined();
+        expect(cellFormat.direction).toBeUndefined();
+        expect(cellFormat.htmlAlign).toBeUndefined();
+        expect(cellFormat.marginTop).toBeUndefined();
+        expect(cellFormat.marginBottom).toBeUndefined();
+        expect(cellFormat.marginLeft).toBeUndefined();
+        expect(cellFormat.marginRight).toBeUndefined();
+        expect(cellFormat.paddingTop).toBeUndefined();
+        expect(cellFormat.paddingBottom).toBeUndefined();
+        expect(cellFormat.paddingLeft).toBeUndefined();
+        expect(cellFormat.paddingRight).toBeUndefined();
+
         expect(blocks).toEqual([]);
         expect(segments).toEqual([]);
         expect(tables).toEqual([[table, true]]);

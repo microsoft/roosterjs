@@ -93,7 +93,11 @@ function setSelectionToBlock(
             });
 
         case 'Paragraph':
-            const segmentsToDelete: number[] = [];
+            const state: ParagraphSelectionState = {
+                segmentsToDelete: [],
+                boundaryMarkers: [],
+                hasSelectedNonMarker: false,
+            };
 
             block.segments.forEach((segment, i) => {
                 isInSelection = handleSelection(
@@ -106,7 +110,7 @@ function setSelectionToBlock(
                             block,
                             segment,
                             isInSelection,
-                            segmentsToDelete,
+                            state,
                             start,
                             end,
                             i
@@ -115,12 +119,25 @@ function setSelectionToBlock(
                 );
             });
 
-            if (segmentsToDelete.length > 0) {
+            if (state.hasSelectedNonMarker) {
+                // This paragraph contains a real (non-marker) selected segment, so any leading/trailing
+                // selection marker of the range is redundant within this paragraph and can be removed.
+                // We only do this within the same paragraph: a boundary marker at a paragraph edge must be
+                // kept to distinguish "selection starts at the beginning of this line" from "selection
+                // starts at the end of the previous line".
+                state.segmentsToDelete.push(...state.boundaryMarkers);
+            }
+
+            if (state.segmentsToDelete.length > 0) {
                 const mutablePara = mutateBlock(block);
 
                 let index: number | undefined;
 
-                while ((index = segmentsToDelete.pop()) !== undefined) {
+                // Sort ascending so the pop()-based splice below always removes the highest index first,
+                // keeping the remaining indices valid (boundary markers may sit before queued deletions).
+                state.segmentsToDelete.sort((a, b) => a - b);
+
+                while ((index = state.segmentsToDelete.pop()) !== undefined) {
                     if (index >= 0) {
                         mutablePara.segments.splice(index, 1);
                     }
@@ -191,22 +208,43 @@ function findCell(
     return { row, col };
 }
 
+interface ParagraphSelectionState {
+    // Indexes of segments to delete after the paragraph is fully processed
+    segmentsToDelete: number[];
+
+    // Indexes of leading/trailing selection markers of the range that are kept for now, but will be
+    // removed if this paragraph also contains a real (non-marker) selected segment
+    boundaryMarkers: number[];
+
+    // Whether this paragraph contains at least one selected segment that is not a selection marker
+    hasSelectedNonMarker: boolean;
+}
+
 function setSelectionToSegment(
     paragraph: ReadonlyContentModelParagraph,
     segment: ReadonlyContentModelSegment,
     isInSelection: boolean,
-    segmentsToDelete: number[],
+    state: ParagraphSelectionState,
     start: ReadonlySelectable | null,
     end: ReadonlySelectable | null,
     i: number
 ) {
+    if (segment.segmentType != 'SelectionMarker' && isInSelection) {
+        state.hasSelectedNonMarker = true;
+    }
+
     switch (segment.segmentType) {
         case 'SelectionMarker':
             if (!isInSelection || (segment != start && segment != end)) {
                 // Delete the selection marker when
                 // 1. It is not in selection any more. Or
                 // 2. It is in middle of selection, so no need to have it
-                segmentsToDelete.push(i);
+                state.segmentsToDelete.push(i);
+            } else {
+                // It is a leading/trailing selection marker of a range selection. Keep it for now, but
+                // remember it so it can be removed later if this same paragraph also contains a real
+                // (non-marker) selected segment, in which case the marker is redundant.
+                state.boundaryMarkers.push(i);
             }
             return isInSelection;
 

@@ -23,6 +23,9 @@ import type {
 
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
 const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
+const END_OF_PARAGRAPH = 'EOP';
+const SELECTED_CLASS = 'Selected';
+const BASE_PADDING_WAC_LISTS = '1em';
 
 interface WacContext extends DomToModelListFormat {
     /**
@@ -77,7 +80,11 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
         return;
     }
 
-    if (TEMP_ELEMENTS_CLASSES.some(className => element.classList.contains(className))) {
+    if (
+        TEMP_ELEMENTS_CLASSES.some(className => element.classList.contains(className)) ||
+        // This is needed to remove some temporary End of paragraph elements that WAC sometimes preserves
+        (element.classList.contains(SELECTED_CLASS) && element.classList.contains(END_OF_PARAGRAPH))
+    ) {
         return;
     } else if (shouldClearListContext(elementTag, element, context)) {
         const { listFormat } = context;
@@ -153,9 +160,6 @@ const wacListItemParser: FormatParser<ContentModelListItemLevelFormat> = (
     if (element.style.display === 'block') {
         format.displayForDummyItem = undefined;
     }
-
-    format.marginLeft = undefined;
-    format.marginRight = undefined;
 };
 
 /**
@@ -165,7 +169,7 @@ const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
     format: ContentModelListItemLevelFormat
 ): void => {
     format.marginLeft = undefined;
-    format.paddingLeft = undefined;
+    format.paddingLeft = BASE_PADDING_WAC_LISTS;
 };
 
 /**

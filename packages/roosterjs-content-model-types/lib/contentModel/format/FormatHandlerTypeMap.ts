@@ -5,6 +5,7 @@ import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
 import type { DatasetFormat } from './metadata/DatasetFormat';
+import type { DataValueFormat } from './formatParts/DataValueFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
 import type { DisplayFormat } from './formatParts/DisplayFormat';
 import type { EntityInfoFormat } from './formatParts/EntityInfoFormat';
@@ -81,6 +82,11 @@ export interface FormatHandlerTypeMap {
      * Format for DatasetFormat
      */
     dataset: DatasetFormat;
+
+    /**
+     * Format for DataValueFormat, used by HTML &lt;data&gt; element
+     */
+    dataValue: DataValueFormat;
 
     /**
      * Format for DirectionFormat

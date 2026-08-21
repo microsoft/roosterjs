@@ -8,6 +8,61 @@ import {
     domToContentModel,
     moveChildNodes,
 } from 'roosterjs-content-model-dom';
+import type { CssRule } from 'roosterjs-content-model-types';
+
+const WORD_DESKTOP_CSS_RULES: CssRule[] = [
+    {
+        selectors: ['p.MsoNormal', 'li.MsoNormal', 'div.MsoNormal'],
+        text:
+            'margin: 0in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: ['h1'],
+        text:
+            'margin: 22pt 0in 0in; break-after: avoid; font-size: 20pt; font-family: "Aptos Display", sans-serif; color: rgb(0, 55, 164); font-weight: normal;',
+    },
+    {
+        selectors: ['p.MsoListParagraph', 'li.MsoListParagraph', 'div.MsoListParagraph'],
+        text:
+            'margin: 0in 0in 0in 0.5in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: [
+            'p.MsoListParagraphCxSpFirst',
+            'li.MsoListParagraphCxSpFirst',
+            'div.MsoListParagraphCxSpFirst',
+        ],
+        text:
+            'margin: 0in 0in 0in 0.5in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: [
+            'p.MsoListParagraphCxSpMiddle',
+            'li.MsoListParagraphCxSpMiddle',
+            'div.MsoListParagraphCxSpMiddle',
+        ],
+        text:
+            'margin: 0in 0in 0in 0.5in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: [
+            'p.MsoListParagraphCxSpLast',
+            'li.MsoListParagraphCxSpLast',
+            'div.MsoListParagraphCxSpLast',
+        ],
+        text:
+            'margin: 0in 0in 0in 0.5in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
+    },
+    {
+        selectors: ['span.Heading1Char'],
+        text: 'font-family: "Aptos Display", sans-serif; color: rgb(0, 55, 164);',
+    },
+    { selectors: ['.MsoChpDefault'], text: 'font-family: Aptos, sans-serif;' },
+    { selectors: ['.MsoPapDefault'], text: 'margin-bottom: 8pt; line-height: 115%;' },
+    { selectors: ['div.WordSection1'], text: 'page: WordSection1;' },
+    { selectors: ['ol'], text: 'margin-bottom: 0in;' },
+    { selectors: ['ul'], text: 'margin-bottom: 0in;' },
+];
 
 describe('processPastedContentFromWordDesktopTest', () => {
     let div: HTMLElement;
@@ -27,7 +82,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment, htmlBefore);
-        processPastedContentFromWordDesktop(event.domToModelOption, htmlBefore || source || '');
+        // Pass a deep copy so each test gets a fresh mutable array.
+        processPastedContentFromWordDesktop(
+            event.domToModelOption,
+            htmlBefore || source || '',
+            JSON.parse(JSON.stringify(WORD_DESKTOP_CSS_RULES))
+        );
 
         const model = domToContentModel(
             fragment,
@@ -1252,7 +1312,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             ],
                             blockType: 'BlockGroup',
                             format: {
-                                marginLeft: '1.5in',
+                                marginLeft: '104px',
                             },
                             blockGroupType: 'ListItem',
                             blocks: [
@@ -1439,6 +1499,76 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginRight: '0in',
                                 marginBottom: '0in',
                                 marginLeft: '0.5in',
+                            },
+                        },
+                    ],
+                },
+                true /* removeUndefinedValues */
+            );
+        });
+
+        it('adjustWordListMarginParser subtracts default list padding from MsoListParagraph margin', () => {
+            // margin-left: 1in = 96px; parser subtracts 40px (default list paddingInlineStart) → 56px
+            const source =
+                '<p style="margin:0in 0in 0in 1in;font-size:12pt;font-family:Calibri, sans-serif;text-indent:-.25in;mso-list:l0 level1 lfo1" class="MsoListParagraph"><span style="font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol"><span style="mso-list:Ignore">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n</span></span></span>TEST</p>';
+            spyOn(getStyleMetadata, 'getStyleMetadata').and.returnValue(
+                new Map<string, WordMetadata>().set('l0:level1', {
+                    'mso-level-number-format': 'bullet',
+                    'mso-level-start-at': '1',
+                })
+            );
+
+            runTest(
+                source,
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'TEST',
+                                            format: {
+                                                fontFamily: 'Calibri, sans-serif',
+                                                fontSize: '12pt',
+                                            },
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                    segmentFormat: {
+                                        fontFamily: 'Calibri, sans-serif',
+                                        fontSize: '12pt',
+                                    },
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'UL',
+                                    format: {
+                                        marginTop: '0in',
+                                        marginRight: '0in',
+                                        paddingLeft: '0px',
+                                        wordList: 'l0',
+                                    },
+                                    dataset: {},
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: { fontFamily: 'Symbol', fontSize: '12pt' },
+                            },
+                            format: {
+                                marginTop: '0in',
+                                marginRight: '0in',
+                                marginBottom: '0in',
+                                marginLeft: '56px',
                             },
                         },
                     ],

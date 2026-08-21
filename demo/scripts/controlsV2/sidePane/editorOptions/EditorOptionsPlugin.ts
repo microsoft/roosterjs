@@ -18,12 +18,14 @@ const initialState: OptionState = {
         pasteOption: true,
         sampleEntity: true,
         markdown: true,
+        markdownPaste: true,
         imageEditPlugin: true,
         hyperlink: true,
         customReplace: true,
         hiddenProperty: true,
         touch: true,
         announce: true,
+        dragAndDrop: true,
     },
     defaultFormat: {
         fontFamily: 'Calibri',
@@ -58,6 +60,10 @@ const initialState: OptionState = {
         strikethrough: true,
         codeFormat: {},
     },
+    markdownPasteOptions: {
+        autoConversion: false,
+        undoConversion: false,
+    },
     editPluginOptions: {
         handleTabKey: {
             indentMultipleBlocks: true,
@@ -70,10 +76,8 @@ const initialState: OptionState = {
     customReplacements: emojiReplacements,
     disableSideResize: false,
     experimentalFeatures: new Set<ExperimentalFeature>([
-        'HandleEnterKey',
-        'CloneIndependentRoot',
-        'CacheList',
         'TransformTableBorderColors',
+        'HandleDropInternalContent',
     ]),
 };
 

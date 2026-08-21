@@ -1,5 +1,5 @@
 import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/addParser';
-import * as createPasteFragmentFile from '../../../lib/command/paste/createPasteFragment';
+import * as createPasteFragmentFile from 'roosterjs-content-model-dom/lib/domUtils/event/createPasteFragment';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
 import * as generatePasteOptionFromPluginsFile from '../../../lib/command/paste/generatePasteOptionFromPlugins';
@@ -130,6 +130,30 @@ describe('Paste ', () => {
             'normal'
         );
     });
+
+    it('Execute | Callback receives all parameters defined', () => {
+        let receivedArgs: any[] | undefined;
+
+        const cb: PasteTypeOrGetter = (...args) => {
+            receivedArgs = args;
+            return 'normal';
+        };
+        paste(editor, clipboardData, cb);
+
+        expect(receivedArgs).toBeDefined();
+        expect(receivedArgs!.length).toBe(4);
+
+        const [doc, cbClipboardData, environment, htmlAttributes] = receivedArgs!;
+
+        expect(doc).toBeDefined();
+        expect(doc).not.toBeNull();
+        expect(cbClipboardData).toBeDefined();
+        expect(cbClipboardData).toBe(clipboardData);
+        expect(environment).toBeDefined();
+        expect(environment).not.toBeNull();
+        expect(htmlAttributes).toBeDefined();
+        expect(htmlAttributes).not.toBeNull();
+    });
 });
 
 describe('paste with content model & paste plugin', () => {
@@ -168,7 +192,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 6);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 7);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -224,7 +248,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(11);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(12);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -396,7 +420,7 @@ describe('Paste with clipboardData', () => {
         expect(mergePasteContentSpy.calls.argsFor(0)[2]).toBeTrue();
     });
 
-    xit('Second paste', () => {
+    it('Second paste', () => {
         clipboardData.rawHtml = '';
         clipboardData.modelBeforePaste = {
             blockGroupType: 'Document',
@@ -404,6 +428,19 @@ describe('Paste with clipboardData', () => {
         };
 
         paste(editor, clipboardData);
+
+        // Merging empty content into an empty model produces no insertion point, so paste leaves
+        // the editor empty without setting a selection. The caret a browser leaves in an empty
+        // editable is browser-specific (Chrome keeps it inside the content div, Firefox drops it to
+        // <body>), which makes the rebuilt model non-deterministic. Place a collapsed selection at
+        // the start of the editor to read the canonical empty-editor model consistently.
+        const contentDiv = document.getElementById(ID)!;
+        const range = contentDiv.ownerDocument.createRange();
+        range.setStart(contentDiv, 0);
+        range.collapse(true);
+        const selection = contentDiv.ownerDocument.getSelection()!;
+        selection.removeAllRanges();
+        selection.addRange(range);
 
         const model = editor.getContentModelCopy('connected');
 

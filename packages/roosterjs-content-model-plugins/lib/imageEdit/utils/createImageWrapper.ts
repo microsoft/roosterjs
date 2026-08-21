@@ -11,8 +11,6 @@ import type {
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageHtmlOptions } from '../types/ImageHtmlOptions';
 
-const IMAGE_EDIT_SHADOW_ROOT = 'ImageEditShadowRoot';
-
 /**
  * @internal
  */
@@ -36,7 +34,7 @@ export function createImageWrapper(
     htmlOptions: ImageHtmlOptions,
     operation: ImageEditOperation[]
 ): WrapperElements {
-    const imageClone = cloneImage(image, editInfo);
+    const imageClone = cloneImage(image, editInfo, options.resolveImageSource);
     const doc = editor.getDocument();
 
     let rotators: HTMLDivElement[] = [];
@@ -62,16 +60,31 @@ export function createImageWrapper(
         rotators,
         croppers
     );
+    // Capture the image footprint before attaching the shadow root, since the light-DOM image
+    // stops being rendered once the shadow root takes over.
+    const imageWidth = image.offsetWidth;
+    const imageHeight = image.offsetHeight;
     const imageSpan = wrap(doc, image, 'span');
-    const shadowSpan = createShadowSpan(wrapper, imageSpan);
+    const shadowSpan = createShadowSpan(wrapper, imageSpan, imageWidth, imageHeight);
     return { wrapper, shadowSpan, imageClone, resizers, rotators, croppers };
 }
 
-const createShadowSpan = (wrapper: HTMLElement, imageSpan: HTMLSpanElement) => {
+const createShadowSpan = (
+    wrapper: HTMLElement,
+    imageSpan: HTMLSpanElement,
+    imageWidth: number,
+    imageHeight: number
+) => {
     const shadowRoot = imageSpan.attachShadow({
         mode: 'open',
     });
-    imageSpan.id = IMAGE_EDIT_SHADOW_ROOT;
+
+    if (imageWidth > 0 && imageHeight > 0) {
+        imageSpan.style.display = 'inline-block';
+        imageSpan.style.verticalAlign = 'bottom';
+        imageSpan.style.overflow = 'visible';
+    }
+
     shadowRoot.appendChild(wrapper);
     return imageSpan;
 };
@@ -136,11 +149,15 @@ const createBorder = (editor: IEditor, borderColor?: string) => {
     return resizeBorder;
 };
 
-const cloneImage = (image: HTMLImageElement, editInfo: ImageMetadataFormat) => {
+const cloneImage = (
+    image: HTMLImageElement,
+    editInfo: ImageMetadataFormat,
+    resolveImageSource?: (src: string) => string | undefined
+) => {
     const imageClone = image.cloneNode(true) as HTMLImageElement;
     imageClone.style.removeProperty('transform');
     if (editInfo.src) {
-        imageClone.src = editInfo.src;
+        imageClone.src = resolveImageSource?.(editInfo.src) ?? editInfo.src;
         imageClone.removeAttribute('id');
         imageClone.style.removeProperty('max-width');
         imageClone.style.removeProperty('max-height');

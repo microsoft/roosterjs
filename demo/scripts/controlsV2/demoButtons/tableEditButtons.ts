@@ -11,7 +11,12 @@ import type {
     TableEditSplitMenuItemStringKey,
 } from 'roosterjs-react';
 
-const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOperation>> = {
+type DemoTableEditMenuItemStringKey =
+    | TableEditMenuItemStringKey
+    | 'menuNameTableShiftCellsUp'
+    | 'menuNameTableShiftCellsLeft';
+
+const TableEditOperationMap: Partial<Record<DemoTableEditMenuItemStringKey, TableOperation>> = {
     menuNameTableInsertAbove: 'insertAbove',
     menuNameTableInsertBelow: 'insertBelow',
     menuNameTableInsertLeft: 'insertLeft',
@@ -35,6 +40,8 @@ const TableEditOperationMap: Partial<Record<TableEditMenuItemStringKey, TableOpe
     menuNameTableAlignTableLeft: 'alignLeft',
     menuNameTableAlignTableCenter: 'alignCenter',
     menuNameTableAlignTableRight: 'alignRight',
+    menuNameTableShiftCellsUp: 'shiftCellsUp',
+    menuNameTableShiftCellsLeft: 'shiftCellsLeft',
 };
 
 export const tableInsertButton: RibbonButton<
@@ -71,6 +78,8 @@ export const tableDeleteButton: RibbonButton<
             menuNameTableDeleteColumn: 'Delete column',
             menuNameTableDeleteRow: 'Delete row',
             menuNameTableDeleteTable: 'Delete table',
+            menuNameTableShiftCellsUp: 'Shift cells up',
+            menuNameTableShiftCellsLeft: 'Shift cells left',
         },
     },
     onClick: (editor, key) => {

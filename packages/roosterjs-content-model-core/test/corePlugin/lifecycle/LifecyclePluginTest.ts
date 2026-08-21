@@ -7,14 +7,27 @@ import { DarkColorHandler, IEditor } from 'roosterjs-content-model-types';
 const announceContainer = {} as Readonly<HTMLDivElement>;
 
 describe('LifecyclePlugin', () => {
+    let appendToRootSpy: jasmine.Spy;
+    let div: HTMLDivElement;
+    let getDOMHelper: jasmine.Spy;
+
     beforeEach(() => {
+        div = document.createElement('div');
+        document.body.appendChild(div);
+        appendToRootSpy = jasmine.createSpy('appendToRoot');
+        getDOMHelper = jasmine.createSpy('getDOMHelper').and.returnValue({
+            appendToRoot: appendToRootSpy,
+        });
         spyOn(createAriaLiveElementFile, 'createAriaLiveElement').and.returnValue(
             announceContainer
         );
     });
 
+    afterEach(() => {
+        div.remove();
+    });
+
     it('init', () => {
-        const div = document.createElement('div');
         const plugin = createLifecyclePlugin({}, div);
         const triggerEvent = jasmine.createSpy('triggerEvent');
         const getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
@@ -27,6 +40,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(state).toEqual({
@@ -54,7 +68,6 @@ describe('LifecyclePlugin', () => {
     it('init with options', () => {
         const mockedModel = 'MODEL' as any;
         const mockedAnnouncerStringGetter = 'ANNOUNCE' as any;
-        const div = document.createElement('div');
         const plugin = createLifecyclePlugin(
             {
                 defaultSegmentFormat: {
@@ -75,6 +88,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(state).toEqual({
@@ -99,7 +113,6 @@ describe('LifecyclePlugin', () => {
     });
 
     it('init with rewriteFromModel', () => {
-        const div = document.createElement('div');
         const plugin = createLifecyclePlugin({}, div);
         const triggerEvent = jasmine.createSpy('triggerEvent');
         const getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
@@ -119,6 +132,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(state).toEqual({
@@ -144,7 +158,6 @@ describe('LifecyclePlugin', () => {
     });
 
     it('init with DIV which already has contenteditable attribute', () => {
-        const div = document.createElement('div');
         div.contentEditable = 'true';
         const plugin = createLifecyclePlugin({}, div);
         const triggerEvent = jasmine.createSpy('triggerEvent');
@@ -156,10 +169,11 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(div.isContentEditable).toBeTrue();
-        expect(div.style.userSelect).toBe('');
+        expect(div.style.getPropertyValue('user-select')).toBe('');
         expect(triggerEvent).toHaveBeenCalledTimes(1);
         expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
         expect(triggerEvent.calls.argsFor(0)[1]).toEqual({
@@ -172,7 +186,6 @@ describe('LifecyclePlugin', () => {
     });
 
     it('init with DIV which already has contenteditable attribute and set to false', () => {
-        const div = document.createElement('div');
         div.contentEditable = 'false';
         const plugin = createLifecyclePlugin({}, div);
         const triggerEvent = jasmine.createSpy('triggerEvent');
@@ -184,10 +197,11 @@ describe('LifecyclePlugin', () => {
             getColorManager: () => <DarkColorHandler | null>null,
             isDarkMode: () => false,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(div.isContentEditable).toBeFalse();
-        expect(div.style.userSelect).toBe('');
+        expect(div.style.getPropertyValue('user-select')).toBe('');
         expect(triggerEvent).toHaveBeenCalledTimes(1);
         expect(triggerEvent.calls.argsFor(0)[0]).toBe('editorReady');
         expect(triggerEvent.calls.argsFor(0)[1]).toEqual({
@@ -200,7 +214,6 @@ describe('LifecyclePlugin', () => {
     });
 
     it('Handle ContentChangedEvent, not change color', () => {
-        const div = document.createElement('div');
         const plugin = createLifecyclePlugin({}, div);
         const triggerEvent = jasmine.createSpy('triggerEvent');
         const state = plugin.getState();
@@ -213,6 +226,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             getColorManager: () => mockedDarkColorHandler,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(setColorSpy).toHaveBeenCalledTimes(2);
@@ -235,7 +249,6 @@ describe('LifecyclePlugin', () => {
     });
 
     it('Handle ContentChangedEvent, change color', () => {
-        const div = document.createElement('div');
         const plugin = createLifecyclePlugin({}, div);
         const triggerEvent = jasmine.createSpy('triggerEvent');
         const state = plugin.getState();
@@ -248,6 +261,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             getColorManager: () => mockedDarkColorHandler,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(setColorSpy).toHaveBeenCalledTimes(2);
@@ -287,7 +301,6 @@ describe('LifecyclePlugin', () => {
     });
 
     it('Handle ContentChangedEvent, not change color when editor does not allow adjust container color', () => {
-        const div = document.createElement('div');
         const plugin = createLifecyclePlugin(
             {
                 doNotAdjustEditorColor: true,
@@ -305,6 +318,7 @@ describe('LifecyclePlugin', () => {
             triggerEvent,
             getColorManager: () => mockedDarkColorHandler,
             getDocument,
+            getDOMHelper,
         }));
 
         expect(setColorSpy).toHaveBeenCalledTimes(0);
@@ -330,7 +344,6 @@ describe('LifecyclePlugin', () => {
     });
 
     it('Dispose plugin and clean up style nodes', () => {
-        const div = document.createElement('div');
         const plugin = createLifecyclePlugin({}, div);
         const getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
 
@@ -338,6 +351,7 @@ describe('LifecyclePlugin', () => {
             getColorManager: jasmine.createSpy(),
             triggerEvent: jasmine.createSpy(),
             getDocument,
+            getDOMHelper,
         });
 
         const state = plugin.getState();

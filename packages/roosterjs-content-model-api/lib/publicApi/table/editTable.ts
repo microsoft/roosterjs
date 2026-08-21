@@ -8,6 +8,7 @@ import { insertTableRow } from '../../modelApi/table/insertTableRow';
 import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
 import { mergeTableColumn } from '../../modelApi/table/mergeTableColumn';
 import { mergeTableRow } from '../../modelApi/table/mergeTableRow';
+import { shiftCells } from '../../modelApi/table/shiftCells';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 import type { TableOperation, IEditor } from 'roosterjs-content-model-types';
@@ -86,6 +87,11 @@ export function editTable(editor: IEditor, operation: TableOperation) {
 
             case 'splitVertically':
                 splitTableCellVertically(tableModel);
+                break;
+
+            case 'shiftCellsUp':
+            case 'shiftCellsLeft':
+                shiftCells(tableModel, operation);
                 break;
         }
     });

@@ -30,7 +30,7 @@ describe('handleSegmentCommon', () => {
 
         expect(context.regularSelection.current.segment).toBe(txt);
         expect(container.outerHTML).toBe(
-            '<span style="font-size: 10pt; color: red; line-height: 2;"><b><a href="href">test</a></b></span>'
+            '<span style="font-size: 10pt; color: red; line-height: 2;"><a href="href"><b>test</b></a></span>'
         );
         expect(onNodeCreated).toHaveBeenCalledWith(segment, txt);
         expect(segmentNodes.length).toBe(1);

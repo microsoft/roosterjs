@@ -1,3 +1,5 @@
+import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
+import * as applyMetadata from '../../../lib/modelToDom/utils/applyMetadata';
 import * as reuseCachedElement from '../../../lib/domUtils/reuseCachedElement';
 import { BulletListType } from '../../../lib/constants/BulletListType';
 import { ContentModelListItem, ModelToDomContext } from 'roosterjs-content-model-types';
@@ -37,6 +39,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -58,6 +61,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -87,6 +91,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -118,6 +123,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -153,6 +159,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -194,6 +201,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
     });
 
@@ -237,6 +245,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
     });
 
@@ -271,6 +280,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -313,6 +323,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -359,6 +370,7 @@ describe('handleList without format handlers', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
     });
 });
@@ -467,6 +479,7 @@ describe('handleList handles metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
     });
 
@@ -510,6 +523,7 @@ describe('handleList handles metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
         expect(result).toBe(br);
     });
@@ -609,6 +623,98 @@ describe('handleList handles metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
+        });
+        expect(listItem.levels[0].format.listStyleType).toBe('disc');
+    });
+
+    it('List style type should be changed by metadata when there is existing UL to reuse', () => {
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            levels: [
+                {
+                    listType: 'UL',
+                    format: {},
+                    dataset: {
+                        editingInfo: '{"applyListStyleFromLevel":true}',
+                    },
+                },
+            ],
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                isSelected: false,
+                format: {},
+            },
+            format: {},
+        };
+
+        context = createModelToDomContext(undefined, {
+            metadataAppliers: {
+                listLevel: listLevelMetadataApplier,
+            },
+        });
+
+        const existingUL = document.createElement('ul');
+        context.listFormat.nodeStack = [
+            {
+                node: parent,
+                refNode: null,
+            },
+            {
+                node: existingUL,
+                listType: 'UL',
+                dataset: {
+                    editingInfo: '{"applyListStyleFromLevel":true}',
+                },
+                format: {},
+                refNode: null,
+            },
+        ];
+
+        const applyFormatSpy = spyOn(applyFormat, 'applyFormat').and.callThrough();
+        const applyMetadataSpy = spyOn(applyMetadata, 'applyMetadata').and.callThrough();
+
+        handleList(document, parent, listItem, context, null);
+
+        expect(applyMetadataSpy).toHaveBeenCalledTimes(1);
+        expect(applyMetadataSpy).toHaveBeenCalledWith(
+            listItem.levels[0],
+            context.metadataAppliers.listLevel as any,
+            listItem.levels[0].format,
+            context
+        );
+        expect(applyFormatSpy).not.toHaveBeenCalled();
+
+        expectHtml(parent.outerHTML, ['<div></div>']);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [],
+            nodeStack: [
+                {
+                    node: parent,
+                    refNode: null,
+                },
+                {
+                    node: existingUL,
+                    listType: 'UL',
+                    dataset: { editingInfo: '{"applyListStyleFromLevel":true}' },
+                    format: {},
+                    refNode: null,
+                },
+            ],
+            currentLevel: 0,
         });
         expect(listItem.levels[0].format.listStyleType).toBe('disc');
     });
@@ -634,7 +740,6 @@ describe('handleList with cache', () => {
         ]);
 
         parent.appendChild(cachedUL);
-        context.allowCacheListItem = true;
 
         const newRefNode = handleList(document, parent, listItem, context, cachedUL);
 
@@ -656,6 +761,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(reuseCachedElementSpy).not.toHaveBeenCalled();
         expect(listItem.levels[0].cachedElement).toBe(parent.firstChild as any);
@@ -676,7 +782,6 @@ describe('handleList with cache', () => {
 
         listItem.levels[0].cachedElement = cachedUL;
         parent.appendChild(cachedUL);
-        context.allowCacheListItem = true;
 
         const newRefNode = handleList(document, parent, listItem, context, cachedUL);
 
@@ -697,6 +802,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(reuseCachedElementSpy).toHaveBeenCalledWith(
             parent,
@@ -723,7 +829,6 @@ describe('handleList with cache', () => {
 
         listItem.levels[0].cachedElement = cachedUL;
         parent.appendChild(refNode);
-        context.allowCacheListItem = true;
 
         const newRefNode = handleList(document, parent, listItem, context, refNode);
 
@@ -744,6 +849,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(reuseCachedElementSpy).toHaveBeenCalledWith(
             parent,
@@ -769,7 +875,6 @@ describe('handleList with cache', () => {
         listItem.levels[0].cachedElement = cachedUL;
 
         parent.appendChild(cachedUL);
-        context.allowCacheListItem = true;
 
         const newRefNode = handleList(document, parent, listItem, context, cachedUL);
 
@@ -792,6 +897,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
 
         expect(listItem.levels[0].cachedElement).toBe(cachedUL);
@@ -819,7 +925,7 @@ describe('handleList with cache', () => {
         listItem.levels[1].cachedElement = cachedUL;
         parent.appendChild(cachedOL);
         cachedOL.appendChild(cachedUL);
-        context.allowCacheListItem = true;
+
         const newRefNode = handleList(document, parent, listItem, context, cachedUL);
 
         expect(parent.outerHTML).toBe('<div><ol start="1"><ul></ul></ol></div>');
@@ -847,6 +953,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
         expect(listItem.levels[0].cachedElement).toBe(cachedOL);
         expect(listItem.levels[1].cachedElement).toBe(cachedUL);
@@ -873,7 +980,7 @@ describe('handleList with cache', () => {
 
         parent.appendChild(refNode);
         listItem.levels[1].cachedElement = cachedUL;
-        context.allowCacheListItem = true;
+
         const newRefNode = handleList(document, parent, listItem, context, refNode);
 
         expect(parent.outerHTML).toBe('<div><ol start="1"><ul></ul></ol><br></div>');
@@ -900,6 +1007,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 1,
         });
         expect(listItem.levels[0].cachedElement).toBe(parent.firstChild as any);
         expect(listItem.levels[1].cachedElement).toBe(cachedUL);
@@ -924,7 +1032,6 @@ describe('handleList with cache', () => {
         parent.appendChild(existingOL1);
         existingOL1.appendChild(existingLI);
         existingOL1.appendChild(existingOL2);
-        context.allowCacheListItem = true;
 
         context.listFormat.nodeStack = [
             { node: parent, refNode: existingOL1 },
@@ -949,6 +1056,7 @@ describe('handleList with cache', () => {
                     refNode: existingOL2,
                 },
             ],
+            currentLevel: 0,
         });
         expect(newRefNode).toBeNull();
     });
@@ -977,7 +1085,6 @@ describe('handleList with cache', () => {
         ]);
 
         listItem.levels[0].cachedElement = existingOL1;
-        context.allowCacheListItem = true;
 
         context.listFormat.nodeStack = [
             { node: parent, refNode: null },
@@ -1002,6 +1109,7 @@ describe('handleList with cache', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(newRefNode).toBeNull();
     });

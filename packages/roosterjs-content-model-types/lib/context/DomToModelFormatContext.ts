@@ -1,6 +1,7 @@
 import type { ContentModelBlockFormat } from '../contentModel/format/ContentModelBlockFormat';
 import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
 import type { ContentModelCode } from '../contentModel/decorator/ContentModelCode';
+import type { ContentModelData } from '../contentModel/decorator/ContentModelData';
 import type { ContentModelLink } from '../contentModel/decorator/ContentModelLink';
 import type { ContentModelListLevel } from '../contentModel/decorator/ContentModelListLevel';
 import type { ContentModelParagraphDecorator } from '../contentModel/decorator/ContentModelParagraphDecorator';
@@ -24,6 +25,12 @@ export interface DomToModelListFormat {
      * Current list type stack
      */
     levels: ContentModelListLevel[];
+
+    /**
+     * This is used for handling an abnormal case where list items are not inside a ul or ol tag
+     * It is not common and against the HTML specification, but we need to handle it for robustness
+     */
+    potentialListType?: 'OL' | 'UL';
 }
 
 /**
@@ -59,6 +66,11 @@ export interface DomToModelDecoratorContext {
      * Context of code info
      */
     code: ContentModelCode;
+
+    /**
+     * Context of data info, used by HTML &lt;data&gt; element
+     */
+    data: ContentModelData;
 
     /**
      * Context for paragraph decorator

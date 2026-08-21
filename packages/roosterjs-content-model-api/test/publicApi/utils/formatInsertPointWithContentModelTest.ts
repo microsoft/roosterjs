@@ -47,6 +47,7 @@ describe('formatInsertPointWithContentModel', () => {
                     textWithSelection: jasmine.anything() as any,
                 },
                 tryGetFromCache: false,
+                skipFormatContainerFallbackCheck: true,
             }
         );
 
@@ -112,6 +113,7 @@ describe('formatInsertPointWithContentModel', () => {
                     textWithSelection: jasmine.anything() as any,
                 },
                 tryGetFromCache: false,
+                skipFormatContainerFallbackCheck: true,
             }
         );
 

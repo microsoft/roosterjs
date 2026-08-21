@@ -310,7 +310,8 @@ export class Editor implements IEditor {
                 core.darkColorHandler,
                 {
                     tableBorders: this.isExperimentalFeatureEnabled('TransformTableBorderColors'),
-                }
+                },
+                core.format.defaultFormat.textColor
             );
 
             core.lifecycle.isDarkMode = !!isDarkMode;
@@ -432,6 +433,14 @@ export class Editor implements IEditor {
      */
     isExperimentalFeatureEnabled(featureName: ExperimentalFeature | string): boolean {
         return this.getCore().experimentalFeatures.indexOf(featureName) >= 0;
+    }
+
+    /**
+     * Get all experimental features enabled in this editor
+     * @returns An array of experimental feature names
+     * */
+    getExperimentalFeatures(): ExperimentalFeature[] {
+        return this.getCore().experimentalFeatures as ExperimentalFeature[];
     }
 
     /**

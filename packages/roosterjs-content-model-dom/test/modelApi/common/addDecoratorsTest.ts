@@ -1,5 +1,9 @@
-import { addCode, addLink } from '../../../lib/modelApi/common/addDecorators';
-import { ContentModelCode, ContentModelLink } from 'roosterjs-content-model-types';
+import { addCode, addData, addLink } from '../../../lib/modelApi/common/addDecorators';
+import {
+    ContentModelCode,
+    ContentModelData,
+    ContentModelLink,
+} from 'roosterjs-content-model-types';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 
 describe('addLink', () => {
@@ -183,6 +187,77 @@ describe('addCode', () => {
             code: {
                 format: {
                     fontFamily: 'monospace',
+                },
+            },
+        });
+    });
+});
+
+describe('addData', () => {
+    it('no data', () => {
+        const segment = createSelectionMarker();
+        const data: ContentModelData = {
+            format: {},
+        };
+        addData(segment, data);
+
+        expect(segment).toEqual({
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        });
+    });
+
+    it('has data value', () => {
+        const segment = createSelectionMarker();
+        const data: ContentModelData = {
+            format: {
+                dataValue: '123',
+            },
+        };
+        addData(segment, data);
+
+        expect(segment).toEqual({
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+            data: {
+                format: {
+                    dataValue: '123',
+                },
+            },
+        });
+
+        data.format.dataValue = '456';
+
+        expect(segment).toEqual({
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+            data: {
+                format: {
+                    dataValue: '123',
+                },
+            },
+        });
+    });
+
+    it('has empty data value', () => {
+        const segment = createSelectionMarker();
+        const data: ContentModelData = {
+            format: {
+                dataValue: '',
+            },
+        };
+        addData(segment, data);
+
+        expect(segment).toEqual({
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+            data: {
+                format: {
+                    dataValue: '',
                 },
             },
         });

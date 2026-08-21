@@ -47,10 +47,10 @@ export const listItemMetadataApplier: MetadataApplier<
 > = {
     metadataDefinition: ListMetadataDefinition,
     applierFunction: (metadata, format, context) => {
-        const depth = context.listFormat.nodeStack.length - 2; // Minus two for the parent element and convert length to index
+        const depth = context.listFormat.currentLevel;
 
         if (depth >= 0) {
-            const listType = context.listFormat.nodeStack[depth + 1].listType ?? 'OL';
+            const listType = context.listFormat.nodeStack[depth + 1]?.listType ?? 'OL';
             const listStyleType = getAutoListStyleType(listType, metadata ?? {}, depth);
 
             if (listStyleType !== undefined) {
@@ -77,10 +77,10 @@ export const listLevelMetadataApplier: MetadataApplier<
 > = {
     metadataDefinition: ListMetadataDefinition,
     applierFunction: (metadata, format, context) => {
-        const depth = context.listFormat.nodeStack.length - 2; // Minus two for the parent element and convert length to index
+        const depth = context.listFormat.currentLevel;
 
         if (depth >= 0) {
-            const listType = context.listFormat.nodeStack[depth + 1].listType ?? 'OL';
+            const listType = context.listFormat.nodeStack[depth + 1]?.listType ?? 'OL';
             const listStyleType = getAutoListStyleType(listType, metadata ?? {}, depth);
 
             if (listStyleType !== undefined) {

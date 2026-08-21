@@ -15,6 +15,10 @@ interface PastePaneState {
 
 let lastClipboardData: ClipboardData | undefined = undefined;
 
+interface ClipboardWithUnsanitized {
+    read(options?: { unsanitized?: string[] }): Promise<ClipboardItems>;
+}
+
 export default class PastePane extends React.Component<ApiPaneProps, PastePaneState>
     implements ApiPlaygroundComponent {
     private clipboardDataRef = React.createRef<HTMLTextAreaElement>();
@@ -72,10 +76,10 @@ export default class PastePane extends React.Component<ApiPaneProps, PastePaneSt
 
     private onExtractClipboardProgrammatically = async () => {
         const doc = this.clipboardDataRef.current.ownerDocument;
-        const clipboard = doc.defaultView.navigator.clipboard;
+        const clipboard = doc.defaultView.navigator.clipboard as ClipboardWithUnsanitized;
         if (clipboard && clipboard.read) {
             try {
-                const clipboardItems = await clipboard.read();
+                const clipboardItems = await clipboard.read({ unsanitized: ['text/html'] });
                 const dataTransferItems = await Promise.all(
                     createDataTransferItems(clipboardItems)
                 );

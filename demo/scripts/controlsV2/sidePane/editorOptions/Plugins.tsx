@@ -99,7 +99,6 @@ abstract class PluginsBase<PluginKey extends keyof BuildInPluginList> extends Re
 export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private allowExcelNoBorderTable = React.createRef<HTMLInputElement>();
     private handleTabKey = React.createRef<HTMLInputElement>();
-    private handleEnterKey = React.createRef<HTMLInputElement>();
     private listMenu = React.createRef<HTMLInputElement>();
     private tableMenu = React.createRef<HTMLInputElement>();
     private imageMenu = React.createRef<HTMLInputElement>();
@@ -119,6 +118,8 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private markdownItalic = React.createRef<HTMLInputElement>();
     private markdownStrikethrough = React.createRef<HTMLInputElement>();
     private markdownCode = React.createRef<HTMLInputElement>();
+    private markdownPasteAutoConversion = React.createRef<HTMLInputElement>();
+    private markdownPasteUndoConversion = React.createRef<HTMLInputElement>();
     private linkTitle = React.createRef<HTMLInputElement>();
     private disableSideResize = React.createRef<HTMLInputElement>();
 
@@ -240,13 +241,6 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                                 (state, value) =>
                                     (state.editPluginOptions.handleTabKey.indentParagraph = value)
                             )}
-                            {this.renderCheckBox(
-                                'Handle Enter Key',
-                                this.handleEnterKey,
-                                this.props.state.editPluginOptions.shouldHandleEnterKey as boolean,
-                                (state, value) =>
-                                    (state.editPluginOptions.shouldHandleEnterKey = value)
-                            )}
                         </>
                     )}
                     {this.renderPluginItem(
@@ -334,6 +328,26 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                         </>
                     )}
                     {this.renderPluginItem(
+                        'markdownPaste',
+                        'MarkdownPaste',
+                        <>
+                            {this.renderCheckBox(
+                                'Auto convert pasted markdown',
+                                this.markdownPasteAutoConversion,
+                                this.props.state.markdownPasteOptions.autoConversion,
+                                (state, value) =>
+                                    (state.markdownPasteOptions.autoConversion = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Undo auto-converted markdown',
+                                this.markdownPasteUndoConversion,
+                                this.props.state.markdownPasteOptions.undoConversion,
+                                (state, value) =>
+                                    (state.markdownPasteOptions.undoConversion = value)
+                            )}
+                        </>
+                    )}
+                    {this.renderPluginItem(
                         'hyperlink',
                         'Hyperlink Plugin',
                         this.renderInputBox(
@@ -360,6 +374,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                     {this.renderPluginItem('hiddenProperty', 'Hidden Property')}
                     {this.renderPluginItem('touch', 'Touch')}
                     {this.renderPluginItem('announce', 'Announce')}
+                    {this.renderPluginItem('dragAndDrop', 'DragAndDrop')}
                 </tbody>
             </table>
         );

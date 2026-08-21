@@ -48,7 +48,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -61,7 +61,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -75,7 +75,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: html,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -89,7 +89,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -106,7 +106,7 @@ describe('extractClipboardItems', () => {
             imageDataUri: `data:${type};base64,${stringValue}`,
             rawHtml: null,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -122,7 +122,7 @@ describe('extractClipboardItems', () => {
             files: [file],
             rawHtml: null,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -143,7 +143,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -165,7 +165,7 @@ describe('extractClipboardItems', () => {
             files: [pdfFile, textFile],
             rawHtml: null,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -192,7 +192,7 @@ describe('extractClipboardItems', () => {
             imageDataUri: `data:${imageType};base64,${stringValue1}`,
             rawHtml: html,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -230,7 +230,7 @@ describe('extractClipboardItems', () => {
             imageDataUri: `data:${imageType};base64,${stringValue1}`,
             rawHtml: html,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -249,7 +249,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: html,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -275,7 +275,7 @@ describe('extractClipboardItems', () => {
             customValues: {
                 known: customInput,
             },
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -289,7 +289,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
-            pasteNativeEvent: true,
+            pasteNativeEvent: false,
         });
     });
 
@@ -300,6 +300,24 @@ describe('extractClipboardItems', () => {
         ]);
         expect(clipboardData).toEqual({
             types: ['text/uri-list'],
+            text: text,
+            image: null,
+            files: [],
+            rawHtml: null,
+            customValues: {},
+            pasteNativeEvent: false,
+        });
+    });
+
+    it('sets pasteNativeEvent to true when isPasteNative is true', async () => {
+        const text = 'This is a test';
+        const clipboardData = await extractClipboardItems(
+            [createStringItem('text/plain', text)],
+            undefined,
+            true
+        );
+        expect(clipboardData).toEqual({
+            types: ['text/plain'],
             text: text,
             image: null,
             files: [],

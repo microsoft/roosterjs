@@ -1,5 +1,6 @@
 import { adjustTableIndentation } from '../../modelApi/common/adjustIndentation';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
+import { getSelectedContentForTable, insertTableContent } from '../../modelApi/table/tableContent';
 import {
     createContentModelDocument,
     createSelectionMarker,
@@ -38,13 +39,18 @@ export function insertTable(
 ) {
     editor.focus();
 
+    const blocks = getSelectedContentForTable(editor);
+
     editor.formatContentModel(
         (model, context) => {
-            const insertPosition = deleteSelection(model, [], context).insertPoint;
+            const deleteSelectionResult = deleteSelection(model, [], context);
+            const insertPosition = deleteSelectionResult.insertPoint;
 
             if (insertPosition) {
                 const doc = createContentModelDocument();
+
                 const table = createTableStructure(doc, columns, rows, customCellFormat);
+
                 if (format) {
                     table.format = { ...format };
                 }
@@ -52,11 +58,14 @@ export function insertTable(
                 normalizeTable(table, editor.getPendingFormat() || insertPosition.marker.format);
                 initCellWidth(table);
 
+                insertTableContent(table, blocks, columns, customCellFormat);
+
                 adjustTableIndentation(insertPosition, table);
 
                 // Assign default vertical align
                 tableMetadataFormat = tableMetadataFormat || { verticalAlign: 'top' };
                 applyTableFormat(table, tableMetadataFormat);
+
                 mergeModel(model, doc, context, {
                     insertPosition,
                     mergeFormat: 'mergeAll',

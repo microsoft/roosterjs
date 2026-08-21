@@ -45,8 +45,16 @@ export function alignTableCellHorizontally(
     operation: TableCellHorizontalAlignOperation
 ) {
     alignTableCellInternal(table, cell => {
-        cell.format.textAlign =
+        const alignment =
             TextAlignValueMap[operation][cell.format.direction == 'rtl' ? 'rtl' : 'ltr'];
+        cell.format.textAlign = alignment;
+        for (const block of cell.blocks) {
+            if (block.blockType === 'Paragraph' && block.format.textAlign) {
+                delete mutateBlock(block).format.textAlign;
+            } else if (block.blockType == 'BlockGroup' && block.blockGroupType == 'ListItem') {
+                mutateBlock(block).format.textAlign = alignment;
+            }
+        }
     });
 }
 
@@ -82,12 +90,6 @@ function alignTableCellInternal(
 
                 if (format) {
                     callback(mutateBlock(cell));
-
-                    cell.blocks.forEach(block => {
-                        if (block.blockType === 'Paragraph' && block.format.textAlign) {
-                            delete mutateBlock(block).format.textAlign;
-                        }
-                    });
                 }
             }
         }

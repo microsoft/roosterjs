@@ -641,3 +641,122 @@ describe('forceFormatContainerProcessor', () => {
         });
     });
 });
+
+describe('formatContainerProcessor with skipFormatContainerFallbackCheck', () => {
+    let context: DomToModelContext;
+
+    beforeEach(() => {
+        context = createDomToModelContext();
+        context.skipFormatContainerFallbackCheck = true;
+    });
+
+    it('div with single paragraph child should NOT fallback to paragraph', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.appendChild(document.createTextNode('test'));
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {},
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('div with id and single paragraph child should NOT fallback to paragraph', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.id = 'testId';
+        div.appendChild(document.createTextNode('test'));
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {
+                        id: 'testId',
+                    },
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('blockquote (non-div) is unaffected and still kept as FormatContainer', () => {
+        const group = createContentModelDocument();
+        const quote = document.createElement('blockquote');
+
+        quote.appendChild(document.createTextNode('test'));
+
+        formatContainerProcessor(group, quote, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                        marginRight: '40px',
+                        marginLeft: '40px',
+                    },
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+});

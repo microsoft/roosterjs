@@ -17,7 +17,11 @@ export function formatParagraphWithContentModel(
         (model, context) => {
             splitSelectedParagraphByBr(model);
 
-            const paragraphs = getSelectedParagraphs(model, true /*mutate*/);
+            const paragraphs = getSelectedParagraphs(
+                model,
+                true /*mutate*/,
+                false /*removeUnmeaningful*/
+            );
 
             paragraphs.forEach(setStyleCallback);
             context.newPendingFormat = 'preserve';

@@ -115,8 +115,6 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
                 if (contentModel) {
                     updateCache(this.state, contentModel, selection);
-                } else {
-                    this.invalidateCache();
                 }
 
                 break;
@@ -150,6 +148,18 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
                     break;
 
+                case 'attribute':
+                    if (
+                        !this.state.domIndexer.reconcileImageAttribute(
+                            mutation.element,
+                            mutation.attributeName
+                        )
+                    ) {
+                        this.invalidateCache();
+                    }
+
+                    break;
+
                 case 'unknown':
                     this.invalidateCache();
                     break;
@@ -165,8 +175,13 @@ class CachePlugin implements PluginWithState<CachePluginState> {
 
     private invalidateCache() {
         if (!this.editor?.isInShadowEdit()) {
-            this.state.cachedModel = undefined;
-            this.state.cachedSelection = undefined;
+            if (this.state.cachedModel) {
+                this.state.cachedModel = undefined;
+            }
+
+            if (this.state.cachedSelection) {
+                this.state.cachedSelection = undefined;
+            }
 
             // Clear paragraph indexer to prevent stale references to old paragraphs
             // It will be rebuild next time when we create a new Content Model

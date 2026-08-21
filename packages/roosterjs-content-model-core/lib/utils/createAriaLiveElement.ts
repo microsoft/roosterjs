@@ -9,11 +9,11 @@ export function createAriaLiveElement(document: Document): HTMLDivElement {
     div.style.height = '1px';
     div.style.overflow = 'hidden';
     div.style.position = 'absolute';
+    div.style.top = '0';
+    div.style.left = '0';
     div.style.whiteSpace = 'nowrap';
     div.style.width = '1px';
     div.ariaLive = 'assertive';
-
-    document.body.appendChild(div);
 
     return div;
 }

@@ -1,3 +1,4 @@
+import { areSameRanges } from '../../utils/areSameRanges';
 import type {
     CacheSelection,
     DOMSelection,
@@ -59,20 +60,12 @@ const TableSelectionKeys: (keyof TableSelection)[] = [
     'firstRow',
     'lastRow',
 ];
-const RangeKeys: (keyof Range)[] = ['startContainer', 'endContainer', 'startOffset', 'endOffset'];
 
 /**
  * @internal
  */
 export function areSameTableSelections(t1: TableSelection, t2: TableSelection): boolean {
     return areSame(t1, t2, TableSelectionKeys);
-}
-
-/**
- * @internal
- */
-export function areSameRanges(r1: Range, r2: Range): boolean {
-    return areSame(r1, r2, RangeKeys);
 }
 
 function isCacheSelection(

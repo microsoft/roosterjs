@@ -21,14 +21,14 @@ export function createRange(node1: Node, offset1?: number, node2?: Node, offset2
     return range;
 }
 
-declare var __karma__: any;
-
 export function itChromeOnly(
     expectation: string,
     assertion?: jasmine.ImplementationCallback,
     timeout?: number
 ) {
-    const func = __karma__.config.browser == 'Chrome' ? it : xit;
+    const ua = navigator.userAgent;
+    const isChrome = /Chrome\//.test(ua) && !/Edg\//.test(ua);
+    const func = isChrome ? it : xit;
     return func(expectation, assertion, timeout);
 }
 

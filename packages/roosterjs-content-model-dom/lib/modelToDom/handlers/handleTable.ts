@@ -150,7 +150,13 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                         applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
                     }
 
-                    context.modelHandlers.blockGroupChildren(doc, td, cell, context);
+                    stackFormat(
+                        context,
+                        cell.format.direction ? { direction: cell.format.direction } : null,
+                        () => {
+                            context.modelHandlers.blockGroupChildren(doc, td, cell, context);
+                        }
+                    );
                 });
 
                 context.onNodeCreated?.(cell, td);

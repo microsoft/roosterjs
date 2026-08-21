@@ -190,6 +190,24 @@ describe('borderColorFormatHandler.parse', () => {
         );
         expect(format.borderTop).toBe('1px solid red');
     });
+
+    it('Parse border with initial color - should use default color', () => {
+        div.style.borderWidth = '1px';
+        div.style.borderStyle = 'solid';
+        div.style.borderTopColor = 'initial';
+
+        context.isDarkMode = false;
+        context.darkColorHandler = undefined;
+
+        spyOn(colorUtils, 'retrieveElementColor').and.returnValue('initial');
+        spyOn(colorUtils, 'getLightModeColor').and.returnValue('#000000');
+
+        borderColorFormatHandler.parse(format, div, context, {});
+
+        expect(colorUtils.retrieveElementColor).toHaveBeenCalledWith(div, 'borderTop');
+        expect(colorUtils.getLightModeColor).toHaveBeenCalledWith('#000000', false, undefined);
+        expect(format.borderTop).toBe('1px solid #000000');
+    });
 });
 
 describe('borderColorFormatHandler.apply', () => {

@@ -209,15 +209,15 @@ describe('addSelectionMarker', () => {
         const doc = createContentModelDocument();
         const context = createDomToModelContext({
             defaultFormat: {
-                a: 'a',
-                b: 'b',
-                c: 'c',
-            } as any,
+                fontFamily: 'Arial',
+                fontSize: '10px',
+                fontWeight: 'normal',
+            },
             pendingFormat: {
                 format: {
-                    c: 'c3',
-                    e: 'e',
-                } as any,
+                    fontWeight: 'bold',
+                    lineHeight: '1.5',
+                },
                 insertPoint: {
                     node: mockedContainer,
                     offset: mockedOffset,
@@ -226,10 +226,10 @@ describe('addSelectionMarker', () => {
         });
 
         context.segmentFormat = {
-            b: 'b2',
-            c: 'c2',
-            d: 'd',
-        } as any;
+            fontSize: '12px',
+            fontWeight: '500',
+            letterSpacing: '1px',
+        };
         doc.blocks.push(createParagraph());
 
         addSelectionMarker(doc, context, mockedContainer, mockedOffset);
@@ -245,12 +245,12 @@ describe('addSelectionMarker', () => {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
                             format: {
-                                a: 'a',
-                                b: 'b2',
-                                c: 'c3',
-                                d: 'd',
-                                e: 'e',
-                            } as any,
+                                fontFamily: 'Arial',
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                letterSpacing: '1px',
+                                lineHeight: '1.5',
+                            },
                         },
                     ],
                 },

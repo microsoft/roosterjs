@@ -132,24 +132,27 @@ describe('convertDomSelectionToRangeEx', () => {
         expect(createRangeSpy).not.toHaveBeenCalled();
     });
 
-    xit('image selection', () => {
-        const mockedImage = 'IMAGE' as any;
-        const mockedRange = 'RANGE' as any;
+    it('image selection', () => {
+        // createRange is imported from the 'roosterjs-editor-dom' barrel, which re-exports it
+        // via a getter. Under webpack that binding can't be spied on, so use a real image node
+        // and verify the resulting Range instead of mocking createRange.
+        const image = document.createElement('img');
+        document.body.appendChild(image);
 
-        createRangeSpy.and.returnValue(mockedRange);
+        try {
+            const result = convertDomSelectionToRangeEx({
+                type: 'image',
+                image,
+            });
 
-        const result = convertDomSelectionToRangeEx({
-            type: 'image',
-            image: mockedImage,
-        });
-
-        expect(result).toEqual({
-            type: SelectionRangeTypes.ImageSelection,
-            ranges: [mockedRange],
-            image: mockedImage,
-            areAllCollapsed: false,
-        });
-        expect(createRangeSpy).toHaveBeenCalledWith(mockedImage);
+            expect(result.type).toBe(SelectionRangeTypes.ImageSelection);
+            expect(result.areAllCollapsed).toBeFalse();
+            expect((result as any).image).toBe(image);
+            expect(result.ranges?.length).toBe(1);
+            expect(result.ranges?.[0] instanceof Range).toBeTrue();
+        } finally {
+            document.body.removeChild(image);
+        }
     });
 
     it('table selection', () => {

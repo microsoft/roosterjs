@@ -2,7 +2,7 @@ import type { ContentModelBlock } from '../contentModel/block/ContentModelBlock'
 import type { ContentModelBlockGroup } from '../contentModel/blockGroup/ContentModelBlockGroup';
 import type { ContentModelDecorator } from '../contentModel/decorator/ContentModelDecorator';
 import type { ContentModelSegment } from '../contentModel/segment/ContentModelSegment';
-import type { ModelToDomContext } from './ModelToDomContext';
+import type { ModelToDomContext, ModelToDomSegmentContext } from './ModelToDomContext';
 
 /**
  * Type of Content Model to DOM handler
@@ -46,6 +46,6 @@ export type ContentModelSegmentHandler<T extends ContentModelSegment> = (
     doc: Document,
     parent: Node,
     model: T,
-    context: ModelToDomContext,
+    context: ModelToDomSegmentContext,
     segmentNodes: Node[]
 ) => void;

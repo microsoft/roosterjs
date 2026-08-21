@@ -580,6 +580,7 @@ describe('textProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            reconcileImageAttribute: null!,
             onMergeText: null!,
             clearIndex: null!,
         };
@@ -619,6 +620,7 @@ describe('textProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            reconcileImageAttribute: null!,
             onMergeText: null!,
             clearIndex: null!,
         };
@@ -669,6 +671,7 @@ describe('textProcessor', () => {
             reconcileChildList: null!,
             onBlockEntity: null!,
             reconcileElementId: null!,
+            reconcileImageAttribute: null!,
             onMergeText: null!,
             clearIndex: null!,
         };
@@ -883,8 +886,8 @@ describe('textProcessor', () => {
         };
         context.pendingFormat = {
             format: {
-                a: 'a',
-            } as any,
+                fontFamily: 'Arial',
+            },
             insertPoint: {
                 node: text,
                 offset: 2,
@@ -907,7 +910,7 @@ describe('textProcessor', () => {
                         },
                         {
                             segmentType: 'SelectionMarker',
-                            format: { a: 'a' } as any,
+                            format: { fontFamily: 'Arial' },
                             isSelected: true,
                         },
                         {

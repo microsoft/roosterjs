@@ -86,7 +86,11 @@ const formatContainerProcessorInternal = (
             formatContainer.zeroFontSize = true;
         }
 
-        if (shouldFallbackToParagraph(formatContainer) && !forceFormatContainer) {
+        if (
+            !context.skipFormatContainerFallbackCheck &&
+            shouldFallbackToParagraph(formatContainer) &&
+            !forceFormatContainer
+        ) {
             // For DIV container that only has one paragraph child, container style can be merged into paragraph
             // and no need to have this container
             const paragraph = formatContainer.blocks[0] as ContentModelParagraph;

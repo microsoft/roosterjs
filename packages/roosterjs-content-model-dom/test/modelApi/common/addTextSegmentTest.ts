@@ -206,4 +206,56 @@ describe('addTextSegment', () => {
             ],
         });
     });
+
+    it('Add text with invisible unicode, feature enabled', () => {
+        const group = createContentModelDocument();
+        const context = createDomToModelContext({
+            experimentalFeatures: ['FilterInvisibleUnicode'],
+        });
+
+        addTextSegment(group, 'a\u{E0041}b\u{E0042}c', context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'abc',
+                            format: {},
+                        },
+                    ],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('Add text with invisible unicode, feature disabled', () => {
+        const group = createContentModelDocument();
+        const context = createDomToModelContext();
+
+        addTextSegment(group, 'a\u{E0041}b\u{E0042}c', context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'a\u{E0041}b\u{E0042}c',
+                            format: {},
+                        },
+                    ],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });

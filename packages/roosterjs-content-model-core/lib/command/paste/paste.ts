@@ -1,8 +1,8 @@
 import { cleanHtmlComments } from './cleanHtmlComments';
-import { cloneModelForPaste, mergePasteContent } from './mergePasteContent';
+import { cloneModelForPaste, createPasteFragment } from 'roosterjs-content-model-dom';
 import { convertInlineCss } from '../createModelFromHtml/convertInlineCss';
-import { createPasteFragment } from './createPasteFragment';
 import { generatePasteOptionFromPlugins } from './generatePasteOptionFromPlugins';
+import { mergePasteContent } from './mergePasteContent';
 import { retrieveHtmlInfo } from './retrieveHtmlInfo';
 import type {
     PasteTypeOrGetter,
@@ -41,13 +41,19 @@ export function paste(
         clipboardData.rawHtml = cleanHtmlComments(clipboardData.rawHtml);
     }
     const doc = createDOMFromHtml(clipboardData.rawHtml, domCreator);
-    const pasteType =
-        typeof pasteTypeOrGetter == 'function'
-            ? pasteTypeOrGetter(doc, clipboardData)
-            : pasteTypeOrGetter;
 
     // 2. Handle HTML from clipboard
     const htmlFromClipboard = retrieveHtmlInfo(doc, clipboardData);
+
+    const pasteType =
+        typeof pasteTypeOrGetter == 'function'
+            ? pasteTypeOrGetter(
+                  doc,
+                  clipboardData,
+                  editor.getEnvironment(),
+                  htmlFromClipboard.metadata
+              )
+            : pasteTypeOrGetter;
 
     // 3. Create target fragment
     const sourceFragment = createPasteFragment(

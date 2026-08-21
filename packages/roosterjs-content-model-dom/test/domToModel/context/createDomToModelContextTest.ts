@@ -25,6 +25,9 @@ describe('createDomToModelContext', () => {
             code: {
                 format: {},
             },
+            data: {
+                format: {},
+            },
             blockDecorator: {
                 format: {},
                 tagName: '',
@@ -58,6 +61,9 @@ describe('createDomToModelContext', () => {
                 dataset: {},
             },
             code: {
+                format: {},
+            },
+            data: {
                 format: {},
             },
             blockDecorator: {
@@ -104,10 +110,10 @@ describe('createDomToModelContext', () => {
         const parsers = buildFormatParsers();
 
         parsers.block[5] = mockedBlockParser;
-        parsers.elementBasedSegment[4] = mockedBoldParser;
-        parsers.segment[7] = mockedBoldParser;
-        parsers.segmentOnBlock[7] = mockedBoldParser;
-        parsers.segmentOnTableCell[7] = mockedBoldParser;
+        parsers.elementBasedSegment[3] = mockedBoldParser;
+        parsers.segment[6] = mockedBoldParser;
+        parsers.segmentOnBlock[6] = mockedBoldParser;
+        parsers.segmentOnTableCell[6] = mockedBoldParser;
         parsers.text = [mockedTextParser1, mockedTextParser2];
 
         expect(context).toEqual({
@@ -123,6 +129,9 @@ describe('createDomToModelContext', () => {
                 dataset: {},
             },
             code: {
+                format: {},
+            },
+            data: {
                 format: {},
             },
             blockDecorator: {

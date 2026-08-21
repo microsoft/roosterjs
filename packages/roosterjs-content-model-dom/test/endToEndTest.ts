@@ -567,6 +567,249 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
         );
     });
 
+    it('LTR table under RTL table', () => {
+        runTest(
+            '<table dir="rtl"><tr><td><table dir="ltr"><tr><td>bb</td></tr></table></td></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                format: {},
+                                height: 0,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Table',
+                                                rows: [
+                                                    {
+                                                        format: {},
+                                                        height: 0,
+                                                        cells: [
+                                                            {
+                                                                blockGroupType: 'TableCell',
+                                                                blocks: [
+                                                                    {
+                                                                        blockType: 'Paragraph',
+                                                                        segments: [
+                                                                            {
+                                                                                segmentType: 'Text',
+                                                                                text: 'bb',
+                                                                                format: {},
+                                                                            },
+                                                                        ],
+                                                                        format: {
+                                                                            direction: 'ltr',
+                                                                        },
+                                                                        isImplicit: true,
+                                                                    },
+                                                                ],
+                                                                format: {
+                                                                    direction: 'ltr',
+                                                                },
+                                                                spanLeft: false,
+                                                                spanAbove: false,
+                                                                isHeader: false,
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                                format: {
+                                                    direction: 'ltr',
+                                                },
+                                                widths: [],
+                                                dataset: {},
+                                            },
+                                        ],
+                                        format: {
+                                            direction: 'rtl',
+                                        },
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: { direction: 'rtl' },
+                        widths: [],
+                        dataset: {},
+                    },
+                ],
+            },
+            'bb',
+            '<table style="direction: rtl; justify-self: flex-end;"><tbody><tr><td style="direction: rtl;"><table style="direction: ltr;"><tbody><tr><td style="direction: ltr;"><div style="direction: ltr;">bb</div></td></tr></tbody></table></td></tr></tbody></table>'
+        );
+    });
+
+    it('RTL table under LTR table', () => {
+        runTest(
+            '<table dir="ltr"><tr><td><table dir="rtl"><tr><td>bb</td></tr></table></td></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                format: {},
+                                height: 0,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Table',
+                                                rows: [
+                                                    {
+                                                        format: {},
+                                                        height: 0,
+                                                        cells: [
+                                                            {
+                                                                blockGroupType: 'TableCell',
+                                                                blocks: [
+                                                                    {
+                                                                        blockType: 'Paragraph',
+                                                                        segments: [
+                                                                            {
+                                                                                segmentType: 'Text',
+                                                                                text: 'bb',
+                                                                                format: {},
+                                                                            },
+                                                                        ],
+                                                                        format: {
+                                                                            direction: 'rtl',
+                                                                        },
+                                                                        isImplicit: true,
+                                                                    },
+                                                                ],
+                                                                format: {
+                                                                    direction: 'rtl',
+                                                                },
+                                                                spanLeft: false,
+                                                                spanAbove: false,
+                                                                isHeader: false,
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                                format: {
+                                                    direction: 'rtl',
+                                                },
+                                                widths: [],
+                                                dataset: {},
+                                            },
+                                        ],
+                                        format: {
+                                            direction: 'ltr',
+                                        },
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: { direction: 'ltr' },
+                        widths: [],
+                        dataset: {},
+                    },
+                ],
+            },
+            'bb',
+            '<table style="direction: ltr;"><tbody><tr><td style="direction: ltr;"><table style="direction: rtl; justify-self: flex-end;"><tbody><tr><td style="direction: rtl;"><div style="direction: rtl;">bb</div></td></tr></tbody></table></td></tr></tbody></table>'
+        );
+    });
+
+    it('RTL table under RTL table', () => {
+        runTest(
+            '<table dir="rtl"><tr><td><table dir="rtl"><tr><td>bb</td></tr></table></td></tr></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                format: {},
+                                height: 0,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Table',
+                                                rows: [
+                                                    {
+                                                        format: {},
+                                                        height: 0,
+                                                        cells: [
+                                                            {
+                                                                blockGroupType: 'TableCell',
+                                                                blocks: [
+                                                                    {
+                                                                        blockType: 'Paragraph',
+                                                                        segments: [
+                                                                            {
+                                                                                segmentType: 'Text',
+                                                                                text: 'bb',
+                                                                                format: {},
+                                                                            },
+                                                                        ],
+                                                                        format: {
+                                                                            direction: 'rtl',
+                                                                        },
+                                                                        isImplicit: true,
+                                                                    },
+                                                                ],
+                                                                format: {
+                                                                    direction: 'rtl',
+                                                                },
+                                                                spanLeft: false,
+                                                                spanAbove: false,
+                                                                isHeader: false,
+                                                                dataset: {},
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                                format: {
+                                                    direction: 'rtl',
+                                                },
+                                                widths: [],
+                                                dataset: {},
+                                            },
+                                        ],
+                                        format: {
+                                            direction: 'rtl',
+                                        },
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
+                        ],
+                        format: { direction: 'rtl' },
+                        widths: [],
+                        dataset: {},
+                    },
+                ],
+            },
+            'bb',
+            '<table style="direction: rtl; justify-self: flex-end;"><tbody><tr><td style="direction: rtl;"><table style="direction: rtl;"><tbody><tr><td style="direction: rtl;"><div style="direction: rtl;">bb</div></td></tr></tbody></table></td></tr></tbody></table>'
+        );
+    });
+
     it('Table under styled block', () => {
         runTest(
             '<b style="background-color:red; display: block">aa<table><tr><td>bb</td></tr></table>cc</b>',
@@ -1082,6 +1325,106 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             },
             'aaabbbccc\r\naaabbbccc',
             '<div>aaa<code>bbb</code>ccc</div><div>aaa<a href="#">bbb</a>ccc</div>'
+        );
+    });
+
+    it('Data element', () => {
+        runTest(
+            '<div>aaa<data value="1">bbb</data>ccc</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bbb',
+                                format: {},
+                                data: {
+                                    format: {
+                                        dataValue: '1',
+                                    },
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'ccc',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            'aaabbbccc',
+            '<div>aaa<data value="1">bbb</data>ccc</div>'
+        );
+    });
+
+    it('Data element with inner element', () => {
+        runTest(
+            '<div>aaa<data value="1">bb<b>cc</b>dd</data>eee</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bb',
+                                format: {},
+                                data: {
+                                    format: {
+                                        dataValue: '1',
+                                    },
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'cc',
+                                format: { fontWeight: 'bold' },
+                                data: {
+                                    format: {
+                                        dataValue: '1',
+                                    },
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'dd',
+                                format: {},
+                                data: {
+                                    format: {
+                                        dataValue: '1',
+                                    },
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'eee',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            'aaabbccddeee',
+            // The three child segments are each wrapped in their own <data value="1"> during
+            // Model => DOM, then mergeNode merges them back into a single <data> element.
+            '<div>aaa<data value="1">bb<b>cc</b>dd</data>eee</div>'
         );
     });
 
@@ -2673,6 +3016,466 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
             },
             'test',
             '<div style="direction: rtl;">test</div>'
+        );
+    });
+
+    it('Link with bold', () => {
+        runTest(
+            '<a href="http://www.bing.com" style="font-weight: bold;">www.bing.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { fontWeight: 'bold' },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com"><b>www.bing.com</b></a>'
+        );
+    });
+
+    it('Link with partial bold', () => {
+        runTest(
+            '<a href="http://www.bing.com">www.<b>bing</b>.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bing',
+                                format: { fontWeight: 'bold' },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '.com',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com">www.<b>bing</b>.com</a>'
+        );
+    });
+
+    it('Link with italic', () => {
+        runTest(
+            '<i><a href="http://www.bing.com">www.bing.com</a></i>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { italic: true },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com"><i>www.bing.com</i></a>'
+        );
+    });
+
+    it('Link with partial italic', () => {
+        runTest(
+            '<a href="http://www.bing.com">www.<i>bing</i>.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bing',
+                                format: { italic: true },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '.com',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com">www.<i>bing</i>.com</a>'
+        );
+    });
+
+    it('Link with underline', () => {
+        runTest(
+            '<a href="http://www.bing.com"><u>www.bing.com</u></a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { underline: true },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com"><u>www.bing.com</u></a>'
+        );
+    });
+
+    it('Link with partial underline', () => {
+        runTest(
+            '<a href="http://www.bing.com">www.<u>bing</u>.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bing',
+                                format: { underline: true },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '.com',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com">www.<u>bing</u>.com</a>'
+        );
+    });
+
+    it('Link with partial no underline', () => {
+        runTest(
+            '<a href="http://www.bing.com">www.</a><a href="http://www.bing.com" style="text-decoration: none">bing</a><a href="http://www.bing.com">.com</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bing',
+                                format: { underline: false },
+                                link: {
+                                    format: {
+                                        underline: false,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '.com',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<a href="http://www.bing.com">www.</a><a href="http://www.bing.com" style="text-decoration: none;">bing</a><a href="http://www.bing.com">.com</a>'
+        );
+    });
+
+    it('Link with superscript', () => {
+        runTest(
+            '<sup><a href="http://www.bing.com">www.bing.com</a></sup>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { superOrSubScriptSequence: 'super' },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: 'http://www.bing.com',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'www.bing.com',
+            '<sup><a href="http://www.bing.com">www.bing.com</a></sup>'
+        );
+    });
+
+    it('Text with invisible unicode tag characters is stripped when FilterInvisibleUnicode feature is enabled', () => {
+        // Source HTML contains U+E0041 / U+E0042 (unicode tag range — must be stripped)
+        // mixed with U+200B (ZWSP), U+200D (ZWJ), U+202E (RLO), U+202C (PDF)
+        // which must be preserved.
+        const div1 = document.createElement('div');
+        div1.innerHTML = '<p>a\u{E0041}b\u{200B}c\u{E0042}d\u{202E}evil\u{202C}e</p>';
+
+        const model = domToContentModel(
+            div1,
+            createDomToModelContext({ experimentalFeatures: ['FilterInvisibleUnicode'] })
+        );
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'ab\u{200B}cd\u{202E}evil\u{202C}e',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                    },
+                    decorator: {
+                        tagName: 'p',
+                        format: {},
+                    },
+                },
+            ],
+        });
+
+        const text = contentModelToText(model);
+        expect(text).toBe('ab\u{200B}cd\u{202E}evil\u{202C}e');
+    });
+
+    it('Text with invisible unicode tag characters is NOT stripped when feature is disabled', () => {
+        const div1 = document.createElement('div');
+        div1.innerHTML = '<p>a\u{E0041}b\u{E0042}c</p>';
+
+        const model = domToContentModel(div1, createDomToModelContext());
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'a\u{E0041}b\u{E0042}c',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        marginTop: '1em',
+                        marginBottom: '1em',
+                    },
+                    decorator: {
+                        tagName: 'p',
+                        format: {},
+                    },
+                },
+            ],
+        });
+    });
+
+    it('LI without UL followed by other blocks', () => {
+        runTest(
+            '<li>test</li><div>other</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [{ segmentType: 'Text', text: 'test', format: {} }],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'other', format: {} }],
+                        format: {},
+                    },
+                ],
+            },
+            'test\r\nother',
+            '<ul><li>test</li></ul><div>other</div>'
         );
     });
 });

@@ -18,7 +18,32 @@ export type GraduatedExperimentalFeature =
      * Prevent default browser behavior for copy/cut event,
      * and set the clipboard data with custom implementation.
      */
-    | 'CustomCopyCut';
+    | 'CustomCopyCut'
+
+    /**
+     * @deprecated
+     * Export editor content as HTML using HTMLFast option
+     */
+    | 'ExportHTMLFast'
+
+    /**
+     * @deprecated Please use the shouldHandleEnterKey option of the EditPlugin Options
+     * Use Content Model handle ENTER key
+     */
+    | 'HandleEnterKey'
+
+    /**
+     * @deprecated
+     * Get cloned root element from an independent HTML document instead of current document.
+     * So any operation to the cloned root won't trigger network request for resources like images
+     */
+    | 'CloneIndependentRoot'
+
+    /**
+     * @deprecated
+     * Allow caching list item elements.
+     */
+    | 'CacheList';
 
 /**
  * Predefined experiment features
@@ -29,12 +54,6 @@ export type ExperimentalFeature =
     | GraduatedExperimentalFeature
 
     /**
-     * @deprecated Please use the shouldHandleEnterKey option of the EditPlugin Options
-     * Use Content Model handle ENTER key
-     */
-    | 'HandleEnterKey'
-
-    /**
      * For CJK keyboard input on mobile, if the user toggles bold/italic/underline on an empty div,
      * the pending format will be applied on the selection marker. When typing text, the selection moves to the text node and the
      * selection marker may be recreated during reconciliation, potentially losing its original formatting. This feature ensures
@@ -43,22 +62,25 @@ export type ExperimentalFeature =
     | 'KeepSelectionMarkerWhenEnteringTextNode'
 
     /**
-     * Export editor content as HTML using HTMLFast option
-     */
-    | 'ExportHTMLFast'
-
-    /**
-     * Get cloned root element from an independent HTML document instead of current document.
-     * So any operation to the cloned root won't trigger network request for resources like images
-     */
-    | 'CloneIndependentRoot'
-
-    /**
-     * Allow caching list item elements.
-     */
-    | 'CacheList'
-
-    /**
      * Transform the table border colors when switching from light to dark mode
      */
-    | 'TransformTableBorderColors';
+    | 'TransformTableBorderColors'
+
+    /**
+     * When the editor content div is inside a Shadow DOM, enable shadow root detection
+     * in DOMHelper so that selection, focus, and element appending work correctly within
+     * the shadow boundary.
+     */
+    | 'ShadowDom'
+
+    /**
+     * Strip invisible unicode characters (U+E0000 to U+EFFFF) from text segments during DOM to Model conversion.
+     * These characters can be used to hide text in HTML and may cause unexpected behavior.
+     * @see https://embracethered.com/blog/posts/2024/hiding-and-finding-text-with-unicode-tags/
+     */
+    | 'FilterInvisibleUnicode'
+
+    /**
+     * Handle the drop event for content that is dropped from the same editor instance.
+     */
+    | 'HandleDropInternalContent';

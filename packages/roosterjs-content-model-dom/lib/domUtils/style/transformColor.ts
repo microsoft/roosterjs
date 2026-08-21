@@ -30,23 +30,34 @@ export function transformColor(
     includeSelf: boolean,
     direction: 'lightToDark' | 'darkToLight',
     darkColorHandler?: DarkColorHandler,
-    transformColorOptions?: TransformColorOptions
+    transformColorOptions?: TransformColorOptions,
+    defaultTextColor?: string
 ) {
     const toDarkMode = direction == 'lightToDark';
     const tableBorders = transformColorOptions?.tableBorders || false;
-    const transformer = (element: HTMLElement) => {
+    const transformer = (element: HTMLElement, parentTextColor?: string) => {
         const textColor = getColor(element, false /*isBackground*/, !toDarkMode, darkColorHandler);
         const backColor = getColor(element, true /*isBackground*/, !toDarkMode, darkColorHandler);
+        const comparingColor = textColor || parentTextColor;
 
         setColor(element, textColor, false /*isBackground*/, toDarkMode, darkColorHandler);
-        setColor(element, backColor, true /*isBackground*/, toDarkMode, darkColorHandler);
+        setColor(
+            element,
+            backColor,
+            true /*isBackground*/,
+            toDarkMode,
+            darkColorHandler,
+            comparingColor
+        );
 
         if (tableBorders) {
             transformBorderColor(element, toDarkMode, darkColorHandler);
         }
+
+        return comparingColor;
     };
 
-    iterateElements(rootNode, transformer, includeSelf);
+    iterateElements(rootNode, transformer, includeSelf, defaultTextColor);
 }
 
 function transformBorderColor(
@@ -79,19 +90,22 @@ function transformBorderColor(
 
 function iterateElements(
     root: Node,
-    transformer: (element: HTMLElement) => void,
-    includeSelf?: boolean
+    transformer: (element: HTMLElement, parentTextColor?: string) => string | undefined,
+    includeSelf?: boolean,
+    parentTextColor?: string
 ) {
     if (includeSelf && isHTMLElement(root)) {
-        transformer(root);
+        parentTextColor = transformer(root, parentTextColor);
     }
 
     for (let child = root.firstChild; child; child = child.nextSibling) {
+        let textColor = parentTextColor;
+
         if (isHTMLElement(child)) {
-            transformer(child);
+            textColor = transformer(child, parentTextColor);
         }
 
-        iterateElements(child, transformer);
+        iterateElements(child, transformer, false, textColor);
     }
 }
 

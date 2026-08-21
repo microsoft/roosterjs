@@ -1,12 +1,14 @@
 import { getColor, setColor } from '../utils/color';
 import { shouldSetValue } from '../utils/shouldSetValue';
-import type { BackgroundColorFormat } from 'roosterjs-content-model-types';
+import type { BackgroundColorFormat, TextColorFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal
  */
-export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> = {
+export const backgroundColorFormatHandler: FormatHandler<
+    BackgroundColorFormat & TextColorFormat
+> = {
     parse: (format, element, context, defaultStyle) => {
         const backgroundColor =
             getColor(
@@ -34,7 +36,8 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
                 format.backgroundColor,
                 true /*isBackground*/,
                 !!context.isDarkMode,
-                context.darkColorHandler
+                context.darkColorHandler,
+                format.textColor
             );
         }
     },

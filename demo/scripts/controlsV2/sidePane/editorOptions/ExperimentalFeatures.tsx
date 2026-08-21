@@ -11,11 +11,10 @@ export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}
     render() {
         return (
             <>
-                {this.renderFeature('HandleEnterKey')}
                 {this.renderFeature('KeepSelectionMarkerWhenEnteringTextNode')}
-                {this.renderFeature('CloneIndependentRoot')}
-                {this.renderFeature('CacheList')}
                 {this.renderFeature('TransformTableBorderColors')}
+                {this.renderFeature('ShadowDom')}
+                {this.renderFeature('HandleDropInternalContent')}
             </>
         );
     }

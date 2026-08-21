@@ -1,17 +1,22 @@
 import { formatTable } from 'roosterjs-content-model-api';
 import { TableBorderFormat } from 'roosterjs-content-model-dom';
-import { TableMetadataFormat } from 'roosterjs-content-model-types';
+import { TableMetadataFormat, TableSpecialCellMetadataFormat } from 'roosterjs-content-model-types';
 import type { RibbonButton } from 'roosterjs-react';
 
 const PREDEFINED_STYLES: Record<
     string,
     (color?: string, lightColor?: string) => TableMetadataFormat
 > = {
-    DEFAULT: (color, lightColor) =>
+    /**
+     * Table Grid:
+     * - Regular cells: all borders, ½ pt, blue
+     * - No special header, first column, or banding
+     */
+    TABLE_GRID: (color, lightColor) =>
         createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
+            color /** topBorder */,
+            color /** bottomBorder */,
+            color /** verticalBorder */,
             false /** bandedRows */,
             false /** bandedColumns */,
             false /** headerRow */,
@@ -19,13 +24,20 @@ const PREDEFINED_STYLES: Record<
             TableBorderFormat.Default /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            color /** headerRowColor */,
+            { fontWeight: 'bold' } /** headerRowCustomStyles */,
+            { fontWeight: 'bold' } /** firstColumnCustomStyles */
         ),
-    DEFAULT_WITH_BACKGROUND_COLOR: (color, lightColor) =>
+    /**
+     * Table Grid Light:
+     * - Regular cells: all borders, ½ pt, light blue
+     * - No special header, first column, or banding
+     */
+    TABLE_GRID_LIGHT: (color, lightColor) =>
         createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
+            color /** topBorder */,
+            color /** bottomBorder */,
+            color /** verticalBorder */,
             false /** bandedRows */,
             false /** bandedColumns */,
             false /** headerRow */,
@@ -33,133 +45,280 @@ const PREDEFINED_STYLES: Record<
             TableBorderFormat.Default /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            color /** headerRowColor */,
+            { fontWeight: 'bold' } /** headerRowCustomStyles */,
+            { fontWeight: 'bold' } /** firstColumnCustomStyles */
         ),
-    GRID_WITHOUT_BORDER: (color, lightColor) =>
+
+    /**
+     * Plain Table 1:
+     * - Regular cells: all borders, blue
+     * - Header row:    bold
+     * - First column:  bold
+     * - Banded rows:   shading
+     * - Banded columns: shading
+     */
+    PLAIN_TABLE_1: (color, lightColor) =>
         createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
+            color /** topBorder */,
+            color /** bottomBorder */,
+            color /** verticalBorder */,
             true /** bandedRows */,
             false /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
-            TableBorderFormat.NoSideBorders /** tableBorderFormat */,
-            null /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
-        ),
-    LIST: (color, lightColor) =>
-        createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            null /** verticalColors*/,
-            false /** bandedRows */,
-            false /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
+            true /** headerRow */,
+            true /** firstColumn */,
             TableBorderFormat.Default /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            color /** headerRowColor */,
+            { fontWeight: 'bold' } /** headerRowCustomStyles */,
+            { fontWeight: 'bold' } /** firstColumnCustomStyles */
         ),
-    BANDED_ROWS_FIRST_COLUMN_NO_BORDER: (color, lightColor) =>
+
+    /**
+     * Plain Table 2:
+     * - Regular cells: horizontal borders only (top/bottom), blue
+     * - Header row:    bold
+     * - First column:  border bottom
+     * - Banded rows:   shading
+     */
+    PLAIN_TABLE_2: (color, lightColor) =>
         createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
+            color /** topBorder */,
+            color /** bottomBorder */,
+            color /** verticalBorder */,
             true /** bandedRows */,
             false /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
-            TableBorderFormat.FirstColumnHeaderExternal /** tableBorderFormat */,
-            '#B0B0B0' /** bgColorEven */,
-            lightColor /** bgColorOdd */,
-            color /** headerRowColor */
-        ),
-    EXTERNAL: (color, lightColor) =>
-        createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            false /** bandedRows */,
-            false /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
+            true /** headerRow */,
+            true /** firstColumn */,
             TableBorderFormat.ListWithSideBorders /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            null /** headerRowColor */,
+            { fontWeight: 'bold' } /** headerRowCustomStyles */,
+            { borderBottomColor: color } /** firstColumnCustomStyles */
         ),
-    NO_HEADER_VERTICAL: (color, lightColor) =>
+
+    /**
+     * Plain Table 3:
+     * - Regular cells: no borders
+     * - Header row:    bold + border bottom
+     * - First column:  border right
+     * - Banded rows:   shading
+     */
+    PLAIN_TABLE_3: (color, lightColor) =>
         createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            false /** bandedRows */,
+            null /** topBorder */,
+            null /** bottomBorder */,
+            null /** verticalBorder */,
+            true /** bandedRows */,
             false /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
-            TableBorderFormat.NoHeaderBorders /** tableBorderFormat */,
+            true /** headerRow */,
+            true /** firstColumn */,
+            TableBorderFormat.Clear /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            'transparent' /** headerRowColor */,
+            { fontWeight: 'bold', borderBottomColor: color } /** headerRowCustomStyles */,
+            { borderRightColor: color } /** firstColumnCustomStyles */
         ),
-    ESPECIAL_TYPE_1: (color, lightColor) =>
+
+    /**
+     * Plain Table 4:
+     * - Regular cells: no borders
+     * - Header row:    bold
+     * - First column:  bold
+     * - Banded rows + columns: shading
+     */
+    PLAIN_TABLE_4: (color, lightColor) =>
         createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            false /** bandedRows */,
-            false /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
-            TableBorderFormat.EspecialType1 /** tableBorderFormat */,
+            null /** topBorder */,
+            null /** bottomBorder */,
+            null /** verticalBorder */,
+            true /** bandedRows */,
+            true /** bandedColumns */,
+            true /** headerRow */,
+            true /** firstColumn */,
+            TableBorderFormat.Clear /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            null /** headerRowColor */,
+            { fontWeight: 'bold' } /** headerRowCustomStyles */,
+            { fontWeight: 'bold' } /** firstColumnCustomStyles */
         ),
-    ESPECIAL_TYPE_2: (color, lightColor) =>
+
+    /**
+     * Plain Table 5:
+     * - Regular cells: no borders
+     * - Header row:    italic + border bottom
+     * - First column:  border right
+     * - Banded rows:   shading
+     */
+    PLAIN_TABLE_5: (color, lightColor) =>
         createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            false /** bandedRows */,
+            null /** topBorder */,
+            null /** bottomBorder */,
+            null /** verticalBorder */,
+            true /** bandedRows */,
             false /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
-            TableBorderFormat.EspecialType2 /** tableBorderFormat */,
+            true /** headerRow */,
+            true /** firstColumn */,
+            TableBorderFormat.Clear /** tableBorderFormat */,
             null /** bgColorEven */,
             lightColor /** bgColorOdd */,
-            color /** headerRowColor */
+            'transparent' /** headerRowColor */,
+            { italic: true, borderBottomColor: color } /** headerRowCustomStyles */,
+            {
+                italic: true,
+                borderRightColor: color,
+                backgroundColor: 'transparent',
+                textAlign: 'end',
+            } /** firstColumnCustomStyles */
         ),
-    ESPECIAL_TYPE_3: (color, lightColor) =>
+
+    /**
+     * Grid Table 1 Light:
+     * - Regular cells: all borders, blue
+     * - Header row:    bold + border bottom (thick)
+     * - First column:  bold
+     * - Banded rows:   shading
+     */
+    GRID_TABLE_1_LIGHT: (color, lightColor) =>
         createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            false /** bandedRows */,
+            color /** topBorder */,
+            color /** bottomBorder */,
+            color /** verticalBorder */,
+            true /** bandedRows */,
             false /** bandedColumns */,
-            false /** headerRow */,
-            false /** firstColumn */,
-            TableBorderFormat.EspecialType3 /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
-            null /** bgColorOdd */,
-            color /** headerRowColor */
+            true /** headerRow */,
+            true /** firstColumn */,
+            TableBorderFormat.Default /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            null /** headerRowColor */,
+            { fontWeight: 'bold', borderBottomColor: color } /** headerRowCustomStyles */,
+            { fontWeight: 'bold' } /** firstColumnCustomStyles */
         ),
-    CLEAR: (color, lightColor) =>
+
+    /**
+     * Grid Table 2:
+     * - Regular cells: borders except outside left/right
+     * - Header row:    bold + border bottom (thick)
+     * - First column:  bold
+     * - Banded rows:   shading (except header)
+     */
+    GRID_TABLE_2: (color, lightColor) =>
         createTableFormat(
-            color /**topBorder */,
-            color /**bottomBorder */,
-            color /** verticalColors*/,
-            false /** bandedRows */,
+            color /** topBorder */,
+            color /** bottomBorder */,
+            color /** verticalBorder */,
+            true /** bandedRows */,
             false /** bandedColumns */,
-            false /** headerRow */,
+            true /** headerRow */,
+            true /** firstColumn */,
+            TableBorderFormat.NoSideBorders /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            null /** headerRowColor */,
+            { fontWeight: 'bold', borderBottomColor: color } /** headerRowCustomStyles */,
+            { fontWeight: 'bold' } /** firstColumnCustomStyles */
+        ),
+
+    /**
+     * Grid Table 3:
+     * - Regular cells: all borders, blue
+     * - Header row:    bold + border bottom
+     * - First column:  border bottom
+     * - Banded rows:   shading
+     */
+    GRID_TABLE_3: (color, lightColor) =>
+        createTableFormat(
+            color /** topBorder */,
+            color /** bottomBorder */,
+            color /** verticalBorder */,
+            true /** bandedRows */,
+            false /** bandedColumns */,
+            true /** headerRow */,
+            true /** firstColumn */,
+            TableBorderFormat.Default /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            null /** headerRowColor */,
+            { fontWeight: 'bold', borderBottomColor: color } /** headerRowCustomStyles */,
+            { borderBottomColor: color } /** firstColumnCustomStyles */
+        ),
+
+    /**
+     * List Table 1 Light:
+     * - Regular cells: no borders
+     * - Header row:    bold + border bottom
+     * - Banded rows:   shading
+     */
+    LIST_TABLE_1_LIGHT: (color, lightColor) =>
+        createTableFormat(
+            null /** topBorder */,
+            null /** bottomBorder */,
+            null /** verticalBorder */,
+            true /** bandedRows */,
+            false /** bandedColumns */,
+            true /** headerRow */,
             false /** firstColumn */,
             TableBorderFormat.Clear /** tableBorderFormat */,
-            lightColor /** bgColorEven */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            null /** headerRowColor */,
+            { fontWeight: 'bold', borderBottomColor: color } /** headerRowCustomStyles */
+        ),
+
+    /**
+     * List Table 2:
+     * - Regular cells: horizontal borders only (top/bottom)
+     * - Header row:    bold
+     * - First column:  bold
+     * - Banded rows + columns: shading
+     */
+    LIST_TABLE_2: (color, lightColor) =>
+        createTableFormat(
+            color /** topBorder */,
+            color /** bottomBorder */,
+            color /** verticalBorder */,
+            true /** bandedRows */,
+            true /** bandedColumns */,
+            true /** headerRow */,
+            true /** firstColumn */,
+            TableBorderFormat.ListWithSideBorders /** tableBorderFormat */,
+            null /** bgColorEven */,
+            lightColor /** bgColorOdd */,
+            null /** headerRowColor */,
+            { fontWeight: 'bold' } /** headerRowCustomStyles */,
+            { fontWeight: 'bold' } /** firstColumnCustomStyles */
+        ),
+
+    /**
+     * List Table 3:
+     * - Regular cells: outside borders only
+     * - Header row:    bold + inverted (dark blue background)
+     * - First column:  bold + top and bottom borders
+     */
+    LIST_TABLE_3: (color, lightColor) =>
+        createTableFormat(
+            color /** topBorder */,
+            color /** bottomBorder */,
+            color /** verticalBorder */,
+            false /** bandedRows */,
+            false /** bandedColumns */,
+            true /** headerRow */,
+            true /** firstColumn */,
+            TableBorderFormat.ListWithSideBorders /** tableBorderFormat */,
+            null /** bgColorEven */,
             null /** bgColorOdd */,
-            color /** headerRowColor */
+            color /** headerRowColor - dark blue inverted background */,
+            { fontWeight: 'bold' } /** headerRowCustomStyles */,
+            {
+                fontWeight: 'bold',
+                borderTopColor: color,
+                borderBottomColor: color,
+            } /** firstColumnCustomStyles */
         ),
 };
 
@@ -174,7 +333,9 @@ export function createTableFormat(
     borderFormat?: number,
     bgColorEven?: string,
     bgColorOdd?: string,
-    headerRowColor?: string
+    headerRowColor?: string,
+    headerRowCustomStyles?: TableSpecialCellMetadataFormat,
+    firstColumnCustomStyles?: TableSpecialCellMetadataFormat
 ): TableMetadataFormat {
     return {
         topBorderColor: topBorder,
@@ -188,6 +349,8 @@ export function createTableFormat(
         headerRowColor: headerRowColor,
         hasFirstColumn: firstColumn,
         tableBorderFormat: borderFormat,
+        headerRowCustomStyles,
+        firstColumnCustomStyles,
     };
 }
 
@@ -198,17 +361,19 @@ export const formatTableButton: RibbonButton<'ribbonButtonTableFormat'> = {
     isDisabled: formatState => !formatState.isInTable,
     dropDownMenu: {
         items: {
-            DEFAULT: 'Default',
-            DEFAULT_WITH_BACKGROUND_COLOR: 'Default with background color',
-            GRID_WITHOUT_BORDER: 'Gride without border',
-            LIST: 'list',
-            BANDED_ROWS_FIRST_COLUMN_NO_BORDER: 'Banded rows first column no border',
-            EXTERNAL: 'External',
-            NO_HEADER_VERTICAL: 'No header vertical',
-            ESPECIAL_TYPE_1: 'Especial type 1',
-            ESPECIAL_TYPE_2: 'Especial type 2',
-            ESPECIAL_TYPE_3: 'Especial type 3',
-            CLEAR: 'Clear',
+            TABLE_GRID: 'Table Grid',
+            TABLE_GRID_LIGHT: 'Table Grid Light',
+            PLAIN_TABLE_1: 'Plain Table 1',
+            PLAIN_TABLE_2: 'Plain Table 2',
+            PLAIN_TABLE_3: 'Plain Table 3',
+            PLAIN_TABLE_4: 'Plain Table 4',
+            PLAIN_TABLE_5: 'Plain Table 5',
+            GRID_TABLE_1_LIGHT: 'Grid Table 1 Light',
+            GRID_TABLE_2: 'Grid Table 2',
+            GRID_TABLE_3: 'Grid Table 3',
+            LIST_TABLE_1_LIGHT: 'List Table 1 Light',
+            LIST_TABLE_2: 'List Table 2',
+            LIST_TABLE_3: 'List Table 3',
         },
     },
     onClick: (editor, key) => {

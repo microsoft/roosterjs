@@ -61,6 +61,7 @@ describe('handleListItem with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -114,6 +115,7 @@ describe('handleListItem with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -180,6 +182,7 @@ describe('handleListItem with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
@@ -231,6 +234,7 @@ describe('handleListItem with metadata', () => {
                     refNode: br,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, br);
@@ -273,6 +277,7 @@ describe('handleListItem with metadata', () => {
                     refNode: null,
                 },
             ],
+            currentLevel: 0,
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);

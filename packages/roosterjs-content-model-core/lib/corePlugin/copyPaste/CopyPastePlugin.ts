@@ -129,7 +129,8 @@ class CopyPastePlugin implements PluginWithState<CopyPastePluginState> {
                 event.preventDefault();
                 extractClipboardItems(
                     toArray(dataTransfer!.items),
-                    this.state.allowedCustomPasteType
+                    this.state.allowedCustomPasteType,
+                    true /* isPasteNative */
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
                         paste(editor, clipboardData, this.state.defaultPasteType);

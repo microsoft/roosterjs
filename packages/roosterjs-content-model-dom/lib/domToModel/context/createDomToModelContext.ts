@@ -39,7 +39,7 @@ export function createDomToModelContext(
 export function createDomToModelContextWithConfig(
     config: DomToModelSettings,
     editorContext?: EditorContext
-) {
+): DomToModelContext {
     return Object.assign(
         {},
         editorContext,
@@ -75,6 +75,9 @@ function createDomToModelDecoratorContext(): DomToModelDecoratorContext {
             dataset: {},
         },
         code: {
+            format: {},
+        },
+        data: {
             format: {},
         },
         blockDecorator: {

@@ -3,7 +3,7 @@ import * as createDomToModelContextForSanitizing from '../../../lib/command/crea
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as getSegmentTextFormatFile from 'roosterjs-content-model-dom/lib/modelApi/editing/getSegmentTextFormat';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
-import { createPasteFragment } from '../../../lib/command/paste/createPasteFragment';
+import { createPasteFragment } from 'roosterjs-content-model-dom/lib/domUtils/event/createPasteFragment';
 import { inlineTemplate, template } from './htmlTemplates/ClipboardContent1';
 import { mergePasteContent } from '../../../lib/command/paste/mergePasteContent';
 
@@ -25,6 +25,7 @@ import {
     IEditor,
     ClipboardData,
     DOMHelper,
+    ExperimentalFeature,
 } from 'roosterjs-content-model-types';
 
 describe('mergePasteContent', () => {
@@ -35,11 +36,18 @@ describe('mergePasteContent', () => {
     let editor: IEditor;
     let mockedClipboard: ClipboardData;
     let mockedDOMHelper: DOMHelper;
+    let formatOptions: FormatContentModelOptions | undefined;
 
     beforeEach(() => {
         formatResult = undefined;
         context = undefined;
-        mockedClipboard = 'CLIPBOARD' as any;
+        formatOptions = undefined;
+        mockedClipboard = {
+            fragment: {
+                childNodes: [],
+                length: 0,
+            },
+        } as any;
 
         formatContentModel = jasmine
             .createSpy('formatContentModel')
@@ -49,6 +57,7 @@ describe('mergePasteContent', () => {
                     deletedEntities: [],
                     newImages: [],
                 };
+                formatOptions = options;
                 formatResult = callback(sourceModel, context);
 
                 const changedData = options.getChangeData!();
@@ -67,6 +76,10 @@ describe('mergePasteContent', () => {
             }),
             getDocument: () => document,
             getDOMHelper: () => mockedDOMHelper,
+            isExperimentalFeatureEnabled: () => false,
+            getExperimentalFeatures: () => {
+                return [] as ExperimentalFeature[];
+            },
         } as any;
     });
 
@@ -175,6 +188,7 @@ describe('mergePasteContent', () => {
             pasteType: 'normal',
             domToModelOption: { additionalAllowedTags: [] },
             clipboardData: mockedClipboard,
+            fragment: document.createDocumentFragment(),
         } as any;
 
         mergePasteContent(editor, eventResult, true);
@@ -282,6 +296,7 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
             customizedMerge,
             clipboardData: mockedClipboard,
+            fragment: document.createDocumentFragment(),
         } as any;
 
         mergePasteContent(editor, eventResult, true);
@@ -304,6 +319,7 @@ describe('mergePasteContent', () => {
             pasteType: 'mergeFormat',
             domToModelOption: { additionalAllowedTags: [] },
             clipboardData: mockedClipboard,
+            fragment: document.createDocumentFragment(),
         } as any;
 
         mergePasteContent(editor, eventResult, true);
@@ -379,7 +395,7 @@ describe('mergePasteContent', () => {
 
         const mockedDomToModelOptions = 'OPTION1' as any;
         const mockedDefaultDomToModelOptions = 'OPTIONS3' as any;
-        const mockedFragment = 'FRAGMENT' as any;
+        const mockedFragment = document.createDocumentFragment();
 
         (editor as any).getEnvironment = () => ({
             domToModelSettings: {
@@ -428,7 +444,8 @@ describe('mergePasteContent', () => {
             undefined,
             mockedDomToModelOptions,
             mockedDefaultDomToModelOptions,
-            mockedDOMHelper
+            mockedDOMHelper,
+            []
         );
         expect(mockedDomToModelContext.segmentFormat).toEqual({ lineHeight: '1pt' });
     });
@@ -452,6 +469,7 @@ describe('mergePasteContent', () => {
             domToModelOption: { additionalAllowedTags: [] },
             clipboardData: mockedClipboard,
             containsBlockElements: true,
+            fragment: document.createDocumentFragment(),
         } as any;
 
         mergePasteContent(editor, eventResult, true);
@@ -475,6 +493,49 @@ describe('mergePasteContent', () => {
                 textColor: '',
                 underline: false,
             },
+        });
+    });
+
+    it('Merge paste content | Paste Type = normal | Paste an image only should not force text color to black', () => {
+        const pasteModel = createContentModelDocument();
+        sourceModel = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        marker.format = {
+            textColor: 'rgb(102, 51, 153)',
+        };
+        para.segments.push(marker);
+        addBlock(sourceModel, para);
+
+        const mockedDomToModelContext = {
+            name: 'DOMTOMODELCONTEXT',
+        } as any;
+
+        spyOn(mergeModelFile, 'mergeModel').and.returnValue(null);
+        spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
+        spyOn(
+            createDomToModelContextForSanitizing,
+            'createDomToModelContextForSanitizing'
+        ).and.returnValue(mockedDomToModelContext);
+
+        const img = document.createElement('img');
+        img.src = 'test.png';
+        const fragment = document.createDocumentFragment();
+        fragment.appendChild(img);
+
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                domToModelOption: <any>{},
+                pasteType: 'normal',
+                clipboardData: mockedClipboard,
+            },
+            true
+        );
+
+        expect(mockedDomToModelContext.segmentFormat).toEqual({
+            textColor: 'rgb(102, 51, 153)',
         });
     });
 
@@ -1890,7 +1951,7 @@ describe('mergePasteContent', () => {
             document.body
         );
         const div = document.createElement('div');
-        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callThrough();
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModelForPaste').and.callThrough();
 
         sourceModel = {
             blockGroupType: 'Document',
@@ -1973,7 +2034,7 @@ describe('mergePasteContent', () => {
             document.body
         );
         const div = document.createElement('div');
-        const cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.callThrough();
+        const cloneModelSpy = spyOn(cloneModel, 'cloneModelForPaste').and.callThrough();
 
         sourceModel = {
             blockGroupType: 'Document',
@@ -2042,8 +2103,101 @@ describe('mergePasteContent', () => {
             format: {},
         });
         expect(cloneModelSpy).toHaveBeenCalledTimes(1);
-        expect(cloneModelSpy).toHaveBeenCalledWith(modelBeforePaste, {
-            includeCachedElement: jasmine.anything(),
-        } as any);
+    });
+
+    describe('scrollCaretIntoView based on paste fragment', () => {
+        function runTest(fragment: DocumentFragment, expectedScrollCaretIntoView: boolean) {
+            spyOn(mergeModelFile, 'mergeModel').and.callThrough();
+            sourceModel = createContentModelDocument();
+            const para = createParagraph();
+            para.segments.push(createSelectionMarker());
+            sourceModel.blocks.push(para);
+
+            mergePasteContent(
+                editor,
+                <any>{
+                    fragment,
+                    domToModelOption: <any>{},
+                    pasteType: 'normal',
+                    clipboardData: mockedClipboard,
+                },
+                true
+            );
+
+            expect(formatOptions).toBeDefined();
+            expect(formatOptions!.scrollCaretIntoView).toBe(expectedScrollCaretIntoView);
+        }
+
+        function createFragment(...nodes: Node[]): DocumentFragment {
+            const fragment = document.createDocumentFragment();
+            nodes.forEach(node => fragment.appendChild(node));
+            return fragment;
+        }
+
+        it('should not scroll caret into view when fragment is a single image', () => {
+            const img = document.createElement('img');
+            img.src = 'test.png';
+
+            runTest(createFragment(img), false);
+        });
+
+        it('should not scroll caret into view when fragment is a span wrapping an image', () => {
+            const span = document.createElement('span');
+            span.appendChild(document.createElement('img'));
+
+            runTest(createFragment(span), false);
+        });
+
+        it('should not scroll caret into view when fragment is a div wrapping an image', () => {
+            const div = document.createElement('div');
+            div.appendChild(document.createElement('img'));
+
+            runTest(createFragment(div), false);
+        });
+
+        it('should scroll caret into view when fragment is a single text node', () => {
+            runTest(createFragment(document.createTextNode('text')), true);
+        });
+
+        it('should scroll caret into view when fragment is a paragraph', () => {
+            const p = document.createElement('p');
+            p.textContent = 'text';
+
+            runTest(createFragment(p), true);
+        });
+
+        it('should scroll caret into view when fragment has multiple children', () => {
+            const img1 = document.createElement('img');
+            const img2 = document.createElement('img');
+
+            runTest(createFragment(img1, img2), true);
+        });
+
+        it('should scroll caret into view when span wraps multiple children', () => {
+            const span = document.createElement('span');
+            span.appendChild(document.createElement('img'));
+            span.appendChild(document.createElement('img'));
+
+            runTest(createFragment(span), true);
+        });
+
+        it('should scroll caret into view when span wraps a non-image element', () => {
+            const span = document.createElement('span');
+            span.appendChild(document.createElement('b'));
+
+            runTest(createFragment(span), true);
+        });
+
+        it('should scroll caret into view when span wraps a text node', () => {
+            const span = document.createElement('span');
+            span.appendChild(document.createTextNode('text'));
+            runTest(createFragment(span), true);
+        });
+
+        it('should not scroll caret into view when fragment is an anchor wrapping an image', () => {
+            const anchor = document.createElement('a');
+            anchor.appendChild(document.createElement('img'));
+            runTest(createFragment(anchor), false);
+        });
     });
 });

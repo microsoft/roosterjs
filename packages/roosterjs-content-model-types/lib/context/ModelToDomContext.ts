@@ -13,3 +13,15 @@ export interface ModelToDomContext
         ModelToDomFormatContext,
         ModelToDomSettings,
         RewriteFromModelContext {}
+
+/**
+ * Extended context used by segment and text handlers to carry per-paragraph segment state
+ */
+export interface ModelToDomSegmentContext extends ModelToDomContext {
+    /**
+     * Whether the current segment is the last segment in the paragraph,
+     * or there are no more Text segments after it (excluding SelectionMarkers).
+     * When true, trailing spaces should be converted to &amp;nbsp;.
+     */
+    noFollowingTextSegmentOrLast?: boolean;
+}

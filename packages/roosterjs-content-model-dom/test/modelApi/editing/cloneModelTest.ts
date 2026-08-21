@@ -97,6 +97,11 @@ describe('cloneModel', () => {
                                     fontFamily: 'a',
                                 },
                             },
+                            data: {
+                                format: {
+                                    dataValue: '123',
+                                },
+                            },
                         },
                         {
                             segmentType: 'SelectionMarker',

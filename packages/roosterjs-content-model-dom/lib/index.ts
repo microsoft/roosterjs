@@ -65,6 +65,7 @@ export { createTableRow } from './modelApi/creators/createTableRow';
 export { mutateBlock, mutateSegments, mutateSegment } from './modelApi/common/mutate';
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
+export { addData } from './modelApi/common/addDecorators';
 export { addLink } from './modelApi/common/addDecorators';
 export { addTextSegment } from './modelApi/common/addTextSegment';
 export { normalizeParagraph } from './modelApi/common/normalizeParagraph';
@@ -113,7 +114,9 @@ export {
 export { isBold } from './domUtils/style/isBold';
 export { getSelectionRootNode } from './domUtils/selection/getSelectionRootNode';
 export { getDOMInsertPointRect } from './domUtils/selection/getDOMInsertPointRect';
+export { trimModelForSelection } from './domUtils/selection/trimModelForSelection';
 export { isCharacterValue, isModifierKey, isCursorMovingKey } from './domUtils/event/eventUtils';
+export { getNodePositionFromEvent } from './domUtils/event/getNodePositionFromEvent';
 export { combineBorderValue, extractBorderValues } from './domUtils/style/borderValues';
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 export { parseTableCells } from './domUtils/table/parseTableCells';
@@ -122,6 +125,7 @@ export { retrieveDocumentMetadata } from './domUtils/retrieveDocumentMetadata';
 export { transformColor, TransformColorOptions } from './domUtils/style/transformColor';
 export { normalizeFontFamily } from './domUtils/style/normalizeFontFamily';
 export { extractClipboardItems } from './domUtils/event/extractClipboardItems';
+export { createPasteFragment } from './domUtils/event/createPasteFragment';
 export { cacheGetEventData } from './domUtils/event/cacheGetEventData';
 export {
     setParagraphMarker,
@@ -147,7 +151,7 @@ export { hasSelectionInSegment } from './modelApi/selection/hasSelectionInSegmen
 export { hasSelectionInBlockGroup } from './modelApi/selection/hasSelectionInBlockGroup';
 export { setSelection } from './modelApi/selection/setSelection';
 
-export { cloneModel } from './modelApi/editing/cloneModel';
+export { cloneModel, cloneModelForPaste } from './modelApi/editing/cloneModel';
 export { mergeModel } from './modelApi/editing/mergeModel';
 export { deleteSelection } from './modelApi/editing/deleteSelection';
 export { deleteSegment } from './modelApi/editing/deleteSegment';

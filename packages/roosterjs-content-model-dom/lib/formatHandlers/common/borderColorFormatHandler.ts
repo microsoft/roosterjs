@@ -28,6 +28,8 @@ const BorderStyleKeyMap: {
     borderLeft: 'border-left-style',
 };
 
+const DEFAULT_COLOR = '#000000';
+
 /**
  * @internal
  */
@@ -40,7 +42,8 @@ export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
             BorderKeys.forEach(key => {
                 const width = element.style.getPropertyValue(BorderWidthKeyMap[key]);
                 const style = element.style.getPropertyValue(BorderStyleKeyMap[key]);
-                const borderColor = retrieveElementColor(element, key);
+                const color = retrieveElementColor(element, key);
+                const borderColor = color == 'initial' ? DEFAULT_COLOR : color;
 
                 if (borderColor) {
                     const lightModeColor = getLightModeColor(
@@ -67,6 +70,7 @@ export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
                 const value = format[key];
                 if (value) {
                     const borderValues = extractBorderValues(value);
+                    const borderColorProperty = BorderColorKeyMap[key];
                     if (borderValues.color) {
                         const transformedColor = adaptColor(
                             element,
@@ -76,7 +80,6 @@ export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
                             context.darkColorHandler
                         );
                         if (transformedColor) {
-                            const borderColorProperty = BorderColorKeyMap[key];
                             element.style.setProperty(borderColorProperty, transformedColor);
                         }
                     }

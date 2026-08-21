@@ -15,7 +15,7 @@ import type {
 /**
  * Export HTML content. If there are entities, this will cause EntityOperation event with option = 'replaceTemporaryContent' to get a dehydrated entity
  * @param editor The editor to get content from
- * @param mode Specify HTML to get HTML. This is the default option
+ * @param mode Specify HTML to get HTML.
  * @param options @optional Options for Model to DOM conversion
  */
 export function exportContent(editor: IEditor, mode?: 'HTML', options?: ModelToDomOption): string;
@@ -24,9 +24,9 @@ export function exportContent(editor: IEditor, mode?: 'HTML', options?: ModelToD
  * Export HTML content. If there are entities, this will cause EntityOperation event with option = 'replaceTemporaryContent' to get a dehydrated entity.
  * This is a fast version, it retrieve HTML content directly from editor without going through content model conversion.
  * @param editor The editor to get content from
- * @param mode Specify HTMLFast to get HTML result.
+ * @param mode Specify HTMLFast to get HTML result. This is the default option
  */
-export function exportContent(editor: IEditor, mode: 'HTMLFast'): string;
+export function exportContent(editor: IEditor, mode?: 'HTMLFast'): string;
 
 /**
  * Export plain text content
@@ -52,7 +52,7 @@ export function exportContent(editor: IEditor, mode: 'PlainTextFast'): string;
 // Once we are confident that 'HTMLFast' is stable, we can fully switch 'HTML' to use the 'HTMLFast' approach
 export function exportContent(
     editor: IEditor,
-    mode: ExportContentMode | 'HTMLFast' = 'HTML',
+    mode: ExportContentMode | 'HTMLFast' = 'HTMLFast',
     optionsOrCallbacks?: ModelToDomOption | ModelToTextCallbacks
 ): string {
     let model: ContentModelDocument;
@@ -70,6 +70,7 @@ export function exportContent(
             );
 
         case 'HTMLFast':
+        default:
             const clonedRoot = editor.getDOMHelper().getClonedRoot();
 
             if (editor.isDarkMode()) {
@@ -89,7 +90,6 @@ export function exportContent(
             return getHTMLFromDOM(editor, clonedRoot);
 
         case 'HTML':
-        default:
             model = editor.getContentModelCopy('clean');
 
             const doc = editor.getDocument();

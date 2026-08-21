@@ -166,7 +166,7 @@ describe('indent', () => {
                         },
                         isSelected: false,
                     },
-                    format: {},
+                    format: { marginBottom: '0px', marginTop: '0px' },
                 },
             ],
         });

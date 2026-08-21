@@ -14,6 +14,7 @@ import {
     EditorCore,
     EditorOptions,
     Rect,
+    ExperimentalFeature,
 } from 'roosterjs-content-model-types';
 
 describe('Editor', () => {
@@ -1016,7 +1017,8 @@ describe('Editor', () => {
             mockedColorHandler,
             {
                 tableBorders: false,
-            }
+            },
+            undefined
         );
         expect(mockedCore.lifecycle.isDarkMode).toEqual(true);
         expect(triggerEventSpy).toHaveBeenCalledTimes(1);
@@ -1041,7 +1043,8 @@ describe('Editor', () => {
             mockedColorHandler,
             {
                 tableBorders: false,
-            }
+            },
+            undefined
         );
         expect(triggerEventSpy).toHaveBeenCalledTimes(2);
         expect(triggerEventSpy).toHaveBeenCalledWith(
@@ -1209,7 +1212,10 @@ describe('Editor', () => {
             api: {
                 setContentModel: setContentModelSpy,
             },
-            experimentalFeatures: ['Feature1', 'Feature2'],
+            experimentalFeatures: [
+                'TransformTableBorderColors',
+                'ShadowDom',
+            ] as ExperimentalFeature[],
             format: {
                 defaultFormat: {},
             },
@@ -1219,8 +1225,8 @@ describe('Editor', () => {
 
         const editor = new Editor(div);
 
-        const result1 = editor.isExperimentalFeatureEnabled('Feature1');
-        const result2 = editor.isExperimentalFeatureEnabled('Feature2');
+        const result1 = editor.isExperimentalFeatureEnabled('TransformTableBorderColors');
+        const result2 = editor.isExperimentalFeatureEnabled('ShadowDom');
         const result3 = editor.isExperimentalFeatureEnabled('Feature3');
 
         expect(result1).toBeTrue();
@@ -1230,5 +1236,39 @@ describe('Editor', () => {
         editor.dispose();
         expect(resetSpy).toHaveBeenCalledWith();
         expect(() => editor.isExperimentalFeatureEnabled('Feature4')).toThrow();
+    });
+
+    it('getExperimentalFeatures', () => {
+        const div = document.createElement('div');
+        const resetSpy = jasmine.createSpy('reset');
+        const mockedCore = {
+            plugins: [],
+            darkColorHandler: {
+                updateKnownColor: updateKnownColorSpy,
+                reset: resetSpy,
+            },
+            api: {
+                setContentModel: setContentModelSpy,
+            },
+            experimentalFeatures: [
+                'TransformTableBorderColors',
+                'ShadowDom',
+            ] as ExperimentalFeature[],
+            format: {
+                defaultFormat: {},
+            },
+        } as any;
+
+        createEditorCoreSpy.and.returnValue(mockedCore);
+
+        const editor = new Editor(div);
+
+        const result = editor.getExperimentalFeatures();
+
+        expect(result).toEqual(['TransformTableBorderColors', 'ShadowDom']);
+
+        editor.dispose();
+        expect(resetSpy).toHaveBeenCalledWith();
+        expect(() => editor.getExperimentalFeatures()).toThrow();
     });
 });

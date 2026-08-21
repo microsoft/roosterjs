@@ -2,6 +2,7 @@ import type { FindResultChangedEvent } from './FindResultChangedEvent';
 import type { BeforeAddUndoSnapshotEvent } from './BeforeAddUndoSnapshotEvent';
 import type { BeforeCutCopyEvent } from './BeforeCutCopyEvent';
 import type { BeforeDisposeEvent } from './BeforeDisposeEvent';
+import type { BeforeDropEvent } from './BeforeDropEvent';
 import type { BeforeKeyboardEditingEvent } from './BeforeKeyboardEditingEvent';
 import type { BeforePasteEvent } from './BeforePasteEvent';
 import type { BeforeSetContentEvent } from './BeforeSetContentEvent';
@@ -32,6 +33,7 @@ export type PluginEvent =
     | BeforeAddUndoSnapshotEvent
     | BeforeCutCopyEvent
     | BeforeDisposeEvent
+    | BeforeDropEvent
     | BeforeKeyboardEditingEvent
     | BeforeLogicalRootChangeEvent
     | BeforePasteEvent

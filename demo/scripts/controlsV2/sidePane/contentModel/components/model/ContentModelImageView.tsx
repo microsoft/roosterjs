@@ -1,13 +1,18 @@
 import * as React from 'react';
+import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
+import { BoxShadowFormatRenderer } from '../format/formatPart/BoxShadowFormatRenderer';
 import { ContentModelCodeView } from './ContentModelCodeView';
+import { ContentModelDataView } from './ContentModelDataView';
 import { ContentModelImage, ContentModelImageFormat } from 'roosterjs-content-model-types';
 import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelView } from '../ContentModelView';
+import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FloatFormatRenderer } from '../format/formatPart/FloatFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
 import { ImageMetadataFormatRenderers } from '../format/formatPart/ImageMetadataFormatRenderers';
+import { ImageStateFormatRenderer } from '../format/formatPart/ImageStateFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
@@ -15,6 +20,7 @@ import { SegmentFormatView } from '../format/SegmentFormatView';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { updateImageMetadata } from 'roosterjs-content-model-dom';
 import { useProperty } from '../../hooks/useProperty';
+import { VerticalAlignFormatRenderer } from '../format/formatPart/VerticalAlignFormatRenderer';
 
 const styles = require('./ContentModelImageView.scss');
 
@@ -23,15 +29,24 @@ const ImageFormatRenderers: FormatRenderer<ContentModelImageFormat>[] = [
     ...SizeFormatRenderers,
     MarginFormatRenderer,
     PaddingFormatRenderer,
+    ...BorderFormatRenderers,
+    BoxShadowFormatRenderer,
+    DisplayFormatRenderer,
     FloatFormatRenderer,
+    VerticalAlignFormatRenderer,
+    ImageStateFormatRenderer,
 ];
 
 export function ContentModelImageView(props: { image: ContentModelImage }) {
     const { image } = props;
     const srcTextArea = React.useRef<HTMLTextAreaElement>(null);
+    const altInput = React.useRef<HTMLInputElement>(null);
+    const titleInput = React.useRef<HTMLInputElement>(null);
     const imageSelectionCheckBox = React.useRef<HTMLInputElement>(null);
 
     const [src, setSrc] = useProperty(image.src);
+    const [alt, setAlt] = useProperty(image.alt || '');
+    const [title, setTitle] = useProperty(image.title || '');
     const [imageSelected, setImageSelected] = useProperty(
         image.isSelectedAsImageSelection || false
     );
@@ -51,6 +66,13 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
                 <img src={src} className={styles.image} />
                 <textarea value={src} ref={srcTextArea} onChange={onSrcChange} />
                 <div>
+                    Alt: <input type="text" value={alt} ref={altInput} onChange={onAltChange} />
+                </div>
+                <div>
+                    Title:{' '}
+                    <input type="text" value={title} ref={titleInput} onChange={onTitleChange} />
+                </div>
+                <div>
                     <input
                         type="checkbox"
                         checked={imageSelected}
@@ -60,10 +82,11 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
                     Image selection
                 </div>
                 {image.link ? <ContentModelLinkView link={image.link} /> : null}{' '}
-                {image.code ? <ContentModelCodeView code={image.code} /> : null}
+                {image.code ? <ContentModelCodeView code={image.code} /> : null}{' '}
+                {image.data ? <ContentModelDataView data={image.data} /> : null}
             </>
         );
-    }, [src, imageSelected, image.link]);
+    }, [src, imageSelected, image.link, alt, title]);
 
     const getMetadata = React.useCallback(() => {
         return (
@@ -80,6 +103,18 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
         image.src = newValue;
         setSrc(newValue);
     }, [src, setSrc]);
+
+    const onAltChange = React.useCallback(() => {
+        const newValue = altInput.current.value;
+        image.alt = newValue;
+        setAlt(newValue);
+    }, [alt, setAlt]);
+
+    const onTitleChange = React.useCallback(() => {
+        const newValue = titleInput.current.value;
+        image.title = newValue;
+        setTitle(newValue);
+    }, [title, setTitle]);
 
     const onImageSelectionChange = React.useCallback(() => {
         const newValue = imageSelectionCheckBox.current.checked;

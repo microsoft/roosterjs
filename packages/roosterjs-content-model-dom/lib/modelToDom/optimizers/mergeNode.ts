@@ -1,6 +1,19 @@
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 
-const OptimizeTags = ['SPAN', 'B', 'EM', 'I', 'U', 'SUB', 'SUP', 'STRIKE', 'S', 'A', 'CODE'];
+const OptimizeTags = [
+    'SPAN',
+    'B',
+    'EM',
+    'I',
+    'U',
+    'SUB',
+    'SUP',
+    'STRIKE',
+    'S',
+    'A',
+    'CODE',
+    'DATA',
+];
 
 /**
  * @internal

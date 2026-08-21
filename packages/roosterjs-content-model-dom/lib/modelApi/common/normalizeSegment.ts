@@ -36,8 +36,35 @@ export function normalizeSingleSegment(
     ignoreTrailingSpaces: boolean = false
 ) {
     const context = resetNormalizeSegmentContext();
+    const index = paragraph.segments.indexOf(segment);
 
     context.ignoreTrailingSpaces = ignoreTrailingSpaces;
+
+    // Search backward for the nearest non-empty text segment (skipping SelectionMarkers and empty text),
+    // to determine whether leading spaces of the current segment should be preserved.
+    // If the previous text doesn't end with a space, keep the leading space to maintain word separation.
+    for (let i = index - 1; i >= 0; i--) {
+        const s = paragraph.segments[i];
+
+        if (s.segmentType == 'Text') {
+            if (s.text.length > 0) {
+                if (s.text.substr(-1) != SPACE) {
+                    context.ignoreLeadingSpaces = false;
+                }
+                break;
+            }
+        } else if (s.segmentType == 'Image') {
+            // If the previous segment is an image, we should keep the leading space of the current segment to maintain word separation.
+            context.ignoreLeadingSpaces = false;
+            break;
+        } else if (s.segmentType == 'Br') {
+            // If the previous segment is a line break, we should ignore the leading space of the current segment.
+            context.ignoreLeadingSpaces = true;
+        } else if (s.segmentType != 'SelectionMarker') {
+            break;
+        }
+    }
+
     normalizeSegment(paragraph, segment, context);
 }
 
@@ -99,6 +126,11 @@ export function normalizeSegment(
             break;
 
         case 'Text':
+            // Skip empty text segments to avoid affecting normalization context
+            if (segment.text.length == 0) {
+                break;
+            }
+
             context.textSegments.push(segment);
             context.lastInlineSegment = segment;
             context.lastTextSegment = segment;
@@ -108,11 +140,11 @@ export function normalizeSegment(
 
             if (!hasSpacesOnly(segment.text)) {
                 if (first == SPACE) {
-                    // 1. Multiple leading space => single &nbsp; or empty (depends on if previous segment ends with space)
+                    // 1. Multiple leading space => single space or empty (depends on if previous segment ends with space)
                     mutateSegment(paragraph, segment, textSegment => {
                         textSegment.text = textSegment.text.replace(
                             LEADING_SPACE_REGEX,
-                            context.ignoreLeadingSpaces ? '' : NONE_BREAK_SPACE
+                            context.ignoreLeadingSpaces ? '' : SPACE
                         );
                     });
                 }

@@ -71,6 +71,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const hasColGroup = processColGroup(tableElement, context, columnPositions);
             const rowPositions: number[] = [0];
             const zoomScale = context.zoomScale || 1;
+            let maxColumns = 0;
 
             for (let row = 0; row < tableElement.rows.length; row++) {
                 const tr = tableElement.rows[row];
@@ -275,17 +276,37 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                         );
                     }
                 }
+
+                maxColumns = Math.max(maxColumns, tableRow.cells.length);
             }
 
             table.widths = calcSizes(columnPositions);
 
             const heights = calcSizes(rowPositions);
 
-            table.rows.forEach((row, i) => {
+            for (let i = 0; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const currentLength = row.cells.length;
+
+                if (currentLength > 0 && currentLength < maxColumns) {
+                    const lastCell = row.cells[currentLength - 1];
+
+                    for (let col = currentLength; col < maxColumns; col++) {
+                        const spanCell = createTableCell(
+                            true, // spanLeft
+                            false,
+                            lastCell.isHeader,
+                            lastCell.format
+                        );
+                        spanCell.dataset = { ...lastCell.dataset };
+                        row.cells[col] = spanCell;
+                    }
+                }
+
                 if (heights[i] > 0) {
                     row.height = heights[i];
                 }
-            });
+            }
         }
     );
 };

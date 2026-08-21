@@ -1,17 +1,17 @@
 import { adjustWordSelection } from '../selection/adjustWordSelection';
 import {
     applyTableFormat,
+    copyFormat,
     createFormatContainer,
     getClosestAncestorBlockGroupIndex,
     iterateSelections,
     mutateBlock,
     mutateSegments,
-    updateTableCellMetadata,
-    updateTableMetadata,
 } from 'roosterjs-content-model-dom';
 import type {
     ContentModelSegmentFormat,
     ContentModelTable,
+    ContentModelTableCellFormat,
     ReadonlyContentModelBlock,
     ReadonlyContentModelBlockGroup,
     ReadonlyContentModelDocument,
@@ -106,7 +106,6 @@ function createTablesFormat(tablesToClear: [ContentModelTable, boolean][]) {
                 useBorderBox: table.format.useBorderBox,
                 borderCollapse: table.format.borderCollapse,
             };
-            updateTableMetadata(table, () => null);
         }
 
         applyTableFormat(table, undefined /*newFormat*/, true);
@@ -139,11 +138,19 @@ function clearTableCellFormat(
         if (cell.isSelected) {
             const mutableCell = mutateBlock(cell);
 
-            updateTableCellMetadata(mutableCell, () => null);
             mutableCell.isHeader = false;
-            mutableCell.format = {
-                useBorderBox: cell.format.useBorderBox,
-            };
+            const newFormat: ContentModelTableCellFormat = {};
+            copyFormat(newFormat, cell.format, [
+                'useBorderBox',
+                'verticalAlign',
+                'height',
+                'width',
+                'borderTop',
+                'borderBottom',
+                'borderLeft',
+                'borderRight',
+            ]);
+            mutableCell.format = newFormat;
         }
 
         if (!tablesToClear.find(x => x[0] == table)) {

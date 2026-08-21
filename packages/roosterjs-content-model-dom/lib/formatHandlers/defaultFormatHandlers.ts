@@ -6,6 +6,7 @@ import { borderColorFormatHandler } from './common/borderColorFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
+import { dataValueFormatHandler } from './segment/dataValueFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
 import { displayFormatHandler } from './block/displayFormatHandler';
 import { entityFormatHandler } from './entity/entityFormatHandler';
@@ -66,6 +67,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     borderColor: borderColorFormatHandler,
     boxShadow: boxShadowFormatHandler,
     dataset: datasetFormatHandler,
+    dataValue: dataValueFormatHandler,
     direction: directionFormatHandler,
     display: displayFormatHandler,
     float: floatFormatHandler,
@@ -109,12 +111,16 @@ const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'fontSize',
 ];
 
-const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+const sizeNeutralElementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'strike',
     'underline',
-    'superOrSubScript',
     'italic',
     'bold',
+];
+
+const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    ...sizeNeutralElementBasedSegmentFormats,
+    'superOrSubScript',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'direction',
@@ -142,7 +148,8 @@ export const defaultFormatKeysPerCategory: {
     listItemElement: [...sharedBlockFormats, 'listItemAlign', 'margin', 'listStyle'],
     listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
-    elementBasedSegment: elementBasedSegmentFormats,
+    elementBasedSegment: sizeNeutralElementBasedSegmentFormats,
+    superOrSubScript: ['superOrSubScript'],
     segment: [
         ...styleBasedSegmentFormats,
         ...elementBasedSegmentFormats,
@@ -213,6 +220,7 @@ export const defaultFormatKeysPerCategory: {
     ],
     segmentUnderLink: ['textColor'],
     code: ['fontFamily', 'display'],
+    data: ['dataValue'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display', 'id'],

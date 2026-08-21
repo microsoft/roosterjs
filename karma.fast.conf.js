@@ -1,5 +1,7 @@
 const argv = require('minimist')(process.argv.slice(2));
 const components = argv.components !== true && argv.components;
+const testPathPattern = argv.testPathPattern !== true && argv.testPathPattern;
+const testNamePattern = argv.testNamePattern !== true && argv.testNamePattern;
 const runCoverage = typeof argv.coverage !== 'undefined';
 const runFirefox = typeof argv.firefox !== 'undefined';
 const runChrome = typeof argv.chrome !== 'undefined';
@@ -69,6 +71,9 @@ module.exports = function (config) {
         plugins,
         client: {
             components: components,
+            testPathPattern: testPathPattern,
+            testNamePattern: testNamePattern,
+            args: testNamePattern ? ['--grep', testNamePattern] : [],
             clearContext: false,
             captureConsole: true,
         },

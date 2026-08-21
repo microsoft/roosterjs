@@ -1,5 +1,6 @@
 import type { SizeFormat } from './formatParts/SizeFormat';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
+import type { ContentModelDataFormat } from './ContentModelDataFormat';
 import type { ContentModelDividerFormat } from './ContentModelDividerFormat';
 import type { ContentModelEntityFormat } from './ContentModelEntityFormat';
 import type { ContentModelFormatContainerFormat } from './ContentModelFormatContainerFormat';
@@ -26,6 +27,13 @@ export interface ContentModelFormatMap {
      * Format type for style based segment format
      */
     styleBasedSegment: ContentModelSegmentFormat;
+
+    /**
+     * Format type for superscript/subscript format.
+     * Keep this separated from other element based segment format because it has special handling when applying format to a hyperlink.
+     * We need to make sure it is applied after all other formats are applied, so it can override other formats if needed.
+     */
+    superOrSubScript: ContentModelSegmentFormat;
 
     /**
      * Format type for element based segment format
@@ -121,6 +129,11 @@ export interface ContentModelFormatMap {
      * Format type for code
      */
     code: FontFamilyFormat;
+
+    /**
+     * Format type for data, used by HTML &lt;data&gt; element
+     */
+    data: ContentModelDataFormat;
 
     /**
      * Format type for dataset

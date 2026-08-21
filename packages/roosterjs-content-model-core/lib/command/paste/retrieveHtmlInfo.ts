@@ -5,8 +5,7 @@ import {
     retrieveDocumentMetadata,
     toArray,
 } from 'roosterjs-content-model-dom';
-import type { ClipboardData } from 'roosterjs-content-model-types';
-import type { CssRule } from '../createModelFromHtml/convertInlineCss';
+import type { ClipboardData, CssRule } from 'roosterjs-content-model-types';
 
 const START_FRAGMENT = '<!--StartFragment-->';
 const END_FRAGMENT = '<!--EndFragment-->';

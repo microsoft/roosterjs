@@ -19,7 +19,8 @@ const ContentHandlers: {
  */
 export function extractClipboardItems(
     items: DataTransferItem[],
-    allowedCustomPasteType?: string[]
+    allowedCustomPasteType?: string[],
+    isPasteNative?: boolean
 ): Promise<ClipboardData> {
     const data: ClipboardData = {
         types: [],
@@ -28,7 +29,7 @@ export function extractClipboardItems(
         files: [],
         rawHtml: null,
         customValues: {},
-        pasteNativeEvent: true,
+        pasteNativeEvent: !!isPasteNative,
     };
 
     return Promise.all(

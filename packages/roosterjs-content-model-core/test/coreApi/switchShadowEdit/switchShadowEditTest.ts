@@ -1,5 +1,6 @@
 import * as iterateSelections from 'roosterjs-content-model-dom/lib/modelApi/selection/iterateSelections';
 import * as toggleCaret from '../../../lib/coreApi/setDOMSelection/toggleCaret';
+import * as toggleTableSelection from '../../../lib/coreApi/setDOMSelection/toggleTableSelection';
 import { EditorCore } from 'roosterjs-content-model-types';
 import { switchShadowEdit } from '../../../lib/coreApi/switchShadowEdit/switchShadowEdit';
 
@@ -13,6 +14,7 @@ describe('switchShadowEdit', () => {
     let getSelectionRange: jasmine.Spy;
     let triggerEvent: jasmine.Spy;
     let toggleCaretSpy: jasmine.Spy;
+    let toggleTableSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
@@ -20,6 +22,7 @@ describe('switchShadowEdit', () => {
         getSelectionRange = jasmine.createSpy('getSelectionRange');
         triggerEvent = jasmine.createSpy('triggerEvent');
         toggleCaretSpy = spyOn(toggleCaret, 'toggleCaret');
+        toggleTableSelectionSpy = spyOn(toggleTableSelection, 'toggleTableSelection');
 
         const contentDiv = document.createElement('div');
 
@@ -34,6 +37,9 @@ describe('switchShadowEdit', () => {
             },
             lifecycle: {},
             cache: {},
+            selection: {
+                selection: null,
+            },
         } as any) as EditorCore;
     });
 
@@ -54,6 +60,7 @@ describe('switchShadowEdit', () => {
                 false
             );
             expect(toggleCaretSpy).toHaveBeenCalledWith(core, true);
+            expect(toggleTableSelectionSpy).toHaveBeenCalledWith(core, true);
         });
 
         it('with cache, isOn', () => {
@@ -74,6 +81,7 @@ describe('switchShadowEdit', () => {
                 false
             );
             expect(toggleCaretSpy).toHaveBeenCalledWith(core, true);
+            expect(toggleTableSelectionSpy).toHaveBeenCalledWith(core, true);
         });
 
         it('no cache, isOff', () => {
@@ -85,6 +93,7 @@ describe('switchShadowEdit', () => {
 
             expect(triggerEvent).not.toHaveBeenCalled();
             expect(toggleCaretSpy).not.toHaveBeenCalled();
+            expect(toggleTableSelectionSpy).not.toHaveBeenCalled();
         });
 
         it('with cache, isOff', () => {
@@ -98,6 +107,7 @@ describe('switchShadowEdit', () => {
 
             expect(triggerEvent).not.toHaveBeenCalled();
             expect(toggleCaretSpy).not.toHaveBeenCalled();
+            expect(toggleTableSelectionSpy).not.toHaveBeenCalled();
         });
     });
 
@@ -115,6 +125,7 @@ describe('switchShadowEdit', () => {
 
             expect(triggerEvent).not.toHaveBeenCalled();
             expect(toggleCaretSpy).not.toHaveBeenCalled();
+            expect(toggleTableSelectionSpy).not.toHaveBeenCalled();
         });
 
         it('with cache, isOn', () => {
@@ -128,6 +139,7 @@ describe('switchShadowEdit', () => {
 
             expect(triggerEvent).not.toHaveBeenCalled();
             expect(toggleCaretSpy).not.toHaveBeenCalled();
+            expect(toggleTableSelectionSpy).not.toHaveBeenCalled();
         });
 
         it('no cache, isOff', () => {
@@ -146,6 +158,7 @@ describe('switchShadowEdit', () => {
                 false
             );
             expect(toggleCaretSpy).toHaveBeenCalledWith(core, false);
+            expect(toggleTableSelectionSpy).toHaveBeenCalledWith(core, false);
         });
 
         it('with cache, isOff', () => {
@@ -170,6 +183,7 @@ describe('switchShadowEdit', () => {
                 false
             );
             expect(toggleCaretSpy).toHaveBeenCalledWith(core, false);
+            expect(toggleTableSelectionSpy).toHaveBeenCalledWith(core, false);
         });
     });
 });

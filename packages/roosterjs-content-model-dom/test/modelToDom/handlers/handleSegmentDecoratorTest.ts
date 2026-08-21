@@ -2,6 +2,7 @@ import { createModelToDomContext } from '../../../lib/modelToDom/context/createM
 import { handleSegmentDecorator } from '../../../lib/modelToDom/handlers/handleSegmentDecorator';
 import {
     ContentModelCode,
+    ContentModelData,
     ContentModelLink,
     ContentModelSegment,
     ContentModelText,
@@ -19,7 +20,8 @@ describe('handleSegmentDecorator', () => {
     function runTest(
         link: ContentModelLink | undefined,
         code: ContentModelCode | undefined,
-        expectedInnerHTML: string
+        expectedInnerHTML: string,
+        data?: ContentModelData
     ) {
         parent = document.createElement('span');
         parent.textContent = 'test';
@@ -29,6 +31,7 @@ describe('handleSegmentDecorator', () => {
             format: {},
             link: link,
             code: code,
+            data: data,
         };
         const segmentNodes: Node[] = [];
 
@@ -206,5 +209,53 @@ describe('handleSegmentDecorator', () => {
             undefined,
             '<a href="http://test.com/test" style="background-color: red;">test</a>'
         );
+    });
+
+    it('simple data', () => {
+        const data: ContentModelData = {
+            format: {
+                dataValue: '123',
+            },
+        };
+
+        runTest(undefined, undefined, '<data value="123">test</data>', data);
+    });
+
+    it('data with empty value', () => {
+        const data: ContentModelData = {
+            format: {
+                dataValue: '',
+            },
+        };
+
+        runTest(undefined, undefined, '<data value="">test</data>', data);
+    });
+
+    it('Data with onNodeCreated', () => {
+        const parent = document.createElement('div');
+        const span = document.createElement('span');
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            format: {},
+            text: 'test',
+            data: {
+                format: {
+                    dataValue: '123',
+                },
+            },
+        };
+
+        parent.appendChild(span);
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleSegmentDecorator(document, span, segment, context, []);
+
+        expect(parent.innerHTML).toBe('<span><data value="123"></data></span>');
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(segment.data);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('data'));
     });
 });

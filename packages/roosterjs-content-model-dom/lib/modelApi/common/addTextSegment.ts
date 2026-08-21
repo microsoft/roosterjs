@@ -4,6 +4,7 @@ import { createText } from '../creators/createText';
 import { ensureParagraph } from './ensureParagraph';
 import { hasSpacesOnly } from './hasSpacesOnly';
 import { isWhiteSpacePreserved } from '../../domUtils/isWhiteSpacePreserved';
+import { stripInvisibleUnicode } from './stripInvisibleUnicode';
 import type {
     ContentModelBlockGroup,
     ContentModelText,
@@ -32,7 +33,13 @@ export function addTextSegment(
             (paragraph?.segments.length ?? 0) > 0 ||
             isWhiteSpacePreserved(paragraph?.format.whiteSpace)
         ) {
-            textModel = createText(text, context.segmentFormat);
+            const filteredText =
+                context.experimentalFeatures &&
+                context.experimentalFeatures.indexOf('FilterInvisibleUnicode') > -1
+                    ? stripInvisibleUnicode(text)
+                    : text;
+
+            textModel = createText(filteredText, context.segmentFormat);
 
             if (context.isInSelection) {
                 textModel.isSelected = true;

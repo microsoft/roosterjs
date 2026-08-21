@@ -5,6 +5,7 @@ import {
     HandleTabOptions,
     MarkdownOptions,
 } from 'roosterjs-content-model-plugins';
+import type { MarkdownPasteOptions } from 'roosterjs-content-model-markdown';
 import type { SidePaneElementProps } from '../SidePaneElement';
 import type { ContentModelSegmentFormat, ExperimentalFeature } from 'roosterjs-content-model-types';
 
@@ -20,12 +21,14 @@ export interface BuildInPluginList {
     pasteOption: boolean;
     sampleEntity: boolean;
     markdown: boolean;
+    markdownPaste: boolean;
     hyperlink: boolean;
     imageEditPlugin: boolean;
     customReplace: boolean;
     hiddenProperty: boolean;
     touch: boolean;
     announce: boolean;
+    dragAndDrop: boolean;
 }
 
 export interface OptionState {
@@ -39,6 +42,7 @@ export interface OptionState {
     watermarkText: string;
     autoFormatOptions: AutoFormatOptions;
     markdownOptions: MarkdownOptions;
+    markdownPasteOptions: MarkdownPasteOptions;
     customReplacements: CustomReplace[];
     editPluginOptions: EditOptions & { handleTabKey: HandleTabOptions };
     disableSideResize: boolean;

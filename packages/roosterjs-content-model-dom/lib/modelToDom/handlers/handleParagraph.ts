@@ -7,7 +7,9 @@ import { unwrap } from '../../domUtils/unwrap';
 import type {
     ContentModelBlockHandler,
     ContentModelParagraph,
+    ContentModelSegment,
     ModelToDomContext,
+    ModelToDomSegmentContext,
 } from 'roosterjs-content-model-types';
 
 const DefaultParagraphTag = 'div';
@@ -55,6 +57,8 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 if (parent) {
                     const firstSegment = paragraph.segments[0];
 
+                    const segmentContext: ModelToDomSegmentContext = context;
+
                     if (firstSegment?.segmentType == 'SelectionMarker') {
                         // Make sure there is a segment created before selection marker.
                         // If selection marker is the first selected segment in a paragraph, create a dummy text node,
@@ -67,19 +71,33 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                                 segmentType: 'Text',
                                 text: '',
                             },
-                            context,
+                            segmentContext,
                             []
                         );
                     }
 
-                    paragraph.segments.forEach(segment => {
-                        const newSegments: Node[] = [];
-                        context.modelHandlers.segment(doc, parent, segment, context, newSegments);
+                    for (let i = 0; i < paragraph.segments.length; i++) {
+                        const segment = paragraph.segments[i];
 
-                        newSegments.forEach(node => {
+                        segmentContext.noFollowingTextSegmentOrLast =
+                            i === paragraph.segments.length - 1 ||
+                            !hasTextSegmentAfter(paragraph.segments, i);
+
+                        const newSegments: Node[] = [];
+                        context.modelHandlers.segment(
+                            doc,
+                            parent,
+                            segment,
+                            segmentContext,
+                            newSegments
+                        );
+
+                        for (const node of newSegments) {
                             context.domIndexer?.onSegment(node, paragraph, [segment]);
-                        });
-                    });
+                        }
+                    }
+
+                    delete segmentContext.noFollowingTextSegmentOrLast;
                 }
             };
 
@@ -130,3 +148,18 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
 
     return refNode;
 };
+
+function hasTextSegmentAfter(segments: ReadonlyArray<ContentModelSegment>, index: number): boolean {
+    for (let i = index + 1; i < segments.length; i++) {
+        const type = segments[i].segmentType;
+        if (type === 'SelectionMarker') {
+            continue;
+        }
+        if (type === 'Text') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}

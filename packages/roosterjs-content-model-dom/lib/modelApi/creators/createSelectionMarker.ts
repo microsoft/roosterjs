@@ -1,3 +1,5 @@
+import { EmptySegmentFormat } from '../../constants/EmptySegmentFormat';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import type {
     ContentModelSegmentFormat,
     ContentModelSelectionMarker,
@@ -10,9 +12,19 @@ import type {
 export function createSelectionMarker(
     format?: Readonly<ContentModelSegmentFormat>
 ): ContentModelSelectionMarker {
+    const filteredFormat: ContentModelSegmentFormat = {};
+
+    if (format) {
+        getObjectKeys(EmptySegmentFormat).forEach(key => {
+            if (key in format) {
+                (filteredFormat[key] as any) = format[key];
+            }
+        });
+    }
+
     return {
         segmentType: 'SelectionMarker',
         isSelected: true,
-        format: { ...format },
+        format: filteredFormat,
     };
 }
