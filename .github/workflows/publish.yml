@@ -9,6 +9,8 @@ jobs:
         permissions:
             id-token: write # Required for OIDC
             contents: read
+        env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -29,4 +31,4 @@ jobs:
               run: npm run-script build:ci
 
             - name: Publish
-              run: node tools/build.js publish --token ${{ secrets.NPM_TOKEN }}
+              run: node tools/build.js publish --token "$NODE_AUTH_TOKEN"
