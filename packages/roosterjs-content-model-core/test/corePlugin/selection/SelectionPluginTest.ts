@@ -743,6 +743,7 @@ describe('SelectionPlugin handle table selection', () => {
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
+        document.body.appendChild(contentDiv);
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         createRangeSpy = jasmine.createSpy('createRange');
@@ -801,6 +802,7 @@ describe('SelectionPlugin handle table selection', () => {
     });
 
     afterEach(() => {
+        contentDiv.remove();
         focusDispatcher = undefined!;
         mouseDispatcher = undefined!;
     });
