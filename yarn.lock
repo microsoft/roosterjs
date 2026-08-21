@@ -443,89 +443,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@parcel/watcher-android-arm64@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-android-arm64/-/watcher-android-arm64-2.6.0.tgz#99aaa3223d43807c9340af439cad7e9b6d26ada6"
-  integrity sha1-maqjIj1DgHyTQK9DnK1+m20mraY=
-
-"@parcel/watcher-darwin-arm64@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-darwin-arm64/-/watcher-darwin-arm64-2.6.0.tgz#024496e586b4744f09ce532bbe89fe38ef02a64e"
-  integrity sha1-AkSW5Ya0dE8JzlMrvon+OO8Cpk4=
-
-"@parcel/watcher-darwin-x64@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-darwin-x64/-/watcher-darwin-x64-2.6.0.tgz#a4621df1359a93d39a332d9bab5ff09016a0608f"
-  integrity sha1-pGId8TWak9OaMy2bq1/wkBagYI8=
-
-"@parcel/watcher-freebsd-x64@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-freebsd-x64/-/watcher-freebsd-x64-2.6.0.tgz#7f565ed1a5b3a5e604e6a4799121518265d62a3d"
-  integrity sha1-f1Ze0aWzpeYE5qR5kSFRgmXWKj0=
-
-"@parcel/watcher-linux-arm-glibc@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-linux-arm-glibc/-/watcher-linux-arm-glibc-2.6.0.tgz#ad7d3825e67b81999165da42593022045abc0889"
-  integrity sha1-rX04JeZ7gZmRZdpCWTAiBFq8CIk=
-
-"@parcel/watcher-linux-arm-musl@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-linux-arm-musl/-/watcher-linux-arm-musl-2.6.0.tgz#fe7d1cccb2c483215c090e938cf5cf404d2f9a8c"
-  integrity sha1-/n0czLLEgyFcCQ6TjPXPQE0vmow=
-
-"@parcel/watcher-linux-arm64-glibc@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-linux-arm64-glibc/-/watcher-linux-arm64-glibc-2.6.0.tgz#7e239dcb4646c4c79f006a7131a48238249530da"
-  integrity sha1-fiOdy0ZGxMefAGpxMaSCOCSVMNo=
-
-"@parcel/watcher-linux-arm64-musl@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-linux-arm64-musl/-/watcher-linux-arm64-musl-2.6.0.tgz#c58b8d9c6d8d81594be00dd83aab741c1aaf7e0e"
-  integrity sha1-xYuNnG2NgVlL4A3YOqt0HBqvfg4=
-
-"@parcel/watcher-linux-x64-glibc@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-linux-x64-glibc/-/watcher-linux-x64-glibc-2.6.0.tgz#5184fa9a770478d86e56875f4ee163a0abdc8791"
-  integrity sha1-UYT6mncEeNhuVodfTuFjoKvch5E=
-
-"@parcel/watcher-linux-x64-musl@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-linux-x64-musl/-/watcher-linux-x64-musl-2.6.0.tgz#2d1c55aa7246cbc7670e2612058a8a542c9cf246"
-  integrity sha1-LRxVqnJGy8dnDiYSBYqKVCyc8kY=
-
-"@parcel/watcher-win32-arm64@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-win32-arm64/-/watcher-win32-arm64-2.6.0.tgz#15e09432040fee9e2213aa9c10ed589012526def"
-  integrity sha1-FeCUMgQP7p4iE6qcEO1YkBJSbe8=
-
-"@parcel/watcher-win32-x64@2.6.0":
-  version "2.6.0"
-  resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher-win32-x64/-/watcher-win32-x64-2.6.0.tgz#9bee199a2a4accd557b451ac2c1c793f305ae012"
-  integrity sha1-m+4ZmipKzNVXtFGsLBx5PzBa4BI=
-
-"@parcel/watcher@^2.4.1":
-  version "2.6.0"
-  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@parcel/watcher/-/watcher-2.6.0.tgz#99661f6220070b76a766aba6b7e313a087a1be4f"
-  integrity sha1-mWYfYiAHC3anZqumt+MToIehvk8=
-  dependencies:
-    detect-libc "^2.0.3"
-    is-glob "^4.0.3"
-    node-addon-api "^7.0.0"
-    picomatch "^4.0.4"
-  optionalDependencies:
-    "@parcel/watcher-android-arm64" "2.6.0"
-    "@parcel/watcher-darwin-arm64" "2.6.0"
-    "@parcel/watcher-darwin-x64" "2.6.0"
-    "@parcel/watcher-freebsd-x64" "2.6.0"
-    "@parcel/watcher-linux-arm-glibc" "2.6.0"
-    "@parcel/watcher-linux-arm-musl" "2.6.0"
-    "@parcel/watcher-linux-arm64-glibc" "2.6.0"
-    "@parcel/watcher-linux-arm64-musl" "2.6.0"
-    "@parcel/watcher-linux-x64-glibc" "2.6.0"
-    "@parcel/watcher-linux-x64-musl" "2.6.0"
-    "@parcel/watcher-win32-arm64" "2.6.0"
-    "@parcel/watcher-win32-x64" "2.6.0"
-
 "@phenomnomnominal/tsquery@^5.0.0":
   version "5.0.1"
   resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@phenomnomnominal/tsquery/-/tsquery-5.0.1.tgz#a2a5abc89f92c01562a32806655817516653a388"
@@ -563,6 +480,11 @@
   integrity sha1-QPimvy/YbpaYdrM5qDfY/xsKbjA=
   dependencies:
     "@types/color-convert" "*"
+
+"@types/cookie@^0.4.1":
+  version "0.4.1"
+  resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@types/cookie/-/cookie-0.4.1.tgz#bfd02c1f2224567676c1545199f87c3a861d878d"
+  integrity sha1-v9AsHyIkVnZ2wVRRmfh8OoYdh40=
 
 "@types/cors@^2.8.12":
   version "2.8.19"
@@ -678,13 +600,6 @@
   version "2.0.7"
   resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@types/trusted-types/-/trusted-types-2.0.7.tgz#baccb07a970b91707df3a3e8ba6896c57ead2d11"
   integrity sha1-usywepcLkXB986PoumiWxX6tLRE=
-
-"@types/ws@^8.5.12":
-  version "8.18.1"
-  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/@types/ws/-/ws-8.18.1.tgz#48464e4bf2ddfd17db13d845467f6070ffea4aa9"
-  integrity sha1-SEZOS/Ld/RfbE9hFRn9gcP/qSqk=
-  dependencies:
-    "@types/node" "*"
 
 "@types/yargs-parser@*":
   version "21.0.3"
@@ -1587,6 +1502,21 @@ chalk@^4.0.0, chalk@^4.1.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+"chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.1:
+  version "3.6.0"
+  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/chokidar/-/chokidar-3.6.0.tgz#197c6cc669ef2a8dc5e7b4d97ee4e092c3eb0d5b"
+  integrity sha1-GXxsxmnvKo3F57TZfuTgksPrDVs=
+  dependencies:
+    anymatch "~3.1.2"
+    braces "~3.0.2"
+    glob-parent "~5.1.2"
+    is-binary-path "~2.1.0"
+    is-glob "~4.0.1"
+    normalize-path "~3.0.0"
+    readdirp "~3.6.0"
+  optionalDependencies:
+    fsevents "~2.3.2"
+
 chokidar@^2.1.8:
   version "2.1.8"
   resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/chokidar/-/chokidar-2.1.8.tgz#804b3a7b6a99358c3c5c61e71d8728f041cff917"
@@ -1605,28 +1535,6 @@ chokidar@^2.1.8:
     upath "^1.1.1"
   optionalDependencies:
     fsevents "^1.2.7"
-
-chokidar@^3.5.1:
-  version "3.6.0"
-  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/chokidar/-/chokidar-3.6.0.tgz#197c6cc669ef2a8dc5e7b4d97ee4e092c3eb0d5b"
-  integrity sha1-GXxsxmnvKo3F57TZfuTgksPrDVs=
-  dependencies:
-    anymatch "~3.1.2"
-    braces "~3.0.2"
-    glob-parent "~5.1.2"
-    is-binary-path "~2.1.0"
-    is-glob "~4.0.1"
-    normalize-path "~3.0.0"
-    readdirp "~3.6.0"
-  optionalDependencies:
-    fsevents "~2.3.2"
-
-chokidar@^5.0.0:
-  version "5.0.0"
-  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/chokidar/-/chokidar-5.0.0.tgz#949c126a9238a80792be9a0265934f098af369a5"
-  integrity sha1-lJwSapI4qAeSvpoCZZNPCYrzaaU=
-  dependencies:
-    readdirp "^5.0.0"
 
 chrome-trace-event@^1.0.2:
   version "1.0.4"
@@ -1858,7 +1766,12 @@ cookie-signature@~1.0.6:
   resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/cookie-signature/-/cookie-signature-1.0.7.tgz#ab5dd7ab757c54e60f37ef6550f481c426d10454"
   integrity sha1-q13Xq3V8VOYPN+9lUPSBxCbRBFQ=
 
-cookie@~0.7.1, cookie@~0.7.2:
+cookie@~0.4.1:
+  version "0.4.2"
+  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
+  integrity sha1-DkHyTeXs8xeUfIL8eJ4GqISCRDI=
+
+cookie@~0.7.1:
   version "0.7.2"
   resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/cookie/-/cookie-0.7.2.tgz#556369c472a2ba910f2979891b526b3436237ed7"
   integrity sha1-VWNpxHKiupEPKXmJG1JrNDYjftc=
@@ -2029,6 +1942,13 @@ debug@^3.2.5, debug@^3.2.7:
   dependencies:
     ms "^2.1.1"
 
+debug@~4.3.1, debug@~4.3.2:
+  version "4.3.7"
+  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/debug/-/debug-4.3.7.tgz#87945b4151a011d76d95a198d7111c865c360a52"
+  integrity sha1-h5RbQVGgEddtlaGY1xEchlw2ClI=
+  dependencies:
+    ms "^2.1.3"
+
 decamelize@^1.2.0:
   version "1.2.0"
   resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
@@ -2141,11 +2061,6 @@ detect-file@^1.0.0:
   version "1.0.0"
   resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/detect-file/-/detect-file-1.0.0.tgz#f0d66d03672a825cb1b73bdb3fe62310c8e552b7"
   integrity sha1-8NZtA2cqglyxtzvbP+YjEMjlUrc=
-
-detect-libc@^2.0.3:
-  version "2.1.2"
-  resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/detect-libc/-/detect-libc-2.1.2.tgz#689c5dcdc1900ef5583a4cb9f6d7b473742074ad"
-  integrity sha1-aJxdzcGQDvVYOky59te0c3QgdK0=
 
 detect-node@^2.0.4:
   version "2.1.0"
@@ -2304,21 +2219,21 @@ engine.io-parser@~5.2.1:
   resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/engine.io-parser/-/engine.io-parser-5.2.3.tgz#00dc5b97b1f233a23c9398d0209504cf5f94d92f"
   integrity sha1-ANxbl7HyM6I8k5jQIJUEz1+U2S8=
 
-engine.io@~6.6.0:
-  version "6.6.9"
-  resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/engine.io/-/engine.io-6.6.9.tgz#fd17e9f4e3a256423592574b60ac262e91af4b82"
-  integrity sha1-/Rfp9OOiVkI1kldLYKwmLpGvS4I=
+engine.io@~6.5.2:
+  version "6.5.5"
+  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/engine.io/-/engine.io-6.5.5.tgz#430b80d8840caab91a50e9e23cb551455195fc93"
+  integrity sha1-QwuA2IQMqrkaUOniPLVRRVGV/JM=
   dependencies:
+    "@types/cookie" "^0.4.1"
     "@types/cors" "^2.8.12"
     "@types/node" ">=10.0.0"
-    "@types/ws" "^8.5.12"
     accepts "~1.3.4"
     base64id "2.0.0"
-    cookie "~0.7.2"
+    cookie "~0.4.1"
     cors "~2.8.5"
-    debug "~4.4.1"
+    debug "~4.3.1"
     engine.io-parser "~5.2.1"
-    ws "~8.21.0"
+    ws "~8.17.1"
 
 enhanced-resolve@4.1.0:
   version "4.1.0"
@@ -3625,10 +3540,10 @@ ignore@^5.1.4, ignore@^5.2.0, ignore@^5.2.4:
   resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/ignore/-/ignore-5.3.2.tgz#3cd40e729f3643fd87cb04e50bf0eb722bc596f5"
   integrity sha1-PNQOcp82Q/2HywTlC/DrcivFlvU=
 
-immutable@^5.1.5:
-  version "5.1.9"
-  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/immutable/-/immutable-5.1.9.tgz#ac23c3a01992ab665e14ac9ffff298f28cd74a0c"
-  integrity sha1-rCPDoBmSq2ZeFKyf//KY8ozXSgw=
+immutable@^4.0.0:
+  version "4.3.9"
+  resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/immutable/-/immutable-4.3.9.tgz#c98349e05e9c6e2a4d8fe88ac0b363e0d536b544"
+  integrity sha1-yYNJ4F6cbipNj+iKwLNj4NU2tUQ=
 
 import-fresh@^3.2.1:
   version "3.3.1"
@@ -4865,11 +4780,6 @@ nice-try@^1.0.4:
   resolved "https://ms-feed-2.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha1-ozeKdpbOfSI+iPybdkvX7xCJ42Y=
 
-node-addon-api@^7.0.0:
-  version "7.1.1"
-  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/node-addon-api/-/node-addon-api-7.1.1.tgz#1aba6693b0f255258a049d621329329322aad558"
-  integrity sha1-Grpmk7DyVSWKBJ1iEykykyKq1Vg=
-
 node-exports-info@^1.6.0:
   version "1.6.2"
   resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/node-exports-info/-/node-exports-info-1.6.2.tgz#243a3105677d6781cd26e6a72350fd928a5cb46f"
@@ -5298,11 +5208,6 @@ picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.3.1:
   resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/picomatch/-/picomatch-2.3.2.tgz#5a942915e26b372dc0f0e6753149a16e6b1c5601"
   integrity sha1-WpQpFeJrNy3A8OZ1MUmhbmscVgE=
 
-picomatch@^4.0.4:
-  version "4.0.5"
-  resolved "https://ms-feed-25.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/picomatch/-/picomatch-4.0.5.tgz#51ea57a17d86f605f81039595fbc40ed06a55fab"
-  integrity sha1-UepXoX2G9gX4EDlZX7xA7QalX6s=
-
 pify@^2.0.0:
   version "2.3.0"
   resolved "https://ms-feed-12.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
@@ -5585,11 +5490,6 @@ readdirp@^2.2.1:
     graceful-fs "^4.1.11"
     micromatch "^3.1.10"
     readable-stream "^2.0.2"
-
-readdirp@^5.0.0:
-  version "5.1.1"
-  resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/readdirp/-/readdirp-5.1.1.tgz#520bca06f9d1ae1b96cc0800dbe84b983d19422c"
-  integrity sha1-UgvKBvnRrhuWzAgA2+hLmD0ZQiw=
 
 readdirp@~3.6.0:
   version "3.6.0"
@@ -7282,6 +7182,11 @@ ws@^6.2.1:
   integrity sha1-VFpqkVsAtmCTf38sMITWI/svxZ8=
   dependencies:
     async-limiter "~1.0.0"
+
+ws@~8.17.1:
+  version "8.17.1"
+  resolved "https://ms-feed-17.pkgs.visualstudio.com/1es-public/_packaging/npm-public/npm/registry/ws/-/ws-8.17.1.tgz#9293da530bb548febc95371d90f9c878727d919b"
+  integrity sha1-kpPaUwu1SP68lTcdkPnIeHJ9kZs=
 
 ws@~8.21.0:
   version "8.21.3"
