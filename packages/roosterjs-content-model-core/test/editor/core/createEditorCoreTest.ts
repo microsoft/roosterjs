@@ -90,6 +90,7 @@ describe('createEditorCore', () => {
                 isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: false,
+                isTouchSupported: false,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
             },
@@ -226,6 +227,7 @@ describe('createEditorCore', () => {
                 isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: true,
+                isTouchSupported: false,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
             },
@@ -263,6 +265,7 @@ describe('createEditorCore', () => {
                 isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: true,
+                isTouchSupported: false,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
             },
@@ -300,6 +303,7 @@ describe('createEditorCore', () => {
                 isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: false,
+                isTouchSupported: false,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
             },
@@ -337,6 +341,7 @@ describe('createEditorCore', () => {
                 isIOS: false,
                 isSafari: true,
                 isMobileOrTablet: false,
+                isTouchSupported: false,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
             },
@@ -374,6 +379,7 @@ describe('createEditorCore', () => {
                 isIOS: false,
                 isSafari: false,
                 isMobileOrTablet: false,
+                isTouchSupported: false,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
             },
@@ -385,6 +391,37 @@ describe('createEditorCore', () => {
             undefined,
             undefined
         );
+    });
+
+    it('Touch supported', () => {
+        const mockedDocument: Document = {
+            defaultView: {
+                navigator: {
+                    maxTouchPoints: 10,
+                },
+            },
+        } as any;
+        const mockedDiv = {
+            ownerDocument: mockedDocument,
+            attributes: {
+                a: 'b',
+            },
+        } as any;
+        const mockedOptions = {} as any;
+
+        runTest(mockedDiv, mockedOptions, {
+            environment: {
+                document: mockedDocument,
+                isMac: false,
+                isAndroid: false,
+                isIOS: false,
+                isSafari: false,
+                isMobileOrTablet: false,
+                isTouchSupported: true,
+                domToModelSettings: mockedDomToModelSettings,
+                modelToDomSettings: mockedModelToDomSettings,
+            },
+        });
     });
 
     it('iOS iPhone Safari', () => {
@@ -412,6 +449,7 @@ describe('createEditorCore', () => {
                 isIOS: true,
                 isSafari: true,
                 isMobileOrTablet: true,
+                isTouchSupported: false,
                 domToModelSettings: mockedDomToModelSettings,
                 modelToDomSettings: mockedModelToDomSettings,
             },
