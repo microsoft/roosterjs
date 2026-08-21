@@ -3,7 +3,7 @@ import * as createDomToModelContextForSanitizing from '../../../lib/command/crea
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as getSegmentTextFormatFile from 'roosterjs-content-model-dom/lib/modelApi/editing/getSegmentTextFormat';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
-import { createPasteFragment } from '../../../lib/command/paste/createPasteFragment';
+import { createPasteFragment } from 'roosterjs-content-model-dom/lib/domUtils/event/createPasteFragment';
 import { inlineTemplate, template } from './htmlTemplates/ClipboardContent1';
 import { mergePasteContent } from '../../../lib/command/paste/mergePasteContent';
 
@@ -493,6 +493,49 @@ describe('mergePasteContent', () => {
                 textColor: '',
                 underline: false,
             },
+        });
+    });
+
+    it('Merge paste content | Paste Type = normal | Paste an image only should not force text color to black', () => {
+        const pasteModel = createContentModelDocument();
+        sourceModel = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        marker.format = {
+            textColor: 'rgb(102, 51, 153)',
+        };
+        para.segments.push(marker);
+        addBlock(sourceModel, para);
+
+        const mockedDomToModelContext = {
+            name: 'DOMTOMODELCONTEXT',
+        } as any;
+
+        spyOn(mergeModelFile, 'mergeModel').and.returnValue(null);
+        spyOn(domToContentModel, 'domToContentModel').and.returnValue(pasteModel);
+        spyOn(
+            createDomToModelContextForSanitizing,
+            'createDomToModelContextForSanitizing'
+        ).and.returnValue(mockedDomToModelContext);
+
+        const img = document.createElement('img');
+        img.src = 'test.png';
+        const fragment = document.createDocumentFragment();
+        fragment.appendChild(img);
+
+        mergePasteContent(
+            editor,
+            <any>{
+                fragment,
+                domToModelOption: <any>{},
+                pasteType: 'normal',
+                clipboardData: mockedClipboard,
+            },
+            true
+        );
+
+        expect(mockedDomToModelContext.segmentFormat).toEqual({
+            textColor: 'rgb(102, 51, 153)',
         });
     });
 

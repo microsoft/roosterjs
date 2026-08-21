@@ -11,6 +11,7 @@ import {
     trimModelForSelection,
 } from 'roosterjs-content-model-dom';
 import type { IEditor } from 'roosterjs-content-model-types';
+import { reorderList } from './reorderList';
 
 /**
  * @internal
@@ -29,8 +30,10 @@ export function handleDroppedInternalContent(editor: IEditor, event: DragEvent):
                 const cloneModel = cloneModelForPaste(model);
                 trimModelForSelection(cloneModel, selection);
 
-                if (deleteSelection(model, [], context).deleteResult == 'range') {
-                    normalizeContentModel(model);
+                if (!event.ctrlKey && !event.metaKey) {
+                    if (deleteSelection(model, [reorderList], context).deleteResult == 'range') {
+                        normalizeContentModel(model);
+                    }
                 }
 
                 const startMarker = createSelectionMarker(insertPoint.marker.format);
@@ -41,6 +44,7 @@ export function handleDroppedInternalContent(editor: IEditor, event: DragEvent):
 
                 const newInsertPoint = mergeModel(model, cloneModel, context, {
                     insertPosition: insertPoint,
+                    mergeParagraphAfterList: true,
                 });
 
                 if (newInsertPoint) {

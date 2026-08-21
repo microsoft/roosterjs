@@ -4,7 +4,7 @@ const BlockPatterns: RegExp[] = [
     /^\s*>\s.+/, // blockquote: "> text"
     /^\s*[\*\-\+]\s.+/, // unordered list: "- item", "* item", "+ item"
     /^\s*\d+\.\s.+/, // ordered list: "1. item"
-    /^---+$/, // horizontal rule: "---"
+    /^---$/, // horizontal rule: "---"
     /^\s*\|.*\|\s*$/, // table row: "| a | b |"
 ];
 

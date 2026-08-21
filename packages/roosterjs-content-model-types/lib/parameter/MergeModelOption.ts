@@ -39,4 +39,10 @@ export interface MergeModelOption {
      * Whether to add a paragraph after the merged content.
      */
     addParagraphAfterMergedContent?: boolean;
+
+    /**
+     * Whether to merge into an empty paragraph immediately after a list as a new list item.
+     * @default false
+     */
+    mergeParagraphAfterList?: boolean;
 }
