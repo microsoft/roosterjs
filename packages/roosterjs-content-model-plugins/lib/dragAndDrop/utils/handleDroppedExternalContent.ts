@@ -41,7 +41,9 @@ export async function handleDroppedExternalContent(
 
         editor.formatContentModel(
             (model, context) => {
-                mergeModel(model, droppedModel, context);
+                mergeModel(model, droppedModel, context, {
+                    mergeParagraphAfterList: true,
+                });
                 return true;
             },
             {
