@@ -1,6 +1,8 @@
 import { handleDroppedExternalContent } from './utils/handleDroppedExternalContent';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { handleDroppedInternalContent } from './utils/handleDroppedInternalContent';
+import { ChangeSource, deleteSelection } from 'roosterjs-content-model-dom';
+import { reorderList } from './utils/reorderList';
 
 /**
  * Options for DragAndDrop plugin
@@ -16,6 +18,8 @@ export interface DragAndDropOptions {
 const DefaultOptions = {
     forbiddenElements: ['iframe'],
 };
+
+const DeleteByDragInputType = 'deleteByDrag';
 
 /**
  * DragAndDrop plugin, handles ContentChanged event when change source is "Drop"
@@ -51,8 +55,23 @@ export class DragAndDropPlugin implements EditorPlugin {
         this.editor = editor;
         this.disposer = editor.attachDomEvent({
             dragstart: {
-                beforeDispatch: _ev => {
+                beforeDispatch: ev => {
                     this.internalDrag = true;
+                    if (
+                        this.editor &&
+                        this.editor.isExperimentalFeatureEnabled('HandleDropInternalContent')
+                    ) {
+                        this.adjustDraggingCursor(this.editor, ev as DragEvent);
+                    }
+                },
+            },
+            beforeinput: {
+                beforeDispatch: (event: Event) => {
+                    const ev = event as InputEvent;
+                    if (this.internalDrag) {
+                        this.handleDragOutOfTheEditor(editor, ev);
+                        this.internalDrag = false;
+                    }
                 },
             },
         });
@@ -70,6 +89,7 @@ export class DragAndDropPlugin implements EditorPlugin {
             this.disposer = null;
         }
         this.forbiddenElements = [];
+        this.internalDrag = false;
     }
 
     /**
@@ -87,17 +107,38 @@ export class DragAndDropPlugin implements EditorPlugin {
             ) {
                 handleDroppedInternalContent(this.editor, dropEvent);
             } else if (!this.internalDrag) {
-                const html = dropEvent.dataTransfer?.getData('text/html');
-                if (html) {
-                    handleDroppedExternalContent(
-                        this.editor,
-                        dropEvent,
-                        html,
-                        this.forbiddenElements
-                    );
-                }
+                handleDroppedExternalContent(this.editor, dropEvent, this.forbiddenElements);
             }
             this.internalDrag = false;
+        }
+    }
+
+    private adjustDraggingCursor(editor: IEditor, dragEvent: DragEvent) {
+        const selection = editor.getDOMSelection();
+        if (selection?.type == 'table') {
+            const doc = this.editor?.getDocument();
+            if (doc && dragEvent.dataTransfer) {
+                const ghost = doc.createElement('span');
+                ghost.textContent = '|';
+                doc.body.appendChild(ghost);
+                dragEvent.dataTransfer.setDragImage(ghost, 0, 0);
+                doc.defaultView?.requestAnimationFrame(() => ghost.remove());
+            }
+        }
+    }
+
+    private handleDragOutOfTheEditor(editor: IEditor, inputEvent: InputEvent) {
+        if (inputEvent.inputType == DeleteByDragInputType) {
+            inputEvent.preventDefault();
+            editor.formatContentModel(
+                (model, context) => {
+                    deleteSelection(model, [reorderList], context);
+                    return true;
+                },
+                {
+                    changeSource: ChangeSource.DragOutOfEditor,
+                }
+            );
         }
     }
 }

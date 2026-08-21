@@ -1,6 +1,7 @@
 import { addBlock } from '../common/addBlock';
 import { addSegment } from '../common/addSegment';
 import { applyTableFormat } from './applyTableFormat';
+import { createBr } from '../creators/createBr';
 import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
@@ -53,7 +54,12 @@ export function mergeModel(
     const insertPosition =
         options?.insertPosition ?? deleteSelection(target, [], context).insertPoint;
 
-    const { addParagraphAfterMergedContent, mergeFormat, mergeTable } = options || {};
+    const { addParagraphAfterMergedContent, mergeFormat, mergeParagraphAfterList, mergeTable } =
+        options || {};
+
+    if (mergeParagraphAfterList && insertPosition && source.blocks[0]?.blockType == 'Paragraph') {
+        moveParagraphAfterListIntoList(insertPosition);
+    }
 
     if (addParagraphAfterMergedContent && !mergeTable) {
         const { paragraph, marker } = insertPosition || {};
@@ -114,6 +120,29 @@ export function mergeModel(
     normalizeContentModel(target);
 
     return insertPosition;
+}
+
+function moveParagraphAfterListIntoList(insertPosition: InsertPoint) {
+    const { paragraph, path } = insertPosition;
+    const parent = path[0];
+    const paragraphIndex = parent.blocks.indexOf(paragraph);
+    const previousBlock = parent.blocks[paragraphIndex - 1];
+
+    if (
+        paragraph.segments.every(
+            segment => segment.segmentType == 'SelectionMarker' || segment.segmentType == 'Br'
+        ) &&
+        previousBlock?.blockType == 'BlockGroup' &&
+        previousBlock.blockGroupType == 'ListItem'
+    ) {
+        const newListItem = createListItem(previousBlock.levels, previousBlock.formatHolder.format);
+        const paragraphAfterList = createParagraph(false, paragraph.format);
+
+        addBlock(newListItem, paragraph);
+        paragraphAfterList.segments.push(createBr());
+        mutateBlock(parent).blocks.splice(paragraphIndex, 1, newListItem, paragraphAfterList);
+        path.unshift(newListItem);
+    }
 }
 
 function mergeParagraph(
