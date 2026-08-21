@@ -1,6 +1,8 @@
 import { handleDroppedExternalContent } from './utils/handleDroppedExternalContent';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 import { handleDroppedInternalContent } from './utils/handleDroppedInternalContent';
+import { ChangeSource, deleteSelection } from 'roosterjs-content-model-dom';
+import { reorderList } from './utils/reorderList';
 
 /**
  * Options for DragAndDrop plugin
@@ -16,6 +18,8 @@ export interface DragAndDropOptions {
 const DefaultOptions = {
     forbiddenElements: ['iframe'],
 };
+
+const DeleteByDragInputType = 'deleteByDrag';
 
 /**
  * DragAndDrop plugin, handles ContentChanged event when change source is "Drop"
@@ -61,6 +65,15 @@ export class DragAndDropPlugin implements EditorPlugin {
                     }
                 },
             },
+            beforeinput: {
+                beforeDispatch: (event: Event) => {
+                    const ev = event as InputEvent;
+                    if (this.internalDrag) {
+                        this.handleDragOutOfTheEditor(editor, ev);
+                        this.internalDrag = false;
+                    }
+                },
+            },
         });
     }
 
@@ -76,6 +89,7 @@ export class DragAndDropPlugin implements EditorPlugin {
             this.disposer = null;
         }
         this.forbiddenElements = [];
+        this.internalDrag = false;
     }
 
     /**
@@ -110,6 +124,21 @@ export class DragAndDropPlugin implements EditorPlugin {
                 dragEvent.dataTransfer.setDragImage(ghost, 0, 0);
                 doc.defaultView?.requestAnimationFrame(() => ghost.remove());
             }
+        }
+    }
+
+    private handleDragOutOfTheEditor(editor: IEditor, inputEvent: InputEvent) {
+        if (inputEvent.inputType == DeleteByDragInputType) {
+            inputEvent.preventDefault();
+            editor.formatContentModel(
+                (model, context) => {
+                    deleteSelection(model, [reorderList], context);
+                    return true;
+                },
+                {
+                    changeSource: ChangeSource.DragOutOfEditor,
+                }
+            );
         }
     }
 }
