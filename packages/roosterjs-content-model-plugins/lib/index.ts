@@ -26,7 +26,11 @@ export {
     ShortcutIndentList,
     ShortcutOutdentList,
 } from './shortcut/shortcuts';
-export { ShortcutPlugin } from './shortcut/ShortcutPlugin';
+export {
+    ShortcutPlugin,
+    ShortcutPluginOptions,
+    DefaultShortcutCommandName,
+} from './shortcut/ShortcutPlugin';
 export { ShortcutKeyDefinition, ShortcutCommand } from './shortcut/ShortcutCommand';
 export { ContextMenuPluginBase, ContextMenuOptions } from './contextMenuBase/ContextMenuPluginBase';
 export { WatermarkPlugin } from './watermark/WatermarkPlugin';

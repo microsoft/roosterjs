@@ -9,6 +9,7 @@ import * as toggleNumbering from 'roosterjs-content-model-api/lib/publicApi/list
 import * as toggleUnderline from 'roosterjs-content-model-api/lib/publicApi/segment/toggleUnderline';
 import * as undo from 'roosterjs-content-model-core/lib/command/undo/undo';
 import { EditorEnvironment, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import type { ShortcutCommand } from '../../lib/shortcut/ShortcutCommand';
 import { ShortcutPlugin } from '../../lib/shortcut/ShortcutPlugin';
 
 const enum Keys {
@@ -17,6 +18,7 @@ const enum Keys {
     A = 65,
     B = 66,
     I = 73,
+    N = 78,
     U = 85,
     Y = 89,
     Z = 90,
@@ -58,6 +60,84 @@ describe('ShortcutPlugin', () => {
     }
 
     describe('Windows', () => {
+        it('uses a custom command list instead of the built-in shortcuts', () => {
+            const boldSpy = spyOn(toggleBold, 'toggleBold');
+            const customCommandSpy = jasmine.createSpy('customCommand');
+            const customCommands: ShortcutCommand[] = [
+                {
+                    shortcutKey: {
+                        modifierKey: 'ctrl',
+                        shiftKey: false,
+                        which: Keys.A,
+                    },
+                    onClick: customCommandSpy,
+                },
+            ];
+            const plugin = new ShortcutPlugin(customCommands);
+            const customEvent: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.A, true, false, false, false),
+            };
+            const boldEvent: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.B, true, false, false, false),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            expect(plugin.willHandleEventExclusively(customEvent)).toBe(true);
+            plugin.onPluginEvent(customEvent);
+            expect(customCommandSpy).toHaveBeenCalledWith(mockedEditor);
+
+            expect(plugin.willHandleEventExclusively(boldEvent)).toBe(false);
+            plugin.onPluginEvent(boldEvent);
+            expect(boldSpy).not.toHaveBeenCalled();
+        });
+
+        it('partially overrides a built-in shortcut and preserves other defaults', () => {
+            const boldSpy = spyOn(toggleBold, 'toggleBold');
+            const italicSpy = spyOn(toggleItalic, 'toggleItalic');
+            const plugin = new ShortcutPlugin({
+                shortcutOverrides: {
+                    bold: {
+                        modifierKey: 'ctrl',
+                        shiftKey: false,
+                        which: Keys.N,
+                    },
+                },
+            });
+            const oldBoldEvent: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.B, true, false, false, false),
+            };
+            const newBoldEvent: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.N, true, false, false, false),
+            };
+            const italicEvent: PluginEvent = {
+                eventType: 'keyDown',
+                rawEvent: createMockedEvent(Keys.I, true, false, false, false),
+            };
+
+            plugin.initialize(mockedEditor);
+
+            expect(plugin.willHandleEventExclusively(oldBoldEvent)).toBe(false);
+            plugin.onPluginEvent(oldBoldEvent);
+            expect(boldSpy).not.toHaveBeenCalled();
+
+            expect(plugin.willHandleEventExclusively(newBoldEvent)).toBe(true);
+            plugin.onPluginEvent(newBoldEvent);
+            expect(boldSpy).toHaveBeenCalledWith(mockedEditor, {
+                announceFormatChange: true,
+            });
+
+            expect(plugin.willHandleEventExclusively(italicEvent)).toBe(true);
+            plugin.onPluginEvent(italicEvent);
+            expect(italicSpy).toHaveBeenCalledWith(mockedEditor, {
+                announceFormatChange: true,
+            });
+        });
+
         it('not a shortcut', () => {
             const apiSpy = spyOn(toggleBold, 'toggleBold');
             const plugin = new ShortcutPlugin();
