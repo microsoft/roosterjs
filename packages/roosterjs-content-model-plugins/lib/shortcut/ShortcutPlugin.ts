@@ -24,24 +24,84 @@ import type {
     PluginEvent,
 } from 'roosterjs-content-model-types';
 
-const defaultShortcuts: ShortcutCommand[] = [
-    ShortcutBold,
-    ShortcutItalic,
-    ShortcutUnderline,
-    ShortcutClearFormat,
-    ShortcutUndo,
-    ShortcutUndo2,
-    ShortcutRedo,
-    ShortcutRedoAlt,
-    ShortcutRedoMacOS,
-    ShortcutBullet,
-    ShortcutNumbering,
-    ShortcutIncreaseFont,
-    ShortcutDecreaseFont,
-    ShortcutIndentList,
-    ShortcutOutdentList,
-];
+/**
+ * Names of the built-in shortcut commands that can be overridden.
+ */
+export type DefaultShortcutCommandName =
+    | 'bold'
+    | 'italic'
+    | 'underline'
+    | 'clearFormat'
+    | 'undo'
+    | 'undo2'
+    | 'redo'
+    | 'redoAlt'
+    | 'redoMacOS'
+    | 'bullet'
+    | 'numbering'
+    | 'increaseFont'
+    | 'decreaseFont'
+    | 'indentList'
+    | 'outdentList';
+
+/**
+ * Built-in shortcut commands in matching order. Add new commands to
+ * DefaultShortcutCommandName and this map; the first matching command wins.
+ */
+const defaultShortcutCommands: Readonly<Record<DefaultShortcutCommandName, ShortcutCommand>> = {
+    bold: ShortcutBold,
+    italic: ShortcutItalic,
+    underline: ShortcutUnderline,
+    clearFormat: ShortcutClearFormat,
+    undo: ShortcutUndo,
+    undo2: ShortcutUndo2,
+    redo: ShortcutRedo,
+    redoAlt: ShortcutRedoAlt,
+    redoMacOS: ShortcutRedoMacOS,
+    bullet: ShortcutBullet,
+    numbering: ShortcutNumbering,
+    increaseFont: ShortcutIncreaseFont,
+    decreaseFont: ShortcutDecreaseFont,
+    indentList: ShortcutIndentList,
+    outdentList: ShortcutOutdentList,
+};
+const defaultShortcutCommandNames = Object.keys(
+    defaultShortcutCommands
+) as DefaultShortcutCommandName[];
+const defaultShortcutCommandList: readonly ShortcutCommand[] = defaultShortcutCommandNames.map(
+    name => defaultShortcutCommands[name]
+);
 const CommandCacheKey = '__ShortcutCommandCache';
+
+/**
+ * Options for ShortcutPlugin.
+ */
+export interface ShortcutPluginOptions {
+    /**
+     * Override keys for selected built-in commands while preserving all other defaults.
+     */
+    shortcutOverrides?: Partial<Record<DefaultShortcutCommandName, ShortcutKeyDefinition>>;
+}
+
+function createShortcutCommands(
+    shortcutOverrides?: ShortcutPluginOptions['shortcutOverrides']
+): readonly ShortcutCommand[] {
+    if (!shortcutOverrides) {
+        return defaultShortcutCommandList;
+    }
+
+    return defaultShortcutCommandNames.map(name => {
+        const command = defaultShortcutCommands[name];
+        const shortcutKey = shortcutOverrides[name];
+
+        return shortcutKey
+            ? {
+                  ...command,
+                  shortcutKey,
+              }
+            : command;
+    });
+}
 
 /**
  * Shortcut plugin hook on the specified shortcut keys and trigger related format API
@@ -49,12 +109,21 @@ const CommandCacheKey = '__ShortcutCommandCache';
 export class ShortcutPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
     private isMac = false;
+    private readonly shortcuts: readonly ShortcutCommand[];
 
     /**
-     * Create a new instance of ShortcutPlugin
-     * @param [shortcuts=defaultShortcuts] Allowed commands
+     * Create a plugin with a complete custom command list.
      */
-    constructor(private shortcuts: ShortcutCommand[] = defaultShortcuts) {}
+    constructor(shortcuts: ShortcutCommand[]);
+    /**
+     * Create a plugin with built-in shortcuts and optional partial overrides.
+     */
+    constructor(options?: ShortcutPluginOptions);
+    constructor(shortcutsOrOptions: ShortcutCommand[] | ShortcutPluginOptions = {}) {
+        this.shortcuts = Array.isArray(shortcutsOrOptions)
+            ? shortcutsOrOptions
+            : createShortcutCommands(shortcutsOrOptions.shortcutOverrides);
+    }
 
     /**
      * Get name of this plugin
@@ -126,11 +195,11 @@ export class ShortcutPlugin implements EditorPlugin {
             }
             return (
                 editor &&
-                this.shortcuts.filter(
+                this.shortcuts.find(
                     command =>
                         this.matchOS(command.environment) &&
                         this.matchShortcut(command.shortcutKey, event.rawEvent)
-                )[0]
+                )
             );
         });
     }
