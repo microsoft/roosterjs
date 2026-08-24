@@ -4415,6 +4415,91 @@ describe('mergeModel', () => {
         });
     });
 
+    it('Merge table after a table with the same number of columns', () => {
+        const target = createContentModelDocument();
+        const targetTable = createTable(1);
+        const targetRow = {
+            cells: [createTableCell(), createTableCell()],
+            format: {},
+            height: 0,
+        };
+        const paragraph = createParagraph();
+        const marker = createSelectionMarker();
+
+        targetTable.rows = [targetRow];
+        paragraph.segments.push(marker);
+        target.blocks.push(targetTable, paragraph);
+
+        const source = createContentModelDocument();
+        const sourceTable = createTable(1);
+        const sourceRow = {
+            cells: [
+                createTableCell(false, false, false, {
+                    borderTop: '1px solid red',
+                    borderRight: '1px solid green',
+                    borderBottom: '1px solid blue',
+                    borderLeft: '1px solid yellow',
+                }),
+                createTableCell(),
+            ],
+            format: {},
+            height: 0,
+        };
+
+        sourceTable.rows = [sourceRow];
+        source.blocks.push(sourceTable);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+
+        const result = mergeModel(target, source, undefined, {
+            mergeTable: true,
+        });
+
+        expect(target.blocks).toEqual([targetTable, paragraph]);
+        expect(targetTable.rows).toEqual([targetRow, sourceRow]);
+        expect(sourceRow.cells[0].format).toEqual({
+            borderTop: '1px solid red',
+            borderRight: '1px solid green',
+            borderBottom: '1px solid blue',
+            borderLeft: '1px solid yellow',
+        });
+        expect(applyTableFormat.applyTableFormat).not.toHaveBeenCalled();
+        expect(result?.marker).toBe(marker);
+    });
+
+    it('Merge table after a table with a different number of columns', () => {
+        const target = createContentModelDocument();
+        const targetTable = createTable(1);
+        const paragraph = createParagraph();
+        const targetRow = {
+            cells: [createTableCell(), createTableCell()],
+            format: {},
+            height: 0,
+        };
+
+        targetTable.rows = [targetRow];
+        paragraph.segments.push(createSelectionMarker());
+        target.blocks.push(targetTable, paragraph);
+
+        const source = createContentModelDocument();
+        const sourceTable = createTable(1);
+        const sourceRow = {
+            cells: [createTableCell()],
+            format: {},
+            height: 0,
+        };
+
+        sourceTable.rows = [sourceRow];
+        source.blocks.push(sourceTable);
+
+        mergeModel(target, source, undefined, {
+            mergeTable: true,
+        });
+
+        expect(target.blocks).toEqual([targetTable, paragraph]);
+        expect(targetTable.rows).toEqual([targetRow, sourceRow]);
+    });
+
     // #region preferTarget
 
     it('Use customized insert position', () => {

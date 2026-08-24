@@ -332,9 +332,35 @@ function mergeTables(
 
         normalizeTable(table, markerPosition.marker.format);
         applyTableFormat(table, undefined /*newFormat*/, true /*keepCellShade*/);
-    } else {
+    } else if (!mergeTableAfterPreviousTable(markerPosition, newTable)) {
         insertBlock(markerPosition, newTable);
     }
+}
+
+function mergeTableAfterPreviousTable(
+    markerPosition: InsertPoint,
+    newTable: ContentModelTable
+): boolean {
+    const { marker, paragraph, path } = markerPosition;
+    const parent = path[0];
+    const paragraphIndex = parent.blocks.indexOf(paragraph);
+    const previousBlock = parent.blocks[paragraphIndex - 1];
+
+    if (
+        paragraphIndex > 0 &&
+        paragraph.segments.indexOf(marker) == 0 &&
+        previousBlock?.blockType == 'Table' &&
+        previousBlock.rows[0]?.cells.length > 0 &&
+        newTable.rows[0]?.cells.length > 0
+    ) {
+        const table = mutateBlock(previousBlock);
+
+        table.rows.push(...newTable.rows);
+
+        return true;
+    }
+
+    return false;
 }
 
 function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
