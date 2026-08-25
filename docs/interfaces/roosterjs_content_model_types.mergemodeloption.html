@@ -106,7 +106,7 @@
 					<div class="tsd-signature tsd-kind-icon">add<wbr>Paragraph<wbr>After<wbr>Merged<wbr>Content<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6246608/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L41">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8378463/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L43">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -121,7 +121,7 @@
 					<div class="tsd-signature tsd-kind-icon">insert<wbr>Position<span class="tsd-signature-symbol">:</span> <a href="roosterjs_content_model_types.insertpoint.html" class="tsd-signature-type" data-tsd-kind="Interface">InsertPoint</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6246608/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L18">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8378463/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L20">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -141,7 +141,7 @@
 					<div class="tsd-signature tsd-kind-icon">merge<wbr>Format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;none&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;mergeAll&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;keepSourceEmphasisFormat&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;preferSource&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;preferTarget&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6246608/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L31">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8378463/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L33">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -168,7 +168,7 @@
 					<div class="tsd-signature tsd-kind-icon">merge<wbr>Paragraph<wbr>After<wbr>List<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6246608/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L47">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8378463/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L49">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:49</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -188,12 +188,14 @@
 					<div class="tsd-signature tsd-kind-icon">merge<wbr>Table<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6246608/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L12">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/8378463/packages/roosterjs-content-model-types/lib/parameter/MergeModelOption.ts#L14">roosterjs-content-model-types/lib/parameter/MergeModelOption.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>When there is only a table to merge, whether merge this table into current table (if any), or just directly insert (nested table).
+							<p>When there is only a table to merge, whether to merge this table into the current table,
+								or into the table immediately before the insert position. Otherwise, insert it as a
+								separate or nested table.
 							This is usually used when paste table inside a table</p>
 						</div>
 						<dl class="tsd-comment-tags">
