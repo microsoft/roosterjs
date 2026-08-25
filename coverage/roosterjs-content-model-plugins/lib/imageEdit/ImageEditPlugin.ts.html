@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.51% </span>
+                <span class="strong">85.59% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>301/352</span>
+                <span class='fraction'>303/354</span>
             </div>
         
             
@@ -940,7 +940,10 @@
 <a name='L875'></a><a href='#L875'>875</a>
 <a name='L876'></a><a href='#L876'>876</a>
 <a name='L877'></a><a href='#L877'>877</a>
-<a name='L878'></a><a href='#L878'>878</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L878'></a><a href='#L878'>878</a>
+<a name='L879'></a><a href='#L879'>879</a>
+<a name='L880'></a><a href='#L880'>880</a>
+<a name='L881'></a><a href='#L881'>881</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1107,10 +1110,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">135x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">114x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">105x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -1531,18 +1534,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1556,7 +1549,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1669,6 +1674,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2370,7 +2376,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (this.imageEditInfo) {
             this.startEditing(editor, image, ['resize', 'rotate']);
             <span class="missing-if-branch" title="else path not taken" >E</span>if (this.selectedImage &amp;&amp; this.imageEditInfo &amp;&amp; this.wrapper &amp;&amp; this.clonedImage) {
-                const isMobileOrTable = !!editor.getEnvironment().isMobileOrTablet;
+                const { isMobileOrTablet, isTouchSupported } = editor.getEnvironment();
                 this.dndHelpers = [
                     ...getDropAndDragHelpers(
                         this.wrapper,
@@ -2399,7 +2405,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             }
                         },
                         this.zoomScale,
-                        isMobileOrTable
+                        !!isMobileOrTablet,
+                        !!isTouchSupported
                     ),
                     ...getDropAndDragHelpers(
                         this.wrapper,
@@ -2440,7 +2447,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             }
                         },
                         this.zoomScale,
-                        isMobileOrTable
+                        !!isMobileOrTablet,
+                        !!isTouchSupported
                     ),
                 ];
 &nbsp;
@@ -2549,7 +2557,8 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                             }
                         },
                         this.zoomScale,
-                        !!editor.getEnvironment().isMobileOrTablet
+                        !!editor.getEnvironment().isMobileOrTablet,
+                        !!editor.getEnvironment().isTouchSupported
                     ),
                 ];
 <span class="cstat-no" title="statement not covered" >                updateWrapper(</span>
@@ -2701,7 +2710,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-08-25T18:50:38.785Z
+                at 2026-08-25T22:55:31.057Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
