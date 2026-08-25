@@ -30,6 +30,7 @@ import type {
     ReadonlyContentModelDocument,
     ReadonlyContentModelTable,
     ShallowMutableContentModelParagraph,
+    ShallowMutableContentModelTable,
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -354,6 +355,13 @@ function mergeTableAfterPreviousTable(
         newTable.rows[0]?.cells.length > 0
     ) {
         const table = mutateBlock(previousBlock);
+        const columnCount = Math.max(
+            ...table.rows.map(row => row.cells.length),
+            ...newTable.rows.map(row => row.cells.length)
+        );
+
+        extendTableRows(table, columnCount);
+        extendTableRows(newTable, columnCount);
 
         table.rows.push(...newTable.rows);
 
@@ -361,6 +369,27 @@ function mergeTableAfterPreviousTable(
     }
 
     return false;
+}
+
+function extendTableRows(table: ShallowMutableContentModelTable, columnCount: number) {
+    table.rows.forEach(row => {
+        const currentColumnCount = row.cells.length;
+        const lastCell = row.cells[currentColumnCount - 1];
+
+        if (lastCell) {
+            for (let col = currentColumnCount; col < columnCount; col++) {
+                const spanCell = createTableCell(
+                    true /* spanLeft */,
+                    false /* spanAbove */,
+                    lastCell.isHeader,
+                    lastCell.format,
+                    lastCell.dataset
+                );
+
+                row.cells.push(spanCell);
+            }
+        }
+    });
 }
 
 function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {

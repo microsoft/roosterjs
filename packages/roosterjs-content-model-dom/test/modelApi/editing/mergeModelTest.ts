@@ -4472,7 +4472,13 @@ describe('mergeModel', () => {
         const targetTable = createTable(1);
         const paragraph = createParagraph();
         const targetRow = {
-            cells: [createTableCell(), createTableCell()],
+            cells: [
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+            ],
             format: {},
             height: 0,
         };
@@ -4484,7 +4490,7 @@ describe('mergeModel', () => {
         const source = createContentModelDocument();
         const sourceTable = createTable(1);
         const sourceRow = {
-            cells: [createTableCell()],
+            cells: [createTableCell(), createTableCell(), createTableCell()],
             format: {},
             height: 0,
         };
@@ -4498,6 +4504,51 @@ describe('mergeModel', () => {
 
         expect(target.blocks).toEqual([targetTable, paragraph]);
         expect(targetTable.rows).toEqual([targetRow, sourceRow]);
+        expect(sourceRow.cells.length).toBe(5);
+        expect(sourceRow.cells[3].spanLeft).toBeTrue();
+        expect(sourceRow.cells[4].spanLeft).toBeTrue();
+    });
+
+    it('Merge table after a table with more columns', () => {
+        const target = createContentModelDocument();
+        const targetTable = createTable(1);
+        const paragraph = createParagraph();
+        const targetRow = {
+            cells: [createTableCell(), createTableCell(), createTableCell()],
+            format: {},
+            height: 0,
+        };
+
+        targetTable.rows = [targetRow];
+        paragraph.segments.push(createSelectionMarker());
+        target.blocks.push(targetTable, paragraph);
+
+        const source = createContentModelDocument();
+        const sourceTable = createTable(1);
+        const sourceRow = {
+            cells: [
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+            ],
+            format: {},
+            height: 0,
+        };
+
+        sourceTable.rows = [sourceRow];
+        source.blocks.push(sourceTable);
+
+        mergeModel(target, source, undefined, {
+            mergeTable: true,
+        });
+
+        expect(target.blocks).toEqual([targetTable, paragraph]);
+        expect(targetTable.rows).toEqual([targetRow, sourceRow]);
+        expect(targetRow.cells.length).toBe(5);
+        expect(targetRow.cells[3].spanLeft).toBeTrue();
+        expect(targetRow.cells[4].spanLeft).toBeTrue();
     });
 
     // #region preferTarget
