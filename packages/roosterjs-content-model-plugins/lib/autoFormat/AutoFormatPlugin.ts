@@ -11,6 +11,8 @@ import {
     formatTextSegmentBeforeSelectionMarker,
     promoteLink,
     getPromoteLink,
+    getTextDirection,
+    setModelDirection,
 } from 'roosterjs-content-model-api';
 import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
@@ -55,6 +57,7 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
     autoOrdinals: false,
     removeListMargins: false,
     autoHorizontalLine: false,
+    autoDirection: false,
 };
 
 /**
@@ -76,6 +79,7 @@ export class AutoFormatPlugin implements EditorPlugin {
      *  - autoTel: A boolean that enables or disables automatic hyperlink telephone numbers transformation. Defaults to false.
      *  - autoMailto: A boolean that enables or disables automatic hyperlink email address transformation. Defaults to false.
      *  - autoHorizontalLine: A boolean that enables or disables automatic horizontal line creation. Defaults to false.
+     *  - autoDirection: A boolean that enables or disables automatic text direction. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -157,6 +161,9 @@ export class AutoFormatPlugin implements EditorPlugin {
             switch (event.eventType) {
                 case 'input':
                     this.handleEditorInputEvent(this.editor, event);
+                    break;
+                case 'compositionEnd':
+                    this.handleAutoDirection(this.editor, event.rawEvent.data);
                     break;
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
@@ -296,10 +303,36 @@ export class AutoFormatPlugin implements EditorPlugin {
             selection.type === 'range' &&
             selection.range.collapsed
         ) {
+            this.handleAutoDirection(editor, rawEvent.data);
+
             switch (rawEvent.data) {
                 case ' ':
                     this.handleKeyboardEvents(editor, this.features);
                     break;
+            }
+        }
+    }
+
+    private handleAutoDirection(editor: IEditor, insertedText: string | null) {
+        if (!this.options.autoDirection || !insertedText || !getTextDirection(insertedText)) {
+            return;
+        }
+
+        const selection = editor.getDOMSelection();
+        const range =
+            selection?.type === 'range' && selection.range.collapsed ? selection.range : null;
+
+        if (range) {
+            const block = editor.getDOMHelper().findClosestBlockElement(range.startContainer);
+            const expectedDirection = getTextDirection(block.textContent || '');
+            const currentDirection =
+                block.ownerDocument.defaultView?.getComputedStyle(block).direction ||
+                block.style.direction;
+
+            if (expectedDirection && currentDirection !== expectedDirection) {
+                editor.formatContentModel(model => setModelDirection(model, 'auto'), {
+                    apiName: 'autoDirection',
+                });
             }
         }
     }

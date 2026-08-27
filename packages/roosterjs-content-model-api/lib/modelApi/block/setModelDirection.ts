@@ -121,11 +121,19 @@ function setProperty(
     }
 }
 
+/**
+ * Determine text direction from the first strong directional character
+ * @param text Text to scan
+ */
+export function getTextDirection(text: string): 'ltr' | 'rtl' | undefined {
+    const firstStrongChar = text.match(FIRST_STRONG_CHAR_REGEX)?.[0];
+
+    return firstStrongChar ? (RTL_CHAR_REGEX.test(firstStrongChar) ? 'rtl' : 'ltr') : undefined;
+}
+
 // Designed to match browser's 'auto' detection, by scanning over the inner text until it hits a strong LTR/RTL character
 function determineTextDirection(block: ReadonlyContentModelBlock): 'ltr' | 'rtl' {
-    const firstStrongChar = getTextContent(block).match(FIRST_STRONG_CHAR_REGEX)?.[0];
-
-    return firstStrongChar && RTL_CHAR_REGEX.test(firstStrongChar) ? 'rtl' : 'ltr';
+    return getTextDirection(getTextContent(block)) || 'ltr';
 }
 
 function getTextContent(block: ReadonlyContentModelBlock): string {

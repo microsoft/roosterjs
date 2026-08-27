@@ -61,7 +61,6 @@ import {
 } from 'roosterjs-content-model-types';
 import {
     AnnouncePlugin,
-    AutoDirectionPlugin,
     AutoFormatPlugin,
     CustomReplacePlugin,
     DragAndDropPlugin,
@@ -407,7 +406,6 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.ribbonPlugin,
             this.formatPainterPlugin,
             this.samplePickerPlugin,
-            new AutoDirectionPlugin(),
             ...this.getToggleablePlugins(),
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,

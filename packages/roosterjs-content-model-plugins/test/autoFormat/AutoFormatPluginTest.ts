@@ -6,6 +6,7 @@ import { AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
 import { ChangeSource } from 'roosterjs-content-model-dom';
 import {
     ContentChangedEvent,
+    CompositionEndEvent,
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelSelectionMarker,
@@ -40,6 +41,96 @@ describe('Content Model Auto Format Plugin Test', () => {
             triggerEvent: triggerEventSpy,
             getDocument: () => document,
         } as any) as IEditor;
+    });
+
+    describe('auto direction', () => {
+        let block: HTMLDivElement;
+        let textNode: Text;
+        let formatContentModelSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            block = document.createElement('div');
+            textNode = document.createTextNode('עברית');
+            block.appendChild(textNode);
+            block.style.direction = 'ltr';
+            document.body.appendChild(block);
+            formatContentModelSpy = jasmine.createSpy('formatContentModel');
+            editor = ({
+                formatContentModel: formatContentModelSpy,
+                getDOMSelection: () => ({
+                    type: 'range',
+                    range: {
+                        collapsed: true,
+                        startContainer: textNode,
+                    },
+                }),
+                getDOMHelper: () => ({
+                    findClosestBlockElement: () => block,
+                }),
+            } as any) as IEditor;
+        });
+
+        afterEach(() => {
+            block.remove();
+        });
+
+        function runEvent(event: EditorInputEvent | CompositionEndEvent) {
+            const plugin = new AutoFormatPlugin({ autoDirection: true });
+            plugin.initialize(editor);
+            plugin.onPluginEvent(event);
+        }
+
+        it('updates direction after inserting the first RTL character', () => {
+            runEvent({
+                eventType: 'input',
+                rawEvent: { inputType: 'insertText', data: 'ע' } as InputEvent,
+            });
+
+            expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+            expect(formatContentModelSpy.calls.argsFor(0)[1]).toEqual({
+                apiName: 'autoDirection',
+            });
+        });
+
+        it('updates direction after composition ends', () => {
+            runEvent({
+                eventType: 'compositionEnd',
+                rawEvent: { data: 'ע' } as CompositionEvent,
+            });
+
+            expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('does not format the model when direction already matches', () => {
+            block.style.direction = 'rtl';
+
+            runEvent({
+                eventType: 'input',
+                rawEvent: { inputType: 'insertText', data: 'ע' } as InputEvent,
+            });
+
+            expect(formatContentModelSpy).not.toHaveBeenCalled();
+        });
+
+        it('does not inspect the model for weak characters', () => {
+            runEvent({
+                eventType: 'input',
+                rawEvent: { inputType: 'insertText', data: '1' } as InputEvent,
+            });
+
+            expect(formatContentModelSpy).not.toHaveBeenCalled();
+        });
+
+        it('does not update direction when the option is disabled', () => {
+            const plugin = new AutoFormatPlugin();
+            plugin.initialize(editor);
+            plugin.onPluginEvent({
+                eventType: 'input',
+                rawEvent: { inputType: 'insertText', data: 'ע' } as InputEvent,
+            });
+
+            expect(formatContentModelSpy).not.toHaveBeenCalled();
+        });
     });
 
     describe('onPluginEvent - keyboardListTrigger', () => {
