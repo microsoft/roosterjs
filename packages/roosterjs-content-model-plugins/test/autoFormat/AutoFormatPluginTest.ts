@@ -1,5 +1,6 @@
 import * as createLink from '../../lib/autoFormat/link/createLink';
 import * as formatTextSegmentBeforeSelectionMarker from 'roosterjs-content-model-api/lib/publicApi/utils/formatTextSegmentBeforeSelectionMarker';
+import * as setDirection from 'roosterjs-content-model-api/lib/publicApi/block/setDirection';
 import * as unlink from '../../lib/autoFormat/link/unlink';
 import { AutoFormatOptions } from '../../lib/autoFormat/interface/AutoFormatOptions';
 import { AutoFormatPlugin } from '../../lib/autoFormat/AutoFormatPlugin';
@@ -46,7 +47,8 @@ describe('Content Model Auto Format Plugin Test', () => {
     describe('auto direction', () => {
         let block: HTMLDivElement;
         let textNode: Text;
-        let formatContentModelSpy: jasmine.Spy;
+        let getDOMSelectionSpy: jasmine.Spy;
+        let setDirectionSpy: jasmine.Spy;
 
         beforeEach(() => {
             block = document.createElement('div');
@@ -54,16 +56,16 @@ describe('Content Model Auto Format Plugin Test', () => {
             block.appendChild(textNode);
             block.style.direction = 'ltr';
             document.body.appendChild(block);
-            formatContentModelSpy = jasmine.createSpy('formatContentModel');
+            getDOMSelectionSpy = jasmine.createSpy('getDOMSelection').and.returnValue({
+                type: 'range',
+                range: {
+                    collapsed: true,
+                    startContainer: textNode,
+                },
+            });
+            setDirectionSpy = spyOn(setDirection, 'setDirection');
             editor = ({
-                formatContentModel: formatContentModelSpy,
-                getDOMSelection: () => ({
-                    type: 'range',
-                    range: {
-                        collapsed: true,
-                        startContainer: textNode,
-                    },
-                }),
+                getDOMSelection: getDOMSelectionSpy,
                 getDOMHelper: () => ({
                     findClosestBlockElement: () => block,
                 }),
@@ -86,10 +88,9 @@ describe('Content Model Auto Format Plugin Test', () => {
                 rawEvent: { inputType: 'insertText', data: 'ע' } as InputEvent,
             });
 
-            expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
-            expect(formatContentModelSpy.calls.argsFor(0)[1]).toEqual({
-                apiName: 'autoDirection',
-            });
+            expect(setDirectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDirectionSpy).toHaveBeenCalledWith(editor, 'auto');
+            expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
         });
 
         it('updates direction after composition ends', () => {
@@ -98,7 +99,8 @@ describe('Content Model Auto Format Plugin Test', () => {
                 rawEvent: { data: 'ע' } as CompositionEvent,
             });
 
-            expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+            expect(setDirectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDirectionSpy).toHaveBeenCalledWith(editor, 'auto');
         });
 
         it('does not format the model when direction already matches', () => {
@@ -109,7 +111,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 rawEvent: { inputType: 'insertText', data: 'ע' } as InputEvent,
             });
 
-            expect(formatContentModelSpy).not.toHaveBeenCalled();
+            expect(setDirectionSpy).not.toHaveBeenCalled();
         });
 
         it('does not inspect the model for weak characters', () => {
@@ -118,7 +120,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 rawEvent: { inputType: 'insertText', data: '1' } as InputEvent,
             });
 
-            expect(formatContentModelSpy).not.toHaveBeenCalled();
+            expect(setDirectionSpy).not.toHaveBeenCalled();
         });
 
         it('does not update direction when the option is disabled', () => {
@@ -129,7 +131,7 @@ describe('Content Model Auto Format Plugin Test', () => {
                 rawEvent: { inputType: 'insertText', data: 'ע' } as InputEvent,
             });
 
-            expect(formatContentModelSpy).not.toHaveBeenCalled();
+            expect(setDirectionSpy).not.toHaveBeenCalled();
         });
     });
 

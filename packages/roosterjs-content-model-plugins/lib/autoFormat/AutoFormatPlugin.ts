@@ -12,7 +12,7 @@ import {
     promoteLink,
     getPromoteLink,
     getTextDirection,
-    setModelDirection,
+    setDirection,
 } from 'roosterjs-content-model-api';
 import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
@@ -163,7 +163,7 @@ export class AutoFormatPlugin implements EditorPlugin {
                     this.handleEditorInputEvent(this.editor, event);
                     break;
                 case 'compositionEnd':
-                    this.handleAutoDirection(this.editor, event.rawEvent.data);
+                    this.handleCompositionEndEvent(this.editor, event.rawEvent.data);
                     break;
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
@@ -303,37 +303,38 @@ export class AutoFormatPlugin implements EditorPlugin {
             selection.type === 'range' &&
             selection.range.collapsed
         ) {
-            this.handleAutoDirection(editor, rawEvent.data);
-
             switch (rawEvent.data) {
                 case ' ':
                     this.handleKeyboardEvents(editor, this.features);
+                    break;
+                default:
+                    this.handleAutoDirection(editor, rawEvent.data, selection.range);
                     break;
             }
         }
     }
 
-    private handleAutoDirection(editor: IEditor, insertedText: string | null) {
+    private handleCompositionEndEvent(editor: IEditor, insertedText: string) {
+        const selection = editor.getDOMSelection();
+
+        if (selection?.type === 'range' && selection.range.collapsed) {
+            this.handleAutoDirection(editor, insertedText, selection.range);
+        }
+    }
+
+    private handleAutoDirection(editor: IEditor, insertedText: string | null, range: Range) {
         if (!this.options.autoDirection || !insertedText || !getTextDirection(insertedText)) {
             return;
         }
 
-        const selection = editor.getDOMSelection();
-        const range =
-            selection?.type === 'range' && selection.range.collapsed ? selection.range : null;
+        const block = editor.getDOMHelper().findClosestBlockElement(range.startContainer);
+        const expectedDirection = getTextDirection(block.textContent || '');
+        const currentDirection =
+            block.ownerDocument.defaultView?.getComputedStyle(block).direction ||
+            block.style.direction;
 
-        if (range) {
-            const block = editor.getDOMHelper().findClosestBlockElement(range.startContainer);
-            const expectedDirection = getTextDirection(block.textContent || '');
-            const currentDirection =
-                block.ownerDocument.defaultView?.getComputedStyle(block).direction ||
-                block.style.direction;
-
-            if (expectedDirection && currentDirection !== expectedDirection) {
-                editor.formatContentModel(model => setModelDirection(model, 'auto'), {
-                    apiName: 'autoDirection',
-                });
-            }
+        if (expectedDirection && currentDirection !== expectedDirection) {
+            setDirection(editor, 'auto');
         }
     }
 
