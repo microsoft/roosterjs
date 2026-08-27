@@ -18,7 +18,7 @@ import type {
 
 const FIRST_STRONG_CHAR_REGEX = new RegExp('[\\p{L}\\u200E\\u200F]', 'u');
 const RTL_CHAR_REGEX = new RegExp(
-    '[\\u0590-\\u08FF\\u200F\\uFB1D-\\uFDFF\\uFE70-\\uFEFF\\u{10800}-\\u{10FFF}\\u{1E800}-\\u{1E95F}]',
+    '[\\u0590-\\u08FF\\u200F\\uFB1D-\\uFDFF\\uFE70-\\uFEFF\\u{10840}-\\u{10FFF}\\u{1E800}-\\u{1E95F}]',
     'u'
 );
 
