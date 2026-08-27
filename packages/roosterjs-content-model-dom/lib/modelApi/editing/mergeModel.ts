@@ -242,7 +242,7 @@ function mergeTables(
                     const leftCell = table.rows[k]?.cells[newColIndex - 1];
                     table.rows[k].cells[newColIndex] = createTableCell(
                         false /*spanLeft*/,
-                        false /*spanAbove*/,
+                        leftCell?.spanAbove,
                         leftCell?.isHeader,
                         leftCell?.format
                     );
@@ -266,7 +266,7 @@ function mergeTables(
                 for (let k = 0; k < colCount; k++) {
                     const aboveCell = table.rows[newRowIndex - 1]?.cells[k];
                     table.rows[newRowIndex].cells[k] = createTableCell(
-                        false /*spanLeft*/,
+                        aboveCell?.spanLeft,
                         false /*spanAbove*/,
                         false /*isHeader*/,
                         aboveCell?.format

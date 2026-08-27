@@ -6816,5 +6816,113 @@ describe('mergeModel', () => {
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
     });
 
+    it('table to table, new row should preserve spanLeft cells from the row above', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const table = createTable(3);
+        const selectedParagraph = createParagraph();
+        const selectedText = createText('selected');
+
+        selectedText.isSelected = true;
+        selectedParagraph.segments.push(selectedText);
+        table.rows = [
+            {
+                format: {},
+                height: 0,
+                cells: [
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                ],
+            },
+            {
+                format: {},
+                height: 0,
+                cells: [
+                    createTableCell(),
+                    createTableCell(true),
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                ],
+            },
+            {
+                format: {},
+                height: 0,
+                cells: [
+                    createTableCell(),
+                    createTableCell(true),
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                ],
+            },
+        ];
+        table.rows[2].cells[4].blocks.push(selectedParagraph);
+        majorModel.blocks.push(table);
+
+        const sourceTable = createTable(2);
+        sourceTable.rows[0].cells = [createTableCell()];
+        sourceTable.rows[1].cells = [createTableCell()];
+        sourceModel.blocks.push(sourceTable);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            { mergeTable: true }
+        );
+
+        expect(table.rows.length).toBe(4);
+        expect(table.rows[3].cells[1].spanLeft).toBe(true);
+    });
+
+    it('table to table, new column should preserve spanAbove cells from the column to the left', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const table = createTable(2);
+        const selectedParagraph = createParagraph();
+        const selectedText = createText('selected');
+
+        selectedText.isSelected = true;
+        selectedParagraph.segments.push(selectedText);
+        table.rows = [
+            {
+                format: {},
+                height: 0,
+                cells: [createTableCell(), createTableCell()],
+            },
+            {
+                format: {},
+                height: 0,
+                cells: [createTableCell(), createTableCell(false, true)],
+            },
+        ];
+        table.rows[0].cells[1].blocks.push(selectedParagraph);
+        majorModel.blocks.push(table);
+
+        const sourceTable = createTable(1);
+        sourceTable.rows[0].cells = [createTableCell(), createTableCell()];
+        sourceModel.blocks.push(sourceTable);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            { mergeTable: true }
+        );
+
+        expect(table.rows[0].cells.length).toBe(3);
+        expect(table.rows[1].cells[2].spanAbove).toBe(true);
+    });
+
     // #endregion
 });
