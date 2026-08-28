@@ -44,6 +44,7 @@ export function handleDroppedInternalContent(editor: IEditor, event: DragEvent):
 
                 const newInsertPoint = mergeModel(model, cloneModel, context, {
                     insertPosition: insertPoint,
+                    mergeParagraphAfterList: true,
                 });
 
                 if (newInsertPoint) {

@@ -126,6 +126,134 @@ describe('mergeModel', () => {
         });
     });
 
+    it('adds merged content right after a list as the last list item', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const listItem = createListItem([createListLevel('OL')]);
+        const listParagraph = createParagraph();
+        const paragraphAfterList = createParagraph();
+        const marker = createSelectionMarker();
+        const sourceParagraph = createParagraph();
+        const sourceText = createText('new item');
+        const nextListItem = createListItem([createListLevel('OL')]);
+        const nextListParagraph = createParagraph();
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(marker);
+        nextListParagraph.segments.push(createText('next item'));
+        nextListItem.blocks.push(nextListParagraph);
+        majorModel.blocks.push(listItem, paragraphAfterList, nextListItem);
+        sourceParagraph.segments.push(sourceText);
+        sourceModel.blocks.push(sourceParagraph);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker,
+                    paragraph: paragraphAfterList,
+                    path: [majorModel],
+                },
+                mergeParagraphAfterList: true,
+            }
+        );
+
+        const newListItem = majorModel.blocks[1] as ContentModelListItem;
+
+        expect(newListItem.blockGroupType).toBe('ListItem');
+        expect(newListItem.levels).toEqual(listItem.levels);
+        expect(newListItem.blocks).toEqual([paragraphAfterList]);
+        expect(paragraphAfterList.segments).toEqual([sourceText, marker]);
+        expect(majorModel.blocks[2]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        });
+        expect(majorModel.blocks[3]).toBe(nextListItem);
+        expect(result?.path).toEqual([newListItem, majorModel]);
+    });
+
+    it('keeps merged content outside a list when mergeParagraphAfterList is not enabled', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const listItem = createListItem([createListLevel('OL')]);
+        const paragraphAfterList = createParagraph();
+        const marker = createSelectionMarker();
+        const sourceParagraph = createParagraph();
+        const sourceText = createText('new text');
+
+        const listParagraph = createParagraph();
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(marker);
+        majorModel.blocks.push(listItem, paragraphAfterList);
+        sourceParagraph.segments.push(sourceText);
+        sourceModel.blocks.push(sourceParagraph);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker,
+                    paragraph: paragraphAfterList,
+                    path: [majorModel],
+                },
+            }
+        );
+
+        expect(majorModel.blocks).toEqual([listItem, paragraphAfterList]);
+        expect(paragraphAfterList.segments).toEqual([sourceText, marker]);
+        expect(result?.path).toEqual([majorModel]);
+    });
+
+    it('keeps merged content outside a list when the line after the list is not empty', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const listItem = createListItem([createListLevel('OL')]);
+        const listParagraph = createParagraph();
+        const paragraphAfterList = createParagraph();
+        const existingText = createText('existing text');
+        const marker = createSelectionMarker();
+        const sourceParagraph = createParagraph();
+        const sourceText = createText('new text');
+
+        listParagraph.segments.push(createText('existing item'));
+        listItem.blocks.push(listParagraph);
+        paragraphAfterList.segments.push(existingText, marker);
+        majorModel.blocks.push(listItem, paragraphAfterList);
+        sourceParagraph.segments.push(sourceText);
+        sourceModel.blocks.push(sourceParagraph);
+
+        const result = mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            {
+                insertPosition: {
+                    marker,
+                    paragraph: paragraphAfterList,
+                    path: [majorModel],
+                },
+                mergeParagraphAfterList: true,
+            }
+        );
+
+        expect(majorModel.blocks).toEqual([listItem, paragraphAfterList]);
+        expect(paragraphAfterList.segments).toEqual([existingText, sourceText, marker]);
+        expect(result?.path).toEqual([majorModel]);
+    });
+
     it('para to para with text selection, with format', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();
@@ -4287,6 +4415,142 @@ describe('mergeModel', () => {
         });
     });
 
+    it('Merge table after a table with the same number of columns', () => {
+        const target = createContentModelDocument();
+        const targetTable = createTable(1);
+        const targetRow = {
+            cells: [createTableCell(), createTableCell()],
+            format: {},
+            height: 0,
+        };
+        const paragraph = createParagraph();
+        const marker = createSelectionMarker();
+
+        targetTable.rows = [targetRow];
+        paragraph.segments.push(marker);
+        target.blocks.push(targetTable, paragraph);
+
+        const source = createContentModelDocument();
+        const sourceTable = createTable(1);
+        const sourceRow = {
+            cells: [
+                createTableCell(false, false, false, {
+                    borderTop: '1px solid red',
+                    borderRight: '1px solid green',
+                    borderBottom: '1px solid blue',
+                    borderLeft: '1px solid yellow',
+                }),
+                createTableCell(),
+            ],
+            format: {},
+            height: 0,
+        };
+
+        sourceTable.rows = [sourceRow];
+        source.blocks.push(sourceTable);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+
+        const result = mergeModel(target, source, undefined, {
+            mergeTable: true,
+        });
+
+        expect(target.blocks).toEqual([targetTable, paragraph]);
+        expect(targetTable.rows).toEqual([targetRow, sourceRow]);
+        expect(sourceRow.cells[0].format).toEqual({
+            borderTop: '1px solid red',
+            borderRight: '1px solid green',
+            borderBottom: '1px solid blue',
+            borderLeft: '1px solid yellow',
+        });
+        expect(applyTableFormat.applyTableFormat).not.toHaveBeenCalled();
+        expect(result?.marker).toBe(marker);
+    });
+
+    it('Merge table after a table with a different number of columns', () => {
+        const target = createContentModelDocument();
+        const targetTable = createTable(1);
+        const paragraph = createParagraph();
+        const targetRow = {
+            cells: [
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+            ],
+            format: {},
+            height: 0,
+        };
+
+        targetTable.rows = [targetRow];
+        paragraph.segments.push(createSelectionMarker());
+        target.blocks.push(targetTable, paragraph);
+
+        const source = createContentModelDocument();
+        const sourceTable = createTable(1);
+        const sourceRow = {
+            cells: [createTableCell(), createTableCell(), createTableCell()],
+            format: {},
+            height: 0,
+        };
+
+        sourceTable.rows = [sourceRow];
+        source.blocks.push(sourceTable);
+
+        mergeModel(target, source, undefined, {
+            mergeTable: true,
+        });
+
+        expect(target.blocks).toEqual([targetTable, paragraph]);
+        expect(targetTable.rows).toEqual([targetRow, sourceRow]);
+        expect(sourceRow.cells.length).toBe(5);
+        expect(sourceRow.cells[3].spanLeft).toBeTrue();
+        expect(sourceRow.cells[4].spanLeft).toBeTrue();
+    });
+
+    it('Merge table after a table with more columns', () => {
+        const target = createContentModelDocument();
+        const targetTable = createTable(1);
+        const paragraph = createParagraph();
+        const targetRow = {
+            cells: [createTableCell(), createTableCell(), createTableCell()],
+            format: {},
+            height: 0,
+        };
+
+        targetTable.rows = [targetRow];
+        paragraph.segments.push(createSelectionMarker());
+        target.blocks.push(targetTable, paragraph);
+
+        const source = createContentModelDocument();
+        const sourceTable = createTable(1);
+        const sourceRow = {
+            cells: [
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+                createTableCell(),
+            ],
+            format: {},
+            height: 0,
+        };
+
+        sourceTable.rows = [sourceRow];
+        source.blocks.push(sourceTable);
+
+        mergeModel(target, source, undefined, {
+            mergeTable: true,
+        });
+
+        expect(target.blocks).toEqual([targetTable, paragraph]);
+        expect(targetTable.rows).toEqual([targetRow, sourceRow]);
+        expect(targetRow.cells.length).toBe(5);
+        expect(targetRow.cells[3].spanLeft).toBeTrue();
+        expect(targetRow.cells[4].spanLeft).toBeTrue();
+    });
+
     // #region preferTarget
 
     it('Use customized insert position', () => {
@@ -6550,6 +6814,114 @@ describe('mergeModel', () => {
         expect(newCell01.spanAbove).toBe(false);
 
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+    });
+
+    it('table to table, new row should preserve spanLeft cells from the row above', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const table = createTable(3);
+        const selectedParagraph = createParagraph();
+        const selectedText = createText('selected');
+
+        selectedText.isSelected = true;
+        selectedParagraph.segments.push(selectedText);
+        table.rows = [
+            {
+                format: {},
+                height: 0,
+                cells: [
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                ],
+            },
+            {
+                format: {},
+                height: 0,
+                cells: [
+                    createTableCell(),
+                    createTableCell(true),
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                ],
+            },
+            {
+                format: {},
+                height: 0,
+                cells: [
+                    createTableCell(),
+                    createTableCell(true),
+                    createTableCell(),
+                    createTableCell(),
+                    createTableCell(),
+                ],
+            },
+        ];
+        table.rows[2].cells[4].blocks.push(selectedParagraph);
+        majorModel.blocks.push(table);
+
+        const sourceTable = createTable(2);
+        sourceTable.rows[0].cells = [createTableCell()];
+        sourceTable.rows[1].cells = [createTableCell()];
+        sourceModel.blocks.push(sourceTable);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            { mergeTable: true }
+        );
+
+        expect(table.rows.length).toBe(4);
+        expect(table.rows[3].cells[1].spanLeft).toBe(true);
+    });
+
+    it('table to table, new column should preserve spanAbove cells from the column to the left', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const table = createTable(2);
+        const selectedParagraph = createParagraph();
+        const selectedText = createText('selected');
+
+        selectedText.isSelected = true;
+        selectedParagraph.segments.push(selectedText);
+        table.rows = [
+            {
+                format: {},
+                height: 0,
+                cells: [createTableCell(), createTableCell()],
+            },
+            {
+                format: {},
+                height: 0,
+                cells: [createTableCell(), createTableCell(false, true)],
+            },
+        ];
+        table.rows[0].cells[1].blocks.push(selectedParagraph);
+        majorModel.blocks.push(table);
+
+        const sourceTable = createTable(1);
+        sourceTable.rows[0].cells = [createTableCell(), createTableCell()];
+        sourceModel.blocks.push(sourceTable);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [], newImages: [] },
+            { mergeTable: true }
+        );
+
+        expect(table.rows[0].cells.length).toBe(3);
+        expect(table.rows[1].cells[2].spanAbove).toBe(true);
     });
 
     // #endregion

@@ -17,7 +17,7 @@ export function getNodePositionFromEvent(
         // Firefox, Chrome, Edge, Safari, Opera
         const pos = (doc as any).caretPositionFromPoint(x, y);
         if (pos && domHelper.isNodeInEditor(pos.offsetNode)) {
-            return { node: pos.offsetNode, offset: pos.offset };
+            return normalizePosition(pos.offsetNode, pos.offset);
         }
     }
 
@@ -25,7 +25,7 @@ export function getNodePositionFromEvent(
         // Safari
         const range = doc.caretRangeFromPoint(x, y);
         if (range && domHelper.isNodeInEditor(range.startContainer)) {
-            return { node: range.startContainer, offset: range.startOffset };
+            return normalizePosition(range.startContainer, range.startOffset);
         }
     }
 
@@ -38,4 +38,14 @@ export function getNodePositionFromEvent(
     }
 
     return null;
+}
+
+function normalizePosition(node: Node, offset: number): DOMInsertPoint {
+    // Safari hit-testing in tableMoverTest returns offset 1 after the lone BR of an empty block.
+    const normalizedOffset =
+        offset == 1 && node.childNodes.length == 1 && node.firstChild?.nodeName == 'BR'
+            ? 0
+            : offset;
+
+    return { node, offset: normalizedOffset };
 }
