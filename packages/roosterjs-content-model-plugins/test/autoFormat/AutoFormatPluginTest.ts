@@ -123,15 +123,36 @@ describe('Content Model Auto Format Plugin Test', () => {
             expect(setDirectionSpy).not.toHaveBeenCalled();
         });
 
-        it('does not check computed style for LTR input', () => {
-            const getComputedStyleSpy = spyOn(window, 'getComputedStyle').and.callThrough();
+        it('updates an RTL paragraph after inserting the first LTR character', () => {
+            textNode.textContent = 'A';
+            block.style.direction = 'rtl';
 
             runEvent({
                 eventType: 'input',
                 rawEvent: { inputType: 'insertText', data: 'A' } as InputEvent,
             });
 
-            expect(getComputedStyleSpy).not.toHaveBeenCalled();
+            expect(setDirectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDirectionSpy).toHaveBeenCalledWith(editor, 'auto');
+        });
+
+        it('does not repeatedly check computed style for LTR input', () => {
+            textNode.textContent = 'English';
+            block.style.direction = '';
+            const getComputedStyleSpy = spyOn(window, 'getComputedStyle').and.callThrough();
+            const plugin = new AutoFormatPlugin({ autoDirection: true });
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent({
+                eventType: 'input',
+                rawEvent: { inputType: 'insertText', data: 'A' } as InputEvent,
+            });
+            plugin.onPluginEvent({
+                eventType: 'input',
+                rawEvent: { inputType: 'insertText', data: 'B' } as InputEvent,
+            });
+
+            expect(getComputedStyleSpy).toHaveBeenCalledTimes(1);
             expect(setDirectionSpy).not.toHaveBeenCalled();
         });
 

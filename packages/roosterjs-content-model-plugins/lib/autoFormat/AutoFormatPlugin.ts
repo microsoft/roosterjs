@@ -66,6 +66,7 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
  */
 export class AutoFormatPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
+    private blockDirections = new WeakMap<HTMLElement, 'ltr' | 'rtl'>();
     /**
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
      *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.
@@ -323,21 +324,31 @@ export class AutoFormatPlugin implements EditorPlugin {
     }
 
     private handleAutoDirection(editor: IEditor, insertedText: string | null, range: Range) {
-        if (
-            !this.options.autoDirection ||
-            !insertedText ||
-            getTextDirection(insertedText) !== 'rtl'
-        ) {
+        if (!this.options.autoDirection || !insertedText || !getTextDirection(insertedText)) {
             return;
         }
 
         const block = editor.getDOMHelper().findClosestBlockElement(range.startContainer);
         const expectedDirection = getTextDirection(block.textContent || '');
-        const currentDirection =
-            block.ownerDocument.defaultView?.getComputedStyle(block).direction ||
-            block.style.direction;
+        const inlineDirection = block.style.direction;
+        const cachedDirection =
+            inlineDirection === 'ltr' || inlineDirection === 'rtl'
+                ? inlineDirection
+                : this.blockDirections.get(block);
 
-        if (expectedDirection && currentDirection !== expectedDirection) {
+        if (!expectedDirection || cachedDirection === expectedDirection) {
+            return;
+        }
+
+        const currentDirection =
+            cachedDirection || block.ownerDocument.defaultView?.getComputedStyle(block).direction;
+
+        if (currentDirection === 'ltr' || currentDirection === 'rtl') {
+            this.blockDirections.set(block, currentDirection);
+        }
+
+        if (currentDirection !== expectedDirection) {
+            this.blockDirections.set(block, expectedDirection);
             setDirection(editor, 'auto');
         }
     }
