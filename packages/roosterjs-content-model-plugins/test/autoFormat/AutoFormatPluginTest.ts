@@ -123,6 +123,18 @@ describe('Content Model Auto Format Plugin Test', () => {
             expect(setDirectionSpy).not.toHaveBeenCalled();
         });
 
+        it('does not check computed style for LTR input', () => {
+            const getComputedStyleSpy = spyOn(window, 'getComputedStyle').and.callThrough();
+
+            runEvent({
+                eventType: 'input',
+                rawEvent: { inputType: 'insertText', data: 'A' } as InputEvent,
+            });
+
+            expect(getComputedStyleSpy).not.toHaveBeenCalled();
+            expect(setDirectionSpy).not.toHaveBeenCalled();
+        });
+
         it('does not update direction when the option is disabled', () => {
             const plugin = new AutoFormatPlugin();
             plugin.initialize(editor);

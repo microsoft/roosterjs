@@ -323,7 +323,11 @@ export class AutoFormatPlugin implements EditorPlugin {
     }
 
     private handleAutoDirection(editor: IEditor, insertedText: string | null, range: Range) {
-        if (!this.options.autoDirection || !insertedText || !getTextDirection(insertedText)) {
+        if (
+            !this.options.autoDirection ||
+            !insertedText ||
+            getTextDirection(insertedText) !== 'rtl'
+        ) {
             return;
         }
 
