@@ -82,7 +82,7 @@ describe('setModelDirection', () => {
     });
 
     it('does not treat LTR supplementary-plane letters as RTL', () => {
-        runAutoDirectionTest(['𐠀 עברית'], undefined, 'ltr');
+        runAutoDirectionTest(['𐠀 עברית'], 'rtl', 'ltr');
     });
 
     it('does not update the direction when it already matches', () => {
