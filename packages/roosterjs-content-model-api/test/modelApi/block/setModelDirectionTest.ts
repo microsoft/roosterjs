@@ -87,7 +87,6 @@ describe('setModelDirection', () => {
 
     it('does not update the direction when it already matches', () => {
         const { model, paragraph } = runAutoDirectionTest(['עברית', ' English'], 'rtl', 'rtl');
-
         expect(model.blocks[0]).toBe(paragraph);
     });
 
