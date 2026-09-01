@@ -53,6 +53,7 @@ const initialState: OptionState = {
         autoTel: true,
         removeListMargins: false,
         autoHorizontalLine: true,
+        autoDirection: true,
     },
     markdownOptions: {
         bold: true,

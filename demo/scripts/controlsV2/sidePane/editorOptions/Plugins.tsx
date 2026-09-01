@@ -114,6 +114,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
     private autoMailto = React.createRef<HTMLInputElement>();
     private removeListMargins = React.createRef<HTMLInputElement>();
     private horizontalLine = React.createRef<HTMLInputElement>();
+    private autoDirection = React.createRef<HTMLInputElement>();
     private markdownBold = React.createRef<HTMLInputElement>();
     private markdownItalic = React.createRef<HTMLInputElement>();
     private markdownStrikethrough = React.createRef<HTMLInputElement>();
@@ -198,6 +199,12 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                                 this.props.state.autoFormatOptions.autoHorizontalLine,
                                 (state, value) =>
                                     (state.autoFormatOptions.autoHorizontalLine = value)
+                            )}
+                            {this.renderCheckBox(
+                                'Auto Direction',
+                                this.autoDirection,
+                                this.props.state.autoFormatOptions.autoDirection,
+                                (state, value) => (state.autoFormatOptions.autoDirection = value)
                             )}
                         </>
                     )}
