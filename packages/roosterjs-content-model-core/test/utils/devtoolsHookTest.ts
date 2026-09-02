@@ -17,8 +17,15 @@ describe('devtoolsHook', () => {
     let events: { editor: IEditor; event: PluginEvent }[];
     let hook: RoosterJsDevToolsHook;
     const win = window as any;
+    let originalHook: RoosterJsDevToolsHook | undefined;
+    let originalEditors: IEditor[] | undefined;
 
     beforeEach(() => {
+        originalHook = win.__ROOSTERJS_DEVTOOLS_HOOK__;
+        originalEditors = win.__ROOSTERJS_DEVTOOLS_EDITORS__;
+        delete win.__ROOSTERJS_DEVTOOLS_HOOK__;
+        delete win.__ROOSTERJS_DEVTOOLS_EDITORS__;
+
         createdEditors = [];
         disposedEditors = [];
         events = [];
@@ -30,8 +37,17 @@ describe('devtoolsHook', () => {
     });
 
     afterEach(() => {
-        delete win.__ROOSTERJS_DEVTOOLS_HOOK__;
-        delete win.__ROOSTERJS_DEVTOOLS_EDITORS__;
+        if (originalHook) {
+            win.__ROOSTERJS_DEVTOOLS_HOOK__ = originalHook;
+        } else {
+            delete win.__ROOSTERJS_DEVTOOLS_HOOK__;
+        }
+
+        if (originalEditors) {
+            win.__ROOSTERJS_DEVTOOLS_EDITORS__ = originalEditors;
+        } else {
+            delete win.__ROOSTERJS_DEVTOOLS_EDITORS__;
+        }
     });
 
     function mockEditor(): IEditor {
