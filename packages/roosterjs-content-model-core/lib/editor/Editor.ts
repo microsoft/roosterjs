@@ -314,7 +314,7 @@ export class Editor implements IEditor {
                 isDarkMode ? 'lightToDark' : 'darkToLight',
                 core.darkColorHandler,
                 {
-                    tableBorders: this.isExperimentalFeatureEnabled('TransformTableBorderColors'),
+                    tableBorders: true,
                 },
                 core.format.defaultFormat.textColor
             );
@@ -470,7 +470,7 @@ export class Editor implements IEditor {
             const colorHandler = this.getColorManager();
 
             transformColor(result, true /*includeSelf*/, 'darkToLight', colorHandler, {
-                tableBorders: this.isExperimentalFeatureEnabled('TransformTableBorderColors'),
+                tableBorders: true,
             });
 
             result.style.color = result.style.color || 'inherit';
