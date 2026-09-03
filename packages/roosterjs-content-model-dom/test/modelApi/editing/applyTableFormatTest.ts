@@ -53,6 +53,29 @@ describe('applyTableFormat', () => {
         };
     }
 
+    function addTextToTable(table: ContentModelTable) {
+        table.rows.forEach(row =>
+            row.cells.forEach(cell =>
+                cell.blocks.push({
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                })
+            )
+        );
+    }
+
     function runTest(
         format: TableMetadataFormat | undefined,
         exportedBackgroundColors: string[][],
@@ -766,6 +789,8 @@ describe('applyTableFormat', () => {
     it('Apply headerRowCustomStyles', () => {
         const table = createTable(2, 2);
 
+        addTextToTable(table);
+
         const format: TableMetadataFormat = {
             topBorderColor: '#000000',
             bottomBorderColor: '#000000',
@@ -797,6 +822,7 @@ describe('applyTableFormat', () => {
             cell.blocks.forEach(block => {
                 if (block.blockType == 'Paragraph') {
                     block.segments.forEach(segment => {
+                        expect(segment.format.fontWeight).toBe('normal');
                         expect(segment.format.italic).toBe(true);
                     });
                 }
@@ -898,7 +924,26 @@ describe('applyTableFormat', () => {
 
         // Check first column cells have first column styles
         expect(table.rows[0].cells[0].format.backgroundColor).toBe('#000000');
+        expect(table.rows[0].cells[0].format.textAlign).toBe('center');
         expect(table.rows[1].cells[0].format.backgroundColor).toBe('lightblue');
+        expect(table.rows[1].cells[0].format.textAlign).toBe('end');
+    });
+
+    it('Apply first column alignment to the top-left cell when header has no alignment', () => {
+        const table = createTable(2, 2);
+
+        applyTableFormat(table as ReadonlyContentModelTable, {
+            hasHeaderRow: true,
+            hasFirstColumn: true,
+            headerRowCustomStyles: {
+                fontWeight: 'bold',
+            },
+            firstColumnCustomStyles: {
+                textAlign: 'end',
+            },
+        });
+
+        expect(table.rows[0].cells[0].format.textAlign).toBe('end');
         expect(table.rows[1].cells[0].format.textAlign).toBe('end');
     });
 
@@ -985,6 +1030,8 @@ describe('applyTableFormat', () => {
         applyTableFormat(table as ReadonlyContentModelTable, formatWithoutFirstColumn);
 
         // Verify first column styles are removed
+        expect(table.rows[0].cells[0].format.textAlign).toBeUndefined();
+        expect(table.rows[1].cells[0].format.textAlign).toBeUndefined();
         table.rows[0].cells[0].blocks.forEach(block => {
             if (block.blockType == 'Paragraph') {
                 block.segments.forEach(segment => {
@@ -992,6 +1039,76 @@ describe('applyTableFormat', () => {
                 });
             }
         });
+    });
+
+    it('Preserve a different cell alignment when first column is disabled', () => {
+        const table = createTable(2, 2);
+        const format: TableMetadataFormat = {
+            hasFirstColumn: true,
+            firstColumnCustomStyles: {
+                textAlign: 'end',
+            },
+        };
+
+        applyTableFormat(table as ReadonlyContentModelTable, format);
+
+        table.rows[0].cells[0].format.textAlign = 'center';
+
+        applyTableFormat(table as ReadonlyContentModelTable, {
+            ...format,
+            hasFirstColumn: false,
+        });
+
+        expect(table.rows[0].cells[0].format.textAlign).toBe('center');
+        expect(table.rows[1].cells[0].format.textAlign).toBeUndefined();
+    });
+
+    it('Clean previous custom text styles before applying new ones', () => {
+        const table = createTable(2, 2);
+
+        addTextToTable(table);
+
+        applyTableFormat(table as ReadonlyContentModelTable, {
+            hasHeaderRow: true,
+            hasFirstColumn: true,
+            headerRowCustomStyles: {
+                fontWeight: 'bold',
+                italic: true,
+                textAlign: 'center',
+            },
+            firstColumnCustomStyles: {
+                fontWeight: 'bold',
+                italic: true,
+                textAlign: 'end',
+            },
+        });
+
+        applyTableFormat(table as ReadonlyContentModelTable, {
+            hasHeaderRow: true,
+            hasFirstColumn: true,
+            headerRowCustomStyles: {
+                fontWeight: 'normal',
+                italic: false,
+            },
+            firstColumnCustomStyles: {
+                fontWeight: 'normal',
+                italic: false,
+            },
+        });
+
+        expect(table.rows[0].cells[0].format.textAlign).toBeUndefined();
+        expect(table.rows[0].cells[1].format.textAlign).toBeUndefined();
+        expect(table.rows[1].cells[0].format.textAlign).toBeUndefined();
+
+        table.rows.forEach((row, rowIndex) =>
+            row.cells.forEach((cell, cellIndex) => {
+                if (rowIndex == 0 || cellIndex == 0) {
+                    expect(cell.format.fontWeight).toBe('normal');
+                    expect(cell.blocks[0].segments[0].format.fontWeight).toBe('normal');
+                    expect(cell.blocks[0].segments[0].format.italic).toBeUndefined();
+                }
+            })
+        );
     });
 
     describe('Banded rows and columns background color logic', () => {
