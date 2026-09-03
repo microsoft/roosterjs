@@ -25,7 +25,7 @@ export function insertTableColumn(
                 const cell = row.cells[insertLeft ? sel.firstColumn : sel.lastColumn];
 
                 const newCell = createTableCell(
-                    cell.spanLeft,
+                    false, //spanLeft
                     cell.spanAbove,
                     cell.isHeader,
                     cell.format,

@@ -284,9 +284,10 @@ describe('insertTableColumn', () => {
 
         insertTableColumn(table, 'insertRight');
 
-        const selectedCell3 = { ...cell3, isSelected: true };
-        const selectedCell6 = { ...cell6, isSelected: true };
-        const selectedCell12 = { ...cell12, isSelected: true };
+        const selectedCell3 = { ...cell3, isSelected: true, spanLeft: false };
+        const selectedCell6 = { ...cell6, isSelected: true, spanLeft: false };
+        const selectedCell9WithoutSpanLeft = { ...selectedCell9, spanLeft: false };
+        const selectedCell12 = { ...cell12, isSelected: true, spanLeft: false };
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -305,7 +306,13 @@ describe('insertTableColumn', () => {
                 {
                     format: {},
                     height: 600,
-                    cells: [cell7, cell8, unselectedCell9, selectedCell9, selectedCell9],
+                    cells: [
+                        cell7,
+                        cell8,
+                        unselectedCell9,
+                        selectedCell9WithoutSpanLeft,
+                        selectedCell9WithoutSpanLeft,
+                    ],
                 },
                 {
                     format: {},
