@@ -414,10 +414,18 @@ describe('formatTable', () => {
                 expect(cell.format.textAlign)
                     .withContext(`${context} alignment`)
                     .toBe(expectedTextAlign);
-                expect(cell.blocks[0].segments[0].format.fontWeight)
+                const firstBlock = cell.blocks[0];
+
+                expect(firstBlock.blockType).withContext(`${context} block type`).toBe('Paragraph');
+
+                if (firstBlock.blockType != 'Paragraph') {
+                    return;
+                }
+
+                expect(firstBlock.segments[0].format.fontWeight)
                     .withContext(`${context} text font weight`)
                     .toBe(expectedFontWeight);
-                expect(cell.blocks[0].segments[0].format.italic)
+                expect(firstBlock.segments[0].format.italic)
                     .withContext(`${context} italic`)
                     .toBe(expectedItalic);
             })
@@ -451,10 +459,10 @@ describe('formatTable', () => {
                     });
                 }
             );
-        editor = {
+        editor = ({
             focus: focusSpy,
             formatContentModel: formatContentModelSpy,
-        } as IEditor;
+        } as unknown) as IEditor;
     });
 
     it('does not format when there is no selected table', () => {

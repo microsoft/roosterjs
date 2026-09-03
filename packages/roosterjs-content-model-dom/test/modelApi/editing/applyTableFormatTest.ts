@@ -1103,9 +1103,15 @@ describe('applyTableFormat', () => {
         table.rows.forEach((row, rowIndex) =>
             row.cells.forEach((cell, cellIndex) => {
                 if (rowIndex == 0 || cellIndex == 0) {
+                    const firstBlock = cell.blocks[0];
+
                     expect(cell.format.fontWeight).toBe('normal');
-                    expect(cell.blocks[0].segments[0].format.fontWeight).toBe('normal');
-                    expect(cell.blocks[0].segments[0].format.italic).toBeUndefined();
+                    expect(firstBlock.blockType).toBe('Paragraph');
+
+                    if (firstBlock.blockType == 'Paragraph') {
+                        expect(firstBlock.segments[0].format.fontWeight).toBe('normal');
+                        expect(firstBlock.segments[0].format.italic).toBeUndefined();
+                    }
                 }
             })
         );
