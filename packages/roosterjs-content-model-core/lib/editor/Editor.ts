@@ -1,4 +1,5 @@
 import { createEditorCore } from './core/createEditorCore';
+import { notifyDevToolsEditorCreated, notifyDevToolsEditorDisposed } from '../utils/devtoolsHook';
 import {
     createEmptyModel,
     ChangeSource,
@@ -60,6 +61,8 @@ export class Editor implements IEditor {
             true /*isInitializing*/
         );
         this.core.plugins.forEach(plugin => plugin.initialize(this));
+
+        notifyDevToolsEditorCreated(this, this.core);
     }
 
     /**
@@ -67,6 +70,8 @@ export class Editor implements IEditor {
      */
     dispose() {
         const core = this.getCore();
+
+        notifyDevToolsEditorDisposed(this, core);
 
         for (let i = core.plugins.length - 1; i >= 0; i--) {
             const plugin = core.plugins[i];
