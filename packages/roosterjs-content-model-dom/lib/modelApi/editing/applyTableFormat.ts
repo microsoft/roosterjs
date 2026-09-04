@@ -1,6 +1,6 @@
 import { BorderKeys } from '../../formatHandlers/utils/borderKeys';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
-import { mutateBlock, mutateSegment } from '../common/mutate';
+import { mutateBlock } from '../common/mutate';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from '../../constants/TableBorderFormat';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
@@ -95,11 +95,10 @@ function clearFirstColumnTextFormat(
 
             for (const block of cell.blocks) {
                 if (block.blockType == 'Paragraph') {
-                    for (const segment of block.segments) {
-                        mutateSegment(block, segment, cellSegment => {
-                            clearStyleIfMatch(cellSegment.format, 'fontWeight', fontWeight);
-                            clearStyleIfMatch(cellSegment.format, 'italic', customStyles?.italic);
-                        });
+                    const mutateParagraph = mutateBlock(block);
+                    for (const cellSegment of mutateParagraph.segments) {
+                        clearStyleIfMatch(cellSegment.format, 'fontWeight', fontWeight);
+                        clearStyleIfMatch(cellSegment.format, 'italic', customStyles?.italic);
                     }
                     clearStyleIfMatch(block.format, 'textAlign', customStyles?.textAlign);
                 }
@@ -122,11 +121,10 @@ function clearHeaderRowTextFormat(
 
         for (const block of cell.blocks) {
             if (block.blockType == 'Paragraph') {
-                for (const segment of block.segments) {
-                    mutateSegment(block, segment, cellSegment => {
-                        clearStyleIfMatch(cellSegment.format, 'fontWeight', fontWeight);
-                        clearStyleIfMatch(cellSegment.format, 'italic', customStyles?.italic);
-                    });
+                const mutateParagraph = mutateBlock(block);
+                for (const cellSegment of mutateParagraph.segments) {
+                    clearStyleIfMatch(cellSegment.format, 'fontWeight', fontWeight);
+                    clearStyleIfMatch(cellSegment.format, 'italic', customStyles?.italic);
                 }
                 clearStyleIfMatch(block.format, 'textAlign', customStyles?.textAlign);
             }
@@ -360,37 +358,36 @@ export function setFirstColumnFormatBorders(
 
                 for (const block of cell.blocks) {
                     if (block.blockType == 'Paragraph') {
-                        for (const segment of block.segments) {
-                            mutateSegment(block, segment, cellSegment => {
-                                if (format.hasFirstColumn) {
-                                    setStyleIfDefined(
-                                        cellSegment.format,
-                                        'fontWeight',
-                                        customStyles?.fontWeight ?? 'bold'
-                                    );
-                                    setStyleIfDefined(
-                                        cell.format,
-                                        'textAlign',
-                                        customStyles?.textAlign
-                                    );
-                                    setStyleIfDefined(
-                                        cell.format,
-                                        'fontWeight',
-                                        customStyles?.fontWeight ?? 'bold'
-                                    );
-                                    if (customStyles?.italic) {
-                                        cellSegment.format.italic = true;
-                                    } else if (customStyles?.italic === false) {
-                                        delete cellSegment.format.italic;
-                                    }
-                                } else if (
-                                    cellSegment.format.fontWeight == 'bold' &&
-                                    cell.format.fontWeight == 'bold'
-                                ) {
-                                    delete cellSegment.format.fontWeight;
-                                    delete cell.format.fontWeight;
+                        const mutateParagraph = mutateBlock(block);
+                        for (const cellSegment of mutateParagraph.segments) {
+                            if (format.hasFirstColumn) {
+                                setStyleIfDefined(
+                                    cellSegment.format,
+                                    'fontWeight',
+                                    customStyles?.fontWeight ?? 'bold'
+                                );
+                                setStyleIfDefined(
+                                    cell.format,
+                                    'textAlign',
+                                    customStyles?.textAlign
+                                );
+                                setStyleIfDefined(
+                                    cell.format,
+                                    'fontWeight',
+                                    customStyles?.fontWeight ?? 'bold'
+                                );
+                                if (customStyles?.italic) {
+                                    cellSegment.format.italic = true;
+                                } else if (customStyles?.italic === false) {
+                                    delete cellSegment.format.italic;
                                 }
-                            });
+                            } else if (
+                                cellSegment.format.fontWeight == 'bold' &&
+                                cell.format.fontWeight == 'bold'
+                            ) {
+                                delete cellSegment.format.fontWeight;
+                                delete cell.format.fontWeight;
+                            }
                         }
                     }
                 }
@@ -469,16 +466,15 @@ function setHeaderRowFormat(
 
         for (const block of cell.blocks) {
             if (block.blockType == 'Paragraph') {
-                for (const segment of block.segments) {
-                    mutateSegment(block, segment, cellSegment => {
-                        cellSegment.format.fontWeight = fontWeight;
+                const mutateParagraph = mutateBlock(block);
+                for (const cellSegment of mutateParagraph.segments) {
+                    cellSegment.format.fontWeight = fontWeight;
 
-                        if (customStyles?.italic) {
-                            cellSegment.format.italic = true;
-                        } else if (customStyles?.italic === false) {
-                            delete cellSegment.format.italic;
-                        }
-                    });
+                    if (customStyles?.italic) {
+                        cellSegment.format.italic = true;
+                    } else if (customStyles?.italic === false) {
+                        delete cellSegment.format.italic;
+                    }
                 }
             }
         }
