@@ -261,7 +261,7 @@ describe('EntityPlugin', () => {
                 'lightToDark',
                 mockedDarkColorHandler,
                 {
-                    tableBorders: false,
+                    tableBorders: true,
                 }
             );
             expect(DelimiterUtils.handleDelimiterContentChangedEvent).toHaveBeenCalled();

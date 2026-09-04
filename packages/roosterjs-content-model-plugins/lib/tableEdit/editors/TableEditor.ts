@@ -212,6 +212,31 @@ export class TableEditor {
         this.setEditorFeatures();
     }
 
+    /**
+     * Public only for testing purposes
+     */
+    public onTouchStart(x: number, y: number) {
+        for (let rowIndex = 0; rowIndex < this.table.rows.length; rowIndex++) {
+            const row = this.table.rows[rowIndex];
+
+            for (let cellIndex = 0; cellIndex < row.cells.length; cellIndex++) {
+                const td = row.cells[cellIndex];
+                const rect = normalizeRect(td.getBoundingClientRect());
+
+                if (
+                    rect &&
+                    x >= rect.left &&
+                    x <= rect.right &&
+                    y >= rect.top &&
+                    y <= rect.bottom
+                ) {
+                    !this.isFeatureDisabled('CellResizer') && this.setResizingTd(td);
+                    return;
+                }
+            }
+        }
+    }
+
     private setEditorFeatures() {
         const disableSelector = this.isFeatureDisabled('TableSelector');
         const disableMovement = this.isFeatureDisabled('TableMover');

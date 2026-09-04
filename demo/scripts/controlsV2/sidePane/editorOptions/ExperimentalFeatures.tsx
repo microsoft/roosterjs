@@ -12,7 +12,6 @@ export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}
         return (
             <>
                 {this.renderFeature('KeepSelectionMarkerWhenEnteringTextNode')}
-                {this.renderFeature('TransformTableBorderColors')}
                 {this.renderFeature('ShadowDom')}
                 {this.renderFeature('HandleDropInternalContent')}
             </>

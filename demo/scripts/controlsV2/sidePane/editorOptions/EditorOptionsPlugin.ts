@@ -53,6 +53,7 @@ const initialState: OptionState = {
         autoTel: true,
         removeListMargins: false,
         autoHorizontalLine: true,
+        autoDirection: true,
     },
     markdownOptions: {
         bold: true,
@@ -75,10 +76,7 @@ const initialState: OptionState = {
     },
     customReplacements: emojiReplacements,
     disableSideResize: false,
-    experimentalFeatures: new Set<ExperimentalFeature>([
-        'TransformTableBorderColors',
-        'HandleDropInternalContent',
-    ]),
+    experimentalFeatures: new Set<ExperimentalFeature>(['HandleDropInternalContent']),
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {
