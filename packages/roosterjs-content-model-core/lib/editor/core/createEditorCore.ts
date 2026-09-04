@@ -66,7 +66,8 @@ function createEditorEnvironment(
     contentDiv: HTMLElement,
     options: EditorOptions
 ): EditorEnvironment {
-    const navigator = contentDiv.ownerDocument.defaultView?.navigator;
+    const defaultView = contentDiv.ownerDocument.defaultView;
+    const navigator = defaultView?.navigator;
     const userAgent = navigator?.userAgent ?? '';
     const appVersion = navigator?.appVersion ?? '';
 
@@ -82,6 +83,8 @@ function createEditorEnvironment(
             userAgent.indexOf('Chrome') < 0 &&
             userAgent.indexOf('Android') < 0,
         isMobileOrTablet: getIsMobileOrTablet(userAgent),
+        isTouchSupported:
+            !!defaultView && ('ontouchstart' in defaultView || !!navigator?.maxTouchPoints),
     };
 }
 

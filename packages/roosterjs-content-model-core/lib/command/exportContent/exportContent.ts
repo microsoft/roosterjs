@@ -80,9 +80,7 @@ export function exportContent(
                     'darkToLight',
                     editor.getColorManager(),
                     {
-                        tableBorders: editor.isExperimentalFeatureEnabled(
-                            'TransformTableBorderColors'
-                        ),
+                        tableBorders: true,
                     }
                 );
             }
