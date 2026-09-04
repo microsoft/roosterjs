@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.5% </span>
+                <span class="strong">93.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/16</span>
+                <span class='fraction'>15/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.33% </span>
+                <span class="strong">93.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/15</span>
+                <span class='fraction'>14/15</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -122,28 +122,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">98x</span>
+<span class="cline-any cline-yes">392x</span>
+<span class="cline-any cline-yes">1568x</span>
+<span class="cline-any cline-yes">1568x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1568x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">98x</span>
+<span class="cline-any cline-yes">98x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -165,29 +165,29 @@ import type { IEditor, TableMetadataFormat } from 'roosterjs-content-model-types
  * @param format The table format to apply
  * @param keepCellShade Whether keep existing shade color when apply format if there is a manually set shade color
  */
-export function <span class="fstat-no" title="function not covered" >formatTable(</span>editor: IEditor, format: TableMetadataFormat, keepCellShade?: boolean) {
-<span class="cstat-no" title="statement not covered" >    editor.focus();</span>
+export function formatTable(editor: IEditor, format: TableMetadataFormat, keepCellShade?: boolean) {
+    editor.focus();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    editor.formatContentModel(</span>
-<span class="fstat-no" title="function not covered" >        model </span>=&gt; {
-            const <span class="cstat-no" title="statement not covered" >[tableModel<span class="cstat-no" title="statement not covered" >] = g</span>etFirstSelectedTable(model);</span>
+    editor.formatContentModel(
+        model =&gt; {
+            const [tableModel] = getFirstSelectedTable(model);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (tableModel) {</span>
+            if (tableModel) {
                 // Wipe border metadata
-<span class="cstat-no" title="statement not covered" >                tableModel.rows.forEach(<span class="fstat-no" title="function not covered" >row </span>=&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                    row.cells.forEach(<span class="fstat-no" title="function not covered" >cell </span>=&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                        updateTableCellMetadata(mutateBlock(cell), <span class="fstat-no" title="function not covered" >metadata </span>=&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                            if (metadata) {</span>
+                tableModel.rows.forEach(row =&gt; {
+                    row.cells.forEach(cell =&gt; {
+                        updateTableCellMetadata(mutateBlock(cell), metadata =&gt; {
+                            <span class="missing-if-branch" title="if path not taken" >I</span>if (metadata) {
 <span class="cstat-no" title="statement not covered" >                                delete metadata.borderOverride;</span>
                             }
-<span class="cstat-no" title="statement not covered" >                            return metadata;</span>
+                            return metadata;
                         });
                     });
                 });
-<span class="cstat-no" title="statement not covered" >                applyTableFormat(tableModel, format, keepCellShade);</span>
-<span class="cstat-no" title="statement not covered" >                return true;</span>
+                applyTableFormat(tableModel, format, keepCellShade);
+                return true;
             } else {
-<span class="cstat-no" title="statement not covered" >                return false;</span>
+                return false;
             }
         },
         {
@@ -202,7 +202,7 @@ export function <span class="fstat-no" title="function not covered" >formatTable
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-03T21:27:50.560Z
+                at 2026-09-04T17:49:50.824Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
