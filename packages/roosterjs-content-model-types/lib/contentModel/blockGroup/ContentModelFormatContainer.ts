@@ -1,3 +1,4 @@
+import type { ContentModelCodeBlockFormat } from '../format/ContentModelCodeBlockFormat';
 import type {
     ContentModelBlockBase,
     ReadonlyContentModelBlockBase,
@@ -24,6 +25,9 @@ export interface ContentModelFormatContainerCommon {
      * and apply "font-size: 0" to the container element
      */
     zeroFontSize?: boolean;
+
+    /** Optional fence metadata for a PRE literal code block. */
+    codeBlock?: ContentModelCodeBlockFormat;
 }
 
 /**

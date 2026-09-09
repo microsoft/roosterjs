@@ -1,3 +1,7 @@
+import { readFencedCodeBlock } from '../utils/readFencedCodeBlock';
+import { createFencedCodeBlock } from '../creators/createFencedCodeBlock';
+import { createListFromMarkdown } from '../creators/createListFromMarkdown';
+import { createFormatContainer } from 'roosterjs-content-model-dom';
 import { createBlockGroupFromMarkdown } from '../creators/createBlockGroupFromMarkdown';
 import { createContentModelDocument, createDivider } from 'roosterjs-content-model-dom';
 import { createParagraphFromMarkdown } from '../creators/createParagraphFromMarkdown';
@@ -16,6 +20,7 @@ import type {
 interface MarkdownContext {
     lastQuote?: ContentModelFormatContainer;
     lastList?: ContentModelListItem;
+    listIndent?: number;
     emptyLineState?: 'notEmpty' | 'lineEnded' | 'empty';
     tableLines: string[];
 }
@@ -54,11 +59,9 @@ export function markdownProcessor(
     text: string,
     options: MarkdownToModelOptions
 ): ContentModelDocument {
-    const splitLinesPattern = options.splitLinesPattern || /\r\n|\r|\\n|\n/;
+    const splitLinesPattern = options.splitLinesPattern || /\r\n|\r|\n/;
     const emptyLine = options.emptyLine ?? 'merge';
     const markdownText = text.split(splitLinesPattern);
-
-    markdownText.push(''); // Add an empty line to make sure the last block is processed
 
     const doc = createContentModelDocument();
     const model = convertMarkdownText(doc, markdownText, options);
@@ -84,26 +87,8 @@ function addMarkdownBlockToModel(
     markdownContext: MarkdownContext,
     options: MarkdownToModelOptions
 ) {
-    if (
-        blockType !== 'Table' &&
-        markdownContext.tableLines &&
-        markdownContext.tableLines.length > 0
-    ) {
-        if (
-            markdownContext.tableLines.length > 2 &&
-            markdownContext.tableLines[1].trim().length > 0 &&
-            isMarkdownTable(markdownContext.tableLines[1]) &&
-            markdownContext.tableLines.length > 1
-        ) {
-            const tableModel = createTableFromMarkdown(markdownContext.tableLines, options);
-            model.blocks.push(tableModel);
-        } else {
-            for (const line of markdownContext.tableLines) {
-                const paragraph = createParagraphFromMarkdown(line, options);
-                model.blocks.push(paragraph);
-            }
-        }
-        markdownContext.tableLines.length = 0;
+    if (blockType !== 'Table') {
+        flushTable(model, markdownContext, options);
     }
 
     if (patternName == 'space') {
@@ -208,36 +193,169 @@ function convertMarkdownText(
         lastList: undefined,
         tableLines: [],
     };
-    for (const line of lines) {
-        let matched = false;
-        for (const patternName in MarkdownPattern) {
-            if (MarkdownPattern.hasOwnProperty(patternName)) {
-                const pattern = MarkdownPattern[patternName];
-                if (pattern.test(line)) {
-                    addMarkdownBlockToModel(
-                        model,
-                        MarkdownBlockType[patternName],
-                        line,
-                        patternName,
-                        markdownContext,
-                        options
-                    );
-                    matched = true;
-                    break;
+    for (let index = 0; index <= lines.length; ) {
+        const fence =
+            index < lines.length ? readContextFence(lines, index, markdownContext) : undefined;
+        if (fence) {
+            flushTable(model, markdownContext, options);
+            const block =
+                options.onFencedCodeBlock?.(fence.block) ?? createFencedCodeBlock(fence.block);
+            let target:
+                | ContentModelDocument
+                | ContentModelFormatContainer
+                | ContentModelListItem = model;
+            if (fence.quoteDepth > 0) {
+                for (let depth = 0; depth < fence.quoteDepth; depth++) {
+                    const quote: ContentModelFormatContainer =
+                        depth == 0 && markdownContext.lastQuote
+                            ? markdownContext.lastQuote
+                            : createFormatContainer('blockquote');
+                    if (quote != markdownContext.lastQuote) {
+                        target.blocks.push(quote);
+                    }
+                    target = quote;
+                }
+                markdownContext.lastQuote = target as ContentModelFormatContainer;
+            } else {
+                markdownContext.lastQuote = undefined;
+            }
+            if (fence.list) {
+                const list = createListFromMarkdown(
+                    fence.list,
+                    /^ *\d/.test(fence.list) ? 'OL' : 'UL',
+                    options
+                );
+                list.blocks = [];
+                target.blocks.push(list);
+                markdownContext.lastList = list;
+                markdownContext.listIndent = fence.listIndent;
+                target = list;
+            } else if (fence.inList && markdownContext.lastList) {
+                target = markdownContext.lastList;
+            } else {
+                markdownContext.lastList = undefined;
+                markdownContext.listIndent = undefined;
+            }
+            target.blocks.push(block);
+            markdownContext.emptyLineState = 'notEmpty';
+            index = fence.end;
+            if (fence.quoteDepth && !/^ {0,3}>/.test(lines[index] ?? '')) {
+                markdownContext.lastQuote = undefined;
+            }
+            if (
+                (fence.list || fence.inList) &&
+                !(lines[index] ?? '').startsWith(' '.repeat(fence.listIndent))
+            ) {
+                markdownContext.lastList = undefined;
+                markdownContext.listIndent = undefined;
+            }
+            continue;
+        }
+        // Preserve the legacy escaped-newline convention outside literal code only.
+        const physicalLine = lines[index++] ?? '';
+        for (const line of options.splitLinesPattern ? [physicalLine] : physicalLine.split(/\\n/)) {
+            const listMarker = /^( *)(?:[-+*]|\d+\.) +/.exec(line);
+            if (listMarker) {
+                markdownContext.listIndent = listMarker[0].length;
+            }
+            let matched = false;
+            for (const patternName in MarkdownPattern) {
+                if (MarkdownPattern.hasOwnProperty(patternName)) {
+                    const pattern = MarkdownPattern[patternName];
+                    if (pattern.test(line)) {
+                        addMarkdownBlockToModel(
+                            model,
+                            MarkdownBlockType[patternName],
+                            line,
+                            patternName,
+                            markdownContext,
+                            options
+                        );
+                        matched = true;
+                        break;
+                    }
                 }
             }
-        }
 
-        if (!matched) {
-            addMarkdownBlockToModel(
-                model,
-                'Paragraph',
-                line,
-                'paragraph',
-                markdownContext,
-                options
-            );
+            if (!matched) {
+                addMarkdownBlockToModel(
+                    model,
+                    'Paragraph',
+                    line,
+                    'paragraph',
+                    markdownContext,
+                    options
+                );
+            }
         }
     }
+    flushTable(model, markdownContext, options);
     return model;
+}
+
+function flushTable(
+    model: ShallowMutableContentModelDocument,
+    markdownContext: MarkdownContext,
+    options: MarkdownToModelOptions
+) {
+    if (markdownContext.tableLines.length > 0) {
+        if (
+            markdownContext.tableLines.length > 2 &&
+            markdownContext.tableLines[1].trim().length > 0 &&
+            isMarkdownTable(markdownContext.tableLines[1]) &&
+            markdownContext.tableLines.length > 1
+        ) {
+            const tableModel = createTableFromMarkdown(markdownContext.tableLines, options);
+            model.blocks.push(tableModel);
+        } else {
+            for (const line of markdownContext.tableLines) {
+                const paragraph = createParagraphFromMarkdown(line, options);
+                model.blocks.push(paragraph);
+            }
+        }
+        markdownContext.tableLines.length = 0;
+    }
+}
+
+function readContextFence(lines: string[], index: number, context: MarkdownContext) {
+    const original = lines[index];
+    let opening = original;
+    let quoteDepth = 0;
+    while (/^ {0,3}> ?/.test(opening)) {
+        opening = opening.replace(/^ {0,3}> ?/, '');
+        quoteDepth++;
+    }
+    const listMatch = /^( *)(?:[-+*]|\d+\.) +/.exec(opening);
+    const list = listMatch ? listMatch[0] : undefined;
+    const listIndent = list?.length ?? context.listIndent ?? 0;
+    const inList =
+        !list && !!context.lastList && listIndent > 0 && opening.startsWith(' '.repeat(listIndent));
+    const strip = (line: string, first: boolean): string | undefined => {
+        for (let depth = 0; depth < quoteDepth; depth++) {
+            if (!/^ {0,3}> ?/.test(line)) {
+                return undefined;
+            }
+            line = line.replace(/^ {0,3}> ?/, '');
+        }
+        if (list || inList) {
+            if (first && list) {
+                return line.substring(list.length);
+            }
+            if (!line.trim()) {
+                return '';
+            }
+            if (!line.startsWith(' '.repeat(listIndent))) {
+                return undefined;
+            }
+            line = line.substring(listIndent);
+        }
+        return line;
+    };
+    let first = true;
+    const result = readFencedCodeBlock(lines, index, line => {
+        const value = strip(line, first);
+        first = false;
+        return value;
+    });
+    return result ? { ...result, quoteDepth, list, listIndent, inList } : undefined;
 }
