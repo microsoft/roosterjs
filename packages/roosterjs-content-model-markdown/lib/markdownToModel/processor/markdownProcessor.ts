@@ -1,9 +1,12 @@
 import { readFencedCodeBlock } from '../utils/readFencedCodeBlock';
 import { createFencedCodeBlock } from '../creators/createFencedCodeBlock';
 import { createListFromMarkdown } from '../creators/createListFromMarkdown';
-import { createFormatContainer } from 'roosterjs-content-model-dom';
 import { createBlockGroupFromMarkdown } from '../creators/createBlockGroupFromMarkdown';
-import { createContentModelDocument, createDivider } from 'roosterjs-content-model-dom';
+import {
+    createContentModelDocument,
+    createDivider,
+    createFormatContainer,
+} from 'roosterjs-content-model-dom';
 import { createParagraphFromMarkdown } from '../creators/createParagraphFromMarkdown';
 import { createTableFromMarkdown } from '../creators/createTableFromMarkdown';
 import { isMarkdownTable } from '../utils/isMarkdownTable';
