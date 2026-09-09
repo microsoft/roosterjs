@@ -1,11 +1,17 @@
 import type { FencedCodeBlock } from '../types/FencedCodeBlock';
 
+/** @internal Result of reading a literal code fence. */
+export interface FencedCodeBlockReadResult {
+    block: FencedCodeBlock;
+    end: number;
+}
+
 /** @internal Read a fence from physical lines, without interpreting its body. */
 export function readFencedCodeBlock(
     lines: string[],
     start: number,
     stripPrefix: (line: string) => string | undefined = line => line
-): { block: FencedCodeBlock; end: number } | undefined {
+): FencedCodeBlockReadResult | undefined {
     const first = stripPrefix(lines[start]);
     const match = first === undefined ? null : /^( {0,3})(`{3,}|~{3,})(.*)$/.exec(first);
     if (!match || (match[2][0] == '`' && match[3].indexOf('`') >= 0)) {
