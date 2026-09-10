@@ -167,6 +167,31 @@ export function retrieveModelFormatState(
     );
 
     if (formatState.fontSize) {
+        const fontSize = formatState.fontSize;
+
+        // If the font size is a relative value (e.g. 1.5em from an h2 default style), resolve it
+        // against the container's computed font size so that the format state always returns an
+        // absolute value that reflects the actual rendered size.
+        if (
+            (fontSize.endsWith('em') && !fontSize.endsWith('rem')) ||
+            fontSize.endsWith('%')
+        ) {
+            if (!containerFormat) {
+                containerFormat =
+                    domHelper?.getContainerFormat(isInDarkMode, colorHandler) ?? modelFormat;
+            }
+
+            const containerFontSizePx = parseValueWithUnit(containerFormat?.fontSize ?? '');
+
+            if (containerFontSizePx > 0) {
+                const resolvedPx = parseValueWithUnit(fontSize, containerFontSizePx);
+
+                if (resolvedPx > 0) {
+                    formatState.fontSize = resolvedPx + 'px';
+                }
+            }
+        }
+
         formatState.fontSize = px2Pt(formatState.fontSize);
     }
 }
