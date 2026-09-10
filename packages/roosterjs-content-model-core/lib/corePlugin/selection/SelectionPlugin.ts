@@ -219,6 +219,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
             return;
         }
 
+        const tableBeforeCursor = this.getTableBeforeCursor(editor, rawEvent);
+        if (tableBeforeCursor) {
+            this.setCursorBelowTable(editor, tableBeforeCursor, rawEvent);
+            return;
+        }
+
         // Table selection
         const target = rawEvent.target as Node;
         const tableSelection: TableSelectionInfo | null = target
@@ -264,6 +270,79 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     beforeDispatch: this.onMouseMove,
                 },
             });
+        }
+    }
+
+    private getTableBeforeCursor(editor: IEditor, rawEvent: MouseEvent): HTMLTableElement | null {
+        if (
+            rawEvent.button != MouseLeftButton ||
+            !Number.isFinite(rawEvent.clientX) ||
+            !Number.isFinite(rawEvent.clientY)
+        ) {
+            return null;
+        }
+
+        const domHelper = editor.getDOMHelper();
+        const target = rawEvent.target as Node;
+        const targetElement = target && domHelper.findClosestElementAncestor(target);
+        const table = domHelper
+            .queryElements('table')
+            .filter((table): table is HTMLTableElement => isElementOfType(table, 'table'))
+            .filter(table => table.isContentEditable)
+            .find(table => {
+                const rect = table.getBoundingClientRect();
+
+                // Clicking on the same line as the table, at the right side of it
+                return (
+                    rawEvent.clientX > rect.right &&
+                    rawEvent.clientY > rect.top &&
+                    rawEvent.clientY < rect.bottom
+                );
+            });
+
+        return table && (!targetElement || table.contains(targetElement)) ? table : null;
+    }
+
+    private setCursorBelowTable(
+        editor: IEditor,
+        table: HTMLTableElement,
+        rawEvent: MouseEvent
+    ): void {
+        const domHelper = editor.getDOMHelper();
+
+        let block: HTMLElement = table;
+
+        while (block.parentElement && domHelper.isNodeInEditor(block.parentElement, true)) {
+            block = block.parentElement;
+        }
+
+        let nextBlock: Node | null = block.nextElementSibling;
+
+        if (!nextBlock) {
+            const doc = editor.getDocument();
+            const paragraph = doc.createElement('div');
+
+            paragraph.appendChild(doc.createElement('br'));
+            block.parentNode?.insertBefore(paragraph, block.nextSibling);
+            nextBlock = paragraph;
+        }
+
+        if (nextBlock) {
+            const range = editor.getDocument().createRange();
+            const { node, offset } = normalizePos(nextBlock, 0);
+
+            range.setStart(node, offset);
+            range.collapse(true /* toStart */);
+            this.setDOMSelection(
+                {
+                    type: 'range',
+                    range,
+                    isReverted: false,
+                },
+                null /* tableSelection */
+            );
+
+            rawEvent.preventDefault();
         }
     }
 

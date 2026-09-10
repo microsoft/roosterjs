@@ -758,6 +758,7 @@ describe('SelectionPlugin handle table selection', () => {
             );
         getDocumentSpy = jasmine.createSpy('getDocument').and.returnValue({
             createRange: createRangeSpy,
+            createElement: document.createElement.bind(document),
             createTreeWalker: createTreeWalkerSpy,
             defaultView: {
                 requestAnimationFrame: requestAnimationFrameSpy,
@@ -914,6 +915,140 @@ describe('SelectionPlugin handle table selection', () => {
             tableCellSelectionBackgroundColorDark: DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         });
         expect(mouseDispatcher).toBeDefined();
+    });
+
+    it('MouseDown - select the first line after a table when clicking beside the table', () => {
+        const table = document.createElement('table');
+        const paragraph = document.createElement('div');
+        const text = document.createTextNode('text');
+        const range = document.createRange();
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+        table.setAttribute('contenteditable', 'true');
+        paragraph.appendChild(text);
+        contentDiv.appendChild(table);
+        contentDiv.appendChild(paragraph);
+        spyOn(table, 'getBoundingClientRect').and.returnValue({
+            top: 100,
+            bottom: 200,
+            right: 300,
+        } as DOMRect);
+        createRangeSpy.and.returnValue(range);
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: contentDiv,
+                clientX: 400,
+                clientY: 150,
+                preventDefault: preventDefaultSpy,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range,
+            isReverted: false,
+        });
+        expect(range.startContainer).toBe(text);
+        expect(range.startOffset).toBe(0);
+        expect(preventDefaultSpy).toHaveBeenCalled();
+    });
+
+    it('MouseDown - do not change selection when clicking below the table', () => {
+        const table = document.createElement('table');
+        const paragraph = document.createElement('div');
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+        table.setAttribute('contenteditable', 'true');
+        paragraph.appendChild(document.createTextNode('text'));
+        contentDiv.appendChild(table);
+        contentDiv.appendChild(paragraph);
+        spyOn(table, 'getBoundingClientRect').and.returnValue({
+            top: 100,
+            bottom: 200,
+            right: 300,
+        } as DOMRect);
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: contentDiv,
+                clientX: 400,
+                clientY: 250,
+                preventDefault: preventDefaultSpy,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+    });
+
+    it('MouseDown - do not change selection when clicking content after a table', () => {
+        const table = document.createElement('table');
+        const paragraph = document.createElement('div');
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+        table.setAttribute('contenteditable', 'true');
+        contentDiv.appendChild(table);
+        contentDiv.appendChild(paragraph);
+        spyOn(table, 'getBoundingClientRect').and.returnValue({
+            top: 100,
+            bottom: 200,
+            right: 300,
+        } as DOMRect);
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: paragraph,
+                clientX: 400,
+                clientY: 150,
+                preventDefault: preventDefaultSpy,
+            } as any,
+        });
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+    });
+
+    it('MouseDown - create an empty paragraph after a final table', () => {
+        const table = document.createElement('table');
+        const range = document.createRange();
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+
+        table.setAttribute('contenteditable', 'true');
+        contentDiv.appendChild(table);
+        spyOn(table, 'getBoundingClientRect').and.returnValue({
+            top: 100,
+            bottom: 200,
+            right: 300,
+        } as DOMRect);
+        createRangeSpy.and.returnValue(range);
+
+        plugin.onPluginEvent!({
+            eventType: 'mouseDown',
+            rawEvent: {
+                button: 0,
+                target: contentDiv,
+                clientX: 400,
+                clientY: 150,
+                preventDefault: preventDefaultSpy,
+            } as any,
+        });
+
+        expect(contentDiv.innerHTML).toBe('<table contenteditable="true"></table><div><br></div>');
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+            type: 'range',
+            range,
+            isReverted: false,
+        });
+        expect(range.startContainer).toBe(contentDiv.lastChild!);
+        expect(range.startOffset).toBe(0);
+        expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
     it('MouseDown - clean and re-attach mouse move event handler if mouseDown event triggered twice', () => {
