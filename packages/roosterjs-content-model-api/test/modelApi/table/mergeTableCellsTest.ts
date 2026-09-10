@@ -209,9 +209,18 @@ describe('mergeTableCells', () => {
                 borderBottom: '1px solid internal-bottom',
                 borderLeft: '1px solid left',
             }),
-            createTableCell(false, false, false, { borderRight: '2px dashed right' }),
-            createTableCell(false, false, false, { borderBottom: '3px double bottom' }),
-            createTableCell(false, false, false, {}),
+            createTableCell(false, false, false, {
+                borderTop: '1px solid top',
+                borderRight: '2px dashed right',
+            }),
+            createTableCell(false, false, false, {
+                borderBottom: '3px double bottom',
+                borderLeft: '1px solid left',
+            }),
+            createTableCell(false, false, false, {
+                borderRight: '2px dashed right',
+                borderBottom: '3px double bottom',
+            }),
         ];
 
         table.rows[0].cells.push(cells[0], cells[1]);
@@ -251,6 +260,34 @@ describe('mergeTableCells', () => {
         mergeTableCells(table);
 
         expect(cells[0].format).toEqual({});
+    });
+
+    it('does not extend partial perimeter borders across the merged area', () => {
+        const table = createTable(5);
+        const cells = Array.from({ length: 25 }, () => createTableCell(false, false, false, {}));
+
+        for (let rowIndex = 0; rowIndex < 5; rowIndex++) {
+            table.rows[rowIndex].cells.push(...cells.slice(rowIndex * 5, rowIndex * 5 + 5));
+        }
+
+        cells[5].format = { borderTop: '1px solid top', borderLeft: '1px solid left' };
+        cells[6].format = { borderTop: '1px solid top', borderRight: '1px solid right' };
+        cells[10].format = {
+            borderBottom: '1px solid bottom',
+            borderLeft: '1px solid left',
+        };
+        cells[11].format = {
+            borderRight: '1px solid right',
+            borderBottom: '1px solid bottom',
+        };
+        cells[5].isSelected = true;
+        cells[12].isSelected = true;
+
+        mergeTableCells(table);
+
+        expect(cells[5].format).toEqual({ borderLeft: '1px solid left' });
+        expect(cells[7].format).toEqual({});
+        expect(cells[12].format).toEqual({});
     });
 
     it('table with both selection and cached elements', () => {
