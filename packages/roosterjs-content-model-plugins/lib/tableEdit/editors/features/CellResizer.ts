@@ -1,6 +1,13 @@
 import { createElement } from '../../../pluginUtils/CreateElement/createElement';
 import { DragAndDropHelper } from '../../../pluginUtils/DragAndDrop/DragAndDropHelper';
 import { getCMTableFromTable } from '../utils/getTableFromContentModel';
+import {
+    createColumnSplit,
+    getAffectedRows,
+    setColumnSplitDirection,
+    writeTableWidthsToDom,
+} from '../utils/cellResizerUtils';
+import type { CellResizerColumnSplit } from '../utils/cellResizerUtils';
 import type { TableEditFeature } from './TableEditFeature';
 import {
     normalizeRect,
@@ -133,6 +140,7 @@ export interface CellResizerInitValue {
     anchorRow: number | undefined;
     anchorRowHeight: number;
     allWidths: number[];
+    columnSplit?: CellResizerColumnSplit;
 }
 
 /**
@@ -278,47 +286,46 @@ export function onDraggingVertical(
             mutableTable.widths[anchorColumn] = newWidth;
         } else {
             // Any other two columns
+            if (change == 0) {
+                return true;
+            }
+
             const anchorChange = allWidths[anchorColumn] + change;
             const nextAnchorChange = allWidths[nextColumn] - change;
-            if (
-                anchorChange < MIN_ALLOWED_TABLE_CELL_WIDTH ||
-                nextAnchorChange < MIN_ALLOWED_TABLE_CELL_WIDTH
-            ) {
-                return false;
-            }
+            const affectedRows = getAffectedRows(cmTable, anchorColumn, initValue.anchorRow);
+            const isExistingSplit =
+                initValue.anchorRow != undefined &&
+                cmTable.rows[initValue.anchorRow].cells[anchorColumn].spanLeft;
 
-            mutableTable.widths[anchorColumn] = anchorChange;
-            mutableTable.widths[nextColumn] = nextAnchorChange;
-        }
+            if (!isExistingSplit && affectedRows.some(isAffected => !isAffected)) {
+                const direction = change < 0 ? -1 : 1;
+                const columnSplit =
+                    initValue.columnSplit ||
+                    (initValue.columnSplit = createColumnSplit(
+                        mutableTable,
+                        anchorColumn,
+                        affectedRows,
+                        direction
+                    ));
 
-        // Write back CM Table size changes to DOM Table
-        for (let row = 0; row < cmTable.rows.length; row++) {
-            const tableRow = cmTable.rows[row].cells;
-            let lastTd: HTMLTableCellElement | null = null;
-            let lastWidth = 0;
-
-            for (let col = 0; col < tableRow.length; col++) {
-                const td = tableRow[col].cachedElement;
-
-                if (td) {
-                    td.style.boxSizing = 'border-box';
-                    lastTd = td;
-                    lastWidth = cmTable.widths[col];
-                } else if (lastTd && tableRow[col].spanLeft) {
-                    lastWidth += cmTable.widths[col];
-                } else if (tableRow[col].spanAbove) {
-                    // For span above case, we don't need to adjust width, just clear lastTd and lastWidth
-                    lastTd = null;
-                    lastWidth = 0;
+                if (columnSplit.direction != direction) {
+                    setColumnSplitDirection(mutableTable, anchorColumn, columnSplit, direction);
                 }
 
-                if (lastTd) {
-                    lastTd.style.width = lastWidth + 'px';
-                }
+                mutableTable.widths[anchorColumn] =
+                    change < 0 ? anchorChange : allWidths[anchorColumn];
+                mutableTable.widths[anchorColumn + 1] = Math.abs(change);
+                mutableTable.widths[anchorColumn + 2] =
+                    change < 0 ? allWidths[nextColumn] : nextAnchorChange;
+            } else {
+                mutableTable.widths[anchorColumn] = anchorChange;
+                mutableTable.widths[nextColumn] = nextAnchorChange;
             }
         }
 
-        if (context.originalWidth > 0) {
+        writeTableWidthsToDom(cmTable);
+
+        if (context.originalWidth > 0 && nextColumn == -1) {
             const newWidth = context.originalWidth + change + 'px';
 
             mutableTable.format.width = newWidth;
