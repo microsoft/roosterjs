@@ -44,6 +44,7 @@ describe('applyTableBorderFormat', () => {
         spyOn(normalizeTable, 'normalizeTable');
 
         editor = ({} as any) as IEditor;
+        editor.getDocument = () => document;
     });
 
     function runTest(
@@ -78,6 +79,206 @@ describe('applyTableBorderFormat', () => {
             blocks: [expectedTable],
         });
     }
+    describe('toggle borders', () => {
+        const operations: BorderOperations[] = [
+            'allBorders',
+            'outsideBorders',
+            'insideBorders',
+            'topBorders',
+            'bottomBorders',
+            'leftBorders',
+            'rightBorders',
+        ];
+        const positions = ['borderTop', 'borderBottom', 'borderLeft', 'borderRight'] as const;
+        const originalBorder = '1px solid red';
+
+        function applyToTable(
+            table: ContentModelTable,
+            operation: BorderOperations,
+            border: Border = testBorder
+        ) {
+            const model = createContentModelDocument();
+            model.blocks.push(table);
+            editor.formatContentModel = jasmine
+                .createSpy('formatContentModel')
+                .and.callFake((callback: ContentModelFormatter) =>
+                    callback(model, { newEntities: [], deletedEntities: [], newImages: [] })
+                );
+            applyTableBorderFormat(editor, border, operation);
+        }
+
+        function copyTable(table: ContentModelTable): ContentModelTable {
+            return JSON.parse(JSON.stringify(table));
+        }
+
+        function spyOnBorderNormalization() {
+            const style = document.createElement('div').style;
+            const setBorder = jasmine.createSpy('setBorder').and.callFake((value: string) => {
+                style.border = value;
+            });
+            // Wrap the native declaration because CSS properties are not ordinary accessors.
+            const comparisonStyle = {
+                get border() {
+                    return style.border;
+                },
+                set border(value: string) {
+                    setBorder(value);
+                },
+            };
+            const createElement = spyOn(document, 'createElement').and.returnValue(({
+                style: comparisonStyle,
+            } as any) as HTMLElement);
+            return { setBorder, createElement };
+        }
+
+        operations.forEach(operation => {
+            [false, true].forEach(isRtl => {
+                // Single cell, row, column, and grids with and without inner cells.
+                [
+                    [3, 3],
+                    [3, 5],
+                    [5, 3],
+                    [4, 4],
+                    [4, 5],
+                    [5, 5],
+                ].forEach(([rows, columns]) => {
+                    it(`${operation}, ${rows - 2}x${
+                        columns - 2
+                    }, RTL=${isRtl}: toggle off and on`, () => {
+                        const table = createTestTable(rows, columns, {
+                            borderTop: originalBorder,
+                            borderBottom: originalBorder,
+                            borderLeft: originalBorder,
+                            borderRight: originalBorder,
+                        });
+                        table.format.direction = isRtl ? 'rtl' : 'ltr';
+                        applyToTable(table, operation);
+
+                        const appliedTable = copyTable(table);
+                        const clearedTable = copyTable(table);
+
+                        clearedTable.rows.forEach(row =>
+                            row.cells.forEach(cell =>
+                                positions.forEach(pos => {
+                                    if (cell.format[pos] == testBorderString) {
+                                        cell.format[pos] = '';
+                                    }
+                                })
+                            )
+                        );
+
+                        // Untargeted borders and metadata must stay unchanged, while shared
+                        // borders on cells outside the selection must also be cleared.
+                        runTest(table, clearedTable, testBorder, operation);
+                        runTest(table, appliedTable, testBorder, operation);
+                    });
+                });
+            });
+
+            it(`${operation}: apply to the whole selection when one targeted border differs`, () => {
+                const table = createTestTable(5, 5);
+                applyToTable(table, operation);
+                const expectedTable = copyTable(table);
+                const cell =
+                    table.rows[operation == 'bottomBorders' ? 3 : 1].cells[
+                        operation == 'rightBorders' ? 3 : 1
+                    ];
+                const position = positions.filter(pos => cell.format[pos] == testBorderString)[0];
+
+                expect(position).toBeDefined();
+                cell.format[position] = originalBorder;
+                runTest(table, expectedTable, testBorder, operation);
+            });
+        });
+
+        it('ignores adjacent unselected cells when deciding whether to remove borders', () => {
+            const table = createTestTable(3, 3, { borderTop: testBorderString });
+            const expectedTable = copyTable(table);
+            expectedTable.rows[1].cells[1].format.borderTop = '';
+            expectedTable.rows[0].cells[1].format.borderBottom = '';
+            expectedTable.rows[1].cells[1].dataset.editingInfo = '{"borderOverride":true}';
+            expectedTable.rows[0].cells[1].dataset.editingInfo = '{"borderOverride":true}';
+
+            runTest(table, expectedTable, testBorder, 'topBorders');
+        });
+
+        it('matches equivalent CSS borders after a DOM round trip', () => {
+            const table = createTestTable(3, 3);
+            applyToTable(table, 'outsideBorders');
+            const expectedTable = copyTable(table);
+
+            table.rows.forEach((row, rowIndex) =>
+                row.cells.forEach((cell, colIndex) =>
+                    positions.forEach(pos => {
+                        if (cell.format[pos] == testBorderString) {
+                            cell.format[pos] = '3px double rgb(170, 187, 204)';
+                            expectedTable.rows[rowIndex].cells[colIndex].format[pos] = '';
+                        }
+                    })
+                )
+            );
+
+            runTest(table, expectedTable, testBorder, 'outsideBorders');
+        });
+
+        it('does not access the document when all targeted borders match exactly', () => {
+            const table = createTestTable(5, 5);
+            applyToTable(table, 'allBorders');
+            const getDocument = spyOn(editor, 'getDocument').and.callThrough();
+
+            applyToTable(table, 'allBorders');
+
+            expect(getDocument).not.toHaveBeenCalled();
+            expect(table.rows[1].cells[1].format.borderTop).toBe('');
+        });
+
+        it('normalizes repeated equivalent borders only once per operation', () => {
+            const rgbBorder = '3px double rgb(170, 187, 204)';
+            const table = createTestTable(5, 5, {
+                borderTop: rgbBorder,
+                borderBottom: rgbBorder,
+                borderLeft: rgbBorder,
+                borderRight: rgbBorder,
+            });
+            const { setBorder, createElement } = spyOnBorderNormalization();
+
+            applyToTable(table, 'allBorders');
+
+            expect(createElement).toHaveBeenCalledTimes(1);
+            // Clear and assign once for the requested border and once for the RGB value.
+            expect(setBorder).toHaveBeenCalledTimes(4);
+            expect(table.rows[1].cells[1].format.borderTop).toBe('');
+            expect(table.rows[3].cells[3].format.borderBottom).toBe('');
+        });
+
+        it('stops comparing at the first mismatch', () => {
+            const table = createTestTable(5, 5, { borderTop: originalBorder });
+            const { setBorder } = spyOnBorderNormalization();
+
+            applyToTable(table, 'allBorders');
+
+            expect(setBorder).toHaveBeenCalledTimes(4);
+            expect(table.rows[3].cells[3].format.borderBottom).toBe(testBorderString);
+        });
+
+        it('uses table border defaults when toggling', () => {
+            const table = createTestTable(3, 3);
+            table.format.borderTop = testBorderString;
+            applyToTable(table, 'topBorders', {});
+            const expectedTable = copyTable(table);
+            expectedTable.rows[1].cells[1].format.borderTop = '';
+            expectedTable.rows[0].cells[1].format.borderBottom = '';
+
+            runTest(table, expectedTable, {}, 'topBorders');
+        });
+
+        it('noBorders keeps borders removed when applied repeatedly', () => {
+            const table = createTestTable(4, 4);
+            applyToTable(table, 'noBorders');
+            runTest(table, copyTable(table), testBorder, 'noBorders');
+        });
+    });
+
     it('All Borders', () => {
         runTest(
             createTestTable(4, 4),
