@@ -1,0 +1,17 @@
+.container {
+    flex-direction: column;
+    display: flex;
+    height: 100%;
+}
+
+.textArea {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    resize: none;
+}
+
+.errorMessage {
+    color: #a80000;
+    margin: 4px 0;
+}
