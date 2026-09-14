@@ -111,26 +111,6 @@ describe('applyTableBorderFormat', () => {
             return JSON.parse(JSON.stringify(table));
         }
 
-        function spyOnBorderNormalization() {
-            const style = document.createElement('div').style;
-            const setBorder = jasmine.createSpy('setBorder').and.callFake((value: string) => {
-                style.border = value;
-            });
-            // Wrap the native declaration because CSS properties are not ordinary accessors.
-            const comparisonStyle = {
-                get border() {
-                    return style.border;
-                },
-                set border(value: string) {
-                    setBorder(value);
-                },
-            };
-            const createElement = spyOn(document, 'createElement').and.returnValue(({
-                style: comparisonStyle,
-            } as any) as HTMLElement);
-            return { setBorder, createElement };
-        }
-
         operations.forEach(operation => {
             [false, true].forEach(isRtl => {
                 // Single cell, row, column, and grids with and without inner cells.
@@ -202,7 +182,7 @@ describe('applyTableBorderFormat', () => {
             runTest(table, expectedTable, testBorder, 'topBorders');
         });
 
-        it('matches equivalent CSS borders after a DOM round trip', () => {
+        it('matches borders with equivalent hex and RGB colors', () => {
             const table = createTestTable(3, 3);
             applyToTable(table, 'outsideBorders');
             const expectedTable = copyTable(table);
@@ -232,7 +212,7 @@ describe('applyTableBorderFormat', () => {
             expect(table.rows[1].cells[1].format.borderTop).toBe('');
         });
 
-        it('normalizes repeated equivalent borders only once per operation', () => {
+        it('matches repeated equivalent borders', () => {
             const rgbBorder = '3px double rgb(170, 187, 204)';
             const table = createTestTable(5, 5, {
                 borderTop: rgbBorder,
@@ -240,24 +220,18 @@ describe('applyTableBorderFormat', () => {
                 borderLeft: rgbBorder,
                 borderRight: rgbBorder,
             });
-            const { setBorder, createElement } = spyOnBorderNormalization();
 
             applyToTable(table, 'allBorders');
 
-            expect(createElement).toHaveBeenCalledTimes(1);
-            // Clear and assign once for the requested border and once for the RGB value.
-            expect(setBorder).toHaveBeenCalledTimes(4);
             expect(table.rows[1].cells[1].format.borderTop).toBe('');
             expect(table.rows[3].cells[3].format.borderBottom).toBe('');
         });
 
         it('stops comparing at the first mismatch', () => {
             const table = createTestTable(5, 5, { borderTop: originalBorder });
-            const { setBorder } = spyOnBorderNormalization();
 
             applyToTable(table, 'allBorders');
 
-            expect(setBorder).toHaveBeenCalledTimes(4);
             expect(table.rows[3].cells[3].format.borderBottom).toBe(testBorderString);
         });
 

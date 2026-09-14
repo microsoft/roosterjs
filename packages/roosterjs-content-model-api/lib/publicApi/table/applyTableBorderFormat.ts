@@ -5,6 +5,7 @@ import {
     mutateBlock,
     getTableMetadata,
     parseValueWithUnit,
+    parseColor,
     setFirstColumnFormatBorders,
     updateTableCellMetadata,
 } from 'roosterjs-content-model-dom';
@@ -373,7 +374,7 @@ export function applyTableBorderFormat(
                     if (
                         operation != 'noBorders' &&
                         borderUpdates.length > 0 &&
-                        hasMatchingBorders(borderUpdates, borderFormat, editor)
+                        hasMatchingBorders(borderUpdates, borderFormat)
                     ) {
                         borderFormat = '';
                     }
@@ -407,16 +408,9 @@ export function applyTableBorderFormat(
  * Check targeted borders without repeatedly parsing identical CSS values.
  * @param borderUpdates The borders to compare
  * @param borderFormat The requested border format
- * @param editor The editor providing the document for CSS normalization
  */
-function hasMatchingBorders(
-    borderUpdates: BorderUpdate[],
-    borderFormat: string,
-    editor: IEditor
-): boolean {
+function hasMatchingBorders(borderUpdates: BorderUpdate[], borderFormat: string): boolean {
     const matchingBorders = new Set<string>();
-    let comparisonStyle: CSSStyleDeclaration | undefined;
-    let normalizedBorder = borderFormat;
 
     for (const { cell, positions } of borderUpdates) {
         for (const pos of positions) {
@@ -427,12 +421,7 @@ function hasMatchingBorders(
                 continue;
             }
 
-            if (!comparisonStyle) {
-                comparisonStyle = editor.getDocument().createElement('div').style;
-                normalizedBorder = normalizeBorder(borderFormat, comparisonStyle);
-            }
-
-            if (normalizeBorder(value, comparisonStyle) != normalizedBorder) {
+            if (!areSameBorders(value, borderFormat)) {
                 return false;
             }
 
@@ -444,14 +433,22 @@ function hasMatchingBorders(
 }
 
 /**
- * Normalize a border value using the browser's CSS serialization.
- * @param value The border value to normalize
- * @param comparisonStyle A reusable style declaration for border comparison
+ * Compare border components, parsing colors to account for equivalent hex and RGB values.
  */
-function normalizeBorder(value: string, comparisonStyle: CSSStyleDeclaration): string {
-    comparisonStyle.border = '';
-    comparisonStyle.border = value;
-    return comparisonStyle.border || value;
+function areSameBorders(border1: string, border2: string): boolean {
+    const values1 = extractBorderValues(border1);
+    const values2 = extractBorderValues(border2);
+    const color1 = values1.color || '';
+    const color2 = values2.color || '';
+    const rgb1 = parseColor(color1);
+    const rgb2 = parseColor(color2);
+
+    return (
+        values1.width == values2.width &&
+        values1.style == values2.style &&
+        (color1 == color2 ||
+            (!!rgb1 && !!rgb2 && rgb1[0] == rgb2[0] && rgb1[1] == rgb2[1] && rgb1[2] == rgb2[2]))
+    );
 }
 
 /**
