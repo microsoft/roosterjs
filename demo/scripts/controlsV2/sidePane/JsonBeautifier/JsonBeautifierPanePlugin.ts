@@ -1,5 +1,5 @@
 import JsonBeautifierPane from './JsonBeautifierPane';
-import { IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import { IEditor } from 'roosterjs-content-model-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
 
@@ -14,8 +14,6 @@ export class JsonBeautifierPanePlugin extends SidePanePluginImpl<
     constructor() {
         super(JsonBeautifierPane, 'jsonBeautifier', 'JSON Beautifier');
     }
-
-    onPluginEvent(e: PluginEvent) {}
 
     getComponentProps(base: JsonBeautifierPaneProps) {
         return {
