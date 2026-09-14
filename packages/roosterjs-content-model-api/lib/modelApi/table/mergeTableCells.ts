@@ -1,5 +1,4 @@
-import { canMergeCells } from './canMergeCells';
-import { getSelectedCells, mutateBlock } from 'roosterjs-content-model-dom';
+import { getSelectedCells, mutateBlock, canMergeCells } from 'roosterjs-content-model-dom';
 import type {
     BorderKey,
     ContentModelTableCellFormat,

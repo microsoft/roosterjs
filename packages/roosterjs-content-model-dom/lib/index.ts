@@ -152,6 +152,7 @@ export { hasSelectionInBlockGroup } from './modelApi/selection/hasSelectionInBlo
 export { setSelection } from './modelApi/selection/setSelection';
 
 export { cloneModel, cloneModelForPaste } from './modelApi/editing/cloneModel';
+export { canMergeCells } from './modelApi/editing/canMergeCells';
 export { mergeModel } from './modelApi/editing/mergeModel';
 export { deleteSelection } from './modelApi/editing/deleteSelection';
 export { deleteSegment } from './modelApi/editing/deleteSegment';
