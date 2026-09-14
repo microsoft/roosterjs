@@ -548,6 +548,30 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
+    it('With selected table cells crossing a split cell', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        const cell1 = createTableCell();
+        const cell2 = createTableCell(false, true);
+        const table = createTable(2);
+
+        cell1.isSelected = true;
+        cell2.isSelected = true;
+        table.rows[0].cells.push(createTableCell(), createTableCell());
+        table.rows[1].cells.push(cell1, cell2);
+        model.blocks.push(table);
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isInTable: true,
+            tableHasHeader: false,
+            isMultilineSelection: true,
+            canMergeTableCell: false,
+            isBlockQuote: false,
+        });
+    });
+
     it('With multiple table cell selected, multiple content is in table cell', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
