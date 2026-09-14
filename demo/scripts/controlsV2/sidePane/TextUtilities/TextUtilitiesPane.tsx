@@ -42,6 +42,14 @@ export default class TextUtilitiesPane extends React.Component<
         this.applyTransformation(value => decodeURIComponent(value), 'Invalid URI component');
     };
 
+    private encodeBase64 = () => {
+        this.applyTransformation(value => encodeTextToBase64(value), 'Unable to encode Base64');
+    };
+
+    private decodeBase64 = () => {
+        this.applyTransformation(value => decodeBase64ToText(value), 'Invalid Base64');
+    };
+
     private applyTransformation = (transform: (value: string) => string, fallbackError: string) => {
         let result: string;
 
@@ -103,6 +111,12 @@ export default class TextUtilitiesPane extends React.Component<
                     <button type="button" onClick={this.decodeUriComponent}>
                         Decode URI component
                     </button>
+                    <button type="button" onClick={this.encodeBase64}>
+                        Encode as Base64
+                    </button>
+                    <button type="button" onClick={this.decodeBase64}>
+                        Decode from Base64
+                    </button>
                     <button type="button" onClick={this.clear}>
                         Clear
                     </button>
@@ -113,4 +127,31 @@ export default class TextUtilitiesPane extends React.Component<
             </div>
         );
     }
+}
+
+function encodeTextToBase64(value: string): string {
+    const encodedValue = encodeURIComponent(value);
+    let binaryValue = '';
+
+    for (let i = 0; i < encodedValue.length; i++) {
+        if (encodedValue[i] == '%') {
+            binaryValue += String.fromCharCode(parseInt(encodedValue.substr(i + 1, 2), 16));
+            i += 2;
+        } else {
+            binaryValue += encodedValue[i];
+        }
+    }
+
+    return btoa(binaryValue);
+}
+
+function decodeBase64ToText(value: string): string {
+    const binaryValue = atob(value);
+    let encodedValue = '';
+
+    for (let i = 0; i < binaryValue.length; i++) {
+        encodedValue += '%' + ('0' + binaryValue.charCodeAt(i).toString(16)).slice(-2);
+    }
+
+    return decodeURIComponent(encodedValue);
 }
