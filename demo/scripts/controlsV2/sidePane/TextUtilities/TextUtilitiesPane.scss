@@ -15,3 +15,9 @@
     color: #a80000;
     margin: 4px 0;
 }
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
