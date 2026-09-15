@@ -253,6 +253,41 @@ describe('ImageEditPlugin', () => {
         plugin.dispose();
     });
 
+    it('keyDown - other key (not Escape, Delete or Backspace)', () => {
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new TestPlugin();
+        plugin.initialize(editor);
+        plugin.setIsEditing(true);
+        const cleanInfoSpy = spyOn(plugin as any, 'cleanInfo');
+        const removeImageWrapperSpy = spyOn(plugin as any, 'removeImageWrapper');
+        const applyFormatWithContentModelSpy = spyOn(plugin, 'applyFormatWithContentModel');
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        const preventDefaultSpy = jasmine.createSpy('preventDefault');
+        plugin.onPluginEvent({
+            eventType: 'keyDown',
+            rawEvent: {
+                key: 'a',
+                target: mockedImage,
+                preventDefault: preventDefaultSpy,
+            } as any,
+        });
+        expect(cleanInfoSpy).not.toHaveBeenCalled();
+        expect(removeImageWrapperSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(applyFormatWithContentModelSpy).toHaveBeenCalledWith(
+            editor,
+            false /** isCropMode */,
+            false /** shouldSelectImage */,
+            false /** isApiOperation */
+        );
+        plugin.dispose();
+    });
+
     it('mouseUp', () => {
         const mockedImage = {
             getAttribute: getAttributeSpy,
@@ -272,6 +307,53 @@ describe('ImageEditPlugin', () => {
             } as any,
         });
         expect(formatContentModelSpy).toHaveBeenCalled();
+        plugin.dispose();
+    });
+
+    it('formatContentModel called with skipDOMSelection true when starting editing', () => {
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            rawEvent: {
+                button: 0,
+                target: mockedImage,
+            } as any,
+        });
+        const options = formatContentModelSpy.calls.mostRecent()
+            .args[1] as FormatContentModelOptions;
+        expect(options.skipDOMSelection).toBe(true);
+        plugin.dispose();
+    });
+
+    it('formatContentModel called with skipDOMSelection false when selecting image', () => {
+        const mockedImage = {
+            getAttribute: getAttributeSpy,
+        };
+        const plugin = new ImageEditPlugin();
+        plugin.initialize(editor);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
+            image: mockedImage,
+        });
+        const target = document.createElement('img');
+        plugin.onPluginEvent({
+            eventType: 'mouseUp',
+            rawEvent: {
+                button: 2,
+                target,
+            } as any,
+        });
+        const options = formatContentModelSpy.calls.mostRecent()
+            .args[1] as FormatContentModelOptions;
+        expect(options.skipDOMSelection).toBe(false);
         plugin.dispose();
     });
 

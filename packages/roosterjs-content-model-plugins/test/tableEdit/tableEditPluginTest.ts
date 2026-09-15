@@ -264,6 +264,7 @@ describe('TableEditPlugin onMouseMove and table rects', () => {
     let editor: IEditor;
     let plugin: TableEditPlugin;
     let mouseMoveHandler: (event: Event) => void;
+    let touchStartHandler: (event: Event) => void;
     let domTables: HTMLTableElement[];
 
     function setup(tableSelector?: any) {
@@ -274,6 +275,7 @@ describe('TableEditPlugin onMouseMove and table rects', () => {
         editor = <IEditor>(<any>{
             attachDomEvent: (handlers: any) => {
                 mouseMoveHandler = handlers.mousemove.beforeDispatch;
+                touchStartHandler = handlers.touchstart.beforeDispatch;
                 return () => {};
             },
             getScrollContainer: () => scrollContainer,
@@ -286,6 +288,10 @@ describe('TableEditPlugin onMouseMove and table rects', () => {
 
     function mouseMoveEvent(pageX: number, pageY: number, buttons: number = 0): any {
         return { pageX, pageY, buttons };
+    }
+
+    function touchStartEvent(clientX: number, clientY: number): any {
+        return { targetTouches: [{ clientX, clientY }], changedTouches: [] };
     }
 
     function selectorReturning(rect: Partial<DOMRect>) {
@@ -337,6 +343,19 @@ describe('TableEditPlugin onMouseMove and table rects', () => {
         const setTableEditorSpy = spyOn(plugin, 'setTableEditor').and.callThrough();
 
         mouseMoveHandler(mouseMoveEvent(150, 150));
+
+        expect(selector).toHaveBeenCalledTimes(1);
+        expect(setTableEditorSpy).toHaveBeenCalledTimes(1);
+        const [entry] = setTableEditorSpy.calls.argsFor(0);
+        expect((entry as any)?.table).toBeTruthy();
+    });
+
+    it('selects the table whose rect is under a touch', () => {
+        const { selector } = selectorReturning({ left: 100, right: 200, top: 100, bottom: 200 });
+        setup(selector);
+        const setTableEditorSpy = spyOn(plugin, 'setTableEditor').and.callThrough();
+
+        touchStartHandler(touchStartEvent(150, 150));
 
         expect(selector).toHaveBeenCalledTimes(1);
         expect(setTableEditorSpy).toHaveBeenCalledTimes(1);

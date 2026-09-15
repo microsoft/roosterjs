@@ -38,4 +38,9 @@ export interface AutoFormatOptions extends AutoLinkOptions {
      * Auto Horizontal line
      */
     autoHorizontalLine?: boolean;
+
+    /**
+     * Automatically update block direction based on the first strong directional character
+     */
+    autoDirection?: boolean;
 }

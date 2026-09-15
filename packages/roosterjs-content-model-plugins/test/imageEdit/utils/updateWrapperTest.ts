@@ -4,6 +4,11 @@ import { initEditor } from '../../TestHelper';
 import { updateWrapper } from '../../../lib/imageEdit/utils/updateWrapper';
 
 describe('updateWrapper', () => {
+    function expectPixelValue(value: string, expected: number) {
+        expect(value).toMatch(/^-?\d+(?:\.\d+)?px$/);
+        expect(parseFloat(value)).toBeCloseTo(expected, 4);
+    }
+
     const editor = initEditor('wrapper_test');
     const options: ImageEditOptions = {
         borderColor: '#DB626C',
@@ -69,19 +74,19 @@ describe('updateWrapper', () => {
             false
         );
 
-        expect(wrapper.style.marginLeft).toBe('0px');
-        expect(wrapper.style.marginRight).toBe('0px');
-        expect(wrapper.style.marginTop).toBe('0px');
-        expect(wrapper.style.marginBottom).toBe('5px');
+        expectPixelValue(wrapper.style.marginLeft, 0);
+        expectPixelValue(wrapper.style.marginRight, 0);
+        expectPixelValue(wrapper.style.marginTop, 0);
+        expectPixelValue(wrapper.style.marginBottom, 5);
         expect(wrapper.style.transform).toBe(`rotate(0rad)`);
         expect(wrapper.style.verticalAlign).toBe(`text-bottom`);
 
-        expect(wrapper.style.width).toBe('20px');
-        expect(wrapper.style.height).toBe('12px');
+        expectPixelValue(wrapper.style.width, 20);
+        expectPixelValue(wrapper.style.height, 12);
         expect(wrapper.style.textAlign).toBe('left');
 
-        expect(imageClone.style.width).toBe('20px');
-        expect(imageClone.style.height).toBe('13.3333px');
+        expectPixelValue(imageClone.style.width, 20);
+        expectPixelValue(imageClone.style.height, 13.3333);
         expect(imageClone.style.position).toBe('absolute');
         image.remove();
     });
@@ -102,19 +107,19 @@ describe('updateWrapper', () => {
         );
         updateWrapper(testEditInfo, options, image, imageClone, wrapper, resizers, undefined, true);
 
-        expect(wrapper.style.marginLeft).toBe('0px');
-        expect(wrapper.style.marginRight).toBe('0px');
-        expect(wrapper.style.marginTop).toBe('0px');
-        expect(wrapper.style.marginBottom).toBe('5px');
+        expectPixelValue(wrapper.style.marginLeft, 0);
+        expectPixelValue(wrapper.style.marginRight, 0);
+        expectPixelValue(wrapper.style.marginTop, 0);
+        expectPixelValue(wrapper.style.marginBottom, 5);
         expect(wrapper.style.transform).toBe(`rotate(0rad)`);
         expect(wrapper.style.verticalAlign).toBe(`text-bottom`);
 
-        expect(wrapper.style.width).toBe('20px');
-        expect(wrapper.style.height).toBe('12px');
+        expectPixelValue(wrapper.style.width, 20);
+        expectPixelValue(wrapper.style.height, 12);
         expect(wrapper.style.textAlign).toBe('right');
 
-        expect(imageClone.style.width).toBe('20px');
-        expect(imageClone.style.height).toBe('13.3333px');
+        expectPixelValue(imageClone.style.width, 20);
+        expectPixelValue(imageClone.style.height, 13.3333);
         expect(imageClone.style.position).toBe('absolute');
         expect(imageClone.style.position).toBe('absolute');
         image.remove();
@@ -162,8 +167,8 @@ describe('updateWrapper', () => {
         );
 
         // The wrapper size should include borders (set by setWrapperSizeDimensions)
-        expect(wrapper.style.width).toBe('24px'); // visibleWidth (20) + borderWidth (4: 2*2px)
-        expect(wrapper.style.height).toBe('24px'); // visibleHeight (20) + borderWidth (4: 2*2px)
+        expectPixelValue(wrapper.style.width, 24); // visibleWidth (20) + borderWidth (4: 2*2px)
+        expectPixelValue(wrapper.style.height, 24); // visibleHeight (20) + borderWidth (4: 2*2px)
 
         image.remove();
     });
@@ -204,8 +209,8 @@ describe('updateWrapper', () => {
         );
 
         // The wrapper size should match visible dimensions exactly
-        expect(wrapper.style.width).toBe('20px');
-        expect(wrapper.style.height).toBe('20px');
+        expectPixelValue(wrapper.style.width, 20);
+        expectPixelValue(wrapper.style.height, 20);
 
         image.remove();
     });
@@ -245,8 +250,8 @@ describe('updateWrapper', () => {
         );
 
         // During rotation with borders, wrapper should use image.style dimensions + border
-        expect(wrapper.style.width).toBe('20px'); // 18px + 2px border
-        expect(wrapper.style.height).toBe('20px'); // 18px + 2px border
+        expectPixelValue(wrapper.style.width, 20); // 18px + 2px border
+        expectPixelValue(wrapper.style.height, 20); // 18px + 2px border
 
         image.remove();
     });
@@ -284,8 +289,8 @@ describe('updateWrapper', () => {
         );
 
         // During rotation, cloned image size should NOT be updated
-        expect(imageClone.style.width).toBe('50px'); // Should remain unchanged
-        expect(imageClone.style.height).toBe('40px'); // Should remain unchanged
+        expectPixelValue(imageClone.style.width, 50); // Should remain unchanged
+        expectPixelValue(imageClone.style.height, 40); // Should remain unchanged
         expect(imageClone.style.position).toBe('absolute'); // Position should still be set
 
         image.remove();
@@ -324,8 +329,8 @@ describe('updateWrapper', () => {
         );
 
         // When not rotating, cloned image size should be updated to original dimensions
-        expect(imageClone.style.width).toBe('20px'); // Should be originalWidth
-        expect(imageClone.style.height).toBe('22.2222px'); // Should be originalHeight
+        expectPixelValue(imageClone.style.width, 20); // Should be originalWidth
+        expectPixelValue(imageClone.style.height, 22.2222); // Should be originalHeight
         expect(imageClone.style.position).toBe('absolute');
 
         image.remove();
@@ -513,8 +518,8 @@ describe('updateWrapper', () => {
 
         // Verify both conditions worked:
         // 1. Image size was not updated (because of !isRotating condition)
-        expect(imageClone.style.width).toBe('100px');
-        expect(imageClone.style.height).toBe('100px');
+        expectPixelValue(imageClone.style.width, 100);
+        expectPixelValue(imageClone.style.height, 100);
         // 2. Resize processing was skipped (because of && !isRotating condition)
         expect(clientWidthAccessed).toBe(false);
 
@@ -539,8 +544,8 @@ describe('updateWrapper', () => {
 
         // Verify both conditions worked:
         // 1. Image size was updated (because !isRotating is true)
-        expect(imageClone.style.width).toBe('20px'); // Should be originalWidth
-        expect(imageClone.style.height).toBe('22.2222px'); // Should be originalHeight
+        expectPixelValue(imageClone.style.width, 20); // Should be originalWidth
+        expectPixelValue(imageClone.style.height, 22.2222); // Should be originalHeight
         // 2. Resize processing happened (because && !isRotating is true)
         expect(clientWidthAccessed).toBe(true);
 

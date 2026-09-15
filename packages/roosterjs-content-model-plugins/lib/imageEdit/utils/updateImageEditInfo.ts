@@ -58,7 +58,7 @@ export function getSelectedImageMetadata(
                 imageMetadata = updateImageEditInfo(modelImage, image);
             });
 
-            return true;
+            return false;
         }
         return false;
     });

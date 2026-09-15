@@ -1,5 +1,5 @@
 import { formatTable, getFormatState } from 'roosterjs-content-model-api';
-import { TableMetadataFormat } from 'roosterjs-content-model-types';
+import type { TableMetadataFormat } from 'roosterjs-content-model-types';
 import type { RibbonButton } from 'roosterjs-react';
 
 const TableEditOperationMap: Partial<Record<
@@ -40,11 +40,12 @@ export const tableOptionsButton: RibbonButton<
         if (key != 'ribbonButtonTableOptions') {
             const format = getFormatState(editor);
             const tableFormatProperty = TableEditOperationMap[key];
-            formatTable(
-                editor,
-                { [tableFormatProperty]: !format.tableFormat[tableFormatProperty] },
-                true /*keepCellShade*/
-            );
+
+            if (tableFormatProperty && format.tableFormat) {
+                const isEnabled = !format.tableFormat[tableFormatProperty];
+
+                formatTable(editor, { [tableFormatProperty]: isEnabled }, true /*keepCellShade*/);
+            }
         }
     },
     commandBarProperties: {

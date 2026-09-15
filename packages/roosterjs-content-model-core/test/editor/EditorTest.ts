@@ -229,7 +229,7 @@ describe('Editor', () => {
             'darkToLight',
             mockedCore.darkColorHandler,
             {
-                tableBorders: false,
+                tableBorders: true,
             }
         );
         expect(clonedNode).toEqual({
@@ -1016,7 +1016,7 @@ describe('Editor', () => {
             'lightToDark',
             mockedColorHandler,
             {
-                tableBorders: false,
+                tableBorders: true,
             },
             undefined
         );
@@ -1042,7 +1042,7 @@ describe('Editor', () => {
             'darkToLight',
             mockedColorHandler,
             {
-                tableBorders: false,
+                tableBorders: true,
             },
             undefined
         );

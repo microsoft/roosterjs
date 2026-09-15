@@ -17,7 +17,8 @@ export function getDropAndDragHelpers(
     helper: DragAndDropHandler<DragAndDropContext, any>,
     updateWrapper: (context: DragAndDropContext, _handle: HTMLElement) => void,
     zoomScale: number,
-    useTouch: boolean
+    forceMobile: boolean,
+    isTouchSupported: boolean
 ): DragAndDropHelper<DragAndDropContext, any>[] {
     return getEditElements(wrapper, elementClass).map(
         element =>
@@ -33,7 +34,8 @@ export function getDropAndDragHelpers(
                 updateWrapper,
                 helper,
                 zoomScale,
-                useTouch
+                forceMobile,
+                isTouchSupported
             )
     );
 }

@@ -443,20 +443,20 @@ describe('tableProcessor with format', () => {
             colSpan: 1,
             rowSpan: 1,
             tagName: 'TD',
-            style: {},
+            style: { getPropertyValue: () => '' },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableCellElement;
         const mockedTr = {
             tagName: 'tr',
-            style: {},
+            style: { getPropertyValue: () => '' },
             getAttribute: () => '',
             cells: [mockedTd],
         };
         const mockedTable = ({
             tagName: 'table',
             rows: [mockedTr],
-            style: {},
+            style: { getPropertyValue: () => '' },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -502,21 +502,21 @@ describe('tableProcessor with format', () => {
             rows: [
                 {
                     tagName: 'tr',
-                    style: {},
+                    style: { getPropertyValue: () => '' },
                     getAttribute: () => '',
                     cells: [
                         {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: { getPropertyValue: () => '' },
                             dataset: {},
                             getAttribute: () => '',
                         },
                     ],
                 },
             ],
-            style: {},
+            style: { getPropertyValue: () => '' },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -545,14 +545,14 @@ describe('tableProcessor with format', () => {
             rows: [
                 {
                     tagName: 'tr',
-                    style: {},
+                    style: { getPropertyValue: () => '' },
                     getAttribute: () => '',
                     cells: [
                         {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: { getPropertyValue: () => '' },
                             dataset: {},
                             getAttribute: () => '',
                         },
@@ -628,7 +628,7 @@ describe('tableProcessor', () => {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: { getPropertyValue: () => '' },
                             dataset: {},
                             getAttribute: () => '',
                         },
@@ -656,6 +656,7 @@ describe('tableProcessor', () => {
             tagName: 'TD',
             style: {
                 color: 'red',
+                getPropertyValue: () => '',
             },
             dataset: {},
             getAttribute: () => '',

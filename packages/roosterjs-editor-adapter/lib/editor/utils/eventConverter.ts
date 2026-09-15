@@ -61,6 +61,7 @@ const KnownAnnounceStringsNewToOld: Record<
     announceUnderlineOff: undefined,
     selected: undefined,
     unselected: undefined,
+    newLineInserted: undefined,
 };
 
 const EntityOperationOldToNew: Record<OldEntityOperation, NewEntityOperation | undefined> = {

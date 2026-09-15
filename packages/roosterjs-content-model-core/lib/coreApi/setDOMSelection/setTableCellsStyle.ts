@@ -2,7 +2,10 @@ import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { getSafeIdSelector, isNodeOfType, toArray } from 'roosterjs-content-model-dom';
 import type { EditorCore, ParsedTable, TableCellCoordinate } from 'roosterjs-content-model-types';
 
-const DOM_SELECTION_CSS_KEY = '_DOMSelection';
+/**
+ * @internal
+ */
+export const DOM_SELECTION_CSS_KEY = '_DOMSelection';
 const TABLE_ID = 'table';
 
 /**

@@ -5,7 +5,9 @@ import type { InsertPoint } from '../selection/InsertPoint';
  */
 export interface MergeModelOption {
     /**
-     * When there is only a table to merge, whether merge this table into current table (if any), or just directly insert (nested table).
+     * When there is only a table to merge, whether to merge this table into the current table,
+     * or into the table immediately before the insert position. Otherwise, insert it as a
+     * separate or nested table.
      * This is usually used when paste table inside a table
      * @default false
      */
@@ -39,4 +41,10 @@ export interface MergeModelOption {
      * Whether to add a paragraph after the merged content.
      */
     addParagraphAfterMergedContent?: boolean;
+
+    /**
+     * Whether to merge into an empty paragraph immediately after a list as a new list item.
+     * @default false
+     */
+    mergeParagraphAfterList?: boolean;
 }

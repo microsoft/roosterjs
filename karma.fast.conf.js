@@ -73,11 +73,9 @@ module.exports = function (config) {
             components: components,
             testPathPattern: testPathPattern,
             testNamePattern: testNamePattern,
+            args: testNamePattern ? ['--grep', testNamePattern] : [],
             clearContext: false,
             captureConsole: true,
-            jasmine: {
-                grep: testNamePattern || null,
-            },
         },
         browsers: launcher,
         files: ['tools/karma.test.all.js'],

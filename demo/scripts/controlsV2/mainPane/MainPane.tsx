@@ -120,6 +120,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private markdownPanePlugin: MarkdownPanePlugin;
     private findReplacePlugin: FindReplacePlugin;
     private findReplaceContext: FindReplaceContext;
+    private imageEditPlugin: ImageEditPlugin | undefined;
 
     protected sidePane = React.createRef<SidePane>();
     protected updateContentPlugin: UpdateContentPlugin;
@@ -182,21 +183,13 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     render() {
         const theme = getTheme(this.state.isDarkMode);
 
-        const imageEditPlugin = this.state.initState.pluginList.imageEditPlugin
-            ? new ImageEditPlugin({
-                  disableSideResize: this.state.initState.disableSideResize,
-              })
-            : null;
-
         return (
             <ThemeProvider applyTo="body" theme={theme} className={styles.mainPane}>
                 {this.renderTitleBar()}
                 {!this.state.popoutWindow && this.renderTabs()}
-                {!this.state.popoutWindow && this.renderRibbon(imageEditPlugin)}
+                {!this.state.popoutWindow && this.renderRibbon()}
                 <div className={styles.body + ' ' + (this.state.isDarkMode ? 'dark' : '')}>
-                    {this.state.popoutWindow
-                        ? this.renderPopout(imageEditPlugin)
-                        : this.renderMainPane(imageEditPlugin)}
+                    {this.state.popoutWindow ? this.renderPopout() : this.renderMainPane()}
                 </div>
             </ThemeProvider>
         );
@@ -241,10 +234,12 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     resetEditorPlugin(pluginState: OptionState) {
         this.updateContentPlugin.update();
-        this.setState({
-            initState: pluginState,
-        });
-        this.resetEditor();
+        this.setState(
+            {
+                initState: pluginState,
+            },
+            () => this.resetEditor()
+        );
     }
 
     setScale(scale: number): void {
@@ -330,13 +325,13 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             </div>
         );
     }
-    private renderRibbon(imageEditPlugin: ImageEditPlugin | undefined) {
+    private renderRibbon() {
         return (
             <Ribbon
                 buttons={getButtons(
                     this.state.activeTab,
                     this.formatPainterPlugin,
-                    imageEditPlugin
+                    this.imageEditPlugin
                 )}
                 plugin={this.ribbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
@@ -358,6 +353,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
 
     private shadowDomEditorDiv: HTMLDivElement | undefined;
     private resetEditor() {
+        this.createImageEditPlugin();
+
         const useShadowDom = this.editorOptionPlugin
             .getBuildInPluginState()
             .experimentalFeatures.has('ShadowDom');
@@ -393,7 +390,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         });
     }
 
-    private renderEditor(imageEditPlugin: ImageEditPlugin | undefined) {
+    private renderEditor() {
         // Set preset if found
         const search = new URLSearchParams(document.location.search);
         const hasPreset = search.get('preset');
@@ -411,7 +408,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.ribbonPlugin,
             this.formatPainterPlugin,
             this.samplePickerPlugin,
-            ...this.getToggleablePlugins(imageEditPlugin),
+            ...this.getToggleablePlugins(),
             this.contentModelPanePlugin.getInnerRibbonPlugin(),
             this.updateContentPlugin,
             this.findReplacePlugin,
@@ -455,10 +452,10 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         );
     }
 
-    private renderMainPane(imageEditPlugin: ImageEditPlugin | undefined) {
+    private renderMainPane() {
         return (
             <>
-                {this.renderEditor(imageEditPlugin)}
+                {this.renderEditor()}
                 {this.state.showSidePane ? (
                     <>
                         <div className={styles.resizer} onMouseDown={this.onMouseDown} />
@@ -484,7 +481,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         );
     }
 
-    private renderPopout(imageEditPlugin: ImageEditPlugin | undefined) {
+    private renderPopout() {
         return (
             <>
                 {this.renderSidePane(true /*fullWidth*/)}
@@ -493,10 +490,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                         <ThemeProvider applyTo="body" theme={getTheme(this.state.isDarkMode)}>
                             <div className={styles.mainPane}>
                                 {this.renderTabs()}
-                                {this.renderRibbon(imageEditPlugin)}
-                                <div className={styles.body}>
-                                    {this.renderEditor(imageEditPlugin)}
-                                </div>
+                                {this.renderRibbon()}
+                                <div className={styles.body}>{this.renderEditor()}</div>
                             </div>
                         </ThemeProvider>
                     </WindowProvider>,
@@ -562,7 +557,15 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         ];
     }
 
-    private getToggleablePlugins(imageEditPlugin: ImageEditPlugin | undefined): EditorPlugin[] {
+    private createImageEditPlugin() {
+        this.imageEditPlugin = this.state.initState.pluginList.imageEditPlugin
+            ? new ImageEditPlugin({
+                  disableSideResize: this.state.initState.disableSideResize,
+              })
+            : undefined;
+    }
+
+    private getToggleablePlugins(): EditorPlugin[] {
         const {
             pluginList,
             allowExcelNoBorderTable,
@@ -588,7 +591,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.watermark && new WatermarkPlugin(watermarkText),
             pluginList.markdown && new MarkdownPlugin(markdownOptions),
             pluginList.markdownPaste && new MarkdownPastePlugin(markdownPasteOptions),
-            imageEditPlugin,
+            this.imageEditPlugin,
             pluginList.emoji && createEmojiPlugin(),
             pluginList.pasteOption && createPasteOptionPlugin(),
             pluginList.sampleEntity && new SampleEntityPlugin(),
@@ -596,9 +599,9 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             pluginList.contextMenu && listMenu && createListEditMenuProvider(),
             pluginList.contextMenu && tableMenu && createTableEditMenuProvider(),
             pluginList.contextMenu &&
-                imageEditPlugin &&
+                this.imageEditPlugin &&
                 imageMenu &&
-                createImageEditMenuProvider(imageEditPlugin),
+                createImageEditMenuProvider(this.imageEditPlugin),
             pluginList.hyperlink &&
                 new HyperlinkPlugin(
                     linkTitle?.indexOf(UrlPlaceholder) >= 0
@@ -630,6 +633,7 @@ const AnnounceStringMap: Record<KnownAnnounceStrings, string> = {
     announceUnderlineOff: 'Underline Off',
     selected: '{0}, selected',
     unselected: '{0}, unselected',
+    newLineInserted: 'New line',
 };
 
 function getAnnouncingString(key: KnownAnnounceStrings) {

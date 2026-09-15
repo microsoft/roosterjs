@@ -1,13 +1,6 @@
-import {
-    createListItem,
-    getClosestAncestorBlockGroupIndex,
-    mutateBlock,
-} from 'roosterjs-content-model-dom';
-import type {
-    DeleteSelectionStep,
-    ContentModelListItem,
-    ContentModelBlock,
-} from 'roosterjs-content-model-types';
+import { getListItemFromInsertPoint } from '../utils/getListItemFromInsertPoint';
+import { createListItem, mutateBlock } from 'roosterjs-content-model-dom';
+import type { DeleteSelectionStep, ContentModelBlock } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -17,21 +10,11 @@ export const deleteList: DeleteSelectionStep = context => {
         return;
     }
 
-    const { paragraph, marker, path } = context.insertPoint;
-    const index = getClosestAncestorBlockGroupIndex<ContentModelListItem>(
-        path,
-        ['ListItem'],
-        ['TableCell', 'FormatContainer']
-    );
-    const item = path[index];
-    const parent = path[index + 1];
+    const { paragraph } = context.insertPoint;
+    const listItemAndParent = getListItemFromInsertPoint(context.insertPoint);
 
-    if (
-        item?.blockGroupType == 'ListItem' &&
-        item.levels.length > 0 &&
-        paragraph.segments[0] == marker &&
-        parent
-    ) {
+    if (listItemAndParent) {
+        const [item, parent] = listItemAndParent;
         const mutableList = mutateBlock(item);
         const lastLevel = mutableList.levels[mutableList.levels.length - 1];
         const listItemIndex = parent.blocks.indexOf(item);

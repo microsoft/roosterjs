@@ -233,7 +233,7 @@ describe('exportContent', () => {
             'darkToLight',
             mockedColorManager,
             {
-                tableBorders: false,
+                tableBorders: true,
             }
         );
     });

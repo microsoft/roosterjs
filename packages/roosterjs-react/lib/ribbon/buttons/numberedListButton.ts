@@ -11,6 +11,6 @@ export const numberedListButton: RibbonButton<NumberedListButtonStringKey> = {
     iconName: 'NumberedList',
     isChecked: formatState => !!formatState.isNumbering,
     onClick: editor => {
-        toggleNumbering(editor);
+        toggleNumbering(editor, true /* removeLisMargins */);
     },
 };

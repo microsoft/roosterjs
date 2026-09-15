@@ -43,7 +43,13 @@ export type GraduatedExperimentalFeature =
      * @deprecated
      * Allow caching list item elements.
      */
-    | 'CacheList';
+    | 'CacheList'
+
+    /**
+     * @deprecated
+     * Transform the table border colors when switching from light to dark mode
+     */
+    | 'TransformTableBorderColors';
 
 /**
  * Predefined experiment features
@@ -62,11 +68,6 @@ export type ExperimentalFeature =
     | 'KeepSelectionMarkerWhenEnteringTextNode'
 
     /**
-     * Transform the table border colors when switching from light to dark mode
-     */
-    | 'TransformTableBorderColors'
-
-    /**
      * When the editor content div is inside a Shadow DOM, enable shadow root detection
      * in DOMHelper so that selection, focus, and element appending work correctly within
      * the shadow boundary.
@@ -78,4 +79,9 @@ export type ExperimentalFeature =
      * These characters can be used to hide text in HTML and may cause unexpected behavior.
      * @see https://embracethered.com/blog/posts/2024/hiding-and-finding-text-with-unicode-tags/
      */
-    | 'FilterInvisibleUnicode';
+    | 'FilterInvisibleUnicode'
+
+    /**
+     * Handle the drop event for content that is dropped from the same editor instance.
+     */
+    | 'HandleDropInternalContent';

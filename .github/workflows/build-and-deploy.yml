@@ -10,12 +10,12 @@ jobs:
             contents: write
         steps:
             - name: Checkout
-              uses: actions/checkout@v2.3.1
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                   persist-credentials: false
 
             - name: Set Node Version
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
                   node-version: 'v18.16.0'
 
@@ -29,12 +29,12 @@ jobs:
               uses: browser-actions/setup-firefox@latest
 
             - name: Generate code coverage report
-              uses: GabrielBB/xvfb-action@v1
+              uses: GabrielBB/xvfb-action@b706e4e27b14669b486812790492dc50ca16b465 # v1.7
               with:
                   run: npm run-script test:coverage
 
             - name: Deploy
-              uses: JamesIves/github-pages-deploy-action@3.6.2
+              uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # 4.9.0
               with:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   BRANCH: gh-pages

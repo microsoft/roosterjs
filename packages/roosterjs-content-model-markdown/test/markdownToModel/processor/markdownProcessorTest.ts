@@ -444,7 +444,9 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text1',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                     segmentType: 'Text',
                                                 },
                                             ],
@@ -534,7 +536,9 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text1',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                     segmentType: 'Text',
                                                 },
                                             ],
@@ -563,7 +567,9 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text2',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                     segmentType: 'Text',
                                                 },
                                             ],
@@ -785,7 +791,9 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text1',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                     segmentType: 'Text',
                                                 },
                                             ],
@@ -814,7 +822,9 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text2',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                     segmentType: 'Text',
                                                 },
                                             ],

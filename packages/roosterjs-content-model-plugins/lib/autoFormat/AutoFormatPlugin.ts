@@ -11,6 +11,8 @@ import {
     formatTextSegmentBeforeSelectionMarker,
     promoteLink,
     getPromoteLink,
+    getTextDirection,
+    setDirection,
 } from 'roosterjs-content-model-api';
 import type { AutoFormatOptions } from './interface/AutoFormatOptions';
 import type {
@@ -55,6 +57,7 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
     autoOrdinals: false,
     removeListMargins: false,
     autoHorizontalLine: false,
+    autoDirection: false,
 };
 
 /**
@@ -63,6 +66,7 @@ const DefaultOptions: Partial<AutoFormatOptions> = {
  */
 export class AutoFormatPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
+    private blockDirections = new WeakMap<HTMLElement, 'ltr' | 'rtl'>();
     /**
      * @param options An optional parameter that takes in an object of type AutoFormatOptions, which includes the following properties:
      *  - autoBullet: A boolean that enables or disables automatic bullet list formatting. Defaults to false.
@@ -76,6 +80,7 @@ export class AutoFormatPlugin implements EditorPlugin {
      *  - autoTel: A boolean that enables or disables automatic hyperlink telephone numbers transformation. Defaults to false.
      *  - autoMailto: A boolean that enables or disables automatic hyperlink email address transformation. Defaults to false.
      *  - autoHorizontalLine: A boolean that enables or disables automatic horizontal line creation. Defaults to false.
+     *  - autoDirection: A boolean that enables or disables automatic text direction. Defaults to false.
      */
     constructor(private options: AutoFormatOptions = DefaultOptions) {}
 
@@ -157,6 +162,9 @@ export class AutoFormatPlugin implements EditorPlugin {
             switch (event.eventType) {
                 case 'input':
                     this.handleEditorInputEvent(this.editor, event);
+                    break;
+                case 'compositionEnd':
+                    this.handleCompositionEndEvent(this.editor, event.rawEvent.data);
                     break;
                 case 'keyDown':
                     this.handleKeyDownEvent(this.editor, event);
@@ -300,7 +308,48 @@ export class AutoFormatPlugin implements EditorPlugin {
                 case ' ':
                     this.handleKeyboardEvents(editor, this.features);
                     break;
+                default:
+                    this.handleAutoDirection(editor, rawEvent.data, selection.range);
+                    break;
             }
+        }
+    }
+
+    private handleCompositionEndEvent(editor: IEditor, insertedText: string) {
+        const selection = editor.getDOMSelection();
+
+        if (selection?.type === 'range' && selection.range.collapsed) {
+            this.handleAutoDirection(editor, insertedText, selection.range);
+        }
+    }
+
+    private handleAutoDirection(editor: IEditor, insertedText: string | null, range: Range) {
+        if (!this.options.autoDirection || !insertedText || !getTextDirection(insertedText)) {
+            return;
+        }
+
+        const block = editor.getDOMHelper().findClosestBlockElement(range.startContainer);
+        const expectedDirection = getTextDirection(block.textContent || '');
+        const inlineDirection = block.style.direction;
+        const cachedDirection =
+            inlineDirection === 'ltr' || inlineDirection === 'rtl'
+                ? inlineDirection
+                : this.blockDirections.get(block);
+
+        if (!expectedDirection || cachedDirection === expectedDirection) {
+            return;
+        }
+
+        const currentDirection =
+            cachedDirection || block.ownerDocument.defaultView?.getComputedStyle(block).direction;
+
+        if (currentDirection === 'ltr' || currentDirection === 'rtl') {
+            this.blockDirections.set(block, currentDirection);
+        }
+
+        if (currentDirection !== expectedDirection) {
+            this.blockDirections.set(block, expectedDirection);
+            setDirection(editor, 'auto');
         }
     }
 

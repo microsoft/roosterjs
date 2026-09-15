@@ -62,7 +62,7 @@ export const formatContentModel: FormatContentModel = (
                 core.api.setContentModel(
                     core,
                     model,
-                    hasFocus ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
+                    hasFocus && !options?.skipDOMSelection ? undefined : { ignoreSelection: true }, // If editor did not have focus before format, do not set focus after format
                     onNodeCreated
                 ) ?? undefined;
 

@@ -12,9 +12,7 @@ describe('borderColorFormatHandler.parse', () => {
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = createDomToModelContext({
-            experimentalFeatures: ['TransformTableBorderColors'],
-        });
+        context = createDomToModelContext();
     });
 
     it('Parse border with CSS variable in dark mode', () => {
@@ -218,9 +216,7 @@ describe('borderColorFormatHandler.apply', () => {
     beforeEach(() => {
         div = document.createElement('div');
         format = {};
-        context = createModelToDomContext({
-            experimentalFeatures: ['TransformTableBorderColors'],
-        });
+        context = createModelToDomContext();
     });
 
     it('Apply border with dark mode color handler in dark mode', () => {

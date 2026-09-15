@@ -15,8 +15,13 @@ describe('entityFormatHandler.parse', () => {
 
     beforeEach(() => {
         div = document.createElement('div');
+        document.body.appendChild(div);
         format = {};
         context = createDomToModelContext();
+    });
+
+    afterEach(() => {
+        div.remove();
     });
 
     it('Not an entity', () => {

@@ -70,4 +70,9 @@ export const ChangeSource = {
      * Content changed by replace
      */
     Replace: 'Replace',
+
+    /**
+     * Content changed by dragging content out the editor
+     */
+    DragOutOfEditor: 'DragOutOfEditor',
 };

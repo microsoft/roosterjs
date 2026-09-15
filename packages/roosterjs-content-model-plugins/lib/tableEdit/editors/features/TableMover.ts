@@ -17,7 +17,10 @@ import {
 } from 'roosterjs-content-model-dom';
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
-import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
+import type {
+    DragAndDropEvent,
+    DragAndDropHandler,
+} from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type {
     DOMSelection,
     IEditor,
@@ -99,7 +102,8 @@ export function createTableMover(
               },
         context.zoomScale,
         onTableEditorCreated,
-        editor.getEnvironment().isMobileOrTablet
+        editor.getEnvironment().isMobileOrTablet,
+        editor.getEnvironment().isTouchSupported
     );
 
     return { node: table, div, featureHandler };
@@ -146,9 +150,10 @@ class TableMoverFeature extends DragAndDropHelper<TableMoverContext, TableMoverI
         handler: DragAndDropHandler<TableMoverContext, TableMoverInitValue>,
         zoomScale: number,
         onTableEditorCreated?: OnTableEditorCreatedCallback,
-        forceMobile?: boolean | undefined
+        forceMobile?: boolean | undefined,
+        isTouchSupported?: boolean | undefined
     ) {
-        super(div, context, onSubmit, handler, zoomScale, forceMobile);
+        super(div, context, onSubmit, handler, zoomScale, forceMobile, isTouchSupported);
         this.disposer = onTableEditorCreated?.('TableMover', div);
     }
 
@@ -225,7 +230,7 @@ export function onDragStart(context: TableMoverContext): TableMoverInitValue {
  */
 export function onDragging(
     context: TableMoverContext,
-    event: MouseEvent,
+    event: DragAndDropEvent,
     initValue: TableMoverInitValue
 ) {
     const { tableRect } = initValue;
@@ -258,7 +263,7 @@ export function onDragging(
  */
 export function onDragEnd(
     context: TableMoverContext,
-    event: MouseEvent,
+    event: DragAndDropEvent,
     initValue: TableMoverInitValue | undefined
 ) {
     const { editor, table, onFinishDragging: selectWholeTable, disableMovement } = context;

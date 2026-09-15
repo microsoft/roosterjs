@@ -8,5 +8,8 @@ export { undo } from './command/undo/undo';
 export { redo } from './command/redo/redo';
 export { paste } from './command/paste/paste';
 
-//Editor copy helper
+// Editor copy helper
 export { getContentForCopy } from './command/cutCopy/getContentForCopy';
+
+// Editor devtools
+export { RoosterJsDevToolsHookVersion } from './utils/devtoolsHook';

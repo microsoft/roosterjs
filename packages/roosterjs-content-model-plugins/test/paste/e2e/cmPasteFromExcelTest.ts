@@ -2,7 +2,12 @@ import * as processPastedContentFromExcel from '../../../lib/paste/Excel/process
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { paste } from 'roosterjs-content-model-core';
-import type { ClipboardData, IEditor } from 'roosterjs-content-model-types';
+import type {
+    ClipboardData,
+    ContentModelDocument,
+    ContentModelTable,
+    IEditor,
+} from 'roosterjs-content-model-types';
 
 const ID = 'CM_Paste_From_Excel_E2E';
 let clipboardData: ClipboardData;
@@ -122,7 +127,7 @@ describe(ID, () => {
 
         const model = editor.getContentModelCopy('connected');
 
-        expectEqual(model, {
+        const expectedModel: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
                 {
@@ -162,10 +167,10 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderTop: '0.5pt solid',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
-                                        borderLeft: '0.5pt solid',
+                                        borderTop: '0.5pt solid currentcolor',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
+                                        borderLeft: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -207,9 +212,9 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderTop: '0.5pt solid',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderTop: '0.5pt solid currentcolor',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -250,9 +255,9 @@ describe(ID, () => {
                                     ],
                                     format: {
                                         textAlign: 'center',
-                                        borderTop: '0.5pt solid',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderTop: '0.5pt solid currentcolor',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -299,9 +304,9 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
-                                        borderLeft: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
+                                        borderLeft: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -350,8 +355,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -392,8 +397,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -440,9 +445,9 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
-                                        borderLeft: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
+                                        borderLeft: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -491,8 +496,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -533,8 +538,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -581,9 +586,9 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
-                                        borderLeft: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
+                                        borderLeft: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -632,8 +637,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -674,8 +679,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -722,9 +727,9 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
-                                        borderLeft: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
+                                        borderLeft: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -773,8 +778,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -815,8 +820,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -863,9 +868,9 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
-                                        borderLeft: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
+                                        borderLeft: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -914,8 +919,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -956,8 +961,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -1004,9 +1009,9 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
-                                        borderLeft: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
+                                        borderLeft: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -1055,8 +1060,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -1097,8 +1102,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -1145,9 +1150,9 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
-                                        borderLeft: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
+                                        borderLeft: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -1196,8 +1201,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -1238,8 +1243,8 @@ describe(ID, () => {
                                     format: {
                                         textAlign: 'center',
                                         whiteSpace: 'nowrap',
-                                        borderRight: '0.5pt solid',
-                                        borderBottom: '0.5pt solid',
+                                        borderRight: '0.5pt solid currentcolor',
+                                        borderBottom: '0.5pt solid currentcolor',
                                         backgroundColor: 'white',
                                         paddingTop: '1px',
                                         paddingRight: '1px',
@@ -1291,6 +1296,21 @@ describe(ID, () => {
                 },
             ],
             format: {},
+        };
+
+        const expectedTable = expectedModel.blocks[0] as ContentModelTable;
+
+        expectedTable.rows.forEach((row, rowIndex) => {
+            row.cells.forEach((cell, columnIndex) => {
+                if (rowIndex > 0) {
+                    cell.format.borderTop = 'medium none currentcolor';
+                }
+                if (columnIndex > 0) {
+                    cell.format.borderLeft = 'medium none currentcolor';
+                }
+            });
         });
+
+        expectEqual(model, expectedModel);
     });
 });

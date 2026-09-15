@@ -243,6 +243,42 @@ describe('TableEditor', () => {
             expect(tEditor.isOwnedElement(editor.getDocument().body)).toBe(false);
         });
 
+        it('creates cell resizers for the cell under a touch', () => {
+            setup();
+            const cellRect = getCellRect(editor, 0, 0);
+
+            tEditor.onTouchStart(
+                cellRect.left + cellRect.width / 2,
+                cellRect.top + cellRect.height / 2
+            );
+
+            expect(editor.getDocument().getElementById(HORIZONTAL_RESIZER_ID)).not.toBeNull();
+            expect(editor.getDocument().getElementById(VERTICAL_RESIZER_ID)).not.toBeNull();
+        });
+
+        it('does not create cell resizers from touch when the feature is disabled', () => {
+            const tableRect = setup();
+            tEditor.dispose();
+            tEditor = new TableEditor(
+                editor,
+                table,
+                null,
+                onChangedSpy,
+                undefined,
+                editor.getDocument().getElementById(TEST_ID),
+                undefined,
+                ['CellResizer']
+            );
+
+            tEditor.onTouchStart(
+                tableRect.left + tableRect.width / 2,
+                tableRect.top + tableRect.height / 2
+            );
+
+            expect(editor.getDocument().getElementById(HORIZONTAL_RESIZER_ID)).toBeNull();
+            expect(editor.getDocument().getElementById(VERTICAL_RESIZER_ID)).toBeNull();
+        });
+
         it('onFinishEditing restores the saved range, snapshots and reports change', () => {
             setup();
             const focusSpy = spyOn(editor, 'focus');

@@ -152,9 +152,7 @@ class EntityPlugin implements PluginWithState<EntityPluginState> {
                             'lightToDark',
                             editor.getColorManager(),
                             {
-                                tableBorders: editor.isExperimentalFeatureEnabled(
-                                    'TransformTableBorderColors'
-                                ),
+                                tableBorders: true,
                             }
                         );
                     }

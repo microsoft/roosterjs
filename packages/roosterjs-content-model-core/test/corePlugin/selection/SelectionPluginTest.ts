@@ -743,6 +743,7 @@ describe('SelectionPlugin handle table selection', () => {
 
     beforeEach(() => {
         contentDiv = document.createElement('div');
+        document.body.appendChild(contentDiv);
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         createRangeSpy = jasmine.createSpy('createRange');
@@ -791,6 +792,7 @@ describe('SelectionPlugin handle table selection', () => {
             isExperimentalFeatureEnabled: () => {
                 return false;
             },
+            setEditorStyle: jasmine.createSpy('setEditorStyle'),
             getSnapshotsManager: () => {
                 return { hasNewContent: false };
             },
@@ -800,6 +802,7 @@ describe('SelectionPlugin handle table selection', () => {
     });
 
     afterEach(() => {
+        contentDiv.remove();
         focusDispatcher = undefined!;
         mouseDispatcher = undefined!;
     });
@@ -3225,6 +3228,101 @@ describe('SelectionPlugin handle table selection', () => {
                 tableSelectionInfo: jasmine.any(Object),
             });
             expect(preventDefaultSpy).toHaveBeenCalled();
+        });
+
+        it('From Range, Press Shift+F10 with a single image in selection', () => {
+            const image = document.createElement('img');
+            const mockedRange = {
+                startContainer: div,
+                startOffset: 0,
+                endContainer: div,
+                endOffset: 0,
+            } as any;
+
+            spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(image);
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: mockedRange,
+                isReverted: false,
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'F10',
+                    shiftKey: true,
+                } as any,
+            });
+
+            expect(isSingleImageInSelection.isSingleImageInSelection).toHaveBeenCalledWith(
+                mockedRange
+            );
+            expect(setDOMSelectionSpy).toHaveBeenCalledTimes(1);
+            expect(setDOMSelectionSpy).toHaveBeenCalledWith({
+                type: 'image',
+                image,
+            });
+        });
+
+        it('From Range, Press Shift+F10 without a single image in selection', () => {
+            const mockedRange = {
+                startContainer: div,
+                startOffset: 0,
+                endContainer: div,
+                endOffset: 0,
+            } as any;
+
+            spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: mockedRange,
+                isReverted: false,
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'F10',
+                    shiftKey: true,
+                } as any,
+            });
+
+            expect(isSingleImageInSelection.isSingleImageInSelection).toHaveBeenCalledWith(
+                mockedRange
+            );
+            expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        });
+
+        it('From Range, Press F10 without shift key does not set image selection', () => {
+            const image = document.createElement('img');
+            const isSingleImageSpy = spyOn(
+                isSingleImageInSelection,
+                'isSingleImageInSelection'
+            ).and.returnValue(image);
+
+            getDOMSelectionSpy.and.returnValue({
+                type: 'range',
+                range: {
+                    startContainer: div,
+                    startOffset: 0,
+                    endContainer: div,
+                    endOffset: 0,
+                } as any,
+                isReverted: false,
+            });
+
+            plugin.onPluginEvent!({
+                eventType: 'keyDown',
+                rawEvent: {
+                    key: 'F10',
+                    shiftKey: false,
+                } as any,
+            });
+
+            expect(isSingleImageSpy).not.toHaveBeenCalled();
+            expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         });
     });
 });

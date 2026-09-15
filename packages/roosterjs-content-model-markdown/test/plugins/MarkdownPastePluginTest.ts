@@ -188,6 +188,54 @@ describe('MarkdownPastePlugin', () => {
         plugin.dispose();
     });
 
+    it('preserves the target format when converting markdown on contentChanged Paste', () => {
+        const plugin = createPlugin(true /*autoConversion*/);
+        const modelBeforePaste = createEmptyModel();
+        const paragraph = modelBeforePaste.blocks[0];
+
+        modelBeforePaste.format = {
+            fontFamily: 'Arial',
+        };
+        if (paragraph.blockType === 'Paragraph') {
+            paragraph.segments[0].format = {
+                fontSize: '20px',
+                textColor: 'red',
+            };
+        }
+
+        const event = createContentChangedPasteEvent({
+            text: '# Heading',
+            rawHtml: '',
+            customValues: {},
+            pasteNativeEvent: true,
+            modelBeforePaste,
+        });
+
+        plugin.onPluginEvent(event);
+
+        const [callback] = formatContentModelSpy.calls.mostRecent().args as [
+            (model: ContentModelDocument) => boolean,
+            FormatContentModelOptions
+        ];
+        const target = createEmptyModel();
+        expect(callback(target)).toBe(true);
+
+        const heading = target.blocks.find(
+            block => block.blockType === 'Paragraph' && block.decorator?.tagName === 'h1'
+        );
+        expect(heading?.blockType).toBe('Paragraph');
+        if (heading?.blockType === 'Paragraph') {
+            expect(heading.segments[0].format).toEqual({
+                fontFamily: 'Arial',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                textColor: 'red',
+            });
+        }
+
+        plugin.dispose();
+    });
+
     it('merges converted markdown into a modelBeforePaste that already has content', () => {
         const plugin = createPlugin(true /*autoConversion*/);
         const modelBeforePaste: ContentModelDocument = {

@@ -60,6 +60,11 @@ export interface EditorEnvironment {
     readonly isMobileOrTablet?: boolean;
 
     /**
+     * Whether current browser supports touch input
+     */
+    readonly isTouchSupported?: boolean;
+
+    /**
      * Settings used by DOM to Content Model conversion
      */
     readonly domToModelSettings: ContentModelSettings<DomToModelOption, DomToModelSettings>;

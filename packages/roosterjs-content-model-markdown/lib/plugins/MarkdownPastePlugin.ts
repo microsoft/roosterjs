@@ -102,7 +102,11 @@ export class MarkdownPastePlugin implements EditorPlugin {
                             document: this.editor.getDocument(),
                         },
                         entities
-                    )
+                    ),
+                    undefined /*context*/,
+                    {
+                        mergeFormat: 'preferTarget',
+                    }
                 );
                 if (this.options.undoConversion) {
                     this.editor.takeSnapshot();

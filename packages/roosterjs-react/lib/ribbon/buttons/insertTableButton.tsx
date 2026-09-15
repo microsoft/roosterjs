@@ -61,13 +61,11 @@ export const insertTableButton: RibbonButton<InsertTableButtonStringKey> = {
             editor,
             col,
             row,
-            editor.isExperimentalFeatureEnabled('TransformTableBorderColors')
-                ? {
-                      verticalBorderColor: '#000000',
-                      bottomBorderColor: '#000000',
-                      topBorderColor: '#000000',
-                  }
-                : {},
+            {
+                verticalBorderColor: '#000000',
+                bottomBorderColor: '#000000',
+                topBorderColor: '#000000',
+            },
             {
                 marginBottom: '1px',
             },
