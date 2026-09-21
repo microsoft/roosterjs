@@ -200,6 +200,96 @@ describe('mergeTableCells', () => {
         expect(cells.map(c => c.spanAbove)).toEqual([false, false, true, true]);
     });
 
+    it('preserves the borders that delimit the merged area', () => {
+        const table = createTable(2);
+        const cells = [
+            createTableCell(false, false, false, {
+                borderTop: '1px solid top',
+                borderRight: '1px solid internal-right',
+                borderBottom: '1px solid internal-bottom',
+                borderLeft: '1px solid left',
+            }),
+            createTableCell(false, false, false, {
+                borderTop: '1px solid top',
+                borderRight: '2px dashed right',
+            }),
+            createTableCell(false, false, false, {
+                borderBottom: '3px double bottom',
+                borderLeft: '1px solid left',
+            }),
+            createTableCell(false, false, false, {
+                borderRight: '2px dashed right',
+                borderBottom: '3px double bottom',
+            }),
+        ];
+
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
+        cells[0].isSelected = true;
+        cells[3].isSelected = true;
+
+        mergeTableCells(table);
+
+        expect(cells[0].format).toEqual({
+            borderTop: '1px solid top',
+            borderRight: '2px dashed right',
+            borderBottom: '3px double bottom',
+            borderLeft: '1px solid left',
+        });
+        expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, true]);
+        expect(cells.map(c => c.spanAbove)).toEqual([false, false, true, true]);
+    });
+
+    it('does not retain internal borders when the merged outer edges have no borders', () => {
+        const table = createTable(2);
+        const cells = [
+            createTableCell(false, false, false, {
+                borderRight: '1px solid internal-right',
+                borderBottom: '1px solid internal-bottom',
+            }),
+            createTableCell(false, false, false, {}),
+            createTableCell(false, false, false, {}),
+            createTableCell(false, false, false, {}),
+        ];
+
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
+        cells[0].isSelected = true;
+        cells[3].isSelected = true;
+
+        mergeTableCells(table);
+
+        expect(cells[0].format).toEqual({});
+    });
+
+    it('does not extend partial perimeter borders across the merged area', () => {
+        const table = createTable(5);
+        const cells = Array.from({ length: 25 }, () => createTableCell(false, false, false, {}));
+
+        for (let rowIndex = 0; rowIndex < 5; rowIndex++) {
+            table.rows[rowIndex].cells.push(...cells.slice(rowIndex * 5, rowIndex * 5 + 5));
+        }
+
+        cells[5].format = { borderTop: '1px solid top', borderLeft: '1px solid left' };
+        cells[6].format = { borderTop: '1px solid top', borderRight: '1px solid right' };
+        cells[10].format = {
+            borderBottom: '1px solid bottom',
+            borderLeft: '1px solid left',
+        };
+        cells[11].format = {
+            borderRight: '1px solid right',
+            borderBottom: '1px solid bottom',
+        };
+        cells[5].isSelected = true;
+        cells[12].isSelected = true;
+
+        mergeTableCells(table);
+
+        expect(cells[5].format).toEqual({ borderLeft: '1px solid left' });
+        expect(cells[7].format).toEqual({});
+        expect(cells[12].format).toEqual({});
+    });
+
     it('table with both selection and cached elements', () => {
         const table = createTable(3);
         const cells: ContentModelTableCell[] = [];
