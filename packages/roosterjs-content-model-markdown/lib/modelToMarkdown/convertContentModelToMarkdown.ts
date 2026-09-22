@@ -1,3 +1,4 @@
+import type { ModelToMarkdownOptions } from './ModelToMarkdownOptions';
 import { modelProcessor } from './processor/modelProcessor';
 import type { MarkdownLineBreaks } from '../constants/markdownLineBreaks';
 import type { ContentModelDocument } from 'roosterjs-content-model-types';
@@ -10,7 +11,8 @@ import type { ContentModelDocument } from 'roosterjs-content-model-types';
  */
 export function convertContentModelToMarkdown(
     model: ContentModelDocument,
-    newLine?: MarkdownLineBreaks
+    newLine?: MarkdownLineBreaks,
+    options?: ModelToMarkdownOptions
 ): string {
-    return modelProcessor(model, newLine);
+    return modelProcessor(model, newLine, options);
 }

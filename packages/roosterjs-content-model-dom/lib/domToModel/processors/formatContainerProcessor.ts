@@ -72,6 +72,21 @@ const formatContainerProcessorInternal = (
         const tagName =
             getDefaultStyle(element).display == 'block' ? element.tagName.toLowerCase() : 'div';
         const formatContainer = createFormatContainer(tagName, format);
+        if (tagName == 'pre') {
+            const code = element.firstElementChild;
+            const languageClass =
+                code?.tagName == 'CODE'
+                    ? Array.from(code.classList).find(name => name.indexOf('language-') == 0)
+                    : undefined;
+            if (element.dataset.roosterCodeInfo !== undefined || languageClass) {
+                formatContainer.codeBlock = {
+                    info: element.dataset.roosterCodeInfo ?? languageClass?.substring(9) ?? '',
+                    fence: /^`{3,}$|^~{3,}$/.test(element.dataset.roosterCodeFence ?? '')
+                        ? element.dataset.roosterCodeFence!
+                        : '```',
+                };
+            }
+        }
 
         // It is possible to inherit margin left/right styles from parent DIV or other containers,
         // since we are going into a deeper level of format container now,

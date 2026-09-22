@@ -1,7 +1,13 @@
+import type { ContentModelBlock } from 'roosterjs-content-model-types';
+import type { FencedCodeBlock } from './FencedCodeBlock';
+
 /**
  * Options for processing markdown text.
  */
 export interface MarkdownToModelOptions {
+    /** Convert a literal fence to a custom block. Return undefined for the default PRE block. */
+    onFencedCodeBlock?: (block: FencedCodeBlock) => ContentModelBlock | undefined;
+
     /**
      * The pattern to split lines in the markdown text.
      */
