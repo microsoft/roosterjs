@@ -95,7 +95,7 @@ export const tableMergeButton: RibbonButton<
     key: 'ribbonButtonTableMerge',
     iconName: '',
     unlocalizedText: 'Merge',
-    isDisabled: formatState => !formatState.isInTable,
+    isDisabled: formatState => !formatState.isInTable || !formatState.canMergeTableCell,
     dropDownMenu: {
         items: {
             menuNameTableMergeAbove: 'Merge above',
