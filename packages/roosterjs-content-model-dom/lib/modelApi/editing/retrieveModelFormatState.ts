@@ -1,4 +1,5 @@
 import { extractBorderValues } from '../../domUtils/style/borderValues';
+import { canMergeCells } from './canMergeCells';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { getImageMetadata } from '../metadata/updateImageMetadata';
 import { getTableMetadata } from '../metadata/updateTableMetadata';
@@ -42,6 +43,7 @@ export function retrieveModelFormatState(
     colorHandler?: DarkColorHandler
 ) {
     let firstTableContext: ReadonlyTableSelectionContext | undefined;
+    let lastTableContext: ReadonlyTableSelectionContext | undefined;
     let firstBlock: ReadonlyContentModelBlock | undefined;
     let isFirst = true;
     let isFirstImage = true;
@@ -151,7 +153,7 @@ export function retrieveModelFormatState(
                         tableContext.table == table &&
                         (tableContext.colIndex != colIndex || tableContext.rowIndex != rowIndex)
                     ) {
-                        formatState.canMergeTableCell = true;
+                        lastTableContext = tableContext;
                         formatState.isMultilineSelection = true;
                     }
                 } else {
@@ -165,6 +167,16 @@ export function retrieveModelFormatState(
             includeListFormatHolder: 'never',
         }
     );
+
+    if (firstTableContext && lastTableContext) {
+        formatState.canMergeTableCell = canMergeCells(
+            firstTableContext.table.rows,
+            firstTableContext.rowIndex,
+            firstTableContext.colIndex,
+            lastTableContext.rowIndex,
+            lastTableContext.colIndex
+        );
+    }
 
     if (formatState.fontSize) {
         formatState.fontSize = px2Pt(formatState.fontSize);
