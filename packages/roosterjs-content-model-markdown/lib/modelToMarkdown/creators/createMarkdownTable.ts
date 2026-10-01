@@ -1,3 +1,4 @@
+import type { ModelToMarkdownOptions } from '../ModelToMarkdownOptions';
 import { createMarkdownBlock } from './createMarkdownBlock';
 import type { MarkdownLineBreaks } from '../../constants/markdownLineBreaks';
 import type { ListCounter } from './createMarkdownBlockGroup';
@@ -9,7 +10,8 @@ import type { ContentModelTable, ContentModelTableRow } from 'roosterjs-content-
 export function createMarkdownTable(
     table: ContentModelTable,
     newLinePattern: MarkdownLineBreaks,
-    listCounter: ListCounter
+    listCounter: ListCounter,
+    options?: ModelToMarkdownOptions
 ): string {
     let markdownString = '';
     const { rows } = table;
@@ -27,7 +29,8 @@ export function createMarkdownTable(
                     },
                     {
                         ignoreLineBreaks: true,
-                    }
+                    },
+                    options
                 );
             }
             markdownString += '|';

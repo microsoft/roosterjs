@@ -1,3 +1,4 @@
+import type { ModelToMarkdownOptions } from '../ModelToMarkdownOptions';
 import { createMarkdownBlock } from '../creators/createMarkdownBlock';
 import type { MarkdownLineBreaks } from '../../constants/markdownLineBreaks';
 import type { ListCounter } from '../creators/createMarkdownBlockGroup';
@@ -13,7 +14,8 @@ const DEFAULT_NEW_LINE: MarkdownLineBreaks = {
  */
 export function modelProcessor(
     model: ContentModelDocument,
-    newLine: MarkdownLineBreaks = DEFAULT_NEW_LINE
+    newLine: MarkdownLineBreaks = DEFAULT_NEW_LINE,
+    options?: ModelToMarkdownOptions
 ): string {
     let markdown = '';
     const listCounter: ListCounter = {
@@ -28,11 +30,18 @@ export function modelProcessor(
             markdown += newLine.newLine;
         }
 
-        markdown += createMarkdownBlock(block, newLine, listCounter, {
-            table: newLine.newLine,
-            paragraph: newLine.lineBreak,
-            divider: newLine.lineBreak,
-        });
+        markdown += createMarkdownBlock(
+            block,
+            newLine,
+            listCounter,
+            {
+                table: newLine.newLine,
+                paragraph: newLine.lineBreak,
+                divider: newLine.lineBreak,
+            },
+            undefined,
+            options
+        );
     }
 
     return markdown;
