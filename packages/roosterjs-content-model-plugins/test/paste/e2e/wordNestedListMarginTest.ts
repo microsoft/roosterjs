@@ -2,7 +2,7 @@ import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFr
 import { initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { paste } from 'roosterjs-content-model-core';
-import type { ClipboardData, IEditor } from 'roosterjs-content-model-types';
+import type { ClipboardData, ContentModelListItem, IEditor } from 'roosterjs-content-model-types';
 
 const ID = 'Word_Nested_List_Margin';
 
@@ -98,7 +98,8 @@ ul {
         const listItems = editor
             .getContentModelCopy('disconnected')
             .blocks.filter(
-                block => block.blockType == 'BlockGroup' && block.blockGroupType == 'ListItem'
+                (block): block is ContentModelListItem =>
+                    block.blockType == 'BlockGroup' && block.blockGroupType == 'ListItem'
             );
 
         expect(listItems.length).toBe(5);

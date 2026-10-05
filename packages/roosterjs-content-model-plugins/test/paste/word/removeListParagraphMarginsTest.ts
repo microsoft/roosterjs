@@ -228,4 +228,22 @@ describe('removeListParagraphMargins', () => {
             },
         ]);
     });
+
+    it('preserves CSS function values in shorthand margins', () => {
+        const rules: CssRule[] = [
+            {
+                selectors: ['p.MsoListParagraph'],
+                text:
+                    'margin: calc(100% - 2px) 4px; margin: var(--top-margin, 1px 2px) 4px var(--bottom-margin, 3px 4px) 8px !important;',
+            },
+        ];
+
+        runTest(rules, [
+            {
+                selectors: ['p.MsoListParagraph'],
+                text:
+                    'margin-top: calc(100% - 2px); margin-bottom: calc(100% - 2px); margin-top: var(--top-margin, 1px 2px) !important; margin-bottom: var(--bottom-margin, 3px 4px) !important;',
+            },
+        ]);
+    });
 });

@@ -49,10 +49,7 @@ function removeHorizontalMarginProperties(cssText: string): string {
             const value = prop.substring(separatorIndex + 1).trim();
             const importantMatch = value.match(/\s*!important\s*$/i);
             const important = importantMatch ? ' !important' : '';
-            const values = value
-                .substring(0, importantMatch?.index ?? value.length)
-                .trim()
-                .split(/\s+/);
+            const values = splitCssValue(value.substring(0, importantMatch?.index ?? value.length));
 
             if (values.length >= 1 && values.length <= 4) {
                 const leadingWhitespace = prop.match(/^\s*/)?.[0] || '';
@@ -69,6 +66,50 @@ function removeHorizontalMarginProperties(cssText: string): string {
     });
 
     return result.join(';');
+}
+
+function splitCssValue(value: string): string[] {
+    const result: string[] = [];
+    let current = '';
+    let quote: string | null = null;
+    let parenthesisDepth = 0;
+
+    for (let i = 0; i < value.length; i++) {
+        const char = value[i];
+
+        if (quote) {
+            current += char;
+
+            if (char == '\\') {
+                i++;
+                current += value[i] || '';
+            } else if (char == quote) {
+                quote = null;
+            }
+        } else if (char == '"' || char == "'") {
+            current += char;
+            quote = char;
+        } else if (char == '(') {
+            current += char;
+            parenthesisDepth++;
+        } else if (char == ')') {
+            current += char;
+            parenthesisDepth = Math.max(0, parenthesisDepth - 1);
+        } else if (parenthesisDepth == 0 && /\s/.test(char)) {
+            if (current) {
+                result.push(current);
+                current = '';
+            }
+        } else {
+            current += char;
+        }
+    }
+
+    if (current) {
+        result.push(current);
+    }
+
+    return result;
 }
 
 /**
