@@ -14,7 +14,7 @@ describe('removeListParagraphMargins', () => {
         runTest(rules, [{ selectors: ['div.SomeClass'], text: 'margin: 0pt; color: red;' }]);
     });
 
-    it('all selectors are list paragraph classes — margins removed', () => {
+    it('all selectors are list paragraph classes — vertical margins preserved', () => {
         const rules: CssRule[] = [
             {
                 selectors: ['p.MsoListParagraph', 'p.MsoListParagraphCxSpFirst'],
@@ -24,12 +24,12 @@ describe('removeListParagraphMargins', () => {
         runTest(rules, [
             {
                 selectors: ['p.MsoListParagraph', 'p.MsoListParagraphCxSpFirst'],
-                text: ' color: red; font-size: 11pt;',
+                text: 'margin-top: 0pt; margin-bottom: 8pt; color: red; font-size: 11pt;',
             },
         ]);
     });
 
-    it('single list paragraph selector — margins removed', () => {
+    it('single list paragraph selector — shorthand preserves vertical margins', () => {
         const rules: CssRule[] = [
             {
                 selectors: ['p.MsoListParagraphCxSpMiddle'],
@@ -39,7 +39,7 @@ describe('removeListParagraphMargins', () => {
         runTest(rules, [
             {
                 selectors: ['p.MsoListParagraphCxSpMiddle'],
-                text: ' font-family: Calibri;',
+                text: 'margin-top: 0; margin-bottom: 0; font-family: Calibri;',
             },
         ]);
     });
@@ -131,8 +131,8 @@ describe('removeListParagraphMargins', () => {
             { selectors: ['ul'], text: 'margin-bottom: 0in;' },
         ];
 
-        const noMarginListText =
-            ' font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);';
+        const noHorizontalMarginListText =
+            'margin-top: 0in; margin-bottom: 0in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);';
 
         runTest(rules, [
             {
@@ -150,7 +150,10 @@ describe('removeListParagraphMargins', () => {
                 text:
                     'margin: 0in 0in 0in 0.5in; font-size: 10pt; font-family: Aptos, sans-serif; color: rgb(25, 25, 25);',
             },
-            { selectors: ['p.MsoListParagraph', 'div.MsoListParagraph'], text: noMarginListText },
+            {
+                selectors: ['p.MsoListParagraph', 'div.MsoListParagraph'],
+                text: noHorizontalMarginListText,
+            },
             {
                 selectors: ['li.MsoListParagraphCxSpFirst'],
                 text:
@@ -158,7 +161,7 @@ describe('removeListParagraphMargins', () => {
             },
             {
                 selectors: ['p.MsoListParagraphCxSpFirst', 'div.MsoListParagraphCxSpFirst'],
-                text: noMarginListText,
+                text: noHorizontalMarginListText,
             },
             {
                 selectors: ['li.MsoListParagraphCxSpMiddle'],
@@ -167,7 +170,7 @@ describe('removeListParagraphMargins', () => {
             },
             {
                 selectors: ['p.MsoListParagraphCxSpMiddle', 'div.MsoListParagraphCxSpMiddle'],
-                text: noMarginListText,
+                text: noHorizontalMarginListText,
             },
             {
                 selectors: ['li.MsoListParagraphCxSpLast'],
@@ -176,7 +179,7 @@ describe('removeListParagraphMargins', () => {
             },
             {
                 selectors: ['p.MsoListParagraphCxSpLast', 'div.MsoListParagraphCxSpLast'],
-                text: noMarginListText,
+                text: noHorizontalMarginListText,
             },
             {
                 selectors: ['span.Heading1Char'],
@@ -203,9 +206,26 @@ describe('removeListParagraphMargins', () => {
             { selectors: ['span.Normal'], text: 'margin: 5pt; color: black;' },
             {
                 selectors: ['p.MsoListParagraph'],
-                text: ' font-size: 11pt;',
+                text: 'margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt;',
             },
             { selectors: ['div.Section'], text: 'margin-right: 2pt; padding: 4pt;' },
+        ]);
+    });
+
+    it('preserves top and bottom from two-, three-, and four-value shorthands', () => {
+        const rules: CssRule[] = [
+            {
+                selectors: ['p.MsoListParagraph'],
+                text: 'margin: 1pt 2pt; color: red; margin: 3pt 4pt 5pt; margin: 6pt 7pt 8pt 9pt;',
+            },
+        ];
+
+        runTest(rules, [
+            {
+                selectors: ['p.MsoListParagraph'],
+                text:
+                    'margin-top: 1pt; margin-bottom: 1pt; color: red; margin-top: 3pt; margin-bottom: 5pt; margin-top: 6pt; margin-bottom: 8pt;',
+            },
         ]);
     });
 });

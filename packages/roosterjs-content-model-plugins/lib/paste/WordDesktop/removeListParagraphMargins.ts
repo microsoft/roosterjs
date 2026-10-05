@@ -18,36 +18,76 @@ const WORD_LIST_PARAGRAPH_SELECTORS = new Set([
 
 /**
  * @internal
- * Strips all margin-* properties from a CSS property string.
+ * Strips horizontal margin properties from a CSS property string while preserving
+ * vertical values from the margin shorthand.
  * Empty tokens produced by a trailing semicolon are preserved so that the
  * resulting string still ends with ";" and remains safe to concatenate.
- * For example, "margin-top: 0pt; color: red;" becomes " color: red;".
+ * For example, "margin: 1pt 2pt 3pt 4pt; color: red;" becomes
+ * "margin-top: 1pt; margin-bottom: 3pt; color: red;".
  */
-function removeMarginProperties(cssText: string): string {
-    return cssText
-        .split(';')
-        .filter(prop => {
-            const name = prop.split(':')[0].trim().toLowerCase();
-            // Keep empty tokens (the trailing ';' produces one) and any non-margin property.
-            return !name || !/^margin/.test(name);
-        })
-        .join(';');
+function removeHorizontalMarginProperties(cssText: string): string {
+    const result: string[] = [];
+
+    cssText.split(';').forEach(prop => {
+        const separatorIndex = prop.indexOf(':');
+        const name = prop
+            .substring(0, separatorIndex < 0 ? prop.length : separatorIndex)
+            .trim()
+            .toLowerCase();
+
+        if (
+            name == 'margin-left' ||
+            name == 'margin-right' ||
+            name == 'margin-inline' ||
+            name == 'margin-inline-start' ||
+            name == 'margin-inline-end'
+        ) {
+            return;
+        }
+
+        if (name == 'margin' && separatorIndex >= 0) {
+            const value = prop.substring(separatorIndex + 1).trim();
+            const importantMatch = value.match(/\s*!important\s*$/i);
+            const important = importantMatch ? ' !important' : '';
+            const values = value
+                .substring(0, importantMatch?.index ?? value.length)
+                .trim()
+                .split(/\s+/);
+
+            if (values.length >= 1 && values.length <= 4) {
+                const leadingWhitespace = prop.match(/^\s*/)?.[0] || '';
+                const top = values[0];
+                const bottom = values.length >= 3 ? values[2] : values[0];
+
+                result.push(`${leadingWhitespace}margin-top: ${top}${important}`);
+                result.push(` margin-bottom: ${bottom}${important}`);
+                return;
+            }
+        }
+
+        result.push(prop);
+    });
+
+    return result.join(';');
 }
 
 /**
  * @internal
- * Removes margin properties from global CSS rules that target Word list paragraph
- * classes (p.MsoListParagraph, p.MsoListParagraphCxSpFirst, etc.).
+ * Removes horizontal margin properties from global CSS rules that target Word list
+ * paragraph classes (p.MsoListParagraph, p.MsoListParagraphCxSpFirst, etc.).
  *
  * Word Desktop pastes a global stylesheet that typically includes rules like:
  *   p.MsoListParagraph { margin: 0in; margin-bottom: .0001pt; ... }
- * These margins conflict with RoosterJS's own list indentation, causing double
- * indentation when the CSS is converted to inline styles via convertInlineCss.
+ * Horizontal margins conflict with RoosterJS's own list indentation, causing double
+ * indentation when the CSS is converted to inline styles via convertInlineCss. The
+ * vertical margins are preserved so Word's margin-top: 0 is not replaced by the
+ * browser's default paragraph margin when the list level is created.
  *
- * When a rule's selectors are exclusively list paragraph classes the margins are
- * removed in place.  When a rule groups list paragraph classes with other selectors
- * the rule is split: the non-list selectors keep the original text, and a new rule
- * is inserted for the list paragraph selectors with margins stripped.
+ * When a rule's selectors are exclusively list paragraph classes the horizontal
+ * margins are removed in place. When a rule groups list paragraph classes with other
+ * selectors the rule is split: the non-list selectors keep the original text, and a
+ * new rule is inserted for the list paragraph selectors with horizontal margins
+ * stripped.
  *
  * The array is mutated in place so the changes are reflected when convertInlineCss
  * subsequently processes the same array reference.
@@ -67,16 +107,15 @@ export function removeListParagraphMargins(globalCssRules: CssRule[]): void {
         );
 
         if (nonMatchingSelectors.length === 0) {
-            // All selectors target list paragraphs — strip margins directly.
-            rule.text = removeMarginProperties(rule.text);
+            // All selectors target list paragraphs — strip horizontal margins directly.
+            rule.text = removeHorizontalMarginProperties(rule.text);
         } else {
             // Mixed rule: keep the non-list selectors on the original entry, then
-            // insert a new entry immediately after for the list paragraph selectors
-            // with margins removed.
+            // insert a new entry immediately after for the list paragraph selectors.
             rule.selectors = nonMatchingSelectors;
             globalCssRules.splice(i + 1, 0, {
                 selectors: matchingSelectors,
-                text: removeMarginProperties(rule.text),
+                text: removeHorizontalMarginProperties(rule.text),
             });
         }
     }
