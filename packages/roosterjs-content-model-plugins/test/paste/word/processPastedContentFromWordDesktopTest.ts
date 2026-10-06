@@ -5179,6 +5179,134 @@ describe('processPastedContentFromWordDesktopTest', () => {
                 htmlBefore
             );
         });
+
+        it('List item format holder should use its own font, not a stale font from a previous element, when there is no Word fake bullet markup', () => {
+            const html =
+                '<p class="MsoNormal">Text before the list</p>' +
+                '<ul type="disc">' +
+                '<li class="MsoNormal" style="mso-list:l0 level1 lfo1;font-family:Aptos;font-size:10pt">Item 1</li>' +
+                '<li class="MsoNormal" style="mso-list:l0 level1 lfo1;font-family:Aptos;font-size:10pt">Item 2</li>' +
+                '</ul>';
+
+            runTest(html, {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Text before the list',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'Item 1',
+                                        format: {
+                                            fontFamily: 'Aptos',
+                                            fontSize: '10pt',
+                                        },
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                                segmentFormat: {
+                                    fontFamily: 'Aptos',
+                                    fontSize: '10pt',
+                                },
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":1}',
+                                },
+                                format: {
+                                    wordList: 'l0',
+                                    marginBottom: undefined,
+                                },
+                            },
+                        ],
+                        // This is the key assertion: the format holder (used to render the list
+                        // bullet/number) must reflect this list item's own font, not whatever was
+                        // left over in context.segmentFormat from the previous paragraph.
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos',
+                                fontSize: '10pt',
+                            },
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'Item 2',
+                                        format: {
+                                            fontFamily: 'Aptos',
+                                            fontSize: '10pt',
+                                        },
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                                segmentFormat: {
+                                    fontFamily: 'Aptos',
+                                    fontSize: '10pt',
+                                },
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                dataset: {
+                                    editingInfo: '{"orderedStyleType":1}',
+                                },
+                                format: {
+                                    wordList: 'l0',
+                                    marginBottom: undefined,
+                                },
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: false,
+                            format: {
+                                fontFamily: 'Aptos',
+                                fontSize: '10pt',
+                            },
+                        },
+                        format: {},
+                    },
+                ],
+            });
+        });
     });
 });
 
