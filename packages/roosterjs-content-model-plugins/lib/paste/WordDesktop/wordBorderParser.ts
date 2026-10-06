@@ -48,7 +48,7 @@ export const wordBorderParser: FormatParser<ContentModelTableFormat> = (format, 
 
         noBorder.forEach((isNone, key) => {
             if (isNone) {
-                format[key] = '';
+                format[key] = 'none';
             }
         });
     }

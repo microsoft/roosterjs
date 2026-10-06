@@ -22,10 +22,10 @@ describe('wordBorderParser', () => {
         wordBorderParser(format, element, context, {});
 
         expect(format).toEqual({
-            borderTop: '',
-            borderRight: '',
-            borderBottom: '',
-            borderLeft: '',
+            borderTop: 'none',
+            borderRight: 'none',
+            borderBottom: 'none',
+            borderLeft: 'none',
         });
     });
 
@@ -42,9 +42,9 @@ describe('wordBorderParser', () => {
         wordBorderParser(format, element, context, {});
 
         expect(format).toEqual({
-            borderTop: '',
+            borderTop: 'none',
             borderRight: '1px solid',
-            borderBottom: '',
+            borderBottom: 'none',
             borderLeft: '1px solid',
         });
     });
@@ -60,9 +60,9 @@ describe('wordBorderParser', () => {
 
         expect(format).toEqual({
             borderTop: '1px solid',
-            borderRight: '',
-            borderBottom: '',
-            borderLeft: '',
+            borderRight: 'none',
+            borderBottom: 'none',
+            borderLeft: 'none',
         });
     });
 
