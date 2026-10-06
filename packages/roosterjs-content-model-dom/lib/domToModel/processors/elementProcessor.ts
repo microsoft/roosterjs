@@ -22,7 +22,9 @@ export const elementProcessor: ElementProcessor<HTMLElement> = (group, element, 
 };
 
 function tryGetProcessorForEntity(element: HTMLElement, context: DomToModelContext) {
-    return isEntityElement(element) || element.contentEditable == 'false' // For readonly element, treat as an entity
+    return isEntityElement(element) ||
+        element.tagName.toLowerCase() == 'math' ||
+        element.contentEditable == 'false' // For readonly element, treat as an entity
         ? context.elementProcessors.entity
         : null;
 }

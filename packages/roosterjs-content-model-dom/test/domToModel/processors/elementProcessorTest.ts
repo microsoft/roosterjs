@@ -69,6 +69,41 @@ describe('elementProcessor', () => {
         expect(delimiterProcessor).not.toHaveBeenCalled();
     });
 
+    it('Math element', () => {
+        const container = document.createElement('div');
+
+        container.innerHTML = '<math><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow></math>';
+
+        const math = container.firstElementChild as HTMLElement;
+        entityProcessor.and.callFake((group, element, context) =>
+            context.defaultElementProcessors.entity(group, element, context)
+        );
+
+        elementProcessor(group, math, context);
+
+        expect(divProcessor).not.toHaveBeenCalled();
+        expect(generalProcessor).not.toHaveBeenCalled();
+        expect(entityProcessor).toHaveBeenCalledWith(group, math, context);
+        expect(delimiterProcessor).not.toHaveBeenCalled();
+        expect(group.blocks.length).toBe(1);
+        expect(group.blocks[0].blockType).toBe('Paragraph');
+
+        const paragraph = group.blocks[0];
+
+        if (paragraph.blockType == 'Paragraph') {
+            expect(paragraph.segments.length).toBe(1);
+            expect(paragraph.segments[0].segmentType).toBe('Entity');
+
+            const entity = paragraph.segments[0];
+
+            if (entity.segmentType == 'Entity') {
+                expect(entity.wrapper).toBe(math);
+            }
+        }
+
+        expect(math.innerHTML).toBe('<mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow>');
+    });
+
     it('Namespace', () => {
         const element = document.createElement('o:p') as HTMLElement;
         element.textContent = 'test';
