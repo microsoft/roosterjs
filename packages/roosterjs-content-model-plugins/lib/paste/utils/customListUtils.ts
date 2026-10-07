@@ -71,9 +71,14 @@ export function processAsListItem(
         updateListMetadata(lastLevel, metadata => Object.assign({}, metadata, listFormatMetadata));
     }
 
+    // Parse the list item element's own segment format (e.g. font family/size) into
+    // context.segmentFormat *before* creating the list item, so the format holder
+    // (used to render the list bullet/number) reflects this list item's own font instead
+    // of whatever was left over from the previously processed element.
+    parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
+
     const listItem = createListItem(listFormat.levels, context.segmentFormat);
 
-    parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
     parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
     parseFormat(
         element,
