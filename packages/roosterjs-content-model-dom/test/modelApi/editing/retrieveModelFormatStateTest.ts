@@ -166,6 +166,90 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
+    it('Single selection with heading and em font size from decorator, with domHelper', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        // Simulate h2 decorator format with a relative em-based font size (default browser style for h2)
+        const para = createParagraph(false, undefined, undefined, {
+            format: { fontSize: '1.5em', fontWeight: 'bold' },
+            tagName: 'h2',
+        });
+        // Segment has no explicit fontSize override
+        const marker = createSelectionMarker({
+            fontFamily: 'Arial',
+            textColor: 'green',
+        });
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path: any, callback) => {
+            callback([path], undefined, para, [marker]);
+            return false;
+        });
+
+        const domHelper: DOMHelper = {
+            getContainerFormat: () => ({ fontFamily: 'Arial', fontSize: '16px', textColor: 'green' }),
+        } as any;
+
+        retrieveModelFormatState(model, null, result, 'remove', domHelper);
+
+        // 1.5em * 16px = 24px = 18pt
+        expect(result.fontSize).toBe('18pt');
+        expect(result.headingLevel).toBe(2);
+    });
+
+    it('Single selection with heading and em font size from decorator, without domHelper', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        // Simulate h2 decorator format with a relative em-based font size
+        const para = createParagraph(false, undefined, undefined, {
+            format: { fontSize: '1.5em', fontWeight: 'bold' },
+            tagName: 'h2',
+        });
+        // Segment has no explicit fontSize override
+        const marker = createSelectionMarker({
+            fontFamily: 'Arial',
+            textColor: 'green',
+        });
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path: any, callback) => {
+            callback([path], undefined, para, [marker]);
+            return false;
+        });
+
+        // No domHelper - relative font size cannot be resolved, should remain as-is
+        retrieveModelFormatState(model, null, result);
+
+        expect(result.fontSize).toBe('1.5em');
+        expect(result.headingLevel).toBe(2);
+    });
+
+    it('Single selection with heading and percentage font size from decorator, with domHelper', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        const para = createParagraph(false, undefined, undefined, {
+            format: { fontSize: '150%', fontWeight: 'bold' },
+            tagName: 'h2',
+        });
+        const marker = createSelectionMarker({
+            fontFamily: 'Arial',
+            textColor: 'green',
+        });
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path: any, callback) => {
+            callback([path], undefined, para, [marker]);
+            return false;
+        });
+
+        const domHelper: DOMHelper = {
+            getContainerFormat: () => ({ fontFamily: 'Arial', fontSize: '16px', textColor: 'green' }),
+        } as any;
+
+        retrieveModelFormatState(model, null, result, 'remove', domHelper);
+
+        // 150% * 16px = 24px = 18pt
+        expect(result.fontSize).toBe('18pt');
+        expect(result.headingLevel).toBe(2);
+    });
+
     it('Single selection with margin format', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
