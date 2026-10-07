@@ -14,6 +14,7 @@ export { ContentModelTableCellFormat } from './contentModel/format/ContentModelT
 export { ContentModelListItemFormat } from './contentModel/format/ContentModelListItemFormat';
 export { ContentModelListItemLevelFormat } from './contentModel/format/ContentModelListItemLevelFormat';
 export { ContentModelHyperLinkFormat } from './contentModel/format/ContentModelHyperLinkFormat';
+export { ContentModelCodeBlockFormat } from './contentModel/format/ContentModelCodeBlockFormat';
 export { ContentModelCodeFormat } from './contentModel/format/ContentModelCodeFormat';
 export { ContentModelDataFormat } from './contentModel/format/ContentModelDataFormat';
 export { ContentModelFormatContainerFormat } from './contentModel/format/ContentModelFormatContainerFormat';

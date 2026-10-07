@@ -1,5 +1,6 @@
 // Block-level markdown patterns. A line that matches any of these is considered markdown.
 const BlockPatterns: RegExp[] = [
+    /^ {0,3}(?:`{3,}[^`]*|~{3,}.*)$/, // fenced code
     /^#{1,6}\s.+/, // heading: "# text" .. "###### text"
     /^\s*>\s.+/, // blockquote: "> text"
     /^\s*[\*\-\+]\s.+/, // unordered list: "- item", "* item", "+ item"

@@ -1,3 +1,5 @@
+import type { ModelToMarkdownOptions } from '../ModelToMarkdownOptions';
+import { createMarkdownCodeBlock } from './createMarkdownCodeBlock';
 import { createMarkdownBlockGroup } from './createMarkdownBlockGroup';
 import { createMarkdownParagraph } from './createMarkdownParagraph';
 import { createMarkdownTable } from './createMarkdownTable';
@@ -29,8 +31,23 @@ export function createMarkdownBlock(
     newLinePattern: MarkdownLineBreaks,
     listCounter: ListCounter,
     newLines?: Partial<MarkdownLineBreaksByBlockType>,
-    paragraphContext?: ParagraphContext
+    paragraphContext?: ParagraphContext,
+    options?: ModelToMarkdownOptions
 ): string {
+    const custom = options?.onBlock?.(block);
+    if (custom !== undefined) {
+        return custom + (paragraphContext?.ignoreLineBreaks ? '' : newLinePattern.lineBreak);
+    }
+    if (
+        block.blockType == 'BlockGroup' &&
+        block.blockGroupType == 'FormatContainer' &&
+        block.tagName == 'pre'
+    ) {
+        return (
+            createMarkdownCodeBlock(block) +
+            (paragraphContext?.ignoreLineBreaks ? '' : newLinePattern.lineBreak)
+        );
+    }
     let markdownString = '';
     const lines = { ...DEFAULT_NEW_LINE, ...newLines };
     switch (block.blockType) {
@@ -38,10 +55,11 @@ export function createMarkdownBlock(
             markdownString += createMarkdownParagraph(block, paragraphContext) + lines.paragraph;
             break;
         case 'BlockGroup':
-            markdownString += createMarkdownBlockGroup(block, newLinePattern, listCounter);
+            markdownString += createMarkdownBlockGroup(block, newLinePattern, listCounter, options);
             break;
         case 'Table':
-            markdownString += createMarkdownTable(block, newLinePattern, listCounter) + lines.table;
+            markdownString +=
+                createMarkdownTable(block, newLinePattern, listCounter, options) + lines.table;
             break;
         case 'Divider':
             if (!paragraphContext?.ignoreLineBreaks) {

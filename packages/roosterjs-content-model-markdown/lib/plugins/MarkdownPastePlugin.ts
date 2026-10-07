@@ -1,3 +1,4 @@
+import type { MarkdownToModelOptions } from '../markdownToModel/types/MarkdownToModelOptions';
 import { convertMarkdownToContentModel } from '../markdownToModel/convertMarkdownToContentModel';
 import { isPastedContentMarkdown } from '../publicApi/isPastedContentMarkdown';
 import {
@@ -92,6 +93,7 @@ export class MarkdownPastePlugin implements EditorPlugin {
                     modelBeforePaste,
                     convertMarkdownToContentModel(clipboardData.text, {
                         emptyLine: 'merge',
+                        ...this.options.markdownOptions,
                     }),
                     undefined /*context*/,
                     {
@@ -116,15 +118,26 @@ export class MarkdownPastePlugin implements EditorPlugin {
         } else if (event.eventType === 'beforePaste' && !event.clipboardData.pasteNativeEvent) {
             const shouldConvert = event.pasteType === 'asMarkdown';
             if (shouldConvert && isPastedContentMarkdown(this.editor, event.clipboardData)) {
-                convertPastedTextToMarkdown(this.editor, event.fragment, event.clipboardData.text);
+                convertPastedTextToMarkdown(
+                    this.editor,
+                    event.fragment,
+                    event.clipboardData.text,
+                    this.options.markdownOptions
+                );
             }
         }
     }
 }
 
-function convertPastedTextToMarkdown(editor: IEditor, fragment: DocumentFragment, text: string) {
+function convertPastedTextToMarkdown(
+    editor: IEditor,
+    fragment: DocumentFragment,
+    text: string,
+    options?: MarkdownToModelOptions
+) {
     const model = convertMarkdownToContentModel(text, {
         emptyLine: 'merge',
+        ...options,
     });
 
     while (fragment.firstChild) {

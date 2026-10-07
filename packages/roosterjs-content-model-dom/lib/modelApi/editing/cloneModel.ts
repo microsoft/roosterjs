@@ -302,6 +302,10 @@ function cloneFormatContainer(
         newContainer.zeroFontSize = true;
     }
 
+    if (container.codeBlock) {
+        newContainer.codeBlock = { ...container.codeBlock };
+    }
+
     return newContainer;
 }
 

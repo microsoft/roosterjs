@@ -81,6 +81,10 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
     }
 
     if (element) {
+        if (container.tagName == 'pre' && container.codeBlock) {
+            element.dataset.roosterCodeInfo = container.codeBlock.info;
+            element.dataset.roosterCodeFence = container.codeBlock.fence;
+        }
         context.onNodeCreated?.(container, element);
     }
 
