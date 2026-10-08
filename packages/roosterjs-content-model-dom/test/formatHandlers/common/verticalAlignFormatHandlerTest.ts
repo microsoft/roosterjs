@@ -100,4 +100,17 @@ describe('verticalAlignFormatHandler.apply', () => {
         verticalAlignFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div style="vertical-align: bottom;"></div>');
     });
+
+    it('image with no alignment defaults to middle', () => {
+        const img = document.createElement('img');
+        verticalAlignFormatHandler.apply(format, img, context);
+        expect(img.outerHTML).toBe('<img style="vertical-align: middle;">');
+    });
+
+    it('image with explicit alignment keeps its value', () => {
+        const img = document.createElement('img');
+        format.verticalAlign = 'top';
+        verticalAlignFormatHandler.apply(format, img, context);
+        expect(img.outerHTML).toBe('<img style="vertical-align: top;">');
+    });
 });
