@@ -142,6 +142,7 @@ describe('handleSegment', () => {
             segment,
             [
                 '<span><a href="/test"><img src="http://test.com/test" data-a="b" style="vertical-align: middle;"></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" style="vertical-align: middle;" data-a="b"></a></span>',
             ],
             0
         );
