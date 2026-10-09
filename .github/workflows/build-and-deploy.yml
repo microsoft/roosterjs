@@ -26,7 +26,7 @@ jobs:
               run: npm run-script build:ci
 
             - name: Install Firefox
-              uses: browser-actions/setup-firefox@latest
+              uses: browser-actions/setup-firefox@0bc507ddf224827e3b1af68e014d5e42ab93e795 # v1.7.2
 
             - name: Generate code coverage report
               uses: GabrielBB/xvfb-action@b706e4e27b14669b486812790492dc50ca16b465 # v1.7

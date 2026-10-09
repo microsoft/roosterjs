@@ -85,8 +85,14 @@ export function processWordList(
         setupListFormat(listType, element, context, wordLevel, listFormat, group, [
             wordListPaddingParser,
         ]);
-        (listFormat.levels[listFormat.levels.length - 1]
-            .format as WordListFormat).wordList = wordList;
+        const currentLevelFormat = listFormat.levels[listFormat.levels.length - 1]
+            .format as WordListFormat;
+        currentLevelFormat.wordList = wordList;
+
+        if (wordLevel > 1) {
+            delete currentLevelFormat.paddingLeft;
+            delete currentLevelFormat.paddingRight;
+        }
 
         const bullet = getBulletFromMetadata(listMetadata, listType);
         const listFormatMetadata = bullet
@@ -103,6 +109,11 @@ export function processWordList(
             listFormatMetadata,
             getBulletElement(element),
             listItem => {
+                if (wordLevel > 1) {
+                    delete listItem.format.marginLeft;
+                    delete listItem.format.marginRight;
+                }
+
                 if (listType == 'OL') {
                     setStartNumber(listItem, context, listMetadata, element);
                 }
