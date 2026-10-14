@@ -340,9 +340,14 @@ describe('handleTabOnParagraph', () => {
                     blockType: 'Paragraph',
                     segments: [
                         {
+                            blockType: 'Entity',
                             segmentType: 'Entity',
                             format: {},
-                            isReadonly: true,
+                            entityFormat: {
+                                id: 'entity-1',
+                                entityType: 'test',
+                                isReadonly: true,
+                            },
                             wrapper: document.createElement('span'),
                         },
                         {
