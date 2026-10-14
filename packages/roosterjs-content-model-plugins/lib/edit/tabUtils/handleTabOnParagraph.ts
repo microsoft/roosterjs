@@ -103,15 +103,6 @@ export function handleTabOnParagraph(
                     return false;
                 }
 
-                const segmentsBeforeMarker = paragraph.segments.slice(0, markerIndex);
-                const hasOnlyEntitiesBeforeMarker = segmentsBeforeMarker.every(
-                    segment => segment.segmentType === 'Entity'
-                );
-
-                if (hasOnlyEntitiesBeforeMarker) {
-                    return false;
-                }
-
                 const tabText = paragraph.segments[markerIndex - 1];
                 const tabSpacesLength = tabSpaces.length;
 
@@ -127,6 +118,8 @@ export function handleTabOnParagraph(
                     } else {
                         return false;
                     }
+                } else {
+                    return false;
                 }
             }
         }
