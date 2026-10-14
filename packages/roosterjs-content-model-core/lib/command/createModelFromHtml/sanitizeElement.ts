@@ -1,4 +1,4 @@
-import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { isNodeOfType, isUnsafeUrl } from 'roosterjs-content-model-dom';
 import type { ValueSanitizer } from 'roosterjs-content-model-types';
 
 /**
@@ -105,7 +105,6 @@ export const AllowedTags: ReadonlyArray<string> = [
     'ul',
     'var',
     'wbr',
-    'xmp',
 ];
 
 /**
@@ -325,7 +324,7 @@ export function createSanitizedElement(
         const name = attribute.name.toLowerCase().trim();
         const value = attribute.value;
 
-        const sanitizer = attributeSanitizers?.[name];
+        const sanitizer = getOwnValue(attributeSanitizers, name);
         const newValue =
             name == 'style'
                 ? processStyles(tag, value, styleSanitizers)
@@ -339,11 +338,7 @@ export function createSanitizedElement(
                 ? value
                 : null;
 
-        if (
-            newValue !== null &&
-            newValue !== undefined &&
-            !newValue.match(/s\n*c\n*r\n*i\n*p\n*t\n*:/i) // match script: with any NewLine inside. Browser will ignore those NewLine char and still treat it as script prefix
-        ) {
+        if (newValue !== null && newValue !== undefined && !isUnsafeUrl(newValue)) {
             element.setAttribute(name, newValue);
         }
     }
@@ -369,7 +364,7 @@ function processStyles(
                 value = processCssVariable(value);
             }
 
-            const sanitizer = styleSanitizers?.[name];
+            const sanitizer = getOwnValue(styleSanitizers, name);
             const sanitizedValue =
                 typeof sanitizer == 'function'
                     ? sanitizer(value, tagName)
@@ -383,7 +378,7 @@ function processStyles(
                 sanitizedValue != 'initial' &&
                 sanitizedValue.indexOf('expression') < 0 &&
                 !name.startsWith('-') &&
-                DefaultStyleValue[name] != sanitizedValue
+                getOwnValue(DefaultStyleValue, name) != sanitizedValue
             ) {
                 result.push(`${name}:${sanitizedValue}`);
             }
@@ -396,6 +391,13 @@ function processStyles(
 function processCssVariable(value: string): string {
     const match = VARIABLE_REGEX.exec(value);
     return match?.[2] || ''; // Without fallback value, we don't know what does the original value mean, so ignore it
+}
+
+// Attribute and style names come from the pasted content, so a name such as "valueOf" or
+// "hasOwnProperty" would otherwise resolve to the inherited member of Object.prototype and be
+// invoked as if it were a sanitizer, which throws and fails the whole conversion.
+function getOwnValue<T>(map: Readonly<Record<string, T>> | undefined, name: string): T | undefined {
+    return map && Object.prototype.hasOwnProperty.call(map, name) ? map[name] : undefined;
 }
 
 function isCssVariable(value: string): boolean {
