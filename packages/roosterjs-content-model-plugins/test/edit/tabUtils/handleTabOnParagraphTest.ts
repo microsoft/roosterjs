@@ -332,6 +332,44 @@ describe('handleTabOnParagraph', () => {
         runTest(model, paragraph, rawEvent, true);
     });
 
+    it('Outdent - collapsed range should return false when only entities exist before the marker', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Entity',
+                            format: {},
+                            isReadonly: true,
+                            wrapper: document.createElement('span'),
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const paragraph = model.blocks[0] as ContentModelParagraph;
+        const rawEvent = new KeyboardEvent('keydown', {
+            key: 'Tab',
+            shiftKey: true,
+        });
+
+        runTest(model, paragraph, rawEvent, false);
+    });
+
     it('Indent - expanded range should return true', () => {
         const model: ContentModelDocument = {
             blockGroupType: 'Document',
