@@ -1,6 +1,54 @@
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import type { ValueSanitizer } from 'roosterjs-content-model-types';
 
+const MathMLNamespace = 'http://www.w3.org/1998/Math/MathML';
+const MathMLTags: ReadonlyArray<string> = [
+    'annotation',
+    'annotation-xml',
+    'maction',
+    'maligngroup',
+    'malignmark',
+    'math',
+    'menclose',
+    'merror',
+    'mfenced',
+    'mfrac',
+    'mglyph',
+    'mi',
+    'mlabeledtr',
+    'mlongdiv',
+    'mmultiscripts',
+    'mn',
+    'mo',
+    'mover',
+    'mpadded',
+    'mphantom',
+    'mprescripts',
+    'mroot',
+    'mrow',
+    'ms',
+    'mscarries',
+    'mscarry',
+    'msgroup',
+    'msline',
+    'mspace',
+    'msqrt',
+    'msrow',
+    'mstack',
+    'mstyle',
+    'msub',
+    'msubsup',
+    'msup',
+    'mtable',
+    'mtd',
+    'mtext',
+    'mtr',
+    'munder',
+    'munderover',
+    'none',
+    'semantics',
+];
+
 /**
  * @internal
  */
@@ -106,7 +154,7 @@ export const AllowedTags: ReadonlyArray<string> = [
     'var',
     'wbr',
     'xmp',
-];
+].concat(MathMLTags);
 
 /**
  * @internal
@@ -274,15 +322,17 @@ export function sanitizeElement(
     attributeSanitizers?: Readonly<Record<string, ValueSanitizer>>
 ): HTMLElement | null {
     const tag = element.tagName.toLowerCase();
+    const isAllowed = allowedTags.indexOf(tag) >= 0;
     const sanitizedElement =
         disallowedTags.indexOf(tag) >= 0
             ? null
             : createSanitizedElement(
                   element.ownerDocument,
-                  allowedTags.indexOf(tag) >= 0 ? tag : 'span',
+                  isAllowed ? tag : 'span',
                   element.attributes,
                   styleSanitizers,
-                  attributeSanitizers
+                  attributeSanitizers,
+                  isAllowed && element.namespaceURI == MathMLNamespace ? MathMLNamespace : undefined
               );
 
     if (sanitizedElement) {
@@ -316,9 +366,12 @@ export function createSanitizedElement(
     tag: string,
     attributes: NamedNodeMap,
     styleSanitizers?: Readonly<Record<string, ValueSanitizer>>,
-    attributeSanitizers?: Readonly<Record<string, ValueSanitizer>>
+    attributeSanitizers?: Readonly<Record<string, ValueSanitizer>>,
+    namespaceURI?: string
 ): HTMLElement {
-    const element = doc.createElement(tag);
+    const element = (namespaceURI
+        ? doc.createElementNS(namespaceURI, tag)
+        : doc.createElement(tag)) as HTMLElement;
 
     for (let i = 0; i < attributes.length; i++) {
         const attribute = attributes[i];

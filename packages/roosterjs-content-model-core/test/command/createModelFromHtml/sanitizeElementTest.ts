@@ -29,6 +29,23 @@ describe('sanitizeElement', () => {
         expect(result!.outerHTML).toBe('<div class="b c">test1<span>test2</span>test3</div>');
     });
 
+    it('Allowed MathML elements', () => {
+        const doc = new DOMParser().parseFromString(
+            '<math><mrow><msubsup><mi>x</mi><mn>1</mn><mn>2</mn></msubsup><mo>+</mo><mfrac><mn>1</mn><msqrt><mi>y</mi></msqrt></mfrac></mrow></math>',
+            'text/html'
+        );
+        const math = doc.body.firstElementChild as HTMLElement;
+
+        const result = sanitizeElement(math, AllowedTags, DisallowedTags);
+
+        expect(result!.outerHTML).toBe(math.outerHTML);
+        expect(result!.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
+
+        for (let child = result!.firstElementChild; child; child = child.nextElementSibling) {
+            expect(child.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
+        }
+    });
+
     it('Empty element with disallowed tag', () => {
         const element = document.createElement('script');
 
