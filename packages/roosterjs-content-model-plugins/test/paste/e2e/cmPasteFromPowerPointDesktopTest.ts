@@ -34,6 +34,9 @@ describe('PowerPoint', () => {
     });
 
     it('PowerPoint 1', () => {
+        const fontStyle = document.createElement('span').style;
+        fontStyle.fontFamily = 'Courier New';
+
         paste(editor!, pptClipboardContent1, 'normal');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
@@ -106,7 +109,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: '"Courier New"',
+                                fontFamily: fontStyle.fontFamily,
                                 fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
