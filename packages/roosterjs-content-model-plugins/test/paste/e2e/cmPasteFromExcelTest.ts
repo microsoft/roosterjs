@@ -62,6 +62,7 @@ describe(ID, () => {
                             src: 'https://github.com/microsoft/roosterjs',
                             format: {
                                 maxWidth: jasmine.anything(),
+                                verticalAlign: 'middle',
                             },
                             dataset: {},
                             alt: undefined,
