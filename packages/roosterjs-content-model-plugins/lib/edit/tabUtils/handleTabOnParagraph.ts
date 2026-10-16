@@ -102,6 +102,7 @@ export function handleTabOnParagraph(
                 if (markerIndex <= 0) {
                     return false;
                 }
+
                 const tabText = paragraph.segments[markerIndex - 1];
                 const tabSpacesLength = tabSpaces.length;
 
@@ -117,6 +118,8 @@ export function handleTabOnParagraph(
                     } else {
                         return false;
                     }
+                } else {
+                    return false;
                 }
             }
         }
