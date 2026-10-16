@@ -11,6 +11,7 @@ import {
     pptClipboardContent3,
     pptClipboardContent4,
 } from './htmlTemplates/powerPointClipboardContent';
+import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 
 describe('PowerPoint', () => {
     let editor: IEditor = undefined!;
@@ -33,7 +34,7 @@ describe('PowerPoint', () => {
         document.getElementById('PowerPoint')?.remove();
     });
 
-    it('PowerPoint 1', () => {
+    itChromeOnly('PowerPoint 1', () => {
         paste(editor!, pptClipboardContent1, 'normal');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);

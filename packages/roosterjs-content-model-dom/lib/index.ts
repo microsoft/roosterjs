@@ -19,6 +19,7 @@ export { buildSelectionMarker } from './domToModel/utils/buildSelectionMarker';
 export { updateMetadata, getMetadata, hasMetadata } from './modelApi/metadata/updateMetadata';
 export { isNodeOfType } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
+export { isUnsafeUrl } from './domUtils/isUnsafeUrl';
 export { getObjectKeys } from './domUtils/getObjectKeys';
 export { getSafeIdSelector } from './domUtils/getSafeIdSelector';
 export { toArray } from './domUtils/toArray';

@@ -1,5 +1,4 @@
 import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
-import { checkXss } from '../utils/checkXss';
 import { matchLink } from '../../modelApi/link/matchLink';
 import {
     addLink,
@@ -8,6 +7,7 @@ import {
     createContentModelDocument,
     createText,
     getSelectedSegments,
+    isUnsafeUrl,
     mergeModel,
 } from 'roosterjs-content-model-dom';
 import type { ContentModelLink, IEditor } from 'roosterjs-content-model-types';
@@ -41,7 +41,7 @@ export function insertLink(
 ) {
     editor.focus();
 
-    const url = (checkXss(link) || '').trim();
+    const url = (isUnsafeUrl(link) ? '' : link || '').trim();
     if (url) {
         const linkData = matchLink(url);
         const linkUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
