@@ -1,4 +1,5 @@
 import { isElementOfType } from '../../domUtils/isElementOfType';
+import { isUnsafeUrl } from '../../domUtils/isUnsafeUrl';
 import type { FormatHandler } from '../FormatHandler';
 import type { LinkFormat } from 'roosterjs-content-model-types';
 
@@ -20,7 +21,7 @@ export const linkFormatHandler: FormatHandler<LinkFormat> = {
                 format.name = name;
             }
 
-            if (href) {
+            if (href && !isUnsafeUrl(href)) {
                 format.href = href;
             }
 
@@ -47,7 +48,7 @@ export const linkFormatHandler: FormatHandler<LinkFormat> = {
     },
     apply: (format, element) => {
         if (isElementOfType(element, 'a') && (format.href || format.name)) {
-            if (format.href) {
+            if (format.href && !isUnsafeUrl(format.href)) {
                 element.href = format.href;
             }
 
