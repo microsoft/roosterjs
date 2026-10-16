@@ -79,6 +79,7 @@ describe('parseEntityFormat', () => {
         const div = document.createElement('div');
 
         div.contentEditable = 'true';
+        document.body.appendChild(div);
 
         div.className = '_EId_A _EType_B _EReadonly_1';
 
@@ -90,6 +91,8 @@ describe('parseEntityFormat', () => {
             id: 'A',
             entityType: 'B',
         });
+
+        div.remove();
     });
 
     it('Fake entity, readonly', () => {

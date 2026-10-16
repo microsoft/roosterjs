@@ -156,13 +156,18 @@ describe('insertTableRow', () => {
 
         const unselectedHeader = { ...selectedHeader, isSelected: false };
         const unselectedSpanAbove = { ...selectedSpanAbove, isSelected: false };
+        const selectedWithoutSpanAbove = { ...selectedSpanAbove, spanAbove: false };
+        const unselectedWithoutSpanAbove = {
+            ...selectedWithoutSpanAbove,
+            isSelected: false,
+        };
 
         insertTableRow(table, 'insertAbove');
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
             rows: [
-                { format: {}, height: 300, cells: [selectedHeader, selectedSpanAbove] },
+                { format: {}, height: 300, cells: [selectedHeader, selectedWithoutSpanAbove] },
                 { format: {}, height: 300, cells: [unselectedHeader, unselectedSpanAbove] },
             ],
             widths: [100, 200],
@@ -174,8 +179,12 @@ describe('insertTableRow', () => {
             blockType: 'Table',
             format: {},
             rows: [
-                { format: {}, height: 300, cells: [unselectedHeader, unselectedSpanAbove] },
-                { format: {}, height: 300, cells: [selectedHeader, selectedSpanAbove] },
+                {
+                    format: {},
+                    height: 300,
+                    cells: [unselectedHeader, unselectedWithoutSpanAbove],
+                },
+                { format: {}, height: 300, cells: [selectedHeader, selectedWithoutSpanAbove] },
                 { format: {}, height: 300, cells: [unselectedHeader, unselectedSpanAbove] },
             ],
             widths: [100, 200],
@@ -266,8 +275,9 @@ describe('insertTableRow', () => {
 
         insertTableRow(table, 'insertBelow');
 
-        const selectedCell7 = { ...cell7, isSelected: true };
-        const selectedCell8 = { ...cell8, isSelected: true };
+        const selectedCell7 = { ...cell7, isSelected: true, spanAbove: false };
+        const selectedCell8 = { ...cell8, isSelected: true, spanAbove: false };
+        const selectedCell9WithoutSpanAbove = { ...selectedCell9, spanAbove: false };
 
         expect(table).toEqual({
             blockType: 'Table',
@@ -276,8 +286,16 @@ describe('insertTableRow', () => {
                 { format: {}, height: 400, cells: [cell1, cell2, cell3] },
                 { format: {}, height: 500, cells: [cell4, unselectedCell5, cell6] },
                 { format: {}, height: 600, cells: [cell7, cell8, unselectedCell9] },
-                { format: {}, height: 600, cells: [selectedCell7, selectedCell8, selectedCell9] },
-                { format: {}, height: 600, cells: [selectedCell7, selectedCell8, selectedCell9] },
+                {
+                    format: {},
+                    height: 600,
+                    cells: [selectedCell7, selectedCell8, selectedCell9WithoutSpanAbove],
+                },
+                {
+                    format: {},
+                    height: 600,
+                    cells: [selectedCell7, selectedCell8, selectedCell9WithoutSpanAbove],
+                },
                 { format: {}, height: 700, cells: [cell10, cell11, cell12] },
             ],
             widths: [100, 200, 300],

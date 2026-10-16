@@ -10,7 +10,10 @@ import {
 import type { TableEditFeature } from './TableEditFeature';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 import type { IEditor, ReadonlyContentModelTable, Rect } from 'roosterjs-content-model-types';
-import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
+import type {
+    DragAndDropEvent,
+    DragAndDropHandler,
+} from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 
 const TABLE_RESIZER_LENGTH = 12;
 /**
@@ -78,6 +81,7 @@ export function createTableResizer(
         },
         zoomScale,
         editor.getEnvironment().isMobileOrTablet,
+        editor.getEnvironment().isTouchSupported,
         onTableEditorCreated
     );
 
@@ -94,9 +98,10 @@ class TableResizer extends DragAndDropHelper<TableResizerContext, TableResizerIn
         handler: DragAndDropHandler<TableResizerContext, TableResizerInitValue>,
         zoomScale: number,
         forceMobile?: boolean,
+        isTouchSupported?: boolean,
         onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {
-        super(trigger, context, onSubmit, handler, zoomScale, forceMobile);
+        super(trigger, context, onSubmit, handler, zoomScale, forceMobile, isTouchSupported);
         this.disposer = onTableEditorCreated?.('TableResizer', trigger);
     }
 
@@ -139,7 +144,7 @@ export interface TableResizerInitValue {
  */
 export function onDragStart(
     context: TableResizerContext,
-    event: MouseEvent
+    event: DragAndDropEvent
 ): TableResizerInitValue {
     context.onStart();
 
@@ -172,7 +177,7 @@ export function onDragStart(
  */
 export function onDragging(
     context: TableResizerContext,
-    event: MouseEvent,
+    event: DragAndDropEvent,
     initValue: TableResizerInitValue,
     deltaX: number,
     deltaY: number
@@ -244,7 +249,7 @@ export function onDragging(
  */
 export function onDragEnd(
     context: TableResizerContext,
-    event: MouseEvent,
+    event: DragAndDropEvent,
     initValue: TableResizerInitValue | undefined
 ) {
     if (context.editor.isDisposed()) {

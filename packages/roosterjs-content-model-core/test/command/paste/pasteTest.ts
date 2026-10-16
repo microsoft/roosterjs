@@ -1,5 +1,5 @@
 import * as addParserF from 'roosterjs-content-model-plugins/lib/paste/utils/addParser';
-import * as createPasteFragmentFile from '../../../lib/command/paste/createPasteFragment';
+import * as createPasteFragmentFile from 'roosterjs-content-model-dom/lib/domUtils/event/createPasteFragment';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from 'roosterjs-content-model-plugins/lib/paste/Excel/processPastedContentFromExcel';
 import * as generatePasteOptionFromPluginsFile from '../../../lib/command/paste/generatePasteOptionFromPlugins';
@@ -192,7 +192,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 7);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 8);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -248,7 +248,7 @@ describe('paste with content model & paste plugin', () => {
         paste(editor!, clipboardData, 'asPlainText');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
-        expect(addParserF.addParser).toHaveBeenCalledTimes(12);
+        expect(addParserF.addParser).toHaveBeenCalledTimes(13);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 

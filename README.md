@@ -228,6 +228,14 @@ There are two ways that tests can be run:
     ```
     yarn test
     ```
+3. Run all tests from command line in Safari on macOS
+
+    ```
+    safaridriver --enable
+    yarn test:safari
+    ```
+
+    Safari's **Allow Remote Automation** setting must be enabled before running the command.
 
 ## Dependencies
 

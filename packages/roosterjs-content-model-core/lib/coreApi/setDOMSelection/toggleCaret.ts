@@ -1,7 +1,10 @@
 import type { EditorCore } from 'roosterjs-content-model-types';
 
 const CARET_CSS_RULE = 'caret-color: transparent';
-const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
+/**
+ * @internal
+ */
+export const HIDE_CURSOR_CSS_KEY = '_DOMSelectionHideCursor';
 
 /**
  * @internal Show/Hide caret in editor

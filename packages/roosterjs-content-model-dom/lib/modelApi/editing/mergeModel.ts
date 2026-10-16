@@ -1,6 +1,7 @@
 import { addBlock } from '../common/addBlock';
 import { addSegment } from '../common/addSegment';
 import { applyTableFormat } from './applyTableFormat';
+import { createBr } from '../creators/createBr';
 import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
@@ -29,6 +30,7 @@ import type {
     ReadonlyContentModelDocument,
     ReadonlyContentModelTable,
     ShallowMutableContentModelParagraph,
+    ShallowMutableContentModelTable,
 } from 'roosterjs-content-model-types';
 
 const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -53,7 +55,12 @@ export function mergeModel(
     const insertPosition =
         options?.insertPosition ?? deleteSelection(target, [], context).insertPoint;
 
-    const { addParagraphAfterMergedContent, mergeFormat, mergeTable } = options || {};
+    const { addParagraphAfterMergedContent, mergeFormat, mergeParagraphAfterList, mergeTable } =
+        options || {};
+
+    if (mergeParagraphAfterList && insertPosition && source.blocks[0]?.blockType == 'Paragraph') {
+        moveParagraphAfterListIntoList(insertPosition);
+    }
 
     if (addParagraphAfterMergedContent && !mergeTable) {
         const { paragraph, marker } = insertPosition || {};
@@ -114,6 +121,29 @@ export function mergeModel(
     normalizeContentModel(target);
 
     return insertPosition;
+}
+
+function moveParagraphAfterListIntoList(insertPosition: InsertPoint) {
+    const { paragraph, path } = insertPosition;
+    const parent = path[0];
+    const paragraphIndex = parent.blocks.indexOf(paragraph);
+    const previousBlock = parent.blocks[paragraphIndex - 1];
+
+    if (
+        paragraph.segments.every(
+            segment => segment.segmentType == 'SelectionMarker' || segment.segmentType == 'Br'
+        ) &&
+        previousBlock?.blockType == 'BlockGroup' &&
+        previousBlock.blockGroupType == 'ListItem'
+    ) {
+        const newListItem = createListItem(previousBlock.levels, previousBlock.formatHolder.format);
+        const paragraphAfterList = createParagraph(false, paragraph.format);
+
+        addBlock(newListItem, paragraph);
+        paragraphAfterList.segments.push(createBr());
+        mutateBlock(parent).blocks.splice(paragraphIndex, 1, newListItem, paragraphAfterList);
+        path.unshift(newListItem);
+    }
 }
 
 function mergeParagraph(
@@ -212,7 +242,7 @@ function mergeTables(
                     const leftCell = table.rows[k]?.cells[newColIndex - 1];
                     table.rows[k].cells[newColIndex] = createTableCell(
                         false /*spanLeft*/,
-                        false /*spanAbove*/,
+                        leftCell?.spanAbove,
                         leftCell?.isHeader,
                         leftCell?.format
                     );
@@ -236,7 +266,7 @@ function mergeTables(
                 for (let k = 0; k < colCount; k++) {
                     const aboveCell = table.rows[newRowIndex - 1]?.cells[k];
                     table.rows[newRowIndex].cells[k] = createTableCell(
-                        false /*spanLeft*/,
+                        aboveCell?.spanLeft,
                         false /*spanAbove*/,
                         false /*isHeader*/,
                         aboveCell?.format
@@ -303,9 +333,63 @@ function mergeTables(
 
         normalizeTable(table, markerPosition.marker.format);
         applyTableFormat(table, undefined /*newFormat*/, true /*keepCellShade*/);
-    } else {
+    } else if (!mergeTableAfterPreviousTable(markerPosition, newTable)) {
         insertBlock(markerPosition, newTable);
     }
+}
+
+function mergeTableAfterPreviousTable(
+    markerPosition: InsertPoint,
+    newTable: ContentModelTable
+): boolean {
+    const { marker, paragraph, path } = markerPosition;
+    const parent = path[0];
+    const paragraphIndex = parent.blocks.indexOf(paragraph);
+    const previousBlock = parent.blocks[paragraphIndex - 1];
+
+    if (
+        paragraphIndex > 0 &&
+        paragraph.segments.indexOf(marker) == 0 &&
+        previousBlock?.blockType == 'Table' &&
+        previousBlock.rows[0]?.cells.length > 0 &&
+        newTable.rows[0]?.cells.length > 0
+    ) {
+        const table = mutateBlock(previousBlock);
+        const columnCount = Math.max(
+            ...table.rows.map(row => row.cells.length),
+            ...newTable.rows.map(row => row.cells.length)
+        );
+
+        extendTableRows(table, columnCount);
+        extendTableRows(newTable, columnCount);
+
+        table.rows.push(...newTable.rows);
+
+        return true;
+    }
+
+    return false;
+}
+
+function extendTableRows(table: ShallowMutableContentModelTable, columnCount: number) {
+    table.rows.forEach(row => {
+        const currentColumnCount = row.cells.length;
+        const lastCell = row.cells[currentColumnCount - 1];
+
+        if (lastCell) {
+            for (let col = currentColumnCount; col < columnCount; col++) {
+                const spanCell = createTableCell(
+                    true /* spanLeft */,
+                    false /* spanAbove */,
+                    lastCell.isHeader,
+                    lastCell.format,
+                    lastCell.dataset
+                );
+
+                row.cells.push(spanCell);
+            }
+        }
+    });
 }
 
 function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {

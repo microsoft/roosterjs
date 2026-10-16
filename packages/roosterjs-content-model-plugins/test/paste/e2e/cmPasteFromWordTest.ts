@@ -165,10 +165,10 @@ describe(ID, () => {
                                         },
                                     ],
                                     format: {
-                                        borderTop: '1pt solid',
-                                        borderRight: '1pt solid',
-                                        borderBottom: '1pt solid',
-                                        borderLeft: '1pt solid',
+                                        borderTop: '1pt solid currentcolor',
+                                        borderRight: '1pt solid currentcolor',
+                                        borderBottom: '1pt solid currentcolor',
+                                        borderLeft: '1pt solid currentcolor',
                                         paddingTop: '0in',
                                         paddingRight: '5.4pt',
                                         paddingBottom: '0in',
@@ -202,9 +202,10 @@ describe(ID, () => {
                                         },
                                     ],
                                     format: {
-                                        borderTop: '1pt solid',
-                                        borderRight: '1pt solid',
-                                        borderBottom: '1pt solid',
+                                        borderTop: '1pt solid currentcolor',
+                                        borderRight: '1pt solid currentcolor',
+                                        borderBottom: '1pt solid currentcolor',
+                                        borderLeft: 'medium none currentcolor',
                                         paddingTop: '0in',
                                         paddingRight: '5.4pt',
                                         paddingBottom: '0in',
@@ -862,14 +863,14 @@ describe(ID, () => {
                             listType: 'OL',
                             format: {
                                 startNumberOverride: 1,
-                                marginTop: '1em',
+                                marginTop: '0cm',
                                 listStyleType: 'decimal',
                             },
                             dataset: { editingInfo: '{"orderedStyleType":1}' },
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { lineHeight: '115%' },
+                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '115%' },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -908,12 +909,12 @@ describe(ID, () => {
                     levels: [
                         {
                             listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            format: { marginTop: '0cm', listStyleType: 'decimal' },
                             dataset: { editingInfo: '{"orderedStyleType":1}' },
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { lineHeight: '115%' },
+                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '115%' },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -952,12 +953,12 @@ describe(ID, () => {
                     levels: [
                         {
                             listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            format: { marginTop: '0cm', listStyleType: 'decimal' },
                             dataset: { editingInfo: '{"orderedStyleType":1}' },
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { lineHeight: '115%' },
+                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '115%' },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -996,22 +997,25 @@ describe(ID, () => {
                     levels: [
                         {
                             listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            format: { marginTop: '0cm', listStyleType: 'decimal' },
                             dataset: { editingInfo: '{"orderedStyleType":1}' },
                         },
                         {
                             listType: 'OL',
                             format: {
                                 startNumberOverride: 1,
-                                marginTop: '1em',
-                                paddingLeft: '0px',
+                                marginTop: '0cm',
                                 listStyleType: 'lower-alpha',
                             },
                             dataset: { editingInfo: '{"orderedStyleType":5}' },
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { lineHeight: '115%', marginLeft: '72pt' },
+                    format: {
+                        marginTop: '0cm',
+                        marginBottom: '0cm',
+                        lineHeight: '115%',
+                    },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -1050,21 +1054,24 @@ describe(ID, () => {
                     levels: [
                         {
                             listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            format: { marginTop: '0cm', listStyleType: 'decimal' },
                             dataset: { editingInfo: '{"orderedStyleType":1}' },
                         },
                         {
                             listType: 'OL',
                             format: {
-                                marginTop: '1em',
-                                paddingLeft: '0px',
+                                marginTop: '0cm',
                                 listStyleType: 'lower-alpha',
                             },
                             dataset: { editingInfo: '{"orderedStyleType":5}' },
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { lineHeight: '115%', marginLeft: '72pt' },
+                    format: {
+                        marginTop: '0cm',
+                        marginBottom: '0cm',
+                        lineHeight: '115%',
+                    },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -1103,12 +1110,12 @@ describe(ID, () => {
                     levels: [
                         {
                             listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
+                            format: { marginTop: '0cm', listStyleType: 'decimal' },
                             dataset: { editingInfo: '{"orderedStyleType":1}' },
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { lineHeight: '115%' },
+                    format: { marginTop: '0cm', marginBottom: '8pt', lineHeight: '115%' },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {

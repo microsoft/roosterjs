@@ -1058,7 +1058,7 @@ export class EditorAdapter extends Editor implements ILegacyEditor {
                 direction == ColorTransformDirection.DarkToLight ? 'darkToLight' : 'lightToDark',
                 core.darkColorHandler,
                 {
-                    tableBorders: this.isExperimentalFeatureEnabled('TransformTableBorderColors'),
+                    tableBorders: true,
                 },
                 core.format.defaultFormat.textColor
             );

@@ -43,7 +43,13 @@ export type GraduatedExperimentalFeature =
      * @deprecated
      * Allow caching list item elements.
      */
-    | 'CacheList';
+    | 'CacheList'
+
+    /**
+     * @deprecated
+     * Transform the table border colors when switching from light to dark mode
+     */
+    | 'TransformTableBorderColors';
 
 /**
  * Predefined experiment features
@@ -60,11 +66,6 @@ export type ExperimentalFeature =
      * the original formatting of the selection marker is kept to match the pending format.
      */
     | 'KeepSelectionMarkerWhenEnteringTextNode'
-
-    /**
-     * Transform the table border colors when switching from light to dark mode
-     */
-    | 'TransformTableBorderColors'
 
     /**
      * When the editor content div is inside a Shadow DOM, enable shadow root detection

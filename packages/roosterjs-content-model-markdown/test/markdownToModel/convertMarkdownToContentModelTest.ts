@@ -192,7 +192,9 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 1',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                 },
                                             ],
                                             format: {},
@@ -222,7 +224,9 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 2',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                 },
                                             ],
                                             format: {},
@@ -252,7 +256,9 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 3',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                 },
                                             ],
                                             format: {},
@@ -492,7 +498,9 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 1',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                 },
                                             ],
                                             format: {},
@@ -522,7 +530,9 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 2',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                 },
                                             ],
                                             format: {},
@@ -552,7 +562,9 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 3',
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                 },
                                             ],
                                             format: {},
@@ -1323,7 +1335,9 @@ describe('convertMarkdownToContentModel', () => {
                                                     text: 'Header 1',
                                                     segmentType: 'Text',
 
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                 },
                                             ],
 
@@ -1355,7 +1369,9 @@ describe('convertMarkdownToContentModel', () => {
                                                     text: 'Header 2',
                                                     segmentType: 'Text',
 
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                 },
                                             ],
 
@@ -1387,7 +1403,9 @@ describe('convertMarkdownToContentModel', () => {
                                                     text: 'Header 3',
                                                     segmentType: 'Text',
 
-                                                    format: {},
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
                                                 },
                                             ],
 

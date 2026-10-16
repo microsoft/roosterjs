@@ -1,3 +1,4 @@
+import { notifyDevToolsPluginEvent } from '../../utils/devtoolsHook';
 import type {
     EditorPlugin,
     PluginEvent,
@@ -31,6 +32,8 @@ export const triggerEvent: TriggerEvent = (core, pluginEvent, broadcast) => {
             }
         });
     }
+
+    notifyDevToolsPluginEvent(core, pluginEvent);
 };
 
 function handledExclusively(event: PluginEvent, plugin: EditorPlugin): boolean {

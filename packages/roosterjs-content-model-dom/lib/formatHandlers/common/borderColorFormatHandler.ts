@@ -35,56 +35,46 @@ const DEFAULT_COLOR = '#000000';
  */
 export const borderColorFormatHandler: FormatHandler<BorderFormat> = {
     parse: (format, element, context) => {
-        if (
-            context.experimentalFeatures &&
-            context.experimentalFeatures.indexOf('TransformTableBorderColors') > -1
-        ) {
-            BorderKeys.forEach(key => {
-                const width = element.style.getPropertyValue(BorderWidthKeyMap[key]);
-                const style = element.style.getPropertyValue(BorderStyleKeyMap[key]);
-                const color = retrieveElementColor(element, key);
-                const borderColor = color == 'initial' ? DEFAULT_COLOR : color;
+        BorderKeys.forEach(key => {
+            const width = element.style.getPropertyValue(BorderWidthKeyMap[key]);
+            const style = element.style.getPropertyValue(BorderStyleKeyMap[key]);
+            const color = retrieveElementColor(element, key);
+            const borderColor = color == 'initial' ? DEFAULT_COLOR : color;
 
-                if (borderColor) {
-                    const lightModeColor = getLightModeColor(
-                        borderColor,
+            if (borderColor) {
+                const lightModeColor = getLightModeColor(
+                    borderColor,
+                    !!context.isDarkMode,
+                    context.darkColorHandler
+                );
+
+                format[key] = combineBorderValue({
+                    width,
+                    style,
+                    color: lightModeColor,
+                });
+            }
+        });
+    },
+    apply: (format, element, context) => {
+        BorderKeys.forEach(key => {
+            const value = format[key];
+            if (value) {
+                const borderValues = extractBorderValues(value);
+                const borderColorProperty = BorderColorKeyMap[key];
+                if (borderValues.color) {
+                    const transformedColor = adaptColor(
+                        element,
+                        borderValues.color,
+                        'border',
                         !!context.isDarkMode,
                         context.darkColorHandler
                     );
-
-                    format[key] = combineBorderValue({
-                        width,
-                        style,
-                        color: lightModeColor,
-                    });
-                }
-            });
-        }
-    },
-    apply: (format, element, context) => {
-        if (
-            context.experimentalFeatures &&
-            context.experimentalFeatures.indexOf('TransformTableBorderColors') > -1
-        ) {
-            BorderKeys.forEach(key => {
-                const value = format[key];
-                if (value) {
-                    const borderValues = extractBorderValues(value);
-                    const borderColorProperty = BorderColorKeyMap[key];
-                    if (borderValues.color) {
-                        const transformedColor = adaptColor(
-                            element,
-                            borderValues.color,
-                            'border',
-                            !!context.isDarkMode,
-                            context.darkColorHandler
-                        );
-                        if (transformedColor) {
-                            element.style.setProperty(borderColorProperty, transformedColor);
-                        }
+                    if (transformedColor) {
+                        element.style.setProperty(borderColorProperty, transformedColor);
                     }
                 }
-            });
-        }
+            }
+        });
     },
 };

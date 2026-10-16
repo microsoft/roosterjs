@@ -34,6 +34,9 @@ export const defaultHTMLStyleMap: DefaultStyleMap = {
         marginBottom: '1em',
     },
     dt: blockElement,
+    del: {
+        textDecoration: 'line-through',
+    },
     em: {
         fontStyle: 'italic',
     },

@@ -16,7 +16,7 @@ export function restoreSnapshotColors(core: EditorCore, snapshot: Snapshot) {
             isDarkMode ? 'lightToDark' : 'darkToLight',
             core.darkColorHandler,
             {
-                tableBorders: core.experimentalFeatures.indexOf('TransformTableBorderColors') > -1,
+                tableBorders: true,
             }
         );
     }

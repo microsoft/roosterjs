@@ -25,6 +25,8 @@ All packages live under `packages/`.
 yarn test:fast
 ```
 
+Use `yarn test:safari` only when real Safari coverage is required. It requires macOS, Safari's **Allow Remote Automation** setting, and `safaridriver --enable`. Both commands use `karma.fast.conf.js` and accept `--testPathPattern` and `--testNamePattern` filters.
+
 Do NOT use `yarn test`, `karma start`, or any other test command. `yarn test:fast` uses `karma.fast.conf.js` and is the correct command for local development.
 
 ### Test file locations

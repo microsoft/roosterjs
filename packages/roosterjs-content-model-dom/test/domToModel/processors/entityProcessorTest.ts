@@ -143,6 +143,7 @@ describe('entityProcessor', () => {
         const span = document.createElement('span');
 
         span.contentEditable = 'true';
+        document.body.appendChild(span);
 
         entityProcessor(group, span, context);
 
@@ -170,6 +171,8 @@ describe('entityProcessor', () => {
                 },
             ],
         });
+
+        span.remove();
     });
 
     it('Entity in selection', () => {

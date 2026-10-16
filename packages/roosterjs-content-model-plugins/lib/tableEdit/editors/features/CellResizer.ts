@@ -9,7 +9,10 @@ import {
     MIN_ALLOWED_TABLE_CELL_HEIGHT,
     parseValueWithUnit,
 } from 'roosterjs-content-model-dom';
-import type { DragAndDropHandler } from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
+import type {
+    DragAndDropEvent,
+    DragAndDropHandler,
+} from '../../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { IEditor, ReadonlyContentModelTable } from 'roosterjs-content-model-types';
 import type { OnTableEditorCreatedCallback } from '../../OnTableEditorCreatedCallback';
 
@@ -74,6 +77,7 @@ export function createCellResizer(
         handler,
         zoomScale,
         editor.getEnvironment().isMobileOrTablet,
+        editor.getEnvironment().isTouchSupported,
         onTableEditorCreated
     );
 
@@ -90,9 +94,10 @@ class CellResizer extends DragAndDropHelper<CellResizerContext, CellResizerInitV
         handler: DragAndDropHandler<CellResizerContext, CellResizerInitValue>,
         zoomScale: number,
         forceMobile?: boolean,
+        isTouchSupported?: boolean,
         onTableEditorCreated?: OnTableEditorCreatedCallback
     ) {
-        super(trigger, context, onSubmit, handler, zoomScale, forceMobile);
+        super(trigger, context, onSubmit, handler, zoomScale, forceMobile, isTouchSupported);
         this.disposer = onTableEditorCreated?.('CellResizer', trigger);
     }
 
@@ -134,7 +139,10 @@ export interface CellResizerInitValue {
  * @internal
  * Exported for testing
  */
-export function onDragStart(context: CellResizerContext, event: MouseEvent): CellResizerInitValue {
+export function onDragStart(
+    context: CellResizerContext,
+    event: DragAndDropEvent
+): CellResizerInitValue {
     const { td, onStart } = context;
     const rect = normalizeRect(td.getBoundingClientRect());
 
@@ -208,7 +216,7 @@ export function onDragStart(context: CellResizerContext, event: MouseEvent): Cel
  */
 export function onDraggingHorizontal(
     context: CellResizerContext,
-    event: MouseEvent,
+    event: DragAndDropEvent,
     initValue: CellResizerInitValue,
     deltaX: number,
     deltaY: number
@@ -247,7 +255,7 @@ export function onDraggingHorizontal(
  */
 export function onDraggingVertical(
     context: CellResizerContext,
-    event: MouseEvent,
+    event: DragAndDropEvent,
     initValue: CellResizerInitValue,
     deltaX: number
 ) {

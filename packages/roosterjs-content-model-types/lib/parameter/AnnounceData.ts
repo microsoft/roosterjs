@@ -65,7 +65,15 @@ export type KnownAnnounceStrings =
      * @example
      * {0}, unselected
      */
-    | 'unselected';
+    | 'unselected'
+
+    /**
+     * String announced when a new line is inserted in the editor.
+     * Used when Enter is pressed and a new line is inserted in the editor.
+     * @example
+     * New line inserted
+     */
+    | 'newLineInserted';
 
 /**
  * Represents data, that can be used to announce text to screen reader.

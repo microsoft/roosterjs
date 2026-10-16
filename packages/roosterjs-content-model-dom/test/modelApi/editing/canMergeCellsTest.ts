@@ -1,4 +1,4 @@
-import { canMergeCells } from '../../../lib/modelApi/table/canMergeCells';
+import { canMergeCells } from '../../../lib/modelApi/editing/canMergeCells';
 import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 
 describe('canMergeCells', () => {

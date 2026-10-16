@@ -5,6 +5,7 @@ import {
     mutateBlock,
     getTableMetadata,
     parseValueWithUnit,
+    parseColor,
     setFirstColumnFormatBorders,
     updateTableCellMetadata,
 } from 'roosterjs-content-model-dom';
@@ -25,6 +26,15 @@ type BorderPositions = 'borderTop' | 'borderBottom' | 'borderLeft' | 'borderRigh
 
 /**
  * @internal
+ * Border positions to update on a cell
+ */
+type BorderUpdate = {
+    cell: ReadonlyContentModelTableCell;
+    positions: BorderPositions[];
+};
+
+/**
+ * @internal
  * Perimeter of the table selection
  * Used to determine where to apply border to the cells adjacent to the selection.
  */
@@ -37,6 +47,7 @@ type Perimeter = {
 
 /**
  * Operations to apply border
+ * Remove the targeted borders instead if they all already match the requested format.
  * @param editor The editor instance
  * @param border The border to apply
  * @param operation The operation to apply
@@ -94,6 +105,13 @@ export function applyTableBorderFormat(
                 const isRtl = tableModel.format.direction == 'rtl';
 
                 if (sel) {
+                    const borderUpdates: BorderUpdate[] = [];
+                    const collectBorderFormat = (
+                        cell: ReadonlyContentModelTableCell,
+                        positions: BorderPositions[]
+                    ) => {
+                        borderUpdates.push({ cell, positions });
+                    };
                     const operations: BorderOperations[] = [operation];
                     while (operations.length) {
                         switch (operations.pop()) {
@@ -121,7 +139,7 @@ export function applyTableBorderFormat(
                                     ) {
                                         const cell = tableModel.rows[rowIndex].cells[colIndex];
                                         // Format cells - All borders
-                                        applyBorderFormat(cell, borderFormat, allBorders);
+                                        collectBorderFormat(cell, allBorders);
                                     }
                                 }
 
@@ -143,7 +161,7 @@ export function applyTableBorderFormat(
                                             isRtl ? sel.lastColumn : sel.firstColumn
                                         ];
                                     // Format cells - Left border
-                                    applyBorderFormat(cell, borderFormat, leftBorder);
+                                    collectBorderFormat(cell, leftBorder);
                                 }
 
                                 // Format perimeter
@@ -161,7 +179,7 @@ export function applyTableBorderFormat(
                                             isRtl ? sel.firstColumn : sel.lastColumn
                                         ];
                                     // Format cells - Right border
-                                    applyBorderFormat(cell, borderFormat, rightBorder);
+                                    collectBorderFormat(cell, rightBorder);
                                 }
 
                                 // Format perimeter
@@ -176,7 +194,7 @@ export function applyTableBorderFormat(
                                 ) {
                                     const cell = tableModel.rows[sel.firstRow].cells[colIndex];
                                     // Format cells - Top border
-                                    applyBorderFormat(cell, borderFormat, topBorder);
+                                    collectBorderFormat(cell, topBorder);
                                 }
 
                                 // Format perimeter
@@ -191,7 +209,7 @@ export function applyTableBorderFormat(
                                 ) {
                                     const cell = tableModel.rows[sel.lastRow].cells[colIndex];
                                     // Format cells - Bottom border
-                                    applyBorderFormat(cell, borderFormat, bottomBorder);
+                                    collectBorderFormat(cell, bottomBorder);
                                 }
 
                                 // Format perimeter
@@ -207,9 +225,8 @@ export function applyTableBorderFormat(
                                 }
                                 // Single column selection
                                 if (singleCol) {
-                                    applyBorderFormat(
+                                    collectBorderFormat(
                                         tableModel.rows[sel.firstRow].cells[sel.firstColumn],
-                                        borderFormat,
                                         ['borderBottom']
                                     );
                                     for (
@@ -219,25 +236,20 @@ export function applyTableBorderFormat(
                                     ) {
                                         const cell =
                                             tableModel.rows[rowIndex].cells[sel.firstColumn];
-                                        applyBorderFormat(cell, borderFormat, [
-                                            'borderTop',
-                                            'borderBottom',
-                                        ]);
+                                        collectBorderFormat(cell, ['borderTop', 'borderBottom']);
                                     }
-                                    applyBorderFormat(
+                                    collectBorderFormat(
                                         tableModel.rows[sel.lastRow].cells[sel.firstColumn],
-                                        borderFormat,
                                         ['borderTop']
                                     );
                                     break;
                                 }
                                 // Single row selection
                                 if (singleRow) {
-                                    applyBorderFormat(
+                                    collectBorderFormat(
                                         tableModel.rows[sel.firstRow].cells[
                                             isRtl ? sel.lastColumn : sel.firstColumn
                                         ],
-                                        borderFormat,
                                         ['borderRight']
                                     );
                                     for (
@@ -246,16 +258,12 @@ export function applyTableBorderFormat(
                                         colIndex++
                                     ) {
                                         const cell = tableModel.rows[sel.firstRow].cells[colIndex];
-                                        applyBorderFormat(cell, borderFormat, [
-                                            'borderLeft',
-                                            'borderRight',
-                                        ]);
+                                        collectBorderFormat(cell, ['borderLeft', 'borderRight']);
                                     }
-                                    applyBorderFormat(
+                                    collectBorderFormat(
                                         tableModel.rows[sel.firstRow].cells[
                                             isRtl ? sel.firstColumn : sel.lastColumn
                                         ],
-                                        borderFormat,
                                         ['borderLeft']
                                     );
                                     break;
@@ -263,35 +271,31 @@ export function applyTableBorderFormat(
 
                                 // For multiple rows and columns selections
                                 // Top left cell
-                                applyBorderFormat(
+                                collectBorderFormat(
                                     tableModel.rows[sel.firstRow].cells[
                                         isRtl ? sel.lastColumn : sel.firstColumn
                                     ],
-                                    borderFormat,
                                     ['borderBottom', 'borderRight']
                                 );
                                 // Top right cell
-                                applyBorderFormat(
+                                collectBorderFormat(
                                     tableModel.rows[sel.firstRow].cells[
                                         isRtl ? sel.firstColumn : sel.lastColumn
                                     ],
-                                    borderFormat,
                                     ['borderBottom', 'borderLeft']
                                 );
                                 // Bottom left cell
-                                applyBorderFormat(
+                                collectBorderFormat(
                                     tableModel.rows[sel.lastRow].cells[
                                         isRtl ? sel.lastColumn : sel.firstColumn
                                     ],
-                                    borderFormat,
                                     ['borderTop', 'borderRight']
                                 );
                                 // Bottom right cell
-                                applyBorderFormat(
+                                collectBorderFormat(
                                     tableModel.rows[sel.lastRow].cells[
                                         isRtl ? sel.firstColumn : sel.lastColumn
                                     ],
-                                    borderFormat,
                                     ['borderTop', 'borderLeft']
                                 );
                                 // First row
@@ -301,7 +305,7 @@ export function applyTableBorderFormat(
                                     colIndex++
                                 ) {
                                     const cell = tableModel.rows[sel.firstRow].cells[colIndex];
-                                    applyBorderFormat(cell, borderFormat, [
+                                    collectBorderFormat(cell, [
                                         'borderBottom',
                                         'borderLeft',
                                         'borderRight',
@@ -314,7 +318,7 @@ export function applyTableBorderFormat(
                                     colIndex++
                                 ) {
                                     const cell = tableModel.rows[sel.lastRow].cells[colIndex];
-                                    applyBorderFormat(cell, borderFormat, [
+                                    collectBorderFormat(cell, [
                                         'borderTop',
                                         'borderLeft',
                                         'borderRight',
@@ -327,7 +331,7 @@ export function applyTableBorderFormat(
                                     rowIndex++
                                 ) {
                                     const cell = tableModel.rows[rowIndex].cells[sel.firstColumn];
-                                    applyBorderFormat(cell, borderFormat, [
+                                    collectBorderFormat(cell, [
                                         'borderTop',
                                         'borderBottom',
                                         isRtl ? 'borderLeft' : 'borderRight',
@@ -340,7 +344,7 @@ export function applyTableBorderFormat(
                                     rowIndex++
                                 ) {
                                     const cell = tableModel.rows[rowIndex].cells[sel.lastColumn];
-                                    applyBorderFormat(cell, borderFormat, [
+                                    collectBorderFormat(cell, [
                                         'borderTop',
                                         'borderBottom',
                                         isRtl ? 'borderRight' : 'borderLeft',
@@ -365,6 +369,20 @@ export function applyTableBorderFormat(
                         }
                     }
 
+                    // Compare before changing any cells, and only consider borders targeted by
+                    // this operation. Normalize CSS so DOM colors (rgb) also match hex input.
+                    if (
+                        operation != 'noBorders' &&
+                        borderUpdates.length > 0 &&
+                        hasMatchingBorders(borderUpdates, borderFormat)
+                    ) {
+                        borderFormat = '';
+                    }
+
+                    for (const { cell, positions } of borderUpdates) {
+                        applyBorderFormat(cell, borderFormat, positions);
+                    }
+
                     //Format perimeter if necessary or possible
                     modifyPerimeter(tableModel, sel, borderFormat, perimeter, isRtl);
                 }
@@ -383,6 +401,53 @@ export function applyTableBorderFormat(
         {
             apiName: 'tableBorder',
         }
+    );
+}
+
+/**
+ * Check targeted borders without repeatedly parsing identical CSS values.
+ * @param borderUpdates The borders to compare
+ * @param borderFormat The requested border format
+ */
+function hasMatchingBorders(borderUpdates: BorderUpdate[], borderFormat: string): boolean {
+    const matchingBorders = new Set<string>();
+
+    for (const { cell, positions } of borderUpdates) {
+        for (const pos of positions) {
+            const value = cell.format[pos] || '';
+
+            // Exact matches need no CSS parsing. Equivalent values are parsed only once.
+            if (value == borderFormat || matchingBorders.has(value)) {
+                continue;
+            }
+
+            if (!areSameBorders(value, borderFormat)) {
+                return false;
+            }
+
+            matchingBorders.add(value);
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Compare border components, parsing colors to account for equivalent hex and RGB values.
+ */
+function areSameBorders(border1: string, border2: string): boolean {
+    const values1 = extractBorderValues(border1);
+    const values2 = extractBorderValues(border2);
+    const color1 = values1.color || '';
+    const color2 = values2.color || '';
+    const rgb1 = parseColor(color1);
+    const rgb2 = parseColor(color2);
+
+    return (
+        values1.width == values2.width &&
+        values1.style == values2.style &&
+        (color1 == color2 ||
+            (!!rgb1 && !!rgb2 && rgb1[0] == rgb2[0] && rgb1[1] == rgb2[1] && rgb1[2] == rgb2[2]))
     );
 }
 

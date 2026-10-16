@@ -1,5 +1,8 @@
 import { handleEnterOnParagraph } from '../../../lib/edit/inputSteps/handleEnterOnParagraph';
-import { ValidDeleteSelectionContext } from 'roosterjs-content-model-types';
+import {
+    FormatContentModelContext,
+    ValidDeleteSelectionContext,
+} from 'roosterjs-content-model-types';
 import {
     createContentModelDocument,
     createParagraph,
@@ -43,6 +46,11 @@ describe('handleEnterOnParagraph', () => {
         const mockedCache = {} as any;
         const text1 = createText('test1');
         const text2 = createText('test1');
+        const formatContext: FormatContentModelContext = {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        };
 
         para.segments.push(text1, marker, text2);
         doc.blocks.push(para);
@@ -55,6 +63,7 @@ describe('handleEnterOnParagraph', () => {
                 marker: marker,
                 path: [doc],
             },
+            formatContext,
         };
 
         handleEnterOnParagraph([])(context);
@@ -97,6 +106,9 @@ describe('handleEnterOnParagraph', () => {
             },
             marker: marker,
             path: [doc],
+        });
+        expect(formatContext.announceData).toEqual({
+            defaultStrings: 'newLineInserted',
         });
     });
 

@@ -1,4 +1,4 @@
-@import '../../theme/theme.scss';
+@use '../../theme/theme.scss' as *;
 
 .snapshotPane {
     flex: 1 1 auto;

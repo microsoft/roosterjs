@@ -512,3 +512,5 @@ export { EnterShadowEditEvent, LeaveShadowEditEvent } from './event/ShadowEditEv
 export { ZoomChangedEvent } from './event/ZoomChangedEvent';
 export { PointerDownEvent, PointerUpEvent } from './event/PointerEvent';
 export { FindResultChangedEvent } from './event/FindResultChangedEvent';
+
+export { RoosterJsDevToolsHook } from './editor/RoosterJsDevToolsHook';

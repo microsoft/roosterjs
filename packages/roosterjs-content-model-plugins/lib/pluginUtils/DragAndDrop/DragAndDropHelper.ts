@@ -1,5 +1,5 @@
 import type { Disposable } from '../Disposable';
-import type { DragAndDropHandler } from './DragAndDropHandler';
+import type { DragAndDropEvent, DragAndDropHandler } from './DragAndDropHandler';
 
 /**
  * @internal
@@ -13,52 +13,61 @@ interface MouseEventMoves {
 /**
  * @internal
  */
-interface MouseEventInfo extends MouseEventMoves {
-    getPageXY: (e: MouseEvent) => number[];
-}
-
-/**
- * @internal
- * Compatible mouse event names for different platform
- */
-interface TouchEventInfo extends MouseEventMoves {
-    getPageXY: (e: TouchEvent) => number[];
+interface DragEventInfo extends MouseEventMoves {
+    normalizeEvent: (event: Event) => DragAndDropEvent;
 }
 
 /**
  * Generate event names and getXY function based on different platforms to be compatible with desktop and mobile browsers
  */
-const MOUSE_EVENT_INFO_DESKTOP: MouseEventInfo = (() => {
+const MOUSE_EVENT_INFO_DESKTOP: DragEventInfo = (() => {
     return {
         MOUSEDOWN: 'mousedown',
         MOUSEMOVE: 'mousemove',
         MOUSEUP: 'mouseup',
-        getPageXY: getMouseEventPageXY,
+        normalizeEvent: normalizeMouseEvent,
     };
 })();
 
-const MOUSE_EVENT_INFO_MOBILE: TouchEventInfo = (() => {
+const MOUSE_EVENT_INFO_MOBILE: DragEventInfo = (() => {
     return {
         MOUSEDOWN: 'touchstart',
         MOUSEMOVE: 'touchmove',
         MOUSEUP: 'touchend',
-        getPageXY: getTouchEventPageXY,
+        normalizeEvent: normalizeTouchEvent,
     };
 })();
 
-function getMouseEventPageXY(e: MouseEvent): [number, number] {
-    return [e.pageX, e.pageY];
+function normalizeMouseEvent(event: Event): DragAndDropEvent {
+    const mouseEvent = event as MouseEvent;
+
+    return {
+        clientX: mouseEvent.clientX,
+        clientY: mouseEvent.clientY,
+        pageX: mouseEvent.pageX,
+        pageY: mouseEvent.pageY,
+        target: mouseEvent.target,
+        shiftKey: mouseEvent.shiftKey,
+        altKey: mouseEvent.altKey,
+    };
 }
 
-function getTouchEventPageXY(e: TouchEvent): [number, number] {
-    let pageX = 0;
-    let pageY = 0;
-    if (e.targetTouches && e.targetTouches.length > 0) {
-        const touch = e.targetTouches[0];
-        pageX = touch.pageX;
-        pageY = touch.pageY;
-    }
-    return [pageX, pageY];
+function normalizeTouchEvent(event: Event): DragAndDropEvent {
+    const touchEvent = event as TouchEvent;
+    const touch = touchEvent.targetTouches?.[0] ?? touchEvent.changedTouches?.[0];
+    const clientX = touch?.clientX ?? 0;
+    const clientY = touch?.clientY ?? 0;
+    const document = touchEvent.view?.document ?? (event.target as Node | null)?.ownerDocument;
+
+    return {
+        clientX,
+        clientY,
+        pageX: touch?.pageX ?? 0,
+        pageY: touch?.pageY ?? 0,
+        target: touch ? document?.elementFromPoint(clientX, clientY) ?? event.target : event.target,
+        shiftKey: false,
+        altKey: false,
+    };
 }
 
 /**
@@ -69,7 +78,9 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
     private initX: number = 0;
     private initY: number = 0;
     private initValue: TInitValue | undefined = undefined;
-    private dndMouse: MouseEventInfo | TouchEventInfo;
+    private dndMouse: DragEventInfo = MOUSE_EVENT_INFO_DESKTOP;
+    private readonly dndMouseList: DragEventInfo[];
+    private readonly originalTouchAction: string;
 
     /**
      * Create a new instance of DragAndDropHelper class
@@ -81,6 +92,7 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
      * @param handler The event handler object, see DragAndDropHandler interface for more information
      * @param zoomScale The zoom scale of the editor
      * @param forceMobile A boolean to force the use of touch controls for the helper
+     * @param isTouchSupported Whether the current browser supports touch input
      */
     constructor(
         private trigger: HTMLElement,
@@ -88,17 +100,32 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
         private onSubmit: (context: TContext, trigger: HTMLElement) => void,
         private handler: DragAndDropHandler<TContext, TInitValue>,
         private zoomScale: number,
-        forceMobile?: boolean
+        forceMobile?: boolean,
+        isTouchSupported?: boolean
     ) {
-        this.dndMouse = forceMobile ? MOUSE_EVENT_INFO_MOBILE : MOUSE_EVENT_INFO_DESKTOP;
-        trigger.addEventListener(this.dndMouse.MOUSEDOWN, this.onMouseDown);
+        this.dndMouseList = forceMobile
+            ? [MOUSE_EVENT_INFO_MOBILE]
+            : isTouchSupported
+            ? [MOUSE_EVENT_INFO_DESKTOP, MOUSE_EVENT_INFO_MOBILE]
+            : [MOUSE_EVENT_INFO_DESKTOP];
+        this.dndMouse = this.dndMouseList[0];
+        this.originalTouchAction = trigger.style.touchAction;
+        if (this.dndMouseList.indexOf(MOUSE_EVENT_INFO_MOBILE) >= 0) {
+            trigger.style.touchAction = 'none';
+        }
+        this.dndMouseList.forEach(eventInfo =>
+            trigger.addEventListener(eventInfo.MOUSEDOWN, this.onMouseDown, { passive: false })
+        );
     }
 
     /**
      * Dispose this object, remove all event listeners that has been attached
      */
     dispose() {
-        this.trigger.removeEventListener(this.dndMouse.MOUSEDOWN, this.onMouseDown);
+        this.dndMouseList.forEach(eventInfo =>
+            this.trigger.removeEventListener(eventInfo.MOUSEDOWN, this.onMouseDown)
+        );
+        this.trigger.style.touchAction = this.originalTouchAction;
         this.removeDocumentEvents();
     }
 
@@ -108,8 +135,14 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
 
     private addDocumentEvents() {
         const doc = this.trigger.ownerDocument;
-        doc.addEventListener(this.dndMouse.MOUSEMOVE, this.onMouseMove, true /*useCapture*/);
-        doc.addEventListener(this.dndMouse.MOUSEUP, this.onMouseUp, true /*useCapture*/);
+        doc.addEventListener(this.dndMouse.MOUSEMOVE, this.onMouseMove, {
+            capture: true,
+            passive: false,
+        });
+        doc.addEventListener(this.dndMouse.MOUSEUP, this.onMouseUp, {
+            capture: true,
+            passive: false,
+        });
     }
 
     private removeDocumentEvents() {
@@ -121,19 +154,24 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
     private onMouseDown = (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
+        this.dndMouse =
+            e.type == MOUSE_EVENT_INFO_MOBILE.MOUSEDOWN
+                ? MOUSE_EVENT_INFO_MOBILE
+                : MOUSE_EVENT_INFO_DESKTOP;
         this.addDocumentEvents();
-        [this.initX, this.initY] = this.dndMouse.getPageXY(e as MouseEvent & TouchEvent);
-        this.initValue = this.handler.onDragStart?.(this.context, e as MouseEvent);
+        const event = this.dndMouse.normalizeEvent(e);
+        [this.initX, this.initY] = [event.pageX, event.pageY];
+        this.initValue = this.handler.onDragStart?.(this.context, event);
     };
 
     private onMouseMove = (e: Event) => {
         e.preventDefault();
-        const [pageX, pageY] = this.dndMouse.getPageXY(e as MouseEvent & TouchEvent);
-        const deltaX = (pageX - this.initX) / this.zoomScale;
-        const deltaY = (pageY - this.initY) / this.zoomScale;
+        const event = this.dndMouse.normalizeEvent(e);
+        const deltaX = (event.pageX - this.initX) / this.zoomScale;
+        const deltaY = (event.pageY - this.initY) / this.zoomScale;
         if (
             this.initValue &&
-            this.handler.onDragging?.(this.context, e as MouseEvent, this.initValue, deltaX, deltaY)
+            this.handler.onDragging?.(this.context, event, this.initValue, deltaX, deltaY)
         ) {
             this.onSubmit?.(this.context, this.trigger);
         }
@@ -142,7 +180,9 @@ export class DragAndDropHelper<TContext, TInitValue> implements Disposable {
     private onMouseUp = (e: Event) => {
         e.preventDefault();
         this.removeDocumentEvents();
-        if (this.handler.onDragEnd?.(this.context, e as MouseEvent, this.initValue)) {
+        if (
+            this.handler.onDragEnd?.(this.context, this.dndMouse.normalizeEvent(e), this.initValue)
+        ) {
             this.onSubmit?.(this.context, this.trigger);
         }
     };

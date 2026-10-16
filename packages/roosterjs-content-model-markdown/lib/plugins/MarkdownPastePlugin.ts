@@ -90,7 +90,13 @@ export class MarkdownPastePlugin implements EditorPlugin {
                 const modelBeforePaste = cloneModelForPaste(clipboardData.modelBeforePaste);
                 mergeModel(
                     modelBeforePaste,
-                    convertMarkdownToContentModel(clipboardData.text, { emptyLine: 'merge' })
+                    convertMarkdownToContentModel(clipboardData.text, {
+                        emptyLine: 'merge',
+                    }),
+                    undefined /*context*/,
+                    {
+                        mergeFormat: 'preferTarget',
+                    }
                 );
                 if (this.options.undoConversion) {
                     this.editor.takeSnapshot();

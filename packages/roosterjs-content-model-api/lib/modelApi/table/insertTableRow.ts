@@ -29,7 +29,7 @@ export function insertTableRow(
                 cells: sourceRow.cells.map(cell => {
                     const newCell = createTableCell(
                         cell.spanLeft,
-                        cell.spanAbove,
+                        false, //spanAbove
                         cell.isHeader,
                         cell.format,
                         cell.dataset

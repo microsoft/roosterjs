@@ -1,5 +1,19 @@
 /**
  * @internal
+ * Platform-independent drag event information.
+ */
+export interface DragAndDropEvent {
+    clientX: number;
+    clientY: number;
+    pageX: number;
+    pageY: number;
+    target: EventTarget | null;
+    shiftKey: boolean;
+    altKey: boolean;
+}
+
+/**
+ * @internal
  * Drag and drop handler interface, used for implementing a handler object and pass into DragAndDropHelper class
  */
 export interface DragAndDropHandler<TContext, TInitValue> {
@@ -11,7 +25,7 @@ export interface DragAndDropHandler<TContext, TInitValue> {
      * @returns An optional object, which will be passed into onDragging and onDragEnd callback. It normally used
      * for passing an initial state of the target object
      */
-    onDragStart?: (context: TContext, event: MouseEvent) => TInitValue;
+    onDragStart?: (context: TContext, event: DragAndDropEvent) => TInitValue;
 
     /**
      * A callback that will be called when user moves mouse and drag the trigger element.
@@ -30,7 +44,7 @@ export interface DragAndDropHandler<TContext, TInitValue> {
      */
     onDragging?: (
         context: TContext,
-        event: MouseEvent,
+        event: DragAndDropEvent,
         initValue: TInitValue,
         deltaX: number,
         deltaY: number
@@ -51,7 +65,7 @@ export interface DragAndDropHandler<TContext, TInitValue> {
      */
     onDragEnd?: (
         context: TContext,
-        event: MouseEvent,
+        event: DragAndDropEvent,
         initValue: TInitValue | undefined
     ) => boolean;
 }

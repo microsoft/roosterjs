@@ -57,7 +57,7 @@ describe('restoreSnapshotColors', () => {
             'lightToDark',
             darkColorHandler,
             {
-                tableBorders: false,
+                tableBorders: true,
             }
         );
     });
@@ -91,7 +91,7 @@ describe('restoreSnapshotColors', () => {
             'darkToLight',
             darkColorHandler,
             {
-                tableBorders: false,
+                tableBorders: true,
             }
         );
         expect(updateKnownColorSpy).toHaveBeenCalledWith(false);

@@ -1,10 +1,15 @@
 import type { ReadonlyContentModelTableRow } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Check whether the given range of table cells can be merged without splitting existing spans.
+ * @param rows The table rows to check
+ * @param firstRow The first row index of the range
+ * @param firstCol The first column index of the range
+ * @param lastRow The last row index of the range
+ * @param lastCol The last column index of the range
  */
 export function canMergeCells(
-    rows: ReadonlyContentModelTableRow[],
+    rows: readonly ReadonlyContentModelTableRow[],
     firstRow: number,
     firstCol: number,
     lastRow: number,
@@ -41,7 +46,7 @@ export function canMergeCells(
 }
 
 function getBelowSpanCount(
-    rows: ReadonlyContentModelTableRow[],
+    rows: readonly ReadonlyContentModelTableRow[],
     rowIndex: number,
     colIndex: number
 ) {
@@ -59,7 +64,7 @@ function getBelowSpanCount(
 }
 
 function getRightSpanCount(
-    rows: ReadonlyContentModelTableRow[],
+    rows: readonly ReadonlyContentModelTableRow[],
     rowIndex: number,
     colIndex: number
 ) {

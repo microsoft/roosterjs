@@ -1,6 +1,6 @@
 import { BorderKeys } from '../../formatHandlers/utils/borderKeys';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/style/borderValues';
-import { mutateBlock, mutateSegment } from '../common/mutate';
+import { mutateBlock } from '../common/mutate';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from '../../constants/TableBorderFormat';
 import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
@@ -10,6 +10,7 @@ import type {
     ReadonlyContentModelTable,
     ShallowMutableContentModelTableRow,
     TableMetadataFormat,
+    TableSpecialCellMetadataFormat,
 } from 'roosterjs-content-model-types';
 
 const DEFAULT_FORMAT: TableMetadataFormat = {
@@ -57,10 +58,77 @@ export function applyTableFormat(
         const metaOverrides: MetaOverrides = updateOverrides(rows, !keepCellShade);
 
         formatCells(rows, effectiveMetadata, metaOverrides);
+
+        if (
+            format?.hasFirstColumn &&
+            (!effectiveMetadata.hasFirstColumn || newFormat?.firstColumnCustomStyles !== undefined)
+        ) {
+            clearFirstColumnTextFormat(rows, format.firstColumnCustomStyles);
+        }
+
+        if (
+            format?.hasHeaderRow &&
+            (!effectiveMetadata.hasHeaderRow || newFormat?.headerRowCustomStyles !== undefined)
+        ) {
+            clearHeaderRowTextFormat(rows, format.headerRowCustomStyles);
+        }
+
         setFirstColumnFormatBorders(rows, effectiveMetadata);
         setHeaderRowFormat(rows, effectiveMetadata, metaOverrides);
 
         return effectiveMetadata;
+    });
+}
+
+function clearFirstColumnTextFormat(
+    rows: ShallowMutableContentModelTableRow[],
+    customStyles: TableSpecialCellMetadataFormat | null | undefined
+) {
+    const fontWeight = customStyles?.fontWeight ?? 'bold';
+
+    rows.forEach(row => {
+        const cell = row.cells[0] && mutateBlock(row.cells[0]);
+
+        if (cell) {
+            clearStyleIfMatch(cell.format, 'fontWeight', fontWeight);
+            clearStyleIfMatch(cell.format, 'textAlign', customStyles?.textAlign);
+
+            for (const block of cell.blocks) {
+                if (block.blockType == 'Paragraph') {
+                    const mutateParagraph = mutateBlock(block);
+                    for (const cellSegment of mutateParagraph.segments) {
+                        clearStyleIfMatch(cellSegment.format, 'fontWeight', fontWeight);
+                        clearStyleIfMatch(cellSegment.format, 'italic', customStyles?.italic);
+                    }
+                    clearStyleIfMatch(block.format, 'textAlign', customStyles?.textAlign);
+                }
+            }
+        }
+    });
+}
+
+function clearHeaderRowTextFormat(
+    rows: ShallowMutableContentModelTableRow[],
+    customStyles: TableSpecialCellMetadataFormat | null | undefined
+) {
+    const fontWeight = customStyles?.fontWeight ?? 'bold';
+
+    rows[0]?.cells.forEach(readonlyCell => {
+        const cell = mutateBlock(readonlyCell);
+
+        clearStyleIfMatch(cell.format, 'fontWeight', fontWeight);
+        clearStyleIfMatch(cell.format, 'textAlign', customStyles?.textAlign);
+
+        for (const block of cell.blocks) {
+            if (block.blockType == 'Paragraph') {
+                const mutateParagraph = mutateBlock(block);
+                for (const cellSegment of mutateParagraph.segments) {
+                    clearStyleIfMatch(cellSegment.format, 'fontWeight', fontWeight);
+                    clearStyleIfMatch(cellSegment.format, 'italic', customStyles?.italic);
+                }
+                clearStyleIfMatch(block.format, 'textAlign', customStyles?.textAlign);
+            }
+        }
     });
 }
 
@@ -290,37 +358,36 @@ export function setFirstColumnFormatBorders(
 
                 for (const block of cell.blocks) {
                     if (block.blockType == 'Paragraph') {
-                        for (const segment of block.segments) {
-                            mutateSegment(block, segment, cellSegment => {
-                                if (format.hasFirstColumn) {
-                                    setStyleIfDefined(
-                                        cellSegment.format,
-                                        'fontWeight',
-                                        customStyles?.fontWeight ?? 'bold'
-                                    );
-                                    setStyleIfDefined(
-                                        cell.format,
-                                        'textAlign',
-                                        customStyles?.textAlign
-                                    );
-                                    setStyleIfDefined(
-                                        cell.format,
-                                        'fontWeight',
-                                        customStyles?.fontWeight ?? 'bold'
-                                    );
-                                    setStyleIfDefined(
-                                        cellSegment.format,
-                                        'italic',
-                                        customStyles?.italic
-                                    );
-                                } else if (
-                                    cellSegment.format.fontWeight == 'bold' &&
-                                    cell.format.fontWeight == 'bold'
-                                ) {
-                                    delete cellSegment.format.fontWeight;
-                                    delete cell.format.fontWeight;
+                        const mutateParagraph = mutateBlock(block);
+                        for (const cellSegment of mutateParagraph.segments) {
+                            if (format.hasFirstColumn) {
+                                setStyleIfDefined(
+                                    cellSegment.format,
+                                    'fontWeight',
+                                    customStyles?.fontWeight ?? 'bold'
+                                );
+                                setStyleIfDefined(
+                                    cell.format,
+                                    'textAlign',
+                                    customStyles?.textAlign
+                                );
+                                setStyleIfDefined(
+                                    cell.format,
+                                    'fontWeight',
+                                    customStyles?.fontWeight ?? 'bold'
+                                );
+                                if (customStyles?.italic) {
+                                    cellSegment.format.italic = true;
+                                } else if (customStyles?.italic === false) {
+                                    delete cellSegment.format.italic;
                                 }
-                            });
+                            } else if (
+                                cellSegment.format.fontWeight == 'bold' &&
+                                cell.format.fontWeight == 'bold'
+                            ) {
+                                delete cellSegment.format.fontWeight;
+                                delete cell.format.fontWeight;
+                            }
                         }
                     }
                 }
@@ -341,6 +408,12 @@ function setStyleIfDefined<T, K extends keyof T>(format: T, key: K, value: T[K] 
     }
 }
 
+function clearStyleIfMatch<T, K extends keyof T>(format: T, key: K, value: T[K] | undefined) {
+    if (value !== undefined && format[key] === value) {
+        delete format[key];
+    }
+}
+
 function setHeaderRowFormat(
     rows: ShallowMutableContentModelTableRow[],
     format: TableMetadataFormat,
@@ -355,9 +428,10 @@ function setHeaderRowFormat(
 
     rows[rowIndex]?.cells.forEach((readonlyCell, cellIndex) => {
         const cell = mutateBlock(readonlyCell);
+        const fontWeight = customStyles?.fontWeight ?? 'bold';
 
         cell.isHeader = true;
-        cell.format.fontWeight = customStyles?.fontWeight ?? 'bold';
+        cell.format.fontWeight = fontWeight;
 
         if (format.headerRowColor) {
             if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
@@ -388,16 +462,18 @@ function setHeaderRowFormat(
         if (customStyles) {
             setStyleIfDefined(cell.format, 'textAlign', customStyles.textAlign);
             setBorderColorIfExists(cell.format, 'borderBottom', customStyles.borderBottomColor);
-            for (const block of cell.blocks) {
-                if (block.blockType == 'Paragraph') {
-                    for (const segment of block.segments) {
-                        mutateSegment(block, segment, cellSegment => {
-                            if (customStyles.italic) {
-                                cellSegment.format.italic = customStyles.italic;
-                            } else if (cellSegment.format.italic) {
-                                delete cellSegment.format.italic;
-                            }
-                        });
+        }
+
+        for (const block of cell.blocks) {
+            if (block.blockType == 'Paragraph') {
+                const mutateParagraph = mutateBlock(block);
+                for (const cellSegment of mutateParagraph.segments) {
+                    cellSegment.format.fontWeight = fontWeight;
+
+                    if (customStyles?.italic) {
+                        cellSegment.format.italic = true;
+                    } else if (customStyles?.italic === false) {
+                        delete cellSegment.format.italic;
                     }
                 }
             }

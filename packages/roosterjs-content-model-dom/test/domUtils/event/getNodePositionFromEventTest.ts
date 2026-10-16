@@ -29,6 +29,18 @@ describe('getNodePositionFromEvent', () => {
             expect(result).toEqual({ node: mockNode, offset: 5 });
         });
 
+        it('should normalize a position after the BR in an empty block', () => {
+            mockNode.appendChild(document.createElement('br'));
+            const mockPos = { offsetNode: mockNode, offset: 1 };
+            (mockDoc as any).caretPositionFromPoint = jasmine
+                .createSpy('caretPositionFromPoint')
+                .and.returnValue(mockPos);
+
+            const result = getNodePositionFromEvent(mockDoc, mockDomHelper, 100, 200);
+
+            expect(result).toEqual({ node: mockNode, offset: 0 });
+        });
+
         it('should not use caretPositionFromPoint result when node is not in editor', () => {
             const outsideNode = document.createElement('span');
             const mockPos = { offsetNode: outsideNode, offset: 3 };

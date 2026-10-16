@@ -52,6 +52,10 @@ describe('Default styles', () => {
         runTest('b', { fontWeight: 'bold' });
     });
 
+    it('Default style for DEL', () => {
+        runTest('del', { textDecoration: 'line-through' });
+    });
+
     it('Default style for EM', () => {
         runTest('em', { fontStyle: 'italic' });
     });
