@@ -223,6 +223,44 @@ describe('sanitizeHtml', () => {
         runTest('aa<form action=/>cc</form>bb', 'aa<span>cc</span>bb');
     });
 
+    it('Html contains script url obfuscated with TAB or CR', () => {
+        // Browsers remove TAB, LF and CR from a URL before resolving its protocol
+        runTest('aa<a href="java&#9;script:alert(1)">cc</a>bb', 'aa<a>cc</a>bb');
+        runTest('aa<a href="javascr&#13;ipt:alert(1)">cc</a>bb', 'aa<a>cc</a>bb');
+        runTest('aa<a href="javascr&#9;ipt:alert(1)">cc</a>bb', 'aa<a>cc</a>bb');
+        runTest('aa<a href="&#32;&#9;javascript:alert(1)">cc</a>bb', 'aa<a>cc</a>bb');
+        runTest('aa<area href="java&#9;script:alert(1)">bb', 'aa<area>bb');
+    });
+
+    it('Html contains url that only looks like a script url', () => {
+        runTest(
+            '<a href="https://example.com/transcript:a">cc</a>',
+            '<a href="https://example.com/transcript:a">cc</a>'
+        );
+    });
+
+    it('Xmp is not kept because its content is serialized without escaping', () => {
+        runTest(
+            '<xmp><img src=x onerror=alert(1)></xmp>',
+            '<span>&lt;img src=x onerror=alert(1)&gt;</span>'
+        );
+    });
+
+    it('Style name that matches a member of Object.prototype', () => {
+        // Those names must not be treated as a sanitizer from the prototype chain
+        runTest('<span style="valueOf:1">aa</span>', '<span style="valueOf:1">aa</span>');
+        runTest(
+            '<span style="hasOwnProperty:1;color:red">aa</span>',
+            '<span style="hasOwnProperty:1;color:red">aa</span>'
+        );
+        runTest('<span style="toString:1">aa</span>', '<span style="toString:1">aa</span>');
+    });
+
+    it('Attribute name that matches a member of Object.prototype', () => {
+        runTest('<span constructor="1">aa</span>', '<span>aa</span>');
+        runTest('<span valueOf="1">aa</span>', '<span>aa</span>');
+    });
+
     it('Html contains unnecessary CSS', () => {
         runTest(
             '<span style="color:red">aa<span style="color:red">bb</span>cc</span>',
