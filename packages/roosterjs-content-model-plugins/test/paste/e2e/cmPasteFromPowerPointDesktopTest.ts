@@ -11,7 +11,6 @@ import {
     pptClipboardContent3,
     pptClipboardContent4,
 } from './htmlTemplates/powerPointClipboardContent';
-import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 
 describe('PowerPoint', () => {
     let editor: IEditor = undefined!;
@@ -34,7 +33,10 @@ describe('PowerPoint', () => {
         document.getElementById('PowerPoint')?.remove();
     });
 
-    itChromeOnly('PowerPoint 1', () => {
+    it('PowerPoint 1', () => {
+        const fontStyle = document.createElement('span').style;
+        fontStyle.fontFamily = 'Courier New';
+
         paste(editor!, pptClipboardContent1, 'normal');
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(2);
@@ -107,7 +109,7 @@ describe('PowerPoint', () => {
                             isSelected: false,
                             segmentType: 'SelectionMarker',
                             format: {
-                                fontFamily: '"Courier New"',
+                                fontFamily: fontStyle.fontFamily,
                                 fontSize: '7pt',
                                 textColor: 'rgb(0, 0, 0)',
                             },
