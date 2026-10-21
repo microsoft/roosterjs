@@ -3828,7 +3828,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             isReverted: true,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setEditorStyleSpy).not.toHaveBeenCalled();
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
     });
 
     it('onSelectionChange on image | 2', () => {
@@ -3861,7 +3861,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
 
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setEditorStyleSpy).not.toHaveBeenCalled();
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
     });
 
     it('onSelectionChange on image | 3', () => {
@@ -3893,7 +3893,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
 
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setEditorStyleSpy).not.toHaveBeenCalled();
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
     });
 
     it('onSelectionChange on image | 4', () => {
@@ -3929,7 +3929,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             image,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
-        expect(setEditorStyleSpy).not.toHaveBeenCalled();
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
     });
 
     it('styles a range selection in dark mode without resetting the DOM selection', () => {
@@ -3952,6 +3952,8 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         onSelectionChange();
 
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(setEditorStyleSpy.calls.first().args).toEqual(['_RangeSelection', null]);
+        expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
         expect(setEditorStyleSpy).toHaveBeenCalledWith(
             '_RangeSelection',
             'background-color: rgba(255, 255, 255, 0.3) !important; color: currentColor !important;',
@@ -3969,12 +3971,31 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         state.textSelectionColor = undefined;
         setEditorStyleSpy.calls.reset();
         onSelectionChange();
-        expect(setEditorStyleSpy).not.toHaveBeenCalled();
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
 
         state.textSelectionColorDark = undefined;
         isDarkModeSpy.and.returnValue(true);
+        setEditorStyleSpy.calls.reset();
         onSelectionChange();
-        expect(setEditorStyleSpy).not.toHaveBeenCalled();
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
+    });
+
+    it('clears range styles when the native selection collapses', () => {
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+        const plugin = createSelectionPlugin({});
+        plugin.initialize(editor);
+        plugin.getState().textSelectionColor = 'red';
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        const range = document.createRange();
+        getDOMSelectionSpy.and.returnValue({ type: 'range', range, isReverted: false });
+        getDOMHelperSpy.and.returnValue({ getSelectionRange: () => range });
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as () => void;
+        onSelectionChange();
+
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
     });
 
     [
@@ -3996,7 +4017,11 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as () => void;
             onSelectionChange();
 
-            expect(setEditorStyleSpy).not.toHaveBeenCalled();
+            if (testCase.hasFocus && !testCase.isInShadowEdit) {
+                expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
+            } else {
+                expect(setEditorStyleSpy).not.toHaveBeenCalled();
+            }
         });
     });
 

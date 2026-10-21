@@ -819,6 +819,8 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private onSelectionChange = () => {
         if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
+            this.editor.setEditorStyle(RANGE_SELECTION_CSS_KEY, null /* cssRule */);
+
             let newSelection = this.editor.getDOMSelection();
             const domHelper = this.editor.getDOMHelper();
 

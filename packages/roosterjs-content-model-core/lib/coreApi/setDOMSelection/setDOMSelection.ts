@@ -37,6 +37,7 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
     core.selection.skipReselectOnFocus = true;
     core.api.setEditorStyle(core, DOM_SELECTION_CSS_KEY, null /*cssRule*/);
     core.api.setEditorStyle(core, HIDE_SELECTION_CSS_KEY, null /*cssRule*/);
+    core.api.setEditorStyle(core, RANGE_SELECTION_CSS_KEY, null /*cssRule*/);
 
     toggleCaret(core, false /* hide */);
 
