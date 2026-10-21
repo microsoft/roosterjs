@@ -434,6 +434,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             defaultSegmentFormat={this.state.initState.defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
+                            textSelectionColor="rgba(128, 128, 128, 0.3)"
                             snapshots={this.snapshotPlugin.getSnapshots()}
                             trustedHTMLHandler={trustedHTMLHandler}
                             initialModel={this.model}
