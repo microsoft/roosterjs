@@ -89,6 +89,12 @@ export interface ContentModelOptions {
  */
 export interface SelectionOptions {
     /**
+     * Background color of selected text. When unset, use the browser's default selection style.
+     * The dark mode color is derived using getDarkColor.
+     */
+    textSelectionColor?: string;
+
+    /**
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;

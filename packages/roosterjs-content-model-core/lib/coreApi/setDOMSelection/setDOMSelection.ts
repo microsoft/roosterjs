@@ -3,6 +3,7 @@ import { ensureUniqueId } from '../setEditorStyle/ensureUniqueId';
 import { findLastedCoInMergedCell } from './findLastedCoInMergedCell';
 import { findTableCellElement } from './findTableCellElement';
 import { getSafeIdSelector, parseTableCells } from 'roosterjs-content-model-dom';
+import { getTextSelectionStyle, RANGE_SELECTION_CSS_KEY } from './getTextSelectionStyle';
 import { setTableCellsStyle } from './setTableCellsStyle';
 import { toggleCaret } from './toggleCaret';
 import type {
@@ -126,6 +127,16 @@ export const setDOMSelection: SetDOMSelection = (core, selection, skipSelectionC
 
                 break;
             case 'range':
+                const textSelectionStyle = !selection.range.collapsed
+                    ? getTextSelectionStyle(core.selection, isDarkMode)
+                    : null;
+
+                if (textSelectionStyle) {
+                    core.api.setEditorStyle(core, RANGE_SELECTION_CSS_KEY, textSelectionStyle, [
+                        SELECTION_SELECTOR,
+                    ]);
+                }
+
                 core.domHelper.setSelectionRange(selection.range, selection.isReverted);
 
                 core.selection.selection = core.domHelper.hasFocus() ? null : selection;
