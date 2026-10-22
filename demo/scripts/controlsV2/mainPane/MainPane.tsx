@@ -20,6 +20,7 @@ import { getTabs, tabNames } from '../tabs/getTabs';
 import { getTheme } from '../theme/themes';
 import { MarkdownPanePlugin } from '../sidePane/MarkdownPane/MarkdownPanePlugin';
 import { MarkdownPastePlugin } from 'roosterjs-content-model-markdown';
+import { TextUtilitiesPanePlugin } from '../sidePane/TextUtilities/TextUtilitiesPanePlugin';
 import { OptionState, UrlPlaceholder } from '../sidePane/editorOptions/OptionState';
 import { popoutButton } from '../demoButtons/popoutButton';
 import { PresetPlugin } from '../sidePane/presets/PresetPlugin';
@@ -116,6 +117,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
     private samplePickerPlugin: SamplePickerPlugin;
     private snapshots: Snapshots;
     private markdownPanePlugin: MarkdownPanePlugin;
+    private textUtilitiesPanePlugin: TextUtilitiesPanePlugin;
     private findReplacePlugin: FindReplacePlugin;
     private findReplaceContext: FindReplaceContext;
     private imageEditPlugin: ImageEditPlugin | undefined;
@@ -157,6 +159,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
         this.formatPainterPlugin = new FormatPainterPlugin();
         this.samplePickerPlugin = new SamplePickerPlugin();
         this.markdownPanePlugin = new MarkdownPanePlugin();
+        this.textUtilitiesPanePlugin = new TextUtilitiesPanePlugin();
 
         this.findReplaceContext = createFindReplaceContext();
         this.findReplacePlugin = new FindReplacePlugin(this.findReplaceContext);
@@ -431,6 +434,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                             defaultSegmentFormat={this.state.initState.defaultFormat}
                             inDarkMode={this.state.isDarkMode}
                             getDarkColor={getDarkColor}
+                            textSelectionColor="rgba(128, 128, 128, 0.3)"
                             snapshots={this.snapshotPlugin.getSnapshots()}
                             trustedHTMLHandler={trustedHTMLHandler}
                             initialModel={this.model}
@@ -552,6 +556,7 @@ export class MainPane extends React.Component<{}, MainPaneState> {
             this.contentModelPanePlugin,
             this.presetPlugin,
             this.markdownPanePlugin,
+            this.textUtilitiesPanePlugin,
         ];
     }
 

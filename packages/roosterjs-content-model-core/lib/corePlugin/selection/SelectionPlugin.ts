@@ -1,5 +1,9 @@
 import { findCoordinate } from './findCoordinate';
 import { findTableCellElement } from '../../coreApi/setDOMSelection/findTableCellElement';
+import {
+    getTextSelectionStyle,
+    RANGE_SELECTION_CSS_KEY,
+} from '../../coreApi/setDOMSelection/getTextSelectionStyle';
 import { isSingleImageInSelection } from './isSingleImageInSelection';
 import { normalizePos } from './normalizePos';
 import {
@@ -72,6 +76,10 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                 ? undefined
                 : DEFAULT_TABLE_CELL_SELECTION_BACKGROUND_COLOR,
         };
+
+        if (options.textSelectionColor) {
+            this.state.textSelectionColor = options.textSelectionColor;
+        }
     }
 
     getName() {
@@ -80,6 +88,12 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     initialize(editor: IEditor) {
         this.editor = editor;
+
+        if (!this.state.textSelectionColorDark && this.state.textSelectionColor) {
+            this.state.textSelectionColorDark = editor
+                .getColorManager()
+                .getDarkColor(this.state.textSelectionColor, undefined, 'background');
+        }
 
         if (!this.state.imageSelectionBorderColorDark && this.state.imageSelectionBorderColor) {
             this.state.imageSelectionBorderColorDark = editor
@@ -805,7 +819,9 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
 
     private onSelectionChange = () => {
         if (this.editor?.hasFocus() && !this.editor.isInShadowEdit()) {
-            const newSelection = this.editor.getDOMSelection();
+            this.editor.setEditorStyle(RANGE_SELECTION_CSS_KEY, null /* cssRule */);
+
+            let newSelection = this.editor.getDOMSelection();
             const domHelper = this.editor.getDOMHelper();
 
             // If an image selection changed to a wider range due to a keyboard event, we should update the selection
@@ -817,22 +833,36 @@ class SelectionPlugin implements PluginWithState<SelectionPluginState> {
                     const isReverted = sel
                         ? sel.focusNode != range.endContainer || sel.focusOffset != range.endOffset
                         : false;
-                    this.editor.setDOMSelection({
+                    newSelection = {
                         type: 'range',
                         range,
                         isReverted,
-                    });
+                    };
+                    this.editor.setDOMSelection(newSelection);
                 } else if (newSelection?.type !== 'image' && image) {
-                    this.editor.setDOMSelection({
+                    newSelection = {
                         type: 'image',
                         image,
-                    });
+                    };
+                    this.editor.setDOMSelection(newSelection);
                 }
             }
 
-            // Safari has problem to handle onBlur event. When blur, we cannot get the original selection from editor.
-            // So we always save a selection whenever editor has focus. Then after blur, we can still use this cached selection.
             if (newSelection?.type == 'range') {
+                if (!newSelection.range.collapsed) {
+                    const textSelectionStyle = getTextSelectionStyle(
+                        this.state,
+                        this.editor.isDarkMode()
+                    );
+
+                    if (textSelectionStyle) {
+                        this.editor.setEditorStyle(RANGE_SELECTION_CSS_KEY, textSelectionStyle, [
+                            '*::selection',
+                        ]);
+                    }
+                }
+
+                // Safari cannot retrieve the original selection on blur, so cache it while focused.
                 if (this.isSafari) {
                     this.state.selection = newSelection;
                 }
