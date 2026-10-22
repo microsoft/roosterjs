@@ -31,6 +31,13 @@ describe('fontFamilyFormatHandler.parse', () => {
         expect(format.fontFamily).toBe('test');
     });
 
+    it('Normalize font from element', () => {
+        div.style.fontFamily = 'Courier New';
+        fontFamilyFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontFamily).toBe('"Courier New"');
+    });
+
     it('Font from default style', () => {
         fontFamilyFormatHandler.parse(format, div, context, { fontFamily: 'test' });
 

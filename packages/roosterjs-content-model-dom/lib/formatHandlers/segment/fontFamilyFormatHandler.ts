@@ -1,5 +1,6 @@
 import type { FontFamilyFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
+import { normalizeFontFamily } from '../../domUtils/style/normalizeFontFamily';
 
 /**
  * @internal
@@ -9,7 +10,7 @@ export const fontFamilyFormatHandler: FormatHandler<FontFamilyFormat> = {
         const fontFamily = element.style.fontFamily || defaultStyle.fontFamily;
 
         if (fontFamily && fontFamily != 'inherit') {
-            format.fontFamily = fontFamily;
+            format.fontFamily = normalizeFontFamily(fontFamily);
         }
     },
     apply: (format, element, context) => {
