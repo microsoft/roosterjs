@@ -41,6 +41,7 @@ export interface MergeModelOption {
      * Preserve source paragraph decorators, including heading tags and sizes, when
      * using 'keepSourceEmphasisFormat'. Decorator formatting takes precedence over
      * target formatting on source segments.
+     * Also include target paragraph decorator and segment formatting in the inherited format.
      * @default false
      */
     preserveParagraphDecorator?: boolean;

@@ -72,8 +72,12 @@ export function mergeModel(
         if (mergeFormat && mergeFormat != 'none') {
             const newFormat: ContentModelSegmentFormat = {
                 ...(target.format || {}),
-                ...insertPosition.paragraph.decorator?.format,
-                ...insertPosition.paragraph.segmentFormat,
+                ...(options?.preserveParagraphDecorator
+                    ? {
+                          ...insertPosition.paragraph.decorator?.format,
+                          ...insertPosition.paragraph.segmentFormat,
+                      }
+                    : undefined),
                 ...insertPosition.marker.format,
             };
 
