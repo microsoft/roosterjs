@@ -62,7 +62,7 @@ const initialState: OptionState = {
         codeFormat: {},
     },
     markdownPasteOptions: {
-        autoConversion: false,
+        autoConversion: true,
         undoConversion: false,
     },
     editPluginOptions: {

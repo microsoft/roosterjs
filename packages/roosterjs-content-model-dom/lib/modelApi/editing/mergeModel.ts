@@ -72,10 +72,12 @@ export function mergeModel(
         if (mergeFormat && mergeFormat != 'none') {
             const newFormat: ContentModelSegmentFormat = {
                 ...(target.format || {}),
+                ...insertPosition.paragraph.decorator?.format,
+                ...insertPosition.paragraph.segmentFormat,
                 ...insertPosition.marker.format,
             };
 
-            applyDefaultFormat(source, newFormat, mergeFormat);
+            applyDefaultFormat(source, newFormat, mergeFormat, options?.preserveParagraphDecorator);
         }
 
         for (let i = 0; i < source.blocks.length; i++) {
@@ -476,7 +478,8 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
 function applyDefaultFormat(
     group: ReadonlyContentModelBlockGroup,
     format: ContentModelSegmentFormat,
-    applyDefaultFormatOption: MergeFormatTypes
+    applyDefaultFormatOption: MergeFormatTypes,
+    preserveParagraphDecorator?: boolean
 ) {
     group.blocks.forEach(block => {
         mergeBlockFormat(applyDefaultFormatOption, block);
@@ -490,13 +493,23 @@ function applyDefaultFormat(
                         block.formatHolder.format
                     );
                 }
-                applyDefaultFormat(block, format, applyDefaultFormatOption);
+                applyDefaultFormat(
+                    block,
+                    format,
+                    applyDefaultFormatOption,
+                    preserveParagraphDecorator
+                );
                 break;
 
             case 'Table':
                 block.rows.forEach(row =>
                     row.cells.forEach(cell => {
-                        applyDefaultFormat(cell, format, applyDefaultFormatOption);
+                        applyDefaultFormat(
+                            cell,
+                            format,
+                            applyDefaultFormatOption,
+                            preserveParagraphDecorator
+                        );
                     })
                 );
                 break;
@@ -504,16 +517,30 @@ function applyDefaultFormat(
             case 'Paragraph':
                 const paragraphFormat = block.decorator?.format || {};
                 const paragraph = mutateBlock(block);
+                const paragraphTargetFormat =
+                    applyDefaultFormatOption === 'keepSourceEmphasisFormat' &&
+                    preserveParagraphDecorator
+                        ? { ...format, ...paragraphFormat }
+                        : format;
 
                 paragraph.segments.forEach(segment => {
                     if (segment.segmentType == 'General') {
-                        applyDefaultFormat(segment, format, applyDefaultFormatOption);
+                        applyDefaultFormat(
+                            segment,
+                            format,
+                            applyDefaultFormatOption,
+                            preserveParagraphDecorator
+                        );
                     }
 
-                    segment.format = mergeSegmentFormat(applyDefaultFormatOption, format, {
-                        ...paragraphFormat,
-                        ...segment.format,
-                    });
+                    segment.format = mergeSegmentFormat(
+                        applyDefaultFormatOption,
+                        paragraphTargetFormat,
+                        {
+                            ...paragraphFormat,
+                            ...segment.format,
+                        }
+                    );
 
                     if (segment.link) {
                         segment.link.format = mergeLinkFormat(
@@ -524,7 +551,10 @@ function applyDefaultFormat(
                     }
                 });
 
-                if (applyDefaultFormatOption === 'keepSourceEmphasisFormat') {
+                if (
+                    applyDefaultFormatOption === 'keepSourceEmphasisFormat' &&
+                    !preserveParagraphDecorator
+                ) {
                     delete paragraph.decorator;
                 }
                 break;
@@ -607,7 +637,7 @@ function mergeSegmentFormat(
 function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentModelSegmentFormat {
     const result: ContentModelSegmentFormat = {};
 
-    const { fontWeight, italic, underline } = segmentFormat;
+    const { fontWeight, italic, underline, strikethrough } = segmentFormat;
 
     if (fontWeight && fontWeight != 'normal') {
         result.fontWeight = fontWeight;
@@ -617,6 +647,9 @@ function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentMod
     }
     if (underline) {
         result.underline = underline;
+    }
+    if (strikethrough) {
+        result.strikethrough = strikethrough;
     }
 
     return result;

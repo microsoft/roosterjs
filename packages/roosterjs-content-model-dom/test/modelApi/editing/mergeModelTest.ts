@@ -2789,6 +2789,46 @@ describe('mergeModel', () => {
         });
     });
 
+    it('preserves heading tags and sizes when preserveParagraphDecorator is enabled', () => {
+        const target = createContentModelDocument({ fontFamily: 'Arial' });
+        const targetParagraph = createParagraph();
+        targetParagraph.decorator = {
+            tagName: 'h3',
+            format: { textColor: 'blue' },
+        };
+        targetParagraph.segmentFormat = { textColor: 'green' };
+        targetParagraph.segments.push(
+            createSelectionMarker({ fontSize: '20px', fontWeight: 'normal', textColor: 'red' })
+        );
+        target.blocks.push(targetParagraph);
+
+        const source = createContentModelDocument();
+        const sourceParagraph = createParagraph();
+        sourceParagraph.decorator = {
+            tagName: 'h2',
+            format: { fontSize: '1.5em', fontWeight: 'bold' },
+        };
+        sourceParagraph.segments.push(createText('Heading'));
+        source.blocks.push(sourceParagraph);
+
+        mergeModel(target, source, undefined, {
+            mergeFormat: 'keepSourceEmphasisFormat',
+            preserveParagraphDecorator: true,
+        });
+
+        const expectedFormat = {
+            fontFamily: 'Arial',
+            fontSize: '1.5em',
+            fontWeight: 'bold',
+            textColor: 'red',
+        };
+        expect(targetParagraph.decorator).toEqual({
+            tagName: 'h2',
+            format: { fontSize: '1.5em', fontWeight: 'bold' },
+        });
+        expect(targetParagraph.segments[0]).toEqual(createText('Heading', expectedFormat));
+    });
+
     it('Merge with default format paragraph and paragraph with decorator, mergeAll', () => {
         const MockedFormat = {
             fontFamily: 'mocked',
