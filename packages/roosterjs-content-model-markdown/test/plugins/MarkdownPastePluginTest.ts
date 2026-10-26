@@ -1,5 +1,9 @@
 import { MarkdownPastePlugin } from '../../lib/plugins/MarkdownPastePlugin';
-import { ChangeSource } from 'roosterjs-content-model-dom';
+import {
+    ChangeSource,
+    contentModelToDom,
+    createModelToDomContext,
+} from 'roosterjs-content-model-dom';
 import type {
     BeforePasteEvent,
     ClipboardData,
@@ -180,60 +184,223 @@ describe('MarkdownPastePlugin', () => {
 
         const target = createEmptyModel();
         expect(callback(target)).toBe(true);
-        // The converted heading should have been merged into the target model
-        const hasHeadingBlock = target.blocks.some(
-            b => b.blockType === 'Paragraph' && b.decorator?.tagName === 'h1'
-        );
-        expect(hasHeadingBlock).toBe(true);
+        const paragraph = target.blocks[0];
+        expect(paragraph.blockType).toBe('Paragraph');
+        if (paragraph.blockType === 'Paragraph') {
+            expect(paragraph.decorator?.tagName).toBe('h1');
+            expect(paragraph.segments[0]).toEqual({
+                segmentType: 'Text',
+                text: 'Heading',
+                format: { fontWeight: 'bold', fontSize: '2em' },
+            });
+        }
         plugin.dispose();
     });
 
-    it('preserves the target format when converting markdown on contentChanged Paste', () => {
-        const plugin = createPlugin(true /*autoConversion*/);
-        const modelBeforePaste = createEmptyModel();
-        const paragraph = modelBeforePaste.blocks[0];
+    ['2em', '1.5em', '1.17em', '1em', '0.83em', '0.67em'].forEach((fontSize, index) => {
+        const level = index + 1;
+        it(`preserves the h${level} tag and font size while inheriting other target formatting`, () => {
+            const plugin = createPlugin(true /*autoConversion*/);
+            const modelBeforePaste = createEmptyModel();
+            const paragraph = modelBeforePaste.blocks[0];
 
-        modelBeforePaste.format = {
-            fontFamily: 'Arial',
-        };
-        if (paragraph.blockType === 'Paragraph') {
-            paragraph.segments[0].format = {
-                fontSize: '20px',
-                textColor: 'red',
+            modelBeforePaste.format = {
+                fontFamily: 'Arial',
             };
-        }
+            if (paragraph.blockType === 'Paragraph') {
+                paragraph.segments[0].format = {
+                    fontSize: '20px',
+                    textColor: 'red',
+                    fontWeight: 'normal',
+                    strikethrough: true,
+                };
+            }
 
-        const event = createContentChangedPasteEvent({
-            text: '# Heading',
-            rawHtml: '',
-            customValues: {},
-            pasteNativeEvent: true,
-            modelBeforePaste,
+            const event = createContentChangedPasteEvent({
+                text: `${'#'.repeat(level)} Heading`,
+                rawHtml: '',
+                customValues: {},
+                pasteNativeEvent: true,
+                modelBeforePaste,
+            });
+
+            plugin.onPluginEvent(event);
+
+            const [callback] = formatContentModelSpy.calls.mostRecent().args as [
+                (model: ContentModelDocument) => boolean,
+                FormatContentModelOptions
+            ];
+            const target = createEmptyModel();
+            expect(callback(target)).toBe(true);
+
+            const heading = target.blocks[0];
+            expect(heading?.blockType).toBe('Paragraph');
+            if (heading?.blockType === 'Paragraph') {
+                expect(heading.decorator).toEqual({
+                    tagName: `h${level}`,
+                    format: {
+                        fontSize,
+                        fontWeight: 'bold',
+                    },
+                });
+                expect(heading.segments[0]).toEqual({
+                    segmentType: 'Text',
+                    text: 'Heading',
+                    format: {
+                        fontFamily: 'Arial',
+                        fontSize,
+                        fontWeight: 'bold',
+                        textColor: 'red',
+                        strikethrough: true,
+                    },
+                });
+            }
+
+            const fragment = doc.createDocumentFragment();
+            contentModelToDom(doc, fragment, target, createModelToDomContext());
+            const headingElement = fragment.querySelector<HTMLElement>(`h${level}`);
+            expect(headingElement).not.toBeNull();
+            expect(headingElement?.textContent).toBe('Heading');
+            expect(
+                Array.from(headingElement?.querySelectorAll<HTMLElement>('[style]') || []).some(
+                    element => !!element.style.fontSize
+                )
+            ).toBe(false);
+            const host = document.createElement('div');
+            host.style.fontSize = '20px';
+            host.appendChild(fragment);
+            document.body.appendChild(host);
+            try {
+                if (headingElement) {
+                    expect(
+                        parseFloat(window.getComputedStyle(headingElement).fontSize)
+                    ).toBeCloseTo(parseFloat(fontSize) * 20, 2);
+                }
+            } finally {
+                host.remove();
+            }
+
+            plugin.dispose();
         });
+    });
 
-        plugin.onPluginEvent(event);
+    ['decorator', 'segmentFormat'].forEach(colorSource => {
+        it(`inherits heading text color from the target paragraph ${colorSource}`, () => {
+            const plugin = createPlugin(true /*autoConversion*/);
+            const modelBeforePaste = createEmptyModel();
+            const paragraph = modelBeforePaste.blocks[0];
+            modelBeforePaste.format = { textColor: 'black' };
 
-        const [callback] = formatContentModelSpy.calls.mostRecent().args as [
-            (model: ContentModelDocument) => boolean,
-            FormatContentModelOptions
-        ];
-        const target = createEmptyModel();
-        expect(callback(target)).toBe(true);
+            if (paragraph.blockType === 'Paragraph') {
+                if (colorSource === 'decorator') {
+                    paragraph.decorator = {
+                        tagName: 'h3',
+                        format: { textColor: 'red', fontSize: '1.17em', fontWeight: 'bold' },
+                    };
+                } else {
+                    paragraph.segmentFormat = { textColor: 'red' };
+                }
+            }
 
-        const heading = target.blocks.find(
-            block => block.blockType === 'Paragraph' && block.decorator?.tagName === 'h1'
-        );
-        expect(heading?.blockType).toBe('Paragraph');
-        if (heading?.blockType === 'Paragraph') {
-            expect(heading.segments[0].format).toEqual({
+            plugin.onPluginEvent(
+                createContentChangedPasteEvent({
+                    text: '# First\n## Second',
+                    rawHtml: '',
+                    customValues: {},
+                    pasteNativeEvent: true,
+                    modelBeforePaste,
+                })
+            );
+
+            const [callback] = formatContentModelSpy.calls.mostRecent().args as [
+                (model: ContentModelDocument) => boolean
+            ];
+            const target = createEmptyModel();
+            expect(callback(target)).toBe(true);
+            const headings = target.blocks.filter(block => block.blockType === 'Paragraph');
+            expect(headings.length).toBe(2);
+            headings.forEach(heading => {
+                if (heading.blockType === 'Paragraph') {
+                    expect(heading.segments[0].format.textColor).toBe('red');
+                }
+            });
+
+            const host = document.createElement('div');
+            contentModelToDom(document, host, target, createModelToDomContext());
+            document.body.appendChild(host);
+            try {
+                ['h1', 'h2'].forEach(tagName => {
+                    const heading = host.querySelector(tagName);
+                    expect(heading).not.toBeNull();
+                    const textParent = heading?.querySelector('span') || heading;
+                    if (textParent) {
+                        expect(window.getComputedStyle(textParent).color).toBe('rgb(255, 0, 0)');
+                    }
+                });
+            } finally {
+                host.remove();
+            }
+
+            plugin.dispose();
+        });
+    });
+
+    [false, true].forEach(strikethrough => {
+        it(`preserves markdown emphasis while inheriting target strikethrough=${strikethrough}`, () => {
+            const plugin = createPlugin(true /*autoConversion*/);
+            const modelBeforePaste = createEmptyModel();
+            const paragraph = modelBeforePaste.blocks[0];
+            const targetFormat = {
                 fontFamily: 'Arial',
                 fontSize: '20px',
-                fontWeight: 'bold',
                 textColor: 'red',
-            });
-        }
+                fontWeight: 'normal',
+                italic: false,
+                strikethrough,
+            };
 
-        plugin.dispose();
+            if (paragraph.blockType === 'Paragraph') {
+                paragraph.segments[0].format = { ...targetFormat };
+            }
+
+            plugin.onPluginEvent(
+                createContentChangedPasteEvent({
+                    text: 'plain **bold** *italic* ~~strike~~',
+                    rawHtml: '',
+                    customValues: {},
+                    pasteNativeEvent: true,
+                    modelBeforePaste,
+                })
+            );
+
+            expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+            const [callback] = formatContentModelSpy.calls.mostRecent().args as [
+                (model: ContentModelDocument) => boolean
+            ];
+            const target = createEmptyModel();
+            expect(callback(target)).toBe(true);
+            const result = target.blocks[0];
+
+            expect(result.blockType).toBe('Paragraph');
+            if (result.blockType === 'Paragraph') {
+                expect(
+                    result.segments
+                        .filter(segment => segment.segmentType === 'Text')
+                        .map(segment => segment.format)
+                ).toEqual([
+                    targetFormat,
+                    { ...targetFormat, fontWeight: 'bold' },
+                    targetFormat,
+                    { ...targetFormat, italic: true },
+                    targetFormat,
+                    { ...targetFormat, strikethrough: true },
+                ]);
+            }
+            if (paragraph.blockType === 'Paragraph') {
+                expect(paragraph.segments[0].format).toEqual(targetFormat);
+            }
+            plugin.dispose();
+        });
     });
 
     it('merges converted markdown into a modelBeforePaste that already has content', () => {
@@ -275,8 +442,6 @@ describe('MarkdownPastePlugin', () => {
 
         expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
 
-        // The callback should produce a model that contains both the pre-existing
-        // text and the converted markdown heading
         const [callback] = formatContentModelSpy.calls.mostRecent().args as [
             (model: ContentModelDocument) => boolean,
             FormatContentModelOptions
@@ -284,19 +449,24 @@ describe('MarkdownPastePlugin', () => {
         const target = createEmptyModel();
         expect(callback(target)).toBe(true);
 
-        // The pre-existing text segment should still be present after merging
-        const hasExistingText = target.blocks.some(
-            b =>
-                b.blockType === 'Paragraph' &&
-                b.segments.some(s => s.segmentType === 'Text' && s.text === 'existing ')
-        );
-        expect(hasExistingText).toBe(true);
-
-        // The converted heading should have been merged into the model
-        const hasHeadingBlock = target.blocks.some(
-            b => b.blockType === 'Paragraph' && b.decorator?.tagName === 'h1'
-        );
-        expect(hasHeadingBlock).toBe(true);
+        const paragraph = target.blocks[0];
+        expect(paragraph.blockType).toBe('Paragraph');
+        if (paragraph.blockType === 'Paragraph') {
+            expect(paragraph.decorator?.tagName).toBe('h1');
+            expect(paragraph.segments.filter(segment => segment.segmentType === 'Text')).toEqual([
+                {
+                    segmentType: 'Text',
+                    text: 'existing ',
+                    format: {},
+                    isSelected: undefined,
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'Heading',
+                    format: { fontWeight: 'bold', fontSize: '2em' },
+                },
+            ]);
+        }
 
         plugin.dispose();
     });
