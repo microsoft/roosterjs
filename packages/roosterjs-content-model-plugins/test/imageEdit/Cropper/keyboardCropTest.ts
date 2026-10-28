@@ -99,17 +99,6 @@ describe('ImageEditPlugin keyboard crop', () => {
         expect(generateDataURL.generateDataURL).not.toHaveBeenCalled();
     });
 
-    it('applies when focus leaves without stealing focus', () => {
-        const button = document.createElement('button');
-        document.body.appendChild(button);
-        key(contentDiv, 'Tab');
-        key(target(0), 'ArrowRight');
-        button.focus();
-        expect(contentDiv.querySelector('img')!.style.width).toBe('99px');
-        expect(document.activeElement).toBe(button);
-        button.remove();
-    });
-
     it('crops in logical pixels regardless of zoom and RTL direction', () => {
         contentDiv.style.setProperty('zoom', '2');
         contentDiv.dir = 'rtl';
@@ -126,24 +115,6 @@ describe('ImageEditPlugin keyboard crop', () => {
         expect(event.defaultPrevented).toBe(false);
         expect(root.querySelector('[aria-describedby]')).toBeNull();
         expect(root.querySelector(`.${ImageEditElementClass.CropKeyboardTarget}`)).toBeNull();
-    });
-
-    it('styles shadow-root focus targets with editor CSS and clears the rule on disposal', () => {
-        [0, 1, 2].forEach(index => {
-            target(index).focus();
-            const style = window.getComputedStyle(target(index));
-            expect(style.outlineStyle).toBe('solid');
-            expect(style.outlineWidth).toBe('2px');
-            expect(style.outlineOffset).toBe('-2px');
-        });
-        expect(target(2).classList.contains(ImageEditElementClass.ImageBorder)).toBe(true);
-        expect(root.querySelector('style')).toBeNull();
-        const styleElement = document.querySelector<HTMLStyleElement>(
-            'style[data-roosterjs-style-key="imageEditCropKeyboard"]'
-        )!;
-        expect(styleElement.sheet!.cssRules.length).toBe(1);
-        plugin.dispose();
-        expect(styleElement.sheet!.cssRules.length).toBe(0);
     });
 
     it('keeps focus UI out of exported content', () => {

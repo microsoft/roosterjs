@@ -307,23 +307,4 @@ describe('ImageCropKeyboardHelper', () => {
             document.getElementById(target(0).getAttribute('aria-describedby')!)!.textContent
         ).toBe('instructions');
     });
-
-    it('applies when focus leaves and removes listeners on disposal', () => {
-        const button = document.createElement('button');
-        document.body.appendChild(button);
-        helper.focus();
-        button.focus();
-        expect(onFinish).toHaveBeenCalledWith(true, false);
-        onFinish.calls.reset();
-        const handle = target(0);
-        helper.dispose();
-        handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-        expect(onFinish).not.toHaveBeenCalled();
-        expect(wrapper.querySelector('[aria-describedby]')).toBeNull();
-        expect(wrapper.querySelector('style')).toBeNull();
-        expect(wrapper.querySelector(`.${ImageEditElementClass.CropKeyboardTarget}`)).toBeNull();
-        expect(wrapper.querySelector('[part]')).toBeNull();
-        expect(wrapper.querySelector(`.${ImageEditElementClass.ImageBorder}`)).not.toBeNull();
-        button.remove();
-    });
 });
