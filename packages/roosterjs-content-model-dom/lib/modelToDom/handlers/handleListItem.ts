@@ -28,6 +28,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     refNode = context.modelHandlers.list(doc, parent, listItem, context, refNode);
 
     const { nodeStack } = context.listFormat;
+    const wordLikeStyles = (context.experimentalFeatures?.indexOf('WordLikeStyles') ?? -1) >= 0;
     const leafLevel: Partial<ModelToDomListStackItem> = nodeStack?.[nodeStack.length - 1] ?? {};
     const itemRefNode = leafLevel.refNode || null;
     const listParent = leafLevel.node || parent;
@@ -74,6 +75,9 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
 
         // Need to apply listItemElement formats after applying metadata since the list numbers value relies on the result of metadata handling
         applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
+        if (wordLikeStyles) {
+            li.style.marginBottom = '2px';
+        }
 
         stackFormat(context, listItem.formatHolder.format, () => {
             stackFormat(
@@ -98,7 +102,11 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     // This is to make sure the elements are announced correctly by screen readers
     // when using arrow keys to navigate the list.
     for (let index = 0; index < li.children.length; index++) {
-        const element = li.children.item(index);
+        const element = li.children.item(index) as HTMLElement;
+        if (wordLikeStyles) {
+            element.style.marginInlineStart = '8px';
+        }
+
         if (isGenericRoleElement(element)) {
             element.setAttribute(HtmlRoleAttribute, PresentationRoleValue);
         }

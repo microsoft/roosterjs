@@ -100,4 +100,46 @@ describe('verticalAlignFormatHandler.apply', () => {
         verticalAlignFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div style="vertical-align: bottom;"></div>');
     });
+
+    [undefined, [], ['ShadowDom']].forEach(experimentalFeatures => {
+        it(`Does not default image alignment without WordLikeStyles: ${experimentalFeatures}`, () => {
+            const img = document.createElement('img');
+
+            context.experimentalFeatures = experimentalFeatures;
+            verticalAlignFormatHandler.apply(format, img, context);
+
+            expect(img.style.verticalAlign).toBe('');
+        });
+    });
+
+    it('Defaults image alignment to middle with WordLikeStyles', () => {
+        const img = document.createElement('img');
+
+        context.experimentalFeatures = ['WordLikeStyles'];
+        verticalAlignFormatHandler.apply(format, img, context);
+
+        expect(img.style.verticalAlign).toBe('middle');
+        expect(format).toEqual({});
+    });
+
+    (['top', 'middle', 'bottom'] as const).forEach(verticalAlign => {
+        [false, true].forEach(enabled => {
+            it(`Preserves explicit image alignment ${verticalAlign} with WordLikeStyles ${enabled}`, () => {
+                const img = document.createElement('img');
+
+                context.experimentalFeatures = enabled ? ['WordLikeStyles'] : [];
+                format.verticalAlign = verticalAlign;
+                verticalAlignFormatHandler.apply(format, img, context);
+
+                expect(img.style.verticalAlign).toBe(verticalAlign);
+            });
+        });
+    });
+
+    it('Does not default alignment for other elements with WordLikeStyles', () => {
+        context.experimentalFeatures = ['WordLikeStyles'];
+        verticalAlignFormatHandler.apply(format, div, context);
+
+        expect(div.outerHTML).toBe('<div></div>');
+    });
 });

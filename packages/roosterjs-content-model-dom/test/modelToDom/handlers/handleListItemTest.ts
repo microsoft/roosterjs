@@ -152,7 +152,7 @@ describe('handleListItem without format handler', () => {
             context
         );
         expect(context.rewriteFromModel).toEqual({
-            addedBlockElements: [document.createElement('li')],
+            addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });
     });
@@ -224,7 +224,7 @@ describe('handleListItem without format handler', () => {
             context
         );
         expect(context.rewriteFromModel).toEqual({
-            addedBlockElements: [document.createElement('li')],
+            addedBlockElements: [parent.firstChild as HTMLElement],
             removedBlockElements: [],
         });
     });
@@ -251,7 +251,7 @@ describe('handleListItem without format handler', () => {
         );
         expect(result).toBe(br);
         expect(context.rewriteFromModel).toEqual({
-            addedBlockElements: [document.createElement('li')],
+            addedBlockElements: [parent.firstChild!.firstChild as HTMLElement],
             removedBlockElements: [],
         });
     });
@@ -381,7 +381,7 @@ describe('handleListItem without format handler', () => {
         expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listItem);
         expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('li'));
         expect(context.rewriteFromModel).toEqual({
-            addedBlockElements: [document.createElement('li')],
+            addedBlockElements: [parent.firstChild!.firstChild as HTMLElement],
             removedBlockElements: [],
         });
     });
@@ -435,6 +435,75 @@ describe('handleListItem without format handler', () => {
         expect(parent.innerHTML).toEqual(
             '<ol start="1"><li><div role="presentation">test1</div><div role="presentation">test2</div><div role="presentation">test3</div><table><tbody><tr><td></td><td></td></tr></tbody></table><div role="presentation">test4</div></li></ol>'
         );
+    });
+
+    (['ltr', 'rtl'] as const).forEach(direction => {
+        it(`Applies inline start margin only to direct children in ${direction} lists`, () => {
+            const parent = document.createElement('div');
+            const listItem = createListItem([createListLevel('UL')]);
+            const child = document.createElement('div');
+            const nestedChild = document.createElement('span');
+            const table = document.createElement('table');
+
+            context.experimentalFeatures = ['WordLikeStyles'];
+            listItem.format.direction = direction;
+            child.appendChild(nestedChild);
+            handleBlockGroupChildrenSpy.and.callFake((_doc, node) => {
+                node.appendChild(child);
+                node.appendChild(table);
+            });
+
+            handleListItem(document, parent, listItem, context, null);
+
+            expect(child.style.marginInlineStart).toBe('8px');
+            expect(table.style.marginInlineStart).toBe('8px');
+            expect(listItem.cachedElement?.style.marginBottom).toBe('2px');
+            expect(nestedChild.style.marginInlineStart).toBe('');
+            expect(child.style.marginLeft).toBe('');
+            expect(child.style.marginRight).toBe('');
+            expect(child.getAttribute('role')).toBe('presentation');
+            expect(table.hasAttribute('role')).toBeFalse();
+        });
+    });
+
+    it('Applies bottom margin after model formatting to a cached list item', () => {
+        const parent = document.createElement('div');
+        const listItem = createListItem([createListLevel('OL')]);
+        const li = document.createElement('li');
+
+        context.experimentalFeatures = ['WordLikeStyles'];
+        li.style.marginBottom = '20px';
+        listItem.cachedElement = li;
+        listItem.format.marginBottom = '12px';
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(listItem.cachedElement).toBe(li);
+        expect(li.style.marginBottom).toBe('2px');
+        expect(parent.querySelector('li')).toBe(li);
+    });
+
+    [undefined, [], ['ShadowDom']].forEach(experimentalFeatures => {
+        it(`Does not apply Word-like spacing without the gate: ${experimentalFeatures}`, () => {
+            const parent = document.createElement('div');
+            const listItem = createListItem([createListLevel('UL')]);
+            const child = document.createElement('div');
+            const li = document.createElement('li');
+
+            context.experimentalFeatures = experimentalFeatures;
+            listItem.cachedElement = li;
+            listItem.format.marginBottom = '12px';
+            child.style.marginInlineStart = '16px';
+            handleBlockGroupChildrenSpy.and.callFake((_doc, node) => {
+                node.appendChild(child);
+            });
+
+            handleListItem(document, parent, listItem, context, null);
+
+            expect(li.style.marginBottom).toBe('12px');
+            expect(child.style.marginInlineStart).toBe('16px');
+            expect(child.getAttribute('role')).toBe('presentation');
+        });
     });
 
     it('List item with RTL direction propagates direction into implicitFormat for children', () => {
