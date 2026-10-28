@@ -29,7 +29,10 @@ export const verticalAlignFormatHandler: FormatHandler<VerticalAlignFormat> = {
         }
     },
     apply: (format, element) => {
-        if (format.verticalAlign) {
+        if (element.tagName == 'IMG') {
+            // Default all images to vertical-align: middle unless a different value was explicitly set
+            element.style.verticalAlign = format.verticalAlign ?? 'middle';
+        } else if (format.verticalAlign) {
             element.style.verticalAlign = format.verticalAlign;
         }
     },

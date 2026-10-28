@@ -1126,7 +1126,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                         {
                             src: 'test',
                             segmentType: 'Image',
-                            format: {},
+                            format: { verticalAlign: 'middle' },
                             dataset: {},
                             alt: undefined,
                             title: undefined,
@@ -1205,6 +1205,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             segmentType: 'Image',
                             format: {
                                 imageState: 'isEditing',
+                                verticalAlign: 'middle',
                             },
                             dataset: {},
                             alt: undefined,
@@ -1274,7 +1275,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                         {
                             src: 'test',
                             segmentType: 'Image',
-                            format: {},
+                            format: { verticalAlign: 'middle' },
                             dataset: {},
                             alt: undefined,
                             title: undefined,
@@ -1286,6 +1287,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             segmentType: 'Image',
                             format: {
                                 imageState: 'isEditing',
+                                verticalAlign: 'middle',
                             },
                             dataset: {},
                             isSelectedAsImageSelection: true,
@@ -1400,7 +1402,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                                     isSelectedAsImageSelection: undefined,
                                                     segmentType: 'Image',
                                                     isSelected: undefined,
-                                                    format: {},
+                                                    format: { verticalAlign: 'middle' },
                                                     dataset: {},
                                                     alt: undefined,
                                                     title: undefined,
@@ -1549,6 +1551,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                                     isSelected: true,
                                                     format: {
                                                         imageState: 'isEditing',
+                                                        verticalAlign: 'middle',
                                                     },
                                                     dataset: {},
                                                     alt: undefined,
@@ -1696,7 +1699,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                                     isSelectedAsImageSelection: undefined,
                                                     segmentType: 'Image',
                                                     isSelected: undefined,
-                                                    format: {},
+                                                    format: { verticalAlign: 'middle' },
                                                     dataset: {},
                                                     alt: undefined,
                                                     title: undefined,
@@ -1737,6 +1740,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             segmentType: 'Image',
                             format: {
                                 imageState: 'isEditing',
+                                verticalAlign: 'middle',
                             },
                             dataset: {},
                             isSelectedAsImageSelection: true,
@@ -1857,7 +1861,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                 {
                                     src: 'test',
                                     segmentType: 'Image',
-                                    format: {},
+                                    format: { verticalAlign: 'middle' },
                                     dataset: {},
                                     isSelectedAsImageSelection: undefined,
                                     isSelected: undefined,
@@ -1996,6 +2000,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                     segmentType: 'Image',
                                     format: {
                                         imageState: 'isEditing',
+                                        verticalAlign: 'middle',
                                     },
                                     dataset: {},
                                     isSelectedAsImageSelection: true,
@@ -2133,7 +2138,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                                 {
                                     src: 'test',
                                     segmentType: 'Image',
-                                    format: {},
+                                    format: { verticalAlign: 'middle' },
                                     dataset: {},
                                     isSelectedAsImageSelection: undefined,
                                     isSelected: undefined,
@@ -2157,6 +2162,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
                             segmentType: 'Image',
                             format: {
                                 imageState: 'isEditing',
+                                verticalAlign: 'middle',
                             },
                             dataset: {},
                             isSelectedAsImageSelection: true,

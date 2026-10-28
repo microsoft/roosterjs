@@ -44,7 +44,11 @@ describe('handleSegment', () => {
             dataset: {},
         };
 
-        runTest(segment, ['<span><img src="http://test.com/test"></span>'], 0);
+        runTest(
+            segment,
+            ['<span><img src="http://test.com/test" style="vertical-align: middle;"></span>'],
+            0
+        );
 
         expect(context.imageSelection).toBeUndefined();
     });
@@ -58,7 +62,11 @@ describe('handleSegment', () => {
             dataset: {},
         };
 
-        runTest(segment, ['<span><img src="http://test.com/test"></span>'], 0);
+        runTest(
+            segment,
+            ['<span><img src="http://test.com/test" style="vertical-align: middle;"></span>'],
+            0
+        );
 
         expect(context.imageSelection!.image.src).toBe('http://test.com/test');
     });
@@ -73,7 +81,13 @@ describe('handleSegment', () => {
             dataset: {},
         };
 
-        runTest(segment, ['<span><img src="http://test.com/test" alt="a" title="b"></span>'], 0);
+        runTest(
+            segment,
+            [
+                '<span><img src="http://test.com/test" alt="a" title="b" style="vertical-align: middle;"></span>',
+            ],
+            0
+        );
     });
 
     it('image segment with link', () => {
@@ -85,7 +99,13 @@ describe('handleSegment', () => {
             dataset: {},
         };
 
-        runTest(segment, ['<span><a href="/test"><img src="http://test.com/test"></a></span>'], 0);
+        runTest(
+            segment,
+            [
+                '<span><a href="/test"><img src="http://test.com/test" style="vertical-align: middle;"></a></span>',
+            ],
+            0
+        );
     });
 
     it('image segment with size', () => {
@@ -100,8 +120,8 @@ describe('handleSegment', () => {
         runTest(
             segment,
             [
-                '<span><a href="/test"><img src="http://test.com/test" width="100" height="200" style="width: 100px; height: 200px;"></a></span>',
-                '<span><a href="/test"><img src="http://test.com/test" style="width: 100px; height: 200px;" width="100" height="200"></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" width="100" height="200" style="width: 100px; height: 200px; vertical-align: middle;"></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" style="width: 100px; height: 200px; vertical-align: middle;" width="100" height="200"></a></span>',
             ],
             0
         );
@@ -120,7 +140,10 @@ describe('handleSegment', () => {
 
         runTest(
             segment,
-            ['<span><a href="/test"><img src="http://test.com/test" data-a="b"></a></span>'],
+            [
+                '<span><a href="/test"><img src="http://test.com/test" data-a="b" style="vertical-align: middle;"></a></span>',
+                '<span><a href="/test"><img src="http://test.com/test" style="vertical-align: middle;" data-a="b"></a></span>',
+            ],
             0
         );
     });
@@ -136,7 +159,13 @@ describe('handleSegment', () => {
 
         spyOn(stackFormat, 'stackFormat').and.callThrough();
 
-        runTest(segment, ['<span><a href="/test"><img src="http://test.com/test"></a></span>'], 0);
+        runTest(
+            segment,
+            [
+                '<span><a href="/test"><img src="http://test.com/test" style="vertical-align: middle;"></a></span>',
+            ],
+            0
+        );
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
@@ -157,7 +186,9 @@ describe('handleSegment', () => {
 
         handleImage(document, parent, segment, context, []);
 
-        expect(parent.innerHTML).toBe('<span><img src="http://test.com/test"></span>');
+        expect(parent.innerHTML).toBe(
+            '<span><img src="http://test.com/test" style="vertical-align: middle;"></span>'
+        );
         expect(onNodeCreated).toHaveBeenCalledTimes(1);
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(segment);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('img'));
@@ -175,7 +206,7 @@ describe('handleSegment', () => {
         handleImage(document, parent, segment, context, []);
 
         expect(parent.innerHTML).toBe(
-            '<span><img src="http://test.com/test" style="display: block;"></span>'
+            '<span><img src="http://test.com/test" style="display: block; vertical-align: middle;"></span>'
         );
     });
 
@@ -192,7 +223,7 @@ describe('handleSegment', () => {
         handleImage(document, parent, segment, context, segmentNodes);
 
         expect(parent.innerHTML).toBe(
-            '<span><img src="http://test.com/test" style="display: block;"></span>'
+            '<span><img src="http://test.com/test" style="display: block; vertical-align: middle;"></span>'
         );
         expect(segmentNodes.length).toBe(1);
         expect(segmentNodes[0]).toBe(parent.firstChild!.firstChild!);
