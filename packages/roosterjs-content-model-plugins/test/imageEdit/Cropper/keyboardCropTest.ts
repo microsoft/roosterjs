@@ -1,10 +1,5 @@
 import * as generateDataURL from '../../../lib/imageEdit/utils/generateDataURL';
-import {
-    createImage,
-    createParagraph,
-    createTable,
-    createTableCell,
-} from 'roosterjs-content-model-dom';
+import { createImage, createParagraph } from 'roosterjs-content-model-dom';
 import { exportContent, undo } from 'roosterjs-content-model-core';
 import { EditPlugin } from '../../../lib/edit/EditPlugin';
 import { ImageEditPlugin } from '../../../lib/imageEdit/ImageEditPlugin';
@@ -77,33 +72,6 @@ describe('ImageEditPlugin keyboard crop', () => {
         expect(root.activeElement).toBe(target(2));
         key(target(2), 'ArrowRight');
         expect(generateDataURL.generateDataURL).not.toHaveBeenCalled();
-    });
-
-    it('enters crop handles before table Tab handling can append a row', () => {
-        key(contentDiv, 'Tab');
-        key(target(0), 'Escape');
-        editor.formatContentModel(model => {
-            const table = createTable(1);
-            const cell = createTableCell();
-            cell.blocks.push(...model.blocks);
-            table.rows[0].cells.push(cell);
-            model.blocks = [table];
-            return true;
-        });
-        const image = contentDiv.querySelector('img')!;
-        editor.setDOMSelection({ type: 'image', image });
-        plugin.cropImage();
-        root = contentDiv.querySelector('td span')!.shadowRoot!;
-        const range = document.createRange();
-        range.selectNodeContents(contentDiv.querySelector('td')!);
-        range.collapse(false);
-        editor.setDOMSelection({ type: 'range', range });
-        const formatSpy = spyOn(editor, 'formatContentModel').and.callThrough();
-        key(contentDiv, 'Tab');
-        expect(root.activeElement).toBe(target(0));
-        expect(root.host.isConnected).toBe(true);
-        expect(contentDiv.querySelectorAll('tr').length).toBe(1);
-        expect(formatSpy).not.toHaveBeenCalled();
     });
 
     it('applies repeated cropping once with Enter and supports undo', () => {

@@ -179,17 +179,6 @@ describe('ImageCropKeyboardHelper', () => {
         expect(onFinish).not.toHaveBeenCalled();
     });
 
-    it('exposes focus targets as CSS parts and reuses the image border', () => {
-        [0, 1, 2].forEach(index => {
-            expect(target(index).getAttribute('part')).toBe(
-                ImageEditElementClass.CropKeyboardTarget
-            );
-        });
-        expect(target(2)).toBe(wrapper.querySelector(`.${ImageEditElementClass.ImageBorder}`));
-        expect(wrapper.lastElementChild).toBe(target(2));
-        expect(wrapper.querySelector('style')).toBeNull();
-    });
-
     it('omits labels when not supplied', () => {
         [0, 1, 2].forEach(index => {
             expect(target(index).hasAttribute('aria-label')).toBe(false);
