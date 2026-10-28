@@ -10,6 +10,7 @@ import { getHTMLImageOptions } from './utils/getHTMLImageOptions';
 import { getSelectedImage } from './utils/getSelectedImage';
 import { getSelectedImageMetadata, updateImageEditInfo } from './utils/updateImageEditInfo';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
+import { ImageCropKeyboardHelper } from './Cropper/ImageCropKeyboardHelper';
 import { normalizeImageSelection } from './utils/normalizeImageSelection';
 import { Resizer } from './Resizer/resizerContext';
 import { Rotator } from './Rotator/rotatorContext';
@@ -60,6 +61,7 @@ const MouseRightButton = 2;
 const DRAG_ID = '_dragging';
 const IMAGE_EDIT_CLASS = 'imageEdit';
 const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
+const IMAGE_EDIT_CLASS_CROP_KEYBOARD = 'imageEditCropKeyboard';
 const IMAGE_EDIT_FORMAT_EVENT = 'ImageEditEvent';
 
 /**
@@ -68,6 +70,10 @@ const IMAGE_EDIT_FORMAT_EVENT = 'ImageEditEvent';
  * - Crop image
  * - Rotate image
  * - Flip image
+ *
+ * In crop mode, Tab focuses the top-left corner, bottom-right corner, then the
+ * whole image. Arrow keys crop at corners or move the fixed-size crop viewport
+ * by one pixel. Enter applies the crop; Escape cancels it.
  */
 export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     protected editor: IEditor | null = null;
@@ -86,6 +92,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private croppers: HTMLDivElement[] = [];
     private zoomScale: number = 1;
     private disposer: (() => void) | null = null;
+    private cropKeyboardHelper: ImageCropKeyboardHelper | null = null;
     protected isEditing = false;
     protected options: ImageEditOptions;
 
@@ -109,8 +116,21 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = editor.attachDomEvent({
+            keydown: {
+                capture: true,
+                beforeDispatch: ev => {
+                    this.focusCropHandle(ev as KeyboardEvent);
+                },
+            },
             blur: {
-                beforeDispatch: () => {
+                beforeDispatch: ev => {
+                    if (
+                        this.cropKeyboardHelper &&
+                        ((ev as FocusEvent).relatedTarget === this.shadowSpan ||
+                            this.cropKeyboardHelper.contains((ev as FocusEvent).relatedTarget))
+                    ) {
+                        return;
+                    }
                     if (this.isEditing && this.editor && !this.editor.isDisposed()) {
                         this.applyFormatWithContentModel(
                             this.editor,
@@ -247,6 +267,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
 
     private onDropHandler(editor: IEditor) {
         const selection = editor.getDOMSelection();
+
         if (selection?.type == 'image') {
             editor.formatContentModel(model => {
                 const imageDragged = findEditingImage(model, selection.image.id);
@@ -276,6 +297,13 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     private keyDownHandler(editor: IEditor, event: KeyDownEvent) {
         if (this.isEditing) {
             if (
+                this.cropKeyboardHelper &&
+                (this.cropKeyboardHelper.contains(event.rawEvent.composedPath()[0]) ||
+                    this.focusCropHandle(event.rawEvent))
+            ) {
+                return;
+            }
+            if (
                 event.rawEvent.key === 'Escape' ||
                 event.rawEvent.key === 'Delete' ||
                 event.rawEvent.key === 'Backspace'
@@ -296,6 +324,22 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                 );
             }
         }
+    }
+
+    private focusCropHandle(event: KeyboardEvent): boolean {
+        if (
+            this.cropKeyboardHelper &&
+            event.key == 'Tab' &&
+            !event.shiftKey &&
+            !this.cropKeyboardHelper.contains(event.composedPath()[0])
+        ) {
+            // Enter crop controls before editing plugins can indent or rerender the image.
+            event.preventDefault();
+            event.stopPropagation();
+            this.cropKeyboardHelper.focus();
+            return true;
+        }
+        return false;
     }
 
     private setContentHandler() {
@@ -704,6 +748,26 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         if (this.imageEditInfo) {
             this.startEditing(editor, image, ['crop']);
             if (this.imageEditInfo && this.selectedImage && this.wrapper && this.clonedImage) {
+                const onCrop = () => {
+                    if (
+                        this.imageEditInfo &&
+                        this.selectedImage &&
+                        this.wrapper &&
+                        this.clonedImage
+                    ) {
+                        updateWrapper(
+                            this.imageEditInfo,
+                            this.options,
+                            this.selectedImage,
+                            this.clonedImage,
+                            this.wrapper,
+                            undefined /* resizers */,
+                            this.croppers,
+                            isRTL
+                        );
+                        this.isCropMode = true;
+                    }
+                };
                 this.dndHelpers = [
                     ...getDropAndDragHelpers(
                         this.wrapper,
@@ -711,26 +775,7 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                         this.options,
                         ImageEditElementClass.CropHandle,
                         Cropper,
-                        () => {
-                            if (
-                                this.imageEditInfo &&
-                                this.selectedImage &&
-                                this.wrapper &&
-                                this.clonedImage
-                            ) {
-                                updateWrapper(
-                                    this.imageEditInfo,
-                                    this.options,
-                                    this.selectedImage,
-                                    this.clonedImage,
-                                    this.wrapper,
-                                    undefined /* resizers */,
-                                    this.croppers,
-                                    isRTL
-                                );
-                                this.isCropMode = true;
-                            }
-                        },
+                        onCrop,
                         this.zoomScale,
                         !!editor.getEnvironment().isMobileOrTablet,
                         !!editor.getEnvironment().isTouchSupported
@@ -746,7 +791,47 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
                     this.croppers,
                     isRTL
                 );
+                this.startCropWithKeyboard(editor, onCrop);
             }
+        }
+    }
+
+    private startCropWithKeyboard(editor: IEditor, onCrop: () => void) {
+        if (this.wrapper && this.selectedImage && this.imageEditInfo) {
+            this.cropKeyboardHelper?.dispose();
+            this.cropKeyboardHelper = new ImageCropKeyboardHelper(
+                this.wrapper,
+                this.selectedImage.id,
+                this.imageEditInfo,
+                this.options,
+                onCrop,
+                (apply, restoreFocus) => this.finishKeyboardCrop(editor, apply, restoreFocus)
+            );
+            editor.setEditorStyle(
+                IMAGE_EDIT_CLASS_CROP_KEYBOARD,
+                'outline:2px solid Highlight;outline-offset:-2px;',
+                [`span::part(${ImageEditElementClass.CropKeyboardTarget}):focus`]
+            );
+        }
+    }
+
+    private finishKeyboardCrop(editor: IEditor, apply: boolean, restoreFocus: boolean) {
+        this.cropKeyboardHelper?.dispose();
+        this.cropKeyboardHelper = null;
+        editor.setEditorStyle(IMAGE_EDIT_CLASS_CROP_KEYBOARD, null);
+        if (apply) {
+            this.applyFormatWithContentModel(editor, true, true);
+        } else {
+            this.isEditing = false;
+            const image = this.removeImageWrapper();
+            this.cleanInfo();
+            if (restoreFocus && image) {
+                editor.focus();
+                editor.setDOMSelection({ type: 'image', image });
+            }
+        }
+        if (restoreFocus) {
+            editor.focus();
         }
     }
 
@@ -800,8 +885,11 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
      * Exported for testing purpose only
      */
     public cleanInfo() {
+        this.cropKeyboardHelper?.dispose();
+        this.cropKeyboardHelper = null;
         this.editor?.setEditorStyle(IMAGE_EDIT_CLASS, null);
         this.editor?.setEditorStyle(IMAGE_EDIT_CLASS_CARET, null);
+        this.editor?.setEditorStyle(IMAGE_EDIT_CLASS_CROP_KEYBOARD, null);
         this.selectedImage = null;
         this.shadowSpan = null;
         this.wrapper = null;
