@@ -26,10 +26,8 @@ export interface MarkdownToModelOptions {
 
     /**
      * Specify the table styles to apply to tables converted from markdown.
-     * - true: Use plain markdown table styles with black borders and no header styling.
-     * - false or omitted: Use the existing table styles with a styled header row.
-     * - TableMetadataFormat: Apply the specified custom table styles.
-     * @default false
+     * When omitted, use plain markdown table styles with black borders and no header styling.
+     * When specified, use the provided table metadata instead of the default markdown styles.
      */
-    markdownTableStyle?: boolean | TableMetadataFormat;
+    markdownTableStyle?: TableMetadataFormat;
 }

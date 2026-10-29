@@ -174,7 +174,7 @@ describe('convertMarkdownToContentModel', () => {
                     },
                     dataset: {
                         editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                            '{"topBorderColor":"#000","bottomBorderColor":"#000","verticalBorderColor":"#000","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":null,"tableBorderFormat":0,"verticalAlign":null,"headerRowCustomStyles":{"fontWeight":"normal","italic":false},"firstColumnCustomStyles":{"fontWeight":"normal","italic":false}}',
                     },
                     blockType: 'Table',
                     rows: [
@@ -192,9 +192,7 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 1',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                 },
                                             ],
                                             format: {},
@@ -204,15 +202,13 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
-                                        fontWeight: 'bold',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                                 {
                                     blockGroupType: 'TableCell',
@@ -224,9 +220,7 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 2',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                 },
                                             ],
                                             format: {},
@@ -236,15 +230,13 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
-                                        fontWeight: 'bold',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                                 {
                                     blockGroupType: 'TableCell',
@@ -256,9 +248,7 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 3',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                 },
                                             ],
                                             format: {},
@@ -268,15 +258,13 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
-                                        fontWeight: 'bold',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                             ],
                         },
@@ -304,10 +292,10 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                     isHeader: false,
@@ -332,10 +320,10 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                     isHeader: false,
@@ -360,10 +348,10 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                     isHeader: false,
@@ -394,10 +382,10 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                     isHeader: false,
@@ -422,10 +410,10 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                     isHeader: false,
@@ -450,10 +438,10 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                     isHeader: false,
@@ -480,7 +468,7 @@ describe('convertMarkdownToContentModel', () => {
                     },
                     dataset: {
                         editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                            '{"topBorderColor":"#000","bottomBorderColor":"#000","verticalBorderColor":"#000","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":null,"tableBorderFormat":0,"verticalAlign":null,"headerRowCustomStyles":{"fontWeight":"normal","italic":false},"firstColumnCustomStyles":{"fontWeight":"normal","italic":false}}',
                     },
                     blockType: 'Table',
                     rows: [
@@ -498,9 +486,7 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 1',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                 },
                                             ],
                                             format: {},
@@ -510,15 +496,13 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'center',
-                                        fontWeight: 'bold',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                                 {
                                     blockGroupType: 'TableCell',
@@ -530,9 +514,7 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 2',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                 },
                                             ],
                                             format: {},
@@ -541,16 +523,14 @@ describe('convertMarkdownToContentModel', () => {
                                     spanAbove: false,
                                     spanLeft: false,
                                     format: {
-                                        fontWeight: 'bold',
                                         textAlign: 'end',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                                 {
                                     blockGroupType: 'TableCell',
@@ -562,9 +542,7 @@ describe('convertMarkdownToContentModel', () => {
                                                     segmentType: 'Text',
 
                                                     text: 'Header 3',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                 },
                                             ],
                                             format: {},
@@ -573,16 +551,14 @@ describe('convertMarkdownToContentModel', () => {
                                     spanAbove: false,
                                     spanLeft: false,
                                     format: {
-                                        fontWeight: 'bold',
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                             ],
                         },
@@ -610,10 +586,10 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'center',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                     isHeader: false,
@@ -638,10 +614,10 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'end',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                     isHeader: false,
@@ -666,10 +642,10 @@ describe('convertMarkdownToContentModel', () => {
                                     spanLeft: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                     isHeader: false,
@@ -1326,7 +1302,7 @@ describe('convertMarkdownToContentModel', () => {
                                 {
                                     spanAbove: false,
                                     spanLeft: false,
-                                    isHeader: true,
+                                    isHeader: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -1335,9 +1311,7 @@ describe('convertMarkdownToContentModel', () => {
                                                     text: 'Header 1',
                                                     segmentType: 'Text',
 
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                 },
                                             ],
 
@@ -1348,19 +1322,17 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        fontWeight: 'bold',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
                                 {
                                     spanAbove: false,
                                     spanLeft: false,
-                                    isHeader: true,
+                                    isHeader: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -1369,9 +1341,7 @@ describe('convertMarkdownToContentModel', () => {
                                                     text: 'Header 2',
                                                     segmentType: 'Text',
 
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                 },
                                             ],
 
@@ -1382,19 +1352,17 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        fontWeight: 'bold',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
                                 {
                                     spanAbove: false,
                                     spanLeft: false,
-                                    isHeader: true,
+                                    isHeader: false,
                                     blockGroupType: 'TableCell',
                                     blocks: [
                                         {
@@ -1403,9 +1371,7 @@ describe('convertMarkdownToContentModel', () => {
                                                     text: 'Header 3',
                                                     segmentType: 'Text',
 
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                 },
                                             ],
 
@@ -1416,12 +1382,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        fontWeight: 'bold',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1454,10 +1418,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1484,10 +1448,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1514,10 +1478,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1550,10 +1514,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1580,10 +1544,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1610,10 +1574,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1646,10 +1610,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1677,10 +1641,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1707,10 +1671,10 @@ describe('convertMarkdownToContentModel', () => {
 
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     dataset: {},
                                 },
@@ -1724,7 +1688,7 @@ describe('convertMarkdownToContentModel', () => {
                     },
                     dataset: {
                         editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                            '{"topBorderColor":"#000","bottomBorderColor":"#000","verticalBorderColor":"#000","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":null,"tableBorderFormat":0,"verticalAlign":null,"headerRowCustomStyles":{"fontWeight":"normal","italic":false},"firstColumnCustomStyles":{"fontWeight":"normal","italic":false}}',
                     },
                 },
                 //22

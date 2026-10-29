@@ -203,21 +203,16 @@ describe('MarkdownPastePlugin', () => {
                 });
             });
 
-            [true, false, undefined].forEach(markdownTableStyle => {
-                it(`applies table styles when markdownTableStyle is ${markdownTableStyle}`, () => {
-                    const fragment = convertWithOptions(
-                        { markdownTableStyle },
-                        '|Header|\n|---|\n|Body|'
-                    );
-                    const cell = fragment.querySelector<HTMLElement>('th, td');
+            it('applies plain table styles by default', () => {
+                const fragment = convertWithOptions({}, '|Header|\n|---|\n|Body|');
+                const cells = fragment.querySelectorAll<HTMLElement>('td');
 
-                    expect(cell).not.toBeNull();
-                    expect(cell?.tagName).toBe(markdownTableStyle === true ? 'TD' : 'TH');
-                    expect(cell?.style.borderTop).toBe(
-                        markdownTableStyle === true
-                            ? '1px solid rgb(0, 0, 0)'
-                            : '1px solid rgb(171, 171, 171)'
-                    );
+                expect(fragment.querySelector('th')).toBeNull();
+                expect(cells.length).toBe(2);
+                cells.forEach(cell => {
+                    expect(cell.style.borderTop).toBe('1px solid rgb(0, 0, 0)');
+                    expect(cell.style.backgroundColor).toBe('');
+                    expect(cell.style.fontWeight).toBe('');
                 });
             });
 

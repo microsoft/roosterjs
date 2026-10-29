@@ -33,7 +33,6 @@ export default class MarkdownPane extends React.Component<
                     ? 'remove'
                     : 'merge',
                 direction: this.isRTL.current.checked ? 'rtl' : 'ltr',
-                markdownTableStyle: true,
             });
 
             model.blocks = markdownModel.blocks;

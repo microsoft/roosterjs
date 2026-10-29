@@ -66,7 +66,6 @@ const initialState: OptionState = {
         undoConversion: false,
         markdownToModelOptions: {
             emptyLine: 'merge',
-            markdownTableStyle: true,
         },
     },
     editPluginOptions: {

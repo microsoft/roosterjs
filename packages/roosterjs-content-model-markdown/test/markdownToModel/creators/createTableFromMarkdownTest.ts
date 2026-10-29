@@ -8,6 +8,7 @@ import {
     createTableCell,
     createTableRow,
     createText,
+    TableBorderFormat,
 } from 'roosterjs-content-model-dom';
 
 describe('createTableFromMarkdown', () => {
@@ -21,40 +22,48 @@ describe('createTableFromMarkdown', () => {
         const result = createTableFromMarkdown(tableLines, options);
 
         applyTableFormat(expectedTable, {
-            hasHeaderRow: true,
+            headerRowColor: null,
+            topBorderColor: '#000',
+            bottomBorderColor: '#000',
+            verticalBorderColor: '#000',
+            tableBorderFormat: TableBorderFormat.Default,
+            headerRowCustomStyles: {
+                fontWeight: 'normal',
+                italic: false,
+            },
+            firstColumnCustomStyles: {
+                fontWeight: 'normal',
+                italic: false,
+            },
         });
 
         // Assert
         expect(result).toEqual(expectedTable);
     }
 
-    [false, undefined].forEach(markdownTableStyle => {
-        it(`preserves existing table styles when markdownTableStyle is ${markdownTableStyle}`, () => {
-            const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {
-                markdownTableStyle,
-            });
+    it('applies styled headers when explicitly requested', () => {
+        const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {
+            markdownTableStyle: { hasHeaderRow: true },
+        });
 
-            table.rows.forEach((row, rowIndex) => {
-                const cell = row.cells[0];
-                expect(cell.isHeader).toBe(rowIndex === 0);
-                expect(cell.format.borderTop).toBe('1px solid #ABABAB');
-                expect(cell.format.backgroundColor).toBe(rowIndex === 0 ? '#ABABAB' : undefined);
-                expect(cell.format.fontWeight).toBe(rowIndex === 0 ? 'bold' : undefined);
-                const paragraph = cell.blocks[0];
-                expect(paragraph.blockType).toBe('Paragraph');
-                if (paragraph.blockType === 'Paragraph') {
-                    expect(paragraph.segments[0].format).toEqual(
-                        rowIndex === 0 ? { fontWeight: 'bold' } : {}
-                    );
-                }
-            });
+        table.rows.forEach((row, rowIndex) => {
+            const cell = row.cells[0];
+            expect(cell.isHeader).toBe(rowIndex === 0);
+            expect(cell.format.borderTop).toBe('1px solid #ABABAB');
+            expect(cell.format.backgroundColor).toBe(rowIndex === 0 ? '#ABABAB' : undefined);
+            expect(cell.format.fontWeight).toBe(rowIndex === 0 ? 'bold' : undefined);
+            const paragraph = cell.blocks[0];
+            expect(paragraph.blockType).toBe('Paragraph');
+            if (paragraph.blockType === 'Paragraph') {
+                expect(paragraph.segments[0].format).toEqual(
+                    rowIndex === 0 ? { fontWeight: 'bold' } : {}
+                );
+            }
         });
     });
 
-    it('applies plain markdown table styles when markdownTableStyle is true', () => {
-        const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {
-            markdownTableStyle: true,
-        });
+    it('applies plain markdown table styles by default', () => {
+        const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {});
 
         table.rows.forEach(row => {
             const cell = row.cells[0];
@@ -74,10 +83,8 @@ describe('createTableFromMarkdown', () => {
         });
     });
 
-    it('preserves explicit markdown emphasis when markdownTableStyle is true', () => {
-        const table = createTableFromMarkdown(['|**Header**|', '|---|', '|*Body*|'], {
-            markdownTableStyle: true,
-        });
+    it('preserves explicit markdown emphasis with default table styles', () => {
+        const table = createTableFromMarkdown(['|**Header**|', '|---|', '|*Body*|'], {});
 
         table.rows.forEach((row, rowIndex) => {
             const cell = row.cells[0];
