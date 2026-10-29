@@ -44,7 +44,7 @@ export function createTableFromMarkdown(
     for (const line of tableLines) {
         createTableModel(line, table, tableDivider, options);
     }
-    applyTableFormat(table, options.markdownTableStyle ?? DefaultMarkdownTable);
+    applyTableFormat(table, options.tableStyles ?? DefaultMarkdownTable);
     return table;
 }
 

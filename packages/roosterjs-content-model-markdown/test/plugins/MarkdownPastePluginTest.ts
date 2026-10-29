@@ -221,7 +221,7 @@ describe('MarkdownPastePlugin', () => {
                     {
                         emptyLine: 'remove',
                         direction: 'rtl',
-                        markdownTableStyle: {
+                        tableStyles: {
                             hasHeaderRow: false,
                             topBorderColor: '#ff0000',
                             bottomBorderColor: '#00ff00',

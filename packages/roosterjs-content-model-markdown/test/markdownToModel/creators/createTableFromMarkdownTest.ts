@@ -43,7 +43,7 @@ describe('createTableFromMarkdown', () => {
 
     it('applies styled headers when explicitly requested', () => {
         const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {
-            markdownTableStyle: { hasHeaderRow: true },
+            tableStyles: { hasHeaderRow: true },
         });
 
         table.rows.forEach((row, rowIndex) => {
@@ -103,7 +103,7 @@ describe('createTableFromMarkdown', () => {
 
     it('applies custom table borders, header row styles, and first column styles', () => {
         const table = createTableFromMarkdown(['|Header1|Header2|', '|---|---|', '|Body1|Body2|'], {
-            markdownTableStyle: {
+            tableStyles: {
                 hasHeaderRow: true,
                 hasFirstColumn: true,
                 headerRowColor: null,
@@ -146,9 +146,9 @@ describe('createTableFromMarkdown', () => {
         });
     });
 
-    it('uses table formatting defaults without a header row when markdownTableStyle is empty', () => {
+    it('uses table formatting defaults without a header row when tableStyles is empty', () => {
         const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {
-            markdownTableStyle: {},
+            tableStyles: {},
         });
 
         table.rows.forEach(row => {
