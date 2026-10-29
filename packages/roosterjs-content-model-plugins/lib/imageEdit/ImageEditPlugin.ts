@@ -824,6 +824,9 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         } else {
             this.isEditing = false;
             const image = this.removeImageWrapper();
+            if (image) {
+                setImageState(image, '');
+            }
             this.cleanInfo();
             if (restoreFocus && image) {
                 editor.focus();

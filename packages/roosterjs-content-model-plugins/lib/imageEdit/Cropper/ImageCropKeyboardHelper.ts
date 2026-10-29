@@ -6,13 +6,16 @@ import type { DragAndDropEvent } from '../../pluginUtils/DragAndDrop/DragAndDrop
 import type { ImageEditOptions } from '../types/ImageEditOptions';
 import type { ImageMetadataFormat } from 'roosterjs-content-model-types';
 
+const DefaultTopLeftLabel = 'Top left';
+const DefaultBottomRightLabel = 'Bottom right';
+const DefaultMoveCropLabel = 'Move Crop';
+
 const FocusTargetAttributes = [
     'tabindex',
     'contenteditable',
     'role',
     'aria-label',
     'aria-describedby',
-    'aria-keyshortcuts',
     'part',
 ];
 
@@ -45,7 +48,11 @@ export class ImageCropKeyboardHelper implements Disposable {
                 `.${ImageEditElementClass.CropHandle}[data-y="${direction[0]}"][data-x="${direction[1]}"]`
             );
             if (handle) {
-                this.prepareTarget(handle, cropLabels?.handleLabel?.(direction));
+                this.prepareTarget(
+                    handle,
+                    cropLabels?.handleLabel?.(direction) ||
+                        (direction == 'nw' ? DefaultTopLeftLabel : DefaultBottomRightLabel)
+                );
             }
         });
 
@@ -54,7 +61,10 @@ export class ImageCropKeyboardHelper implements Disposable {
         );
         if (this.cropMoveTarget) {
             wrapper.appendChild(this.cropMoveTarget);
-            this.prepareTarget(this.cropMoveTarget, cropLabels?.viewportLabel);
+            this.prepareTarget(
+                this.cropMoveTarget,
+                cropLabels?.moveCropLabel || DefaultMoveCropLabel
+            );
         }
 
         // Make native tab entry start at the top-left corner as well.
@@ -103,17 +113,13 @@ export class ImageCropKeyboardHelper implements Disposable {
     private prepareTarget(target: HTMLElement, label?: string) {
         target.tabIndex = 0;
         target.contentEditable = 'false';
-        target.setAttribute('role', 'button');
+        target.setAttribute('role', 'application');
         if (label) {
             target.setAttribute('aria-label', label);
         }
         if (this.instructions) {
             target.setAttribute('aria-describedby', this.instructions.id);
         }
-        target.setAttribute(
-            'aria-keyshortcuts',
-            'ArrowUp ArrowDown ArrowLeft ArrowRight Enter Escape'
-        );
         target.classList.add(ImageEditElementClass.CropKeyboardTarget);
         target.setAttribute('part', ImageEditElementClass.CropKeyboardTarget);
         this.cropFocusTargets.push(target);

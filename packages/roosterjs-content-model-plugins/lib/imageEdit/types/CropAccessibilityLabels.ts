@@ -4,15 +4,15 @@
 export interface CropAccessibilityLabels {
     /**
      * Optional accessible crop corner label. Direction is top left (nw) or bottom right (se).
-     * No label is added when omitted or empty.
+     * Falls back to "Top left" or "Bottom right" when omitted or empty.
      */
     handleLabel?: (direction: 'nw' | 'se') => string;
 
     /**
      * Optional accessible label for the whole-image focus target that moves the crop viewport.
-     * No label is added when omitted or empty.
+     * Falls back to "Move Crop" when omitted or empty.
      */
-    viewportLabel?: string;
+    moveCropLabel?: string;
 
     /**
      * Optional localized keyboard cropping instructions. No instructions are added when

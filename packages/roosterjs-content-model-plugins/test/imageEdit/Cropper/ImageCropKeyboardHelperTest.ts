@@ -67,9 +67,11 @@ describe('ImageCropKeyboardHelper', () => {
         expect(target(0).dataset.y).toBe('n');
         expect(target(1).dataset.x).toBe('e');
         expect(target(1).dataset.y).toBe('s');
+        expect(target(0).getAttribute('aria-label')).toBe('Top left');
+        expect(target(1).getAttribute('aria-label')).toBe('Bottom right');
+        expect(target(2).getAttribute('aria-label')).toBe('Move Crop');
         [0, 1, 2].forEach(index => {
-            expect(target(index).getAttribute('role')).toBe('button');
-            expect(target(index).hasAttribute('aria-label')).toBe(false);
+            expect(target(index).getAttribute('role')).toBe('application');
             expect(target(index).hasAttribute('aria-describedby')).toBe(false);
         });
         helper.focus();
@@ -80,6 +82,26 @@ describe('ImageCropKeyboardHelper', () => {
         expect(document.activeElement).toBe(target(2));
         key(2, 'Tab', { shiftKey: true });
         expect(document.activeElement).toBe(target(1));
+        expect(onFinish).not.toHaveBeenCalled();
+    });
+
+    it('scopes application semantics to crop targets and removes them on disposal', () => {
+        expect(wrapper.hasAttribute('role')).toBe(false);
+        expect(wrapper.querySelectorAll('[role="application"]').length).toBe(3);
+        helper.dispose();
+        expect(wrapper.querySelector('[role="application"]')).toBeNull();
+        expect(wrapper.querySelector('[tabindex]')).toBeNull();
+    });
+
+    it('keeps focus on each crop target when arrow keys adjust the crop', () => {
+        [0, 1, 2].forEach(index => {
+            target(index).focus();
+            ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].forEach(value => {
+                expect(key(index, value).defaultPrevented).toBe(true);
+                expect(document.activeElement).toBe(target(index));
+            });
+        });
+        expect(onCrop).toHaveBeenCalledTimes(12);
         expect(onFinish).not.toHaveBeenCalled();
     });
 
@@ -179,14 +201,16 @@ describe('ImageCropKeyboardHelper', () => {
         expect(onFinish).not.toHaveBeenCalled();
     });
 
-    it('omits labels when not supplied', () => {
+    it('uses handle names when labels are not supplied', () => {
+        expect(target(0).getAttribute('aria-label')).toBe('Top left');
+        expect(target(1).getAttribute('aria-label')).toBe('Bottom right');
+        expect(target(2).getAttribute('aria-label')).toBe('Move Crop');
         [0, 1, 2].forEach(index => {
-            expect(target(index).hasAttribute('aria-label')).toBe(false);
             expect(target(index).tabIndex).toBe(0);
         });
     });
 
-    it('omits labels and instructions when cropLabels is empty', () => {
+    it('uses handle names and omits instructions when cropLabels is empty', () => {
         helper.dispose();
         helper = new ImageCropKeyboardHelper(
             wrapper,
@@ -197,25 +221,27 @@ describe('ImageCropKeyboardHelper', () => {
             onFinish
         );
         expect(wrapper.querySelector('[id^="imageCropInstructions"]')).toBeNull();
+        expect(target(0).getAttribute('aria-label')).toBe('Top left');
+        expect(target(1).getAttribute('aria-label')).toBe('Bottom right');
+        expect(target(2).getAttribute('aria-label')).toBe('Move Crop');
         [0, 1, 2].forEach(index => {
-            expect(target(index).hasAttribute('aria-label')).toBe(false);
             expect(target(index).hasAttribute('aria-describedby')).toBe(false);
         });
     });
 
-    it('omits labels when empty', () => {
+    it('uses handle names when labels are empty', () => {
         helper.dispose();
         helper = new ImageCropKeyboardHelper(
             wrapper,
             'cropImage',
             editInfo,
-            { cropLabels: { handleLabel: () => '', viewportLabel: '' } },
+            { cropLabels: { handleLabel: () => '', moveCropLabel: '' } },
             onCrop,
             onFinish
         );
-        [0, 1, 2].forEach(index => {
-            expect(target(index).hasAttribute('aria-label')).toBe(false);
-        });
+        expect(target(0).getAttribute('aria-label')).toBe('Top left');
+        expect(target(1).getAttribute('aria-label')).toBe('Bottom right');
+        expect(target(2).getAttribute('aria-label')).toBe('Move Crop');
     });
 
     it('uses supplied labels and removes them on disposal', () => {
@@ -227,7 +253,7 @@ describe('ImageCropKeyboardHelper', () => {
             {
                 cropLabels: {
                     handleLabel: () => 'Crop corner',
-                    viewportLabel: 'Move viewport',
+                    moveCropLabel: 'Move viewport',
                 },
             },
             onCrop,
@@ -293,7 +319,7 @@ describe('ImageCropKeyboardHelper', () => {
             {
                 cropLabels: {
                     handleLabel: direction => 'corner ' + direction,
-                    viewportLabel: 'viewport',
+                    moveCropLabel: 'viewport',
                     instructions: 'instructions',
                 },
             },
