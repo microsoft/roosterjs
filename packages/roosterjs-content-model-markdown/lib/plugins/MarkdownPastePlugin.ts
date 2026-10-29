@@ -95,7 +95,8 @@ export class MarkdownPastePlugin implements EditorPlugin {
                     }),
                     undefined /*context*/,
                     {
-                        mergeFormat: 'preferTarget',
+                        mergeFormat: 'keepSourceEmphasisFormat',
+                        preserveParagraphDecorator: true,
                     }
                 );
                 if (this.options.undoConversion) {
