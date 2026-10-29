@@ -1,12 +1,29 @@
 import { createParagraphFromMarkdown } from './createParagraphFromMarkdown';
-import type { ContentModelTable } from 'roosterjs-content-model-types';
+import type { ContentModelTable, TableMetadataFormat } from 'roosterjs-content-model-types';
 import {
     applyTableFormat,
     createTable,
     createTableCell,
     createTableRow,
+    TableBorderFormat,
 } from 'roosterjs-content-model-dom';
 import type { MarkdownToModelOptions } from '../types/MarkdownToModelOptions';
+
+const DefaultMarkdownTable: TableMetadataFormat = {
+    headerRowColor: null,
+    topBorderColor: '#000',
+    bottomBorderColor: '#000',
+    verticalBorderColor: '#000',
+    tableBorderFormat: TableBorderFormat.Default,
+    headerRowCustomStyles: {
+        fontWeight: 'normal',
+        italic: false,
+    },
+    firstColumnCustomStyles: {
+        fontWeight: 'normal',
+        italic: false,
+    },
+};
 
 /**
  * @internal
@@ -29,9 +46,9 @@ export function createTableFromMarkdown(
     }
     applyTableFormat(
         table,
-        options.tableStyles ?? {
-            hasHeaderRow: true,
-        }
+        options.markdownTableStyle === true
+            ? DefaultMarkdownTable
+            : options.markdownTableStyle || { hasHeaderRow: true }
     );
     return table;
 }

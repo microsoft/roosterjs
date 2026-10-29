@@ -44,6 +44,7 @@ export class MarkdownPastePlugin implements EditorPlugin {
             markdownToModelOptions: {
                 ...DefaultOptions.markdownToModelOptions,
                 ...options?.markdownToModelOptions,
+                emptyLine: options?.markdownToModelOptions?.emptyLine ?? 'merge',
             },
         };
     }

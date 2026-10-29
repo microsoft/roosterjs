@@ -182,6 +182,13 @@ describe('MarkdownPastePlugin', () => {
                 expect(fragment.querySelector<HTMLElement>('h1')?.style.direction).toBe('rtl');
             });
 
+            it('merges empty lines when emptyLine is explicitly undefined', () => {
+                const fragment = convertWithOptions({ direction: 'rtl', emptyLine: undefined });
+
+                expect(fragment.querySelectorAll('div').length).toBe(2);
+                expect(fragment.querySelector<HTMLElement>('h1')?.style.direction).toBe('rtl');
+            });
+
             ['remove', 'preserve'].forEach((emptyLine: 'remove' | 'preserve') => {
                 it(`applies ${emptyLine} empty lines and right-to-left direction`, () => {
                     const fragment = convertWithOptions({
@@ -196,12 +203,30 @@ describe('MarkdownPastePlugin', () => {
                 });
             });
 
+            [true, false, undefined].forEach(markdownTableStyle => {
+                it(`applies table styles when markdownTableStyle is ${markdownTableStyle}`, () => {
+                    const fragment = convertWithOptions(
+                        { markdownTableStyle },
+                        '|Header|\n|---|\n|Body|'
+                    );
+                    const cell = fragment.querySelector<HTMLElement>('th, td');
+
+                    expect(cell).not.toBeNull();
+                    expect(cell?.tagName).toBe(markdownTableStyle === true ? 'TD' : 'TH');
+                    expect(cell?.style.borderTop).toBe(
+                        markdownTableStyle === true
+                            ? '1px solid rgb(0, 0, 0)'
+                            : '1px solid rgb(171, 171, 171)'
+                    );
+                });
+            });
+
             it('applies custom table styles', () => {
                 const fragment = convertWithOptions(
                     {
                         emptyLine: 'remove',
                         direction: 'rtl',
-                        tableStyles: {
+                        markdownTableStyle: {
                             hasHeaderRow: false,
                             topBorderColor: '#ff0000',
                             bottomBorderColor: '#00ff00',

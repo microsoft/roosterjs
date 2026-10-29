@@ -20,6 +20,7 @@ export interface MarkdownPasteOptions {
 
     /**
      * Options for converting pasted markdown text into a content model.
+     * An omitted or undefined emptyLine option defaults to 'merge'.
      */
     markdownToModelOptions?: MarkdownToModelOptions;
 }
