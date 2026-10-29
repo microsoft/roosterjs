@@ -1,3 +1,5 @@
+import type { TableMetadataFormat } from 'roosterjs-content-model-types';
+
 /**
  * Options for processing markdown text.
  */
@@ -21,4 +23,11 @@ export interface MarkdownToModelOptions {
      * @default 'ltr'
      */
     direction?: 'ltr' | 'rtl' | undefined;
+
+    /**
+     * Specify the table styles to apply to tables converted from markdown.
+     * When omitted, use plain markdown table styles with black borders and no header styling.
+     * When specified, use the provided table metadata instead of the default markdown styles.
+     */
+    tableStyles?: TableMetadataFormat;
 }

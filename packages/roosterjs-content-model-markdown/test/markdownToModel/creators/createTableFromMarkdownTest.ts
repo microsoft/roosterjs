@@ -8,6 +8,7 @@ import {
     createTableCell,
     createTableRow,
     createText,
+    TableBorderFormat,
 } from 'roosterjs-content-model-dom';
 
 describe('createTableFromMarkdown', () => {
@@ -20,9 +21,143 @@ describe('createTableFromMarkdown', () => {
         // Act
         const result = createTableFromMarkdown(tableLines, options);
 
+        applyTableFormat(expectedTable, {
+            headerRowColor: null,
+            topBorderColor: '#000',
+            bottomBorderColor: '#000',
+            verticalBorderColor: '#000',
+            tableBorderFormat: TableBorderFormat.Default,
+            headerRowCustomStyles: {
+                fontWeight: 'normal',
+                italic: false,
+            },
+            firstColumnCustomStyles: {
+                fontWeight: 'normal',
+                italic: false,
+            },
+        });
+
         // Assert
         expect(result).toEqual(expectedTable);
     }
+
+    it('applies styled headers when explicitly requested', () => {
+        const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {
+            tableStyles: { hasHeaderRow: true },
+        });
+
+        table.rows.forEach((row, rowIndex) => {
+            const cell = row.cells[0];
+            expect(cell.isHeader).toBe(rowIndex === 0);
+            expect(cell.format.borderTop).toBe('1px solid #ABABAB');
+            expect(cell.format.backgroundColor).toBe(rowIndex === 0 ? '#ABABAB' : undefined);
+            expect(cell.format.fontWeight).toBe(rowIndex === 0 ? 'bold' : undefined);
+            const paragraph = cell.blocks[0];
+            expect(paragraph.blockType).toBe('Paragraph');
+            if (paragraph.blockType === 'Paragraph') {
+                expect(paragraph.segments[0].format).toEqual(
+                    rowIndex === 0 ? { fontWeight: 'bold' } : {}
+                );
+            }
+        });
+    });
+
+    it('applies plain markdown table styles by default', () => {
+        const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {});
+
+        table.rows.forEach(row => {
+            const cell = row.cells[0];
+            expect(cell.isHeader).toBe(false);
+            expect(cell.format).toEqual({
+                textAlign: 'start',
+                borderTop: '1px solid #000',
+                borderBottom: '1px solid #000',
+                borderLeft: '1px solid #000',
+                borderRight: '1px solid #000',
+            });
+            const paragraph = cell.blocks[0];
+            expect(paragraph.blockType).toBe('Paragraph');
+            if (paragraph.blockType === 'Paragraph') {
+                expect(paragraph.segments[0].format).toEqual({});
+            }
+        });
+    });
+
+    it('preserves explicit markdown emphasis with default table styles', () => {
+        const table = createTableFromMarkdown(['|**Header**|', '|---|', '|*Body*|'], {});
+
+        table.rows.forEach((row, rowIndex) => {
+            const cell = row.cells[0];
+            expect(cell.isHeader).toBe(false);
+            expect(cell.format.backgroundColor).toBeUndefined();
+            expect(cell.format.fontWeight).toBeUndefined();
+            const paragraph = cell.blocks[0];
+            expect(paragraph.blockType).toBe('Paragraph');
+            if (paragraph.blockType === 'Paragraph') {
+                expect(paragraph.segments[0].format).toEqual(
+                    rowIndex === 0 ? { fontWeight: 'bold' } : { italic: true }
+                );
+            }
+        });
+    });
+
+    it('applies custom table borders, header row styles, and first column styles', () => {
+        const table = createTableFromMarkdown(['|Header1|Header2|', '|---|---|', '|Body1|Body2|'], {
+            tableStyles: {
+                hasHeaderRow: true,
+                hasFirstColumn: true,
+                headerRowColor: null,
+                topBorderColor: '#ff0000',
+                bottomBorderColor: '#00ff00',
+                verticalBorderColor: '#0000ff',
+                headerRowCustomStyles: {
+                    fontWeight: 'normal',
+                    italic: true,
+                },
+                firstColumnCustomStyles: {
+                    fontWeight: 'normal',
+                    italic: true,
+                },
+            },
+        });
+
+        table.rows.forEach((row, rowIndex) => {
+            row.cells.forEach((cell, columnIndex) => {
+                expect(cell.isHeader).toBe(rowIndex === 0);
+                expect(cell.format).toEqual(
+                    jasmine.objectContaining({
+                        borderTop: '1px solid #ff0000',
+                        borderBottom: '1px solid #00ff00',
+                        borderLeft: '1px solid #0000ff',
+                        borderRight: '1px solid #0000ff',
+                    })
+                );
+                expect(cell.format.backgroundColor).toBeUndefined();
+                const paragraph = cell.blocks[0];
+                expect(paragraph.blockType).toBe('Paragraph');
+                if (paragraph.blockType === 'Paragraph') {
+                    expect(paragraph.segments[0].format).toEqual(
+                        rowIndex === 0 || columnIndex === 0
+                            ? { fontWeight: 'normal', italic: true }
+                            : {}
+                    );
+                }
+            });
+        });
+    });
+
+    it('uses table formatting defaults without a header row when tableStyles is empty', () => {
+        const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {
+            tableStyles: {},
+        });
+
+        table.rows.forEach(row => {
+            expect(row.cells[0].isHeader).toBe(false);
+            expect(row.cells[0].format.borderTop).toBe('1px solid #ABABAB');
+            expect(row.cells[0].format.backgroundColor).toBeUndefined();
+            expect(row.cells[0].format.fontWeight).toBeUndefined();
+        });
+    });
 
     it('should return table with two rows and one column', () => {
         const table = createTable(0, {
@@ -35,7 +170,6 @@ describe('createTableFromMarkdown', () => {
         paragraph1.segments.push(text1);
         cell1.blocks.push(paragraph1);
         cell1.format.textAlign = 'start';
-        cell1.isHeader = true;
         row1.cells.push(cell1);
 
         table.rows.push(row1);
@@ -50,9 +184,6 @@ describe('createTableFromMarkdown', () => {
         row2.cells.push(cell2);
 
         table.rows.push(row2);
-        applyTableFormat(table, {
-            hasHeaderRow: true,
-        });
         runTest(['|text1|', '|----|', '|text2|'], table);
     });
 
@@ -68,7 +199,6 @@ describe('createTableFromMarkdown', () => {
         paragraph1.segments.push(text1);
         cell1.blocks.push(paragraph1);
         cell1.format.textAlign = 'start';
-        cell1.isHeader = true;
         row1.cells.push(cell1);
         row1.format.direction = 'rtl';
         paragraph1.format.direction = 'rtl';
@@ -89,9 +219,6 @@ describe('createTableFromMarkdown', () => {
         row2.format.direction = 'rtl';
 
         table.rows.push(row2);
-        applyTableFormat(table, {
-            hasHeaderRow: true,
-        });
         runTest(['|text1|', '|----|', '|text2|'], table, true /* isRTL */);
     });
 
@@ -106,7 +233,6 @@ describe('createTableFromMarkdown', () => {
         paragraph1.segments.push(text1);
         cell1.blocks.push(paragraph1);
         cell1.format.textAlign = 'start';
-        cell1.isHeader = true;
         row1.cells.push(cell1);
 
         const cell2 = createTableCell();
@@ -115,7 +241,6 @@ describe('createTableFromMarkdown', () => {
         paragraph2.segments.push(text2);
         cell2.blocks.push(paragraph2);
         cell2.format.textAlign = 'start';
-        cell2.isHeader = true;
         row1.cells.push(cell2);
 
         table.rows.push(row1);
@@ -138,9 +263,6 @@ describe('createTableFromMarkdown', () => {
         row2.cells.push(cell4);
 
         table.rows.push(row2);
-        applyTableFormat(table, {
-            hasHeaderRow: true,
-        });
         runTest(['|text1|text2|', '|----|----|', '|text3|text4|'], table);
     });
 
@@ -155,7 +277,6 @@ describe('createTableFromMarkdown', () => {
         paragraph1.segments.push(text1);
         cell1.blocks.push(paragraph1);
         cell1.format.textAlign = 'start';
-        cell1.isHeader = true;
         row1.cells.push(cell1);
 
         const cell2 = createTableCell();
@@ -164,7 +285,6 @@ describe('createTableFromMarkdown', () => {
         paragraph2.segments.push(text2);
         cell2.blocks.push(paragraph2);
         cell2.format.textAlign = 'end';
-        cell2.isHeader = true;
         row1.cells.push(cell2);
 
         table.rows.push(row1);
@@ -187,9 +307,6 @@ describe('createTableFromMarkdown', () => {
         row2.cells.push(cell4);
 
         table.rows.push(row2);
-        applyTableFormat(table, {
-            hasHeaderRow: true,
-        });
         runTest(['|text1|text2|', '|:----|----:|', '|text3|text4|'], table);
     });
 
@@ -204,7 +321,6 @@ describe('createTableFromMarkdown', () => {
         paragraph1.segments.push(text1);
         cell1.blocks.push(paragraph1);
         cell1.format.textAlign = 'start';
-        cell1.isHeader = true;
         row1.cells.push(cell1);
 
         const cell2 = createTableCell();
@@ -213,7 +329,6 @@ describe('createTableFromMarkdown', () => {
         paragraph2.segments.push(text2);
         cell2.blocks.push(paragraph2);
         cell2.format.textAlign = 'end';
-        cell2.isHeader = true;
         row1.cells.push(cell2);
 
         const cell3 = createTableCell();
@@ -222,7 +337,6 @@ describe('createTableFromMarkdown', () => {
         paragraph3.segments.push(text3);
         cell3.blocks.push(paragraph3);
         cell3.format.textAlign = 'center';
-        cell3.isHeader = true;
         row1.cells.push(cell3);
 
         table.rows.push(row1);
@@ -253,9 +367,6 @@ describe('createTableFromMarkdown', () => {
         row2.cells.push(cell6);
 
         table.rows.push(row2);
-        applyTableFormat(table, {
-            hasHeaderRow: true,
-        });
         runTest(
             ['| text1 | text2 | text3 |', '|:----|----:|:----:|', '| text4 | text5 | text6 |'],
             table
