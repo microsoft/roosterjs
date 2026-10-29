@@ -441,46 +441,201 @@ describe('handleListItem without format handler', () => {
         it(`Applies inline start margin only to direct children in ${direction} lists`, () => {
             const parent = document.createElement('div');
             const listItem = createListItem([createListLevel('UL')]);
-            const child = document.createElement('div');
-            const nestedChild = document.createElement('span');
-            const table = document.createElement('table');
+            const paragraph = createParagraph();
+            const table = createTable(1);
 
             context.experimentalFeatures = ['WordLikeStyles'];
             listItem.format.direction = direction;
-            child.appendChild(nestedChild);
-            handleBlockGroupChildrenSpy.and.callFake((_doc, node) => {
-                node.appendChild(child);
-                node.appendChild(table);
-            });
+            paragraph.segments.push(createText('test', { fontWeight: 'bold' }));
+            table.rows[0].cells.push(createTableCell(1, 1, false));
+            listItem.blocks.push(paragraph, table);
+            handleBlockGroupChildrenSpy.and.callThrough();
 
             handleListItem(document, parent, listItem, context, null);
 
-            expect(child.style.marginInlineStart).toBe('8px');
-            expect(table.style.marginInlineStart).toBe('8px');
+            const child = parent.querySelector<HTMLDivElement>('li > div')!;
+            const tableElement = parent.querySelector('table')!;
+            const nestedChild = child.querySelector('b')!;
+
+            const marginKey = direction == 'rtl' ? 'marginRight' : 'marginLeft';
+            const oppositeMarginKey = direction == 'rtl' ? 'marginLeft' : 'marginRight';
+
+            expect(paragraph.format[marginKey]).toBe('8px');
+            expect(table.format[marginKey]).toBe('8px');
+            expect(listItem.format.marginBottom).toBe('2px');
+            expect(child.style[marginKey]).toBe('8px');
+            expect(tableElement.style[marginKey]).toBe('8px');
             expect(listItem.cachedElement?.style.marginBottom).toBe('2px');
             expect(nestedChild.style.marginInlineStart).toBe('');
-            expect(child.style.marginLeft).toBe('');
-            expect(child.style.marginRight).toBe('');
+            expect(child.style[oppositeMarginKey]).toBe('');
             expect(child.getAttribute('role')).toBe('presentation');
-            expect(table.hasAttribute('role')).toBeFalse();
+            expect(tableElement.hasAttribute('role')).toBeFalse();
         });
     });
 
-    it('Applies bottom margin after model formatting to a cached list item', () => {
-        const parent = document.createElement('div');
-        const listItem = createListItem([createListLevel('OL')]);
-        const li = document.createElement('li');
+    ['list level', 'context'].forEach(source => {
+        it(`Uses RTL direction inherited from the ${source} for model spacing`, () => {
+            const parent = document.createElement('div');
+            const level = createListLevel('UL');
+            const listItem = createListItem([level]);
+            const paragraph = createParagraph();
 
+            if (source == 'list level') {
+                listItem.levels[0].format.direction = 'rtl';
+            } else {
+                context.implicitFormat.direction = 'rtl';
+            }
+
+            paragraph.segments.push(createText('test'));
+            listItem.blocks.push(paragraph);
+            context.experimentalFeatures = ['WordLikeStyles'];
+            handleBlockGroupChildrenSpy.and.callThrough();
+
+            handleListItem(document, parent, listItem, context, null);
+
+            expect(paragraph.format.marginRight).toBe('8px');
+            expect(paragraph.format.marginLeft).toBeUndefined();
+            expect(paragraph.format.direction).toBe('rtl');
+            expect(parent.querySelector<HTMLDivElement>('li > div')!.style.marginRight).toBe('8px');
+        });
+    });
+
+    it('Respects an explicit paragraph direction for model spacing', () => {
+        const parent = document.createElement('div');
+        const listItem = createListItem([createListLevel('UL')]);
+        const paragraph = createParagraph();
+
+        listItem.format.direction = 'rtl';
+        paragraph.format.direction = 'ltr';
+        paragraph.segments.push(createText('test'));
+        listItem.blocks.push(paragraph);
         context.experimentalFeatures = ['WordLikeStyles'];
-        li.style.marginBottom = '20px';
-        listItem.cachedElement = li;
-        listItem.format.marginBottom = '12px';
 
         handleListItem(document, parent, listItem, context, null);
 
-        expect(listItem.cachedElement).toBe(li);
-        expect(li.style.marginBottom).toBe('2px');
-        expect(parent.querySelector('li')).toBe(li);
+        expect(paragraph.format.marginLeft).toBe('8px');
+        expect(paragraph.format.marginRight).toBeUndefined();
+    });
+
+    it('Wraps a mixed-format implicit paragraph with WordLikeStyles without spacing inline runs', () => {
+        const parent = document.createElement('div');
+        const listItem = createListItem([createListLevel('UL')]);
+        const paragraph = createParagraph(true /*isImplicit*/);
+
+        paragraph.segments.push(
+            createText('foo'),
+            createText('bar', { fontWeight: 'bold' }),
+            createText('baz')
+        );
+        listItem.blocks.push(paragraph);
+        context.experimentalFeatures = ['WordLikeStyles'];
+        handleBlockGroupChildrenSpy.and.callThrough();
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(listItem.cachedElement?.outerHTML).toBe(
+            '<li style="margin-bottom: 2px;"><div role="presentation" style="margin-left: 8px;">foo<b>bar</b>baz</div></li>'
+        );
+    });
+
+    it('Wraps a plain-text implicit paragraph with WordLikeStyles to apply the inset', () => {
+        const parent = document.createElement('div');
+        const listItem = createListItem([createListLevel('UL')]);
+        const paragraph = createParagraph(true /*isImplicit*/);
+
+        paragraph.segments.push(createText('foobarbaz'));
+        listItem.blocks.push(paragraph);
+        context.experimentalFeatures = ['WordLikeStyles'];
+        handleBlockGroupChildrenSpy.and.callThrough();
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(listItem.cachedElement?.outerHTML).toBe(
+            '<li style="margin-bottom: 2px;"><div role="presentation" style="margin-left: 8px;">foobarbaz</div></li>'
+        );
+        expect(listItem.format.marginBottom).toBe('2px');
+        expect(paragraph.format.marginLeft).toBe('8px');
+        expect(paragraph.isImplicit).toBeFalse();
+    });
+
+    it('Keeps a mixed-format paragraph implicit without WordLikeStyles', () => {
+        const parent = document.createElement('div');
+        const listItem = createListItem([createListLevel('UL')]);
+        const paragraph = createParagraph(true /*isImplicit*/);
+
+        paragraph.segments.push(
+            createText('foo'),
+            createText('bar', { fontWeight: 'bold' }),
+            createText('baz')
+        );
+        listItem.blocks.push(paragraph);
+        handleBlockGroupChildrenSpy.and.callThrough();
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(listItem.cachedElement?.outerHTML).toBe('<li>foo<b>bar</b>baz</li>');
+        expect(paragraph.isImplicit).toBeTrue();
+    });
+
+    ['12px', '0px'].forEach(marginBottom => {
+        it(`Preserves the model bottom margin ${marginBottom} on a cached list item`, () => {
+            const parent = document.createElement('div');
+            const listItem = createListItem([createListLevel('OL')]);
+            const li = document.createElement('li');
+
+            context.experimentalFeatures = ['WordLikeStyles'];
+            li.style.marginBottom = '20px';
+            listItem.cachedElement = li;
+            listItem.format.marginBottom = marginBottom;
+
+            handleListItem(document, parent, listItem, context, null);
+
+            expect(listItem.cachedElement).toBe(li);
+            expect(listItem.format.marginBottom).toBe(marginBottom);
+            expect(li.style.marginBottom).toBe(marginBottom);
+            expect(parent.querySelector('li')).toBe(li);
+        });
+    });
+
+    ['16px', '0px'].forEach(marginLeft => {
+        it(`Preserves the model start margin ${marginLeft}`, () => {
+            const parent = document.createElement('div');
+            const listItem = createListItem([createListLevel('UL')]);
+            const paragraph = createParagraph();
+
+            paragraph.segments.push(createText('test'));
+            paragraph.format.marginLeft = marginLeft;
+            listItem.blocks.push(paragraph);
+            context.experimentalFeatures = ['WordLikeStyles'];
+            handleBlockGroupChildrenSpy.and.callThrough();
+
+            handleListItem(document, parent, listItem, context, null);
+
+            expect(paragraph.format.marginLeft).toBe(marginLeft);
+            expect(parent.querySelector<HTMLDivElement>('li > div')!.style.marginLeft).toBe(
+                marginLeft
+            );
+        });
+    });
+
+    it('Updates a cached paragraph when adding default spacing to its model', () => {
+        const parent = document.createElement('div');
+        const listItem = createListItem([createListLevel('UL')]);
+        const paragraph = createParagraph();
+        const cachedParagraph = document.createElement('div');
+
+        paragraph.segments.push(createText('test'));
+        paragraph.cachedElement = cachedParagraph;
+        listItem.blocks.push(paragraph);
+        context.experimentalFeatures = ['WordLikeStyles'];
+        context.allowCacheElement = true;
+        handleBlockGroupChildrenSpy.and.callThrough();
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(paragraph.format.marginLeft).toBe('8px');
+        expect(paragraph.cachedElement).not.toBe(cachedParagraph);
+        expect(paragraph.cachedElement?.style.marginLeft).toBe('8px');
     });
 
     [undefined, [], ['ShadowDom']].forEach(experimentalFeatures => {

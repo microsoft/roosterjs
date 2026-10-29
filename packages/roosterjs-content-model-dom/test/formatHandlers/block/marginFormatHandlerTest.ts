@@ -35,6 +35,21 @@ describe('marginFormatHandler.parse', () => {
         });
     });
 
+    (['ltr', 'rtl'] as const).forEach(direction => {
+        it(`Preserves an inline start margin in the ${direction} model`, () => {
+            div.style.direction = direction;
+            div.style.marginInlineStart = '8px';
+            format.direction = direction;
+
+            marginFormatHandler.parse(format, div, context, {});
+
+            expect(format).toEqual({
+                direction,
+                [direction == 'rtl' ? 'marginRight' : 'marginLeft']: '8px',
+            });
+        });
+    });
+
     it('Has margin in default style', () => {
         marginFormatHandler.parse(format, div, context, {
             marginTop: '1em',
@@ -44,6 +59,14 @@ describe('marginFormatHandler.parse', () => {
             marginTop: '1em',
             marginBottom: '1em',
         });
+    });
+
+    it('Prefers an authored inline start margin over a default physical margin', () => {
+        div.style.marginInlineStart = '8px';
+
+        marginFormatHandler.parse(format, div, context, { marginLeft: '20px' });
+
+        expect(format).toEqual({ marginLeft: '8px' });
     });
 
     it('Merge margin values', () => {

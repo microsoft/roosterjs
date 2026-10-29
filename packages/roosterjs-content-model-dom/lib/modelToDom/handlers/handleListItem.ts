@@ -1,5 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
+import { applyWordLikeListStyles } from '../../modelApi/list/applyWordLikeListStyles';
 import { isGenericRoleElement } from '../../domUtils/isGenericRoleElement';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
@@ -67,6 +68,10 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     }
 
     if (level) {
+        if (wordLikeStyles) {
+            applyWordLikeListStyles(listItem, context.implicitFormat.direction);
+        }
+
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
         applyFormat(li, context.formatAppliers.listItemThread, level.format, context);
 
@@ -75,9 +80,6 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
 
         // Need to apply listItemElement formats after applying metadata since the list numbers value relies on the result of metadata handling
         applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
-        if (wordLikeStyles) {
-            li.style.marginBottom = '2px';
-        }
 
         stackFormat(context, listItem.formatHolder.format, () => {
             stackFormat(
@@ -102,11 +104,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     // This is to make sure the elements are announced correctly by screen readers
     // when using arrow keys to navigate the list.
     for (let index = 0; index < li.children.length; index++) {
-        const element = li.children.item(index) as HTMLElement;
-        if (wordLikeStyles) {
-            element.style.marginInlineStart = '8px';
-        }
-
+        const element = li.children.item(index);
         if (isGenericRoleElement(element)) {
             element.setAttribute(HtmlRoleAttribute, PresentationRoleValue);
         }
