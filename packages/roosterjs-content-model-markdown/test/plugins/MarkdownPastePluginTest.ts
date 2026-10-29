@@ -1,4 +1,5 @@
 import { MarkdownPastePlugin } from '../../lib/plugins/MarkdownPastePlugin';
+import type { MarkdownToModelOptions } from '../../lib/markdownToModel/types/MarkdownToModelOptions';
 import {
     ChangeSource,
     contentModelToDom,
@@ -38,13 +39,18 @@ describe('MarkdownPastePlugin', () => {
         } as unknown) as IEditor;
     });
 
-    function createPlugin(autoConversion?: boolean, undoConversion?: boolean): MarkdownPastePlugin {
+    function createPlugin(
+        autoConversion?: boolean,
+        undoConversion?: boolean,
+        markdownToModelOptions?: MarkdownToModelOptions
+    ): MarkdownPastePlugin {
         const plugin =
             autoConversion === undefined && undoConversion === undefined
                 ? new MarkdownPastePlugin()
                 : new MarkdownPastePlugin({
                       autoConversion: !!autoConversion,
                       undoConversion: !!undoConversion,
+                      markdownToModelOptions,
                   });
         plugin.initialize(editor);
         return plugin;
@@ -122,6 +128,98 @@ describe('MarkdownPastePlugin', () => {
 
         expect(event.fragment.querySelector('h1')).not.toBeNull();
         plugin.dispose();
+    });
+
+    [false, true].forEach(autoConversion => {
+        describe(autoConversion ? 'automatic conversion options' : 'asMarkdown options', () => {
+            function convertWithOptions(
+                options?: MarkdownToModelOptions,
+                text = '# First\n\n\nSecond'
+            ): DocumentFragment {
+                const plugin = createPlugin(autoConversion, false /*undoConversion*/, options);
+                let fragment: DocumentFragment;
+
+                if (autoConversion) {
+                    plugin.onPluginEvent(
+                        createContentChangedPasteEvent({
+                            text,
+                            rawHtml: '',
+                            customValues: {},
+                            pasteNativeEvent: true,
+                            modelBeforePaste: createEmptyModel(),
+                        })
+                    );
+
+                    expect(formatContentModelSpy).toHaveBeenCalledTimes(1);
+                    const [callback] = formatContentModelSpy.calls.mostRecent().args as [
+                        (model: ContentModelDocument) => boolean
+                    ];
+                    const target = createEmptyModel();
+                    expect(callback(target)).toBe(true);
+                    fragment = doc.createDocumentFragment();
+                    contentModelToDom(doc, fragment, target, createModelToDomContext());
+                } else {
+                    const event = createEvent({ text, rawHtml: '' }, 'asMarkdown');
+                    plugin.onPluginEvent(event);
+                    fragment = event.fragment;
+                }
+
+                plugin.dispose();
+                return fragment;
+            }
+
+            it('merges empty lines when conversion options are omitted', () => {
+                const fragment = convertWithOptions();
+
+                expect(fragment.querySelectorAll('h1').length).toBe(1);
+                expect(fragment.querySelectorAll('div').length).toBe(2);
+            });
+
+            it('merges empty lines when only direction is specified', () => {
+                const fragment = convertWithOptions({ direction: 'rtl' });
+
+                expect(fragment.querySelectorAll('div').length).toBe(2);
+                expect(fragment.querySelector<HTMLElement>('h1')?.style.direction).toBe('rtl');
+            });
+
+            ['remove', 'preserve'].forEach((emptyLine: 'remove' | 'preserve') => {
+                it(`applies ${emptyLine} empty lines and right-to-left direction`, () => {
+                    const fragment = convertWithOptions({
+                        emptyLine,
+                        direction: 'rtl',
+                    });
+
+                    expect(fragment.querySelectorAll('div').length).toBe(
+                        emptyLine === 'preserve' ? 3 : 1
+                    );
+                    expect(fragment.querySelector<HTMLElement>('h1')?.style.direction).toBe('rtl');
+                });
+            });
+
+            it('applies custom table styles', () => {
+                const fragment = convertWithOptions(
+                    {
+                        emptyLine: 'remove',
+                        direction: 'rtl',
+                        tableStyles: {
+                            hasHeaderRow: false,
+                            topBorderColor: '#ff0000',
+                            bottomBorderColor: '#00ff00',
+                            verticalBorderColor: '#0000ff',
+                        },
+                    },
+                    '|Header|\n|---|\n|Body|'
+                );
+
+                expect(fragment.querySelector('table')?.style.direction).toBe('rtl');
+                expect(fragment.querySelector('th')).toBeNull();
+                const cell = fragment.querySelector('td');
+                expect(cell).not.toBeNull();
+                expect(cell?.style.borderTop).toBe('1px solid rgb(255, 0, 0)');
+                expect(cell?.style.borderBottom).toBe('1px solid rgb(0, 255, 0)');
+                expect(cell?.style.borderLeft).toBe('1px solid rgb(0, 0, 255)');
+            });
+        });
     });
 
     it('does not convert non-markdown content even when pasteType is asMarkdown', () => {

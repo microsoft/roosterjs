@@ -14,10 +14,14 @@ import type {
     IEditor,
     PluginEvent,
 } from 'roosterjs-content-model-types';
+import type { MarkdownToModelOptions } from '../markdownToModel/types/MarkdownToModelOptions';
 
 const DefaultOptions: MarkdownPasteOptions = {
     autoConversion: false,
     undoConversion: false,
+    markdownToModelOptions: {
+        emptyLine: 'merge',
+    },
 };
 
 /**
@@ -34,7 +38,14 @@ export class MarkdownPastePlugin implements EditorPlugin {
      * @param options Options to control the markdown paste behavior
      */
     constructor(options?: MarkdownPasteOptions) {
-        this.options = options ?? DefaultOptions;
+        this.options = {
+            ...DefaultOptions,
+            ...options,
+            markdownToModelOptions: {
+                ...DefaultOptions.markdownToModelOptions,
+                ...options?.markdownToModelOptions,
+            },
+        };
     }
 
     /**
@@ -90,9 +101,10 @@ export class MarkdownPastePlugin implements EditorPlugin {
                 const modelBeforePaste = cloneModelForPaste(clipboardData.modelBeforePaste);
                 mergeModel(
                     modelBeforePaste,
-                    convertMarkdownToContentModel(clipboardData.text, {
-                        emptyLine: 'merge',
-                    }),
+                    convertMarkdownToContentModel(
+                        clipboardData.text,
+                        this.options.markdownToModelOptions
+                    ),
                     undefined /*context*/,
                     {
                         mergeFormat: 'keepSourceEmphasisFormat',
@@ -117,16 +129,24 @@ export class MarkdownPastePlugin implements EditorPlugin {
         } else if (event.eventType === 'beforePaste' && !event.clipboardData.pasteNativeEvent) {
             const shouldConvert = event.pasteType === 'asMarkdown';
             if (shouldConvert && isPastedContentMarkdown(this.editor, event.clipboardData)) {
-                convertPastedTextToMarkdown(this.editor, event.fragment, event.clipboardData.text);
+                convertPastedTextToMarkdown(
+                    this.editor,
+                    event.fragment,
+                    event.clipboardData.text,
+                    this.options.markdownToModelOptions
+                );
             }
         }
     }
 }
 
-function convertPastedTextToMarkdown(editor: IEditor, fragment: DocumentFragment, text: string) {
-    const model = convertMarkdownToContentModel(text, {
-        emptyLine: 'merge',
-    });
+function convertPastedTextToMarkdown(
+    editor: IEditor,
+    fragment: DocumentFragment,
+    text: string,
+    markdownToModelOptions?: MarkdownToModelOptions
+) {
+    const model = convertMarkdownToContentModel(text, markdownToModelOptions);
 
     while (fragment.firstChild) {
         fragment.removeChild(fragment.firstChild);

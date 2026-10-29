@@ -27,9 +27,12 @@ export function createTableFromMarkdown(
     for (const line of tableLines) {
         createTableModel(line, table, tableDivider, options);
     }
-    applyTableFormat(table, {
-        hasHeaderRow: true,
-    });
+    applyTableFormat(
+        table,
+        options.tableStyles ?? {
+            hasHeaderRow: true,
+        }
+    );
     return table;
 }
 

@@ -24,6 +24,64 @@ describe('createTableFromMarkdown', () => {
         expect(result).toEqual(expectedTable);
     }
 
+    it('applies custom table borders, header row styles, and first column styles', () => {
+        const table = createTableFromMarkdown(['|Header1|Header2|', '|---|---|', '|Body1|Body2|'], {
+            tableStyles: {
+                hasHeaderRow: true,
+                hasFirstColumn: true,
+                headerRowColor: null,
+                topBorderColor: '#ff0000',
+                bottomBorderColor: '#00ff00',
+                verticalBorderColor: '#0000ff',
+                headerRowCustomStyles: {
+                    fontWeight: 'normal',
+                    italic: true,
+                },
+                firstColumnCustomStyles: {
+                    fontWeight: 'normal',
+                    italic: true,
+                },
+            },
+        });
+
+        table.rows.forEach((row, rowIndex) => {
+            row.cells.forEach((cell, columnIndex) => {
+                expect(cell.isHeader).toBe(rowIndex === 0);
+                expect(cell.format).toEqual(
+                    jasmine.objectContaining({
+                        borderTop: '1px solid #ff0000',
+                        borderBottom: '1px solid #00ff00',
+                        borderLeft: '1px solid #0000ff',
+                        borderRight: '1px solid #0000ff',
+                    })
+                );
+                expect(cell.format.backgroundColor).toBeUndefined();
+                const paragraph = cell.blocks[0];
+                expect(paragraph.blockType).toBe('Paragraph');
+                if (paragraph.blockType === 'Paragraph') {
+                    expect(paragraph.segments[0].format).toEqual(
+                        rowIndex === 0 || columnIndex === 0
+                            ? { fontWeight: 'normal', italic: true }
+                            : {}
+                    );
+                }
+            });
+        });
+    });
+
+    it('uses table formatting defaults without a header row when tableStyles is empty', () => {
+        const table = createTableFromMarkdown(['|Header|', '|---|', '|Body|'], {
+            tableStyles: {},
+        });
+
+        table.rows.forEach(row => {
+            expect(row.cells[0].isHeader).toBe(false);
+            expect(row.cells[0].format.borderTop).toBe('1px solid #ABABAB');
+            expect(row.cells[0].format.backgroundColor).toBeUndefined();
+            expect(row.cells[0].format.fontWeight).toBeUndefined();
+        });
+    });
+
     it('should return table with two rows and one column', () => {
         const table = createTable(0, {
             borderCollapse: true,

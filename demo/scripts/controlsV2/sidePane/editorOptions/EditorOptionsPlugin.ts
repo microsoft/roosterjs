@@ -4,6 +4,7 @@ import { OptionPaneProps, OptionState, UrlPlaceholder } from './OptionState';
 import { OptionsPane } from './OptionsPane';
 import { SidePaneElementProps } from '../SidePaneElement';
 import { SidePanePluginImpl } from '../SidePanePluginImpl';
+import { TableBorderFormat } from 'roosterjs-content-model-dom';
 
 const initialState: OptionState = {
     pluginList: {
@@ -64,6 +65,24 @@ const initialState: OptionState = {
     markdownPasteOptions: {
         autoConversion: true,
         undoConversion: false,
+        markdownToModelOptions: {
+            tableStyles: {
+                headerRowColor: null,
+                topBorderColor: '#000',
+                bottomBorderColor: '#000',
+                verticalBorderColor: '#000',
+                tableBorderFormat: TableBorderFormat.Default,
+                headerRowCustomStyles: {
+                    fontWeight: 'normal',
+                    italic: false,
+                },
+                firstColumnCustomStyles: {
+                    fontWeight: 'normal',
+                    italic: false,
+                },
+            },
+            emptyLine: 'merge',
+        },
     },
     editPluginOptions: {
         handleTabKey: {

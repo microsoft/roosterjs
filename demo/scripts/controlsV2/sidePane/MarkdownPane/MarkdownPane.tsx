@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { createBr, createParagraph, createSelectionMarker } from 'roosterjs-content-model-dom';
+import {
+    createBr,
+    createParagraph,
+    createSelectionMarker,
+    TableBorderFormat,
+} from 'roosterjs-content-model-dom';
 import { MarkdownPaneProps } from './MarkdownPanePlugin';
 import {
     convertMarkdownToContentModel,
@@ -25,7 +30,7 @@ export default class MarkdownPane extends React.Component<
 
     private convert = () => {
         const editor = this.props.getEditor();
-        editor.formatContentModel((model, context) => {
+        editor.formatContentModel(model => {
             const markdownModel = convertMarkdownToContentModel(this.html.current.value, {
                 emptyLine: this.emptyLinePreserve.current.checked
                     ? 'preserve'
@@ -33,6 +38,21 @@ export default class MarkdownPane extends React.Component<
                     ? 'remove'
                     : 'merge',
                 direction: this.isRTL.current.checked ? 'rtl' : 'ltr',
+                tableStyles: {
+                    headerRowColor: null,
+                    topBorderColor: '#000',
+                    bottomBorderColor: '#000',
+                    verticalBorderColor: '#000',
+                    tableBorderFormat: TableBorderFormat.Default,
+                    headerRowCustomStyles: {
+                        fontWeight: 'normal',
+                        italic: false,
+                    },
+                    firstColumnCustomStyles: {
+                        fontWeight: 'normal',
+                        italic: false,
+                    },
+                },
             });
 
             model.blocks = markdownModel.blocks;

@@ -1,3 +1,5 @@
+import type { MarkdownToModelOptions } from '../markdownToModel/types/MarkdownToModelOptions';
+
 /**
  * Options for MarkdownPastePlugin
  */
@@ -15,4 +17,9 @@ export interface MarkdownPasteOptions {
      * @default false
      */
     undoConversion: boolean;
+
+    /**
+     * Options for converting pasted markdown text into a content model.
+     */
+    markdownToModelOptions?: MarkdownToModelOptions;
 }
