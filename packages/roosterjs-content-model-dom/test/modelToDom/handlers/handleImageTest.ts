@@ -125,6 +125,26 @@ describe('handleSegment', () => {
         );
     });
 
+    it('image segment defaults to middle with WordLikeStyles', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: {},
+            dataset: { a: 'b' },
+        };
+
+        context.experimentalFeatures = ['WordLikeStyles'];
+
+        runTest(
+            segment,
+            [
+                '<span><img src="http://test.com/test" style="vertical-align: middle;" data-a="b"></span>',
+                '<span><img src="http://test.com/test" data-a="b" style="vertical-align: middle;"></span>',
+            ],
+            0
+        );
+    });
+
     it('call stackFormat', () => {
         const segment: ContentModelImage = {
             segmentType: 'Image',

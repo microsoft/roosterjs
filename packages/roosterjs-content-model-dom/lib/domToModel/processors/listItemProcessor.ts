@@ -1,3 +1,4 @@
+import { applyWordLikeListStyles } from '../../modelApi/list/applyWordLikeListStyles';
 import { createListItem } from '../../modelApi/creators/createListItem';
 import { createListLevel } from '../../modelApi/creators/createListLevel';
 import { parseFormat } from '../utils/parseFormat';
@@ -9,6 +10,7 @@ import type { ElementProcessor } from 'roosterjs-content-model-types';
  */
 export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, element, context) => {
     const { listFormat } = context;
+    const wordLikeStyles = (context.experimentalFeatures?.indexOf('WordLikeStyles') ?? -1) >= 0;
     const originalListParent = listFormat.listParent;
     let shouldPopListLevel = false;
 
@@ -28,6 +30,7 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
             context,
             {
                 segment: 'shallowCloneForBlock',
+                paragraph: wordLikeStyles ? 'shallowClone' : undefined,
             },
             () => {
                 parseFormat(
@@ -54,6 +57,10 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
                     context
                 );
 
+                if (wordLikeStyles && listItem.format.direction) {
+                    context.blockFormat.direction = listItem.format.direction;
+                }
+
                 context.elementProcessors.child(listItem, element, context);
 
                 const firstChild = listItem.blocks[0];
@@ -65,6 +72,10 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
                 ) {
                     Object.assign(listItem.format, firstChild.format);
                     firstChild.format = {};
+                }
+
+                if (wordLikeStyles) {
+                    applyWordLikeListStyles(listItem, context.blockFormat.direction);
                 }
             }
         );
