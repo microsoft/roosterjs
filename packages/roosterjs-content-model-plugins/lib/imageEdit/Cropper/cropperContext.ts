@@ -1,4 +1,5 @@
 import { rotateCoordinate } from '../utils/imageEditUtils';
+import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import type { DragAndDropContext } from '../types/DragAndDropContext';
 import type { DragAndDropHandler } from '../../pluginUtils/DragAndDrop/DragAndDropHandler';
 import type { ImageCropMetadataFormat } from 'roosterjs-content-model-types';
@@ -9,7 +10,7 @@ import type { ImageCropMetadataFormat } from 'roosterjs-content-model-types';
  */
 export const Cropper: DragAndDropHandler<DragAndDropContext, ImageCropMetadataFormat> = {
     onDragStart: ({ editInfo }) => ({ ...editInfo }),
-    onDragging: ({ editInfo, x, y, options }, e, base, dx, dy) => {
+    onDragging: ({ editInfo, x, y, options, elementClass }, e, base, dx, dy) => {
         [dx, dy] = rotateCoordinate(dx, dy, editInfo.angleRad ?? 0);
 
         const {
@@ -48,6 +49,23 @@ export const Cropper: DragAndDropHandler<DragAndDropContext, ImageCropMetadataFo
         ) {
             const fullWidth = widthPx / widthPercent;
             const fullHeight = heightPx / heightPercent;
+
+            if (elementClass == ImageEditElementClass.CropContainer) {
+                const deltaX = Math.max(
+                    -base.leftPercent,
+                    Math.min(dx / fullWidth, base.rightPercent)
+                );
+                const deltaY = Math.max(
+                    -base.topPercent,
+                    Math.min(dy / fullHeight, base.bottomPercent)
+                );
+                editInfo.leftPercent = base.leftPercent + deltaX;
+                editInfo.rightPercent = base.rightPercent - deltaX;
+                editInfo.topPercent = base.topPercent + deltaY;
+                editInfo.bottomPercent = base.bottomPercent - deltaY;
+                return true;
+            }
+
             const newLeft =
                 x != 'e'
                     ? crop(base.leftPercent, dx, fullWidth, rightPercent, minWidth)

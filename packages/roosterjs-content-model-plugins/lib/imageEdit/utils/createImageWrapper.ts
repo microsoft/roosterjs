@@ -1,6 +1,7 @@
 import { createImageCropper } from '../Cropper/createImageCropper';
 import { createImageResizer } from '../Resizer/createImageResizer';
 import { createImageRotator } from '../Rotator/createImageRotator';
+import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { wrap } from 'roosterjs-content-model-dom';
 
 import type {
@@ -142,6 +143,7 @@ const createWrapper = (
 const createBorder = (editor: IEditor, borderColor?: string) => {
     const doc = editor.getDocument();
     const resizeBorder = doc.createElement('div');
+    resizeBorder.className = ImageEditElementClass.ImageBorder;
     resizeBorder.setAttribute(
         `style`,
         `position:absolute;left:0;right:0;top:0;bottom:0;border:solid 2px ${borderColor};pointer-events:none;`
