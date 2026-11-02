@@ -25,7 +25,7 @@ export default class MarkdownPane extends React.Component<
 
     private convert = () => {
         const editor = this.props.getEditor();
-        editor.formatContentModel((model, context) => {
+        editor.formatContentModel(model => {
             const markdownModel = convertMarkdownToContentModel(this.html.current.value, {
                 emptyLine: this.emptyLinePreserve.current.checked
                     ? 'preserve'

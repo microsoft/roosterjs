@@ -71,6 +71,16 @@ export interface SelectionPluginState {
     skipReselectOnFocus?: boolean;
 
     /**
+     * Background color of selected text. When unset, use the browser's default selection style.
+     */
+    textSelectionColor?: string;
+
+    /**
+     * Background color of selected text in dark mode. When unset, use the browser's default selection style.
+     */
+    textSelectionColorDark?: string;
+
+    /**
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
