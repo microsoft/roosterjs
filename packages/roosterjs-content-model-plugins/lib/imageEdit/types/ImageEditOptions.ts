@@ -1,3 +1,4 @@
+import type { CropAccessibilityLabels } from './CropAccessibilityLabels';
 import type { ImageEditOperation } from 'roosterjs-content-model-types';
 
 /**
@@ -56,6 +57,12 @@ export interface ImageEditOptions {
      * Whether image crop is disabled. @default false
      */
     disableCrop?: boolean;
+
+    /**
+     * Optional localized crop accessibility text.
+     * Omitted or empty values are not added to the crop controls.
+     */
+    cropLabels?: CropAccessibilityLabels;
 
     /**
      * Which operations will be executed when image is selected

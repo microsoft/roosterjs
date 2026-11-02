@@ -64,6 +64,9 @@ const initialState: OptionState = {
     markdownPasteOptions: {
         autoConversion: true,
         undoConversion: false,
+        markdownToModelOptions: {
+            emptyLine: 'merge',
+        },
     },
     editPluginOptions: {
         handleTabKey: {
