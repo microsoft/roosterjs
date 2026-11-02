@@ -141,6 +141,16 @@ describe('boldFormatHandler.apply', () => {
         expect(div.outerHTML).toEqual('<div><b>test</b></div>');
     });
 
+    it('Set bold on the list item so its marker and future children inherit it', () => {
+        const li = document.createElement('li');
+        format.fontWeight = 'bold';
+
+        boldFormatHandler.apply(format, li, context);
+        li.textContent = 'test';
+
+        expect(li.outerHTML).toEqual('<li style="font-weight: bold;">test</li>');
+    });
+
     it('Turn off bold when there is bold from block', () => {
         div.innerHTML = 'test';
         context.implicitFormat.fontWeight = 'bold';
