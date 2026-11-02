@@ -6,6 +6,7 @@ import { createListLevel } from '../../../lib/modelApi/creators/createListLevel'
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createTable, createTableCell, createText } from '../../../lib';
+import { expectHtml } from '../../testUtils';
 import { handleListItem } from '../../../lib/modelToDom/handlers/handleListItem';
 import {
     ContentModelBlockGroup,
@@ -533,9 +534,10 @@ describe('handleListItem without format handler', () => {
 
         handleListItem(document, parent, listItem, context, null);
 
-        expect(listItem.cachedElement?.outerHTML).toBe(
-            '<li style="margin-bottom: 2px;"><div role="presentation" style="margin-left: 8px;">foo<b>bar</b>baz</div></li>'
-        );
+        expectHtml(listItem.cachedElement!.outerHTML, [
+            '<li style="margin-bottom: 2px;"><div role="presentation" style="margin-left: 8px;">foo<b>bar</b>baz</div></li>',
+            '<li style="margin-bottom: 2px;"><div style="margin-left: 8px;" role="presentation">foo<b>bar</b>baz</div></li>',
+        ]);
     });
 
     it('Wraps a plain-text implicit paragraph with WordLikeStyles to apply the inset', () => {
@@ -550,9 +552,10 @@ describe('handleListItem without format handler', () => {
 
         handleListItem(document, parent, listItem, context, null);
 
-        expect(listItem.cachedElement?.outerHTML).toBe(
-            '<li style="margin-bottom: 2px;"><div role="presentation" style="margin-left: 8px;">foobarbaz</div></li>'
-        );
+        expectHtml(listItem.cachedElement!.outerHTML, [
+            '<li style="margin-bottom: 2px;"><div role="presentation" style="margin-left: 8px;">foobarbaz</div></li>',
+            '<li style="margin-bottom: 2px;"><div style="margin-left: 8px;" role="presentation">foobarbaz</div></li>',
+        ]);
         expect(listItem.format.marginBottom).toBe('2px');
         expect(paragraph.format.marginLeft).toBe('8px');
         expect(paragraph.isImplicit).toBeFalse();
