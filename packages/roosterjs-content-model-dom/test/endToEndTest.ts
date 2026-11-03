@@ -2042,7 +2042,7 @@ describe('End to end test for DOM => Model => DOM/TEXT', () => {
                 ],
             },
             'test',
-            '<div><b><i><u><s><s>test</s></s></u></i></b></div>'
+            '<div style="font-weight: bold;"><i><u><s><s>test</s></s></u></i></div>'
         );
     });
 

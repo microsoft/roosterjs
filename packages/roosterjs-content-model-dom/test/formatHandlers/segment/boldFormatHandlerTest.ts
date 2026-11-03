@@ -129,7 +129,7 @@ describe('boldFormatHandler.apply', () => {
 
         boldFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual('<div><b></b></div>');
+        expect(div.outerHTML).toEqual('<div style="font-weight: bold;"></div>');
     });
 
     it('Set bold to true with content', () => {
@@ -138,17 +138,41 @@ describe('boldFormatHandler.apply', () => {
 
         boldFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toEqual('<div><b>test</b></div>');
+        expect(div.outerHTML).toEqual('<div style="font-weight: bold;">test</div>');
     });
 
-    it('Set bold on the list item so its marker and future children inherit it', () => {
-        const li = document.createElement('li');
+    it('Set bold on block elements so their markers and future children inherit it', () => {
         format.fontWeight = 'bold';
 
-        boldFormatHandler.apply(format, li, context);
-        li.textContent = 'test';
+        ['li', 'p', 'h2', 'span'].forEach(tag => {
+            const element = document.createElement(tag);
+            if (tag == 'span') {
+                element.style.display = 'block';
+            }
 
-        expect(li.outerHTML).toEqual('<li style="font-weight: bold;">test</li>');
+            boldFormatHandler.apply(format, element, context);
+            element.appendChild(document.createTextNode('test'));
+
+            expect(element.style.fontWeight).withContext(tag).toBe('bold');
+            expect(element.innerHTML).withContext(tag).toBe('test');
+        });
+    });
+
+    it('Wrap inline content in bold, including blocks styled as inline', () => {
+        format.fontWeight = 'bold';
+
+        ['span', 'div'].forEach(tag => {
+            const element = document.createElement(tag);
+            if (tag == 'div') {
+                element.style.display = 'inline';
+            }
+            element.textContent = 'test';
+
+            boldFormatHandler.apply(format, element, context);
+
+            expect(element.innerHTML).withContext(tag).toBe('<b>test</b>');
+            expect(element.style.fontWeight).withContext(tag).toBe('');
+        });
     });
 
     it('Turn off bold when there is bold from block', () => {

@@ -1,4 +1,4 @@
-import { isElementOfType } from '../../domUtils/isElementOfType';
+import { isBlockElement } from '../../domToModel/utils/isBlockElement';
 import { shouldSetValue } from '../utils/shouldSetValue';
 import { wrapAllChildNodes } from '../../domUtils/moveChildNodes';
 import type { BoldFormat } from 'roosterjs-content-model-types';
@@ -26,7 +26,7 @@ export const boldFormatHandler: FormatHandler<BoldFormat> = {
             (blockFontWeight && blockFontWeight != format.fontWeight) ||
             (!blockFontWeight && format.fontWeight && format.fontWeight != 'normal')
         ) {
-            if (format.fontWeight == 'bold' && !isElementOfType(element, 'li')) {
+            if (format.fontWeight == 'bold' && !isBlockElement(element)) {
                 wrapAllChildNodes(element, 'b');
             } else {
                 element.style.fontWeight = format.fontWeight || 'normal';
