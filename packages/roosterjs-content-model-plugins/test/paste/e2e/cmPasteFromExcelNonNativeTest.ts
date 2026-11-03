@@ -100,6 +100,7 @@ describe('Paste from Excel non native', () => {
                                 letterSpacing: '',
                                 lineHeight: '',
                                 strikethrough: false,
+                                superOrSubScriptFontSize: '',
                                 superOrSubScriptSequence: '',
                                 textColor: '',
                                 underline: false,
