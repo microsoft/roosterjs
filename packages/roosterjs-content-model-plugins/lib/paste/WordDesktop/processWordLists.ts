@@ -74,6 +74,7 @@ export function processWordList(
 
     if (wordListStyle && group && typeof listFormat.wordLevel === 'number') {
         const { wordLevel, wordList } = listFormat;
+        const isHeading = /^H[1-6]$/.test(element.tagName);
         // Retrieve the Fake bullet on the element and also the list type
         const listMetadata = metadata.get(`${lNumber}:${level}`);
         const listType =
@@ -89,12 +90,19 @@ export function processWordList(
             .format as WordListFormat;
         currentLevelFormat.wordList = wordList;
 
-        if (wordLevel > 1) {
+        if (isHeading) {
+            // Keep Word's heading spacing on the item, not on synthesized list wrappers.
+            currentLevelFormat.paddingLeft = '0px';
+            currentLevelFormat.paddingRight = '0px';
+            currentLevelFormat.marginTop = '0px';
+            currentLevelFormat.marginBottom = '0px';
+        } else if (wordLevel > 1) {
             delete currentLevelFormat.paddingLeft;
             delete currentLevelFormat.paddingRight;
         }
 
         const bullet = getBulletFromMetadata(listMetadata, listType);
+        const bulletElement = getBulletElement(element);
         const listFormatMetadata = bullet
             ? {
                   unorderedStyleType: listType == 'UL' ? bullet : undefined,
@@ -102,23 +110,40 @@ export function processWordList(
               }
             : undefined;
 
-        processAsListItem(
-            context,
-            element,
-            group,
-            listFormatMetadata,
-            getBulletElement(element),
-            listItem => {
-                if (wordLevel > 1) {
-                    delete listItem.format.marginLeft;
-                    delete listItem.format.marginRight;
-                }
+        const originalSegmentFormat = context.segmentFormat;
 
-                if (listType == 'OL') {
-                    setStartNumber(listItem, context, listMetadata, element);
+        try {
+            context.segmentFormat = { ...originalSegmentFormat };
+            processAsListItem(
+                context,
+                element,
+                group,
+                listFormatMetadata,
+                bulletElement,
+                listItem => {
+                    if (isHeading && listType == 'OL') {
+                        listItem.format.marginLeft = '0px';
+                        listItem.format.marginRight = '0px';
+                        listItem.format.listStylePosition = 'inside';
+
+                        // Preserve Word's rendered number when its outline template is unsupported.
+                        const number = bulletElement?.textContent?.trim();
+                        if (bullet === undefined && number && /^\d+(?:\.\d+)*[.)]?$/.test(number)) {
+                            listItem.format.listStyleType = '"' + number + ' "';
+                        }
+                    } else if (wordLevel > 1 && !isHeading) {
+                        delete listItem.format.marginLeft;
+                        delete listItem.format.marginRight;
+                    }
+
+                    if (listType == 'OL') {
+                        setStartNumber(listItem, context, listMetadata, element);
+                    }
                 }
-            }
-        );
+            );
+        } finally {
+            context.segmentFormat = originalSegmentFormat;
+        }
 
         if (
             listFormat.levels.length > 0 &&
@@ -269,6 +294,13 @@ function wordListPaddingParser(
 function getBulletElement(element: HTMLElement): HTMLElement | undefined {
     const firstChild = element.firstElementChild;
     let isBulletElement = false;
+
+    if (
+        isNodeOfType(firstChild, 'ELEMENT_NODE') &&
+        getStyles(firstChild)[MSO_LIST]?.toLowerCase() === MSO_LIST_IGNORE
+    ) {
+        return firstChild;
+    }
 
     if (firstChild) {
         for (let i = 0; i < firstChild.childNodes.length; i++) {
