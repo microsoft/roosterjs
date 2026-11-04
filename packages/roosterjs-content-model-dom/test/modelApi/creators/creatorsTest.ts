@@ -498,6 +498,11 @@ describe('Creators', () => {
         expect(format).toEqual({ fontSize: '10px', a: 1 } as any);
     });
 
+    it('createSelectionMarker preserves language', () => {
+        expect(createSelectionMarker({ lang: 'nl' }).format).toEqual({ lang: 'nl' });
+        expect(createSelectionMarker({ lang: '' }).format).toEqual({ lang: '' });
+    });
+
     it('createBr', () => {
         const br = createBr();
 

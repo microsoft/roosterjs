@@ -445,12 +445,12 @@ describe('tableProcessor with format', () => {
             tagName: 'TD',
             style: { getPropertyValue: () => '' },
             dataset: {},
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
         } as any) as HTMLTableCellElement;
         const mockedTr = {
             tagName: 'tr',
             style: { getPropertyValue: () => '' },
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
             cells: [mockedTd],
         };
         const mockedTable = ({
@@ -458,7 +458,7 @@ describe('tableProcessor with format', () => {
             rows: [mockedTr],
             style: { getPropertyValue: () => '' },
             dataset: {},
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
         } as any) as HTMLTableElement;
 
         const doc = createContentModelDocument();
@@ -503,7 +503,7 @@ describe('tableProcessor with format', () => {
                 {
                     tagName: 'tr',
                     style: { getPropertyValue: () => '' },
-                    getAttribute: () => '',
+                    getAttribute: (): string | null => null,
                     cells: [
                         {
                             colSpan: 1,
@@ -511,14 +511,14 @@ describe('tableProcessor with format', () => {
                             tagName: 'TD',
                             style: { getPropertyValue: () => '' },
                             dataset: {},
-                            getAttribute: () => '',
+                            getAttribute: (): string | null => null,
                         },
                     ],
                 },
             ],
             style: { getPropertyValue: () => '' },
             dataset: {},
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
         } as any) as HTMLTableElement;
 
         const doc = createContentModelDocument();
@@ -546,7 +546,7 @@ describe('tableProcessor with format', () => {
                 {
                     tagName: 'tr',
                     style: { getPropertyValue: () => '' },
-                    getAttribute: () => '',
+                    getAttribute: (): string | null => null,
                     cells: [
                         {
                             colSpan: 1,
@@ -554,14 +554,14 @@ describe('tableProcessor with format', () => {
                             tagName: 'TD',
                             style: { getPropertyValue: () => '' },
                             dataset: {},
-                            getAttribute: () => '',
+                            getAttribute: (): string | null => null,
                         },
                     ],
                 },
             ],
             style: {},
             dataset: {},
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
         } as any) as HTMLTableElement;
 
         const doc = createContentModelDocument();
@@ -622,7 +622,7 @@ describe('tableProcessor', () => {
                 {
                     tagName: 'tr',
                     style: {},
-                    getAttribute: () => '',
+                    getAttribute: (): string | null => null,
                     cells: [
                         {
                             colSpan: 1,
@@ -630,14 +630,14 @@ describe('tableProcessor', () => {
                             tagName: 'TD',
                             style: { getPropertyValue: () => '' },
                             dataset: {},
-                            getAttribute: () => '',
+                            getAttribute: (): string | null => null,
                         },
                     ],
                 },
             ],
             style: {},
             dataset: {},
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
         } as any) as HTMLTableElement;
 
         tableProcessor(group, mockedTable, context);
@@ -659,12 +659,12 @@ describe('tableProcessor', () => {
                 getPropertyValue: () => '',
             },
             dataset: {},
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
         } as any) as HTMLTableCellElement;
         const mockedTr = ({
             tagName: 'tr',
             style: {},
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
             cells: [mockedTd],
         } as any) as HTMLTableRowElement;
         const mockedTable = ({
@@ -672,7 +672,7 @@ describe('tableProcessor', () => {
             rows: [mockedTr],
             style: {},
             dataset: {},
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
         } as any) as HTMLTableElement;
 
         context.segmentFormat = {
@@ -720,7 +720,7 @@ describe('tableProcessor', () => {
             rows: [],
             style: {},
             dataset: {},
-            getAttribute: () => '',
+            getAttribute: (): string | null => null,
         } as any) as HTMLTableElement;
 
         context.blockFormat.backgroundColor = 'red';

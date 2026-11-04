@@ -30,6 +30,7 @@ export { BoldFormat } from './contentModel/format/formatParts/BoldFormat';
 export { FontFamilyFormat } from './contentModel/format/formatParts/FontFamilyFormat';
 export { FontSizeFormat } from './contentModel/format/formatParts/FontSizeFormat';
 export { ItalicFormat } from './contentModel/format/formatParts/ItalicFormat';
+export { LangFormat } from './contentModel/format/formatParts/LangFormat';
 export { LetterSpacingFormat } from './contentModel/format/formatParts/LetterSpacingFormat';
 export { DataValueFormat } from './contentModel/format/formatParts/DataValueFormat';
 export { LineHeightFormat } from './contentModel/format/formatParts/LineHeightFormat';

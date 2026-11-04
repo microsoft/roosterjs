@@ -109,11 +109,11 @@ describe('createDomToModelContext', () => {
 
         const parsers = buildFormatParsers();
 
-        parsers.block[5] = mockedBlockParser;
+        parsers.block[6] = mockedBlockParser;
         parsers.elementBasedSegment[3] = mockedBoldParser;
-        parsers.segment[6] = mockedBoldParser;
-        parsers.segmentOnBlock[6] = mockedBoldParser;
-        parsers.segmentOnTableCell[6] = mockedBoldParser;
+        parsers.segment[7] = mockedBoldParser;
+        parsers.segmentOnBlock[7] = mockedBoldParser;
+        parsers.segmentOnTableCell[7] = mockedBoldParser;
         parsers.text = [mockedTextParser1, mockedTextParser2];
 
         expect(context).toEqual({

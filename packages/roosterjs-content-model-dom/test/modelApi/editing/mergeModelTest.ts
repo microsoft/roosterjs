@@ -26,6 +26,56 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('mergeModel', () => {
+    [undefined, 'fr'].forEach(lang => {
+        it(
+            'preserves existing paragraph language when merging language-tagged paragraphs: ' +
+                lang,
+            () => {
+                const target = createContentModelDocument();
+                const paragraph = createParagraph(false, lang === undefined ? {} : { lang });
+                const marker = createSelectionMarker();
+                const source = createContentModelDocument();
+
+                paragraph.segments.push(createText('Before'), marker, createText('After'));
+                target.blocks.push(paragraph);
+
+                ['one', 'two'].forEach(text => {
+                    const sourceParagraph = createParagraph(false, { lang: 'nl' });
+                    sourceParagraph.segments.push(createText(text, { lang: 'nl' }));
+                    source.blocks.push(sourceParagraph);
+                });
+
+                mergeModel(target, source);
+
+                expect(
+                    target.blocks.map(block =>
+                        block.blockType == 'Paragraph' ? block.format.lang : 'unexpected block'
+                    )
+                ).toEqual([lang, lang]);
+            }
+        );
+    });
+
+    ['en', ''].forEach(lang => {
+        it('preserves source language when merging emphasis formatting: ' + lang, () => {
+            const target = createContentModelDocument();
+            const paragraph = createParagraph(false, { lang: 'fr' });
+            const marker = createSelectionMarker({ lang: 'fr' });
+            const source = createContentModelDocument();
+            const sourceParagraph = createParagraph();
+            const sourceText = createText('Pasted', { lang });
+
+            paragraph.segments.push(marker);
+            target.blocks.push(paragraph);
+            sourceParagraph.segments.push(sourceText);
+            source.blocks.push(sourceParagraph);
+
+            mergeModel(target, source, undefined, { mergeFormat: 'keepSourceEmphasisFormat' });
+
+            expect(sourceText.format.lang).toBe(lang);
+        });
+    });
+
     it('empty to single selection', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();

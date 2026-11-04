@@ -853,6 +853,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            lang: 'EN-US',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -870,7 +871,12 @@ describe(ID, () => {
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '115%' },
+                    format: {
+                        lang: 'EN-US',
+                        marginTop: '0cm',
+                        marginBottom: '0cm',
+                        lineHeight: '115%',
+                    },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -880,6 +886,7 @@ describe(ID, () => {
                                     text: 'dsfa',
                                     segmentType: 'Text',
                                     format: {
+                                        lang: 'EN-US',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -901,6 +908,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            lang: 'EN-US',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -914,7 +922,12 @@ describe(ID, () => {
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '115%' },
+                    format: {
+                        lang: 'EN-US',
+                        marginTop: '0cm',
+                        marginBottom: '0cm',
+                        lineHeight: '115%',
+                    },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -924,6 +937,7 @@ describe(ID, () => {
                                     text: 'dff',
                                     segmentType: 'Text',
                                     format: {
+                                        lang: 'EN-US',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -945,6 +959,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            lang: 'EN-US',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -958,7 +973,12 @@ describe(ID, () => {
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '115%' },
+                    format: {
+                        lang: 'EN-US',
+                        marginTop: '0cm',
+                        marginBottom: '0cm',
+                        lineHeight: '115%',
+                    },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -968,6 +988,7 @@ describe(ID, () => {
                                     text: 'fdsfsd',
                                     segmentType: 'Text',
                                     format: {
+                                        lang: 'EN-US',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -989,6 +1010,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            lang: 'EN-US',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -1012,6 +1034,7 @@ describe(ID, () => {
                     ],
                     blockType: 'BlockGroup',
                     format: {
+                        lang: 'EN-US',
                         marginTop: '0cm',
                         marginBottom: '0cm',
                         lineHeight: '115%',
@@ -1025,6 +1048,7 @@ describe(ID, () => {
                                     text: 'dfsfd',
                                     segmentType: 'Text',
                                     format: {
+                                        lang: 'EN-US',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -1046,6 +1070,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            lang: 'EN-US',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -1068,6 +1093,7 @@ describe(ID, () => {
                     ],
                     blockType: 'BlockGroup',
                     format: {
+                        lang: 'EN-US',
                         marginTop: '0cm',
                         marginBottom: '0cm',
                         lineHeight: '115%',
@@ -1081,6 +1107,7 @@ describe(ID, () => {
                                     text: 'fd',
                                     segmentType: 'Text',
                                     format: {
+                                        lang: 'EN-US',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -1102,6 +1129,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            lang: 'EN-US',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -1115,7 +1143,12 @@ describe(ID, () => {
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { marginTop: '0cm', marginBottom: '8pt', lineHeight: '115%' },
+                    format: {
+                        lang: 'EN-US',
+                        marginTop: '0cm',
+                        marginBottom: '8pt',
+                        lineHeight: '115%',
+                    },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -1125,6 +1158,7 @@ describe(ID, () => {
                                     text: 'sdsd',
                                     segmentType: 'Text',
                                     format: {
+                                        lang: 'EN-US',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -1257,7 +1291,10 @@ describe(ID, () => {
                                                             text:
                                                                 '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
                                                             segmentType: 'Text',
-                                                            format: { textColor: 'rgb(0, 0, 0)' },
+                                                            format: {
+                                                                lang: 'EN-US',
+                                                                textColor: 'rgb(0, 0, 0)',
+                                                            },
                                                         },
                                                     ],
                                                     segmentFormat: { textColor: 'rgb(0, 0, 0)' },
@@ -1305,7 +1342,10 @@ describe(ID, () => {
                                                             text:
                                                                 '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
                                                             segmentType: 'Text',
-                                                            format: { textColor: 'rgb(0, 0, 0)' },
+                                                            format: {
+                                                                lang: 'EN-US',
+                                                                textColor: 'rgb(0, 0, 0)',
+                                                            },
                                                         },
                                                     ],
                                                     segmentFormat: { textColor: 'rgb(0, 0, 0)' },
@@ -1352,7 +1392,10 @@ describe(ID, () => {
                                                         {
                                                             text: '■■■■■■■■■■■■',
                                                             segmentType: 'Text',
-                                                            format: { textColor: 'rgb(0, 0, 0)' },
+                                                            format: {
+                                                                lang: 'EN-US',
+                                                                textColor: 'rgb(0, 0, 0)',
+                                                            },
                                                         },
                                                     ],
                                                     segmentFormat: { textColor: 'rgb(0, 0, 0)' },
@@ -1410,7 +1453,10 @@ describe(ID, () => {
                                                             text:
                                                                 '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
                                                             segmentType: 'Text',
-                                                            format: { textColor: 'rgb(0, 0, 0)' },
+                                                            format: {
+                                                                lang: 'EN-US',
+                                                                textColor: 'rgb(0, 0, 0)',
+                                                            },
                                                         },
                                                     ],
                                                     segmentFormat: { textColor: 'rgb(0, 0, 0)' },
@@ -1468,7 +1514,10 @@ describe(ID, () => {
                                                             text:
                                                                 '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
                                                             segmentType: 'Text',
-                                                            format: { textColor: 'rgb(0, 0, 0)' },
+                                                            format: {
+                                                                lang: 'EN-US',
+                                                                textColor: 'rgb(0, 0, 0)',
+                                                            },
                                                         },
                                                     ],
                                                     segmentFormat: { textColor: 'rgb(0, 0, 0)' },
@@ -1525,7 +1574,10 @@ describe(ID, () => {
                                                         {
                                                             text: '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
                                                             segmentType: 'Text',
-                                                            format: { textColor: 'rgb(0, 0, 0)' },
+                                                            format: {
+                                                                lang: 'EN-US',
+                                                                textColor: 'rgb(0, 0, 0)',
+                                                            },
                                                         },
                                                     ],
                                                     segmentFormat: { textColor: 'rgb(0, 0, 0)' },

@@ -1484,6 +1484,7 @@ describe('domIndexerImpl.reconcileChildList', () => {
         const paragraph = createParagraph();
         const segment = createBr({
             fontSize: '10pt',
+            lang: 'nl',
         });
 
         paragraph.segments.push(segment);
@@ -1505,6 +1506,7 @@ describe('domIndexerImpl.reconcileChildList', () => {
                     text: 'test',
                     format: {
                         fontSize: '10pt',
+                        lang: 'nl',
                     },
                 },
             ],

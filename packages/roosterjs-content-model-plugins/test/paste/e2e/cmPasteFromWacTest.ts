@@ -112,6 +112,7 @@ describe(ID, () => {
                                                                             text: 'Test TableÂ ',
                                                                             segmentType: 'Text',
                                                                             format: {
+                                                                                lang: 'EN-US',
                                                                                 textColor:
                                                                                     'rgb(0, 0, 0)',
                                                                                 fontFamily:
@@ -123,10 +124,12 @@ describe(ID, () => {
                                                                         },
                                                                     ],
                                                                     segmentFormat: {
+                                                                        lang: 'EN-US',
                                                                         textColor: 'rgb(0, 0, 0)',
                                                                     },
                                                                     blockType: 'Paragraph',
                                                                     format: {
+                                                                        lang: 'EN-US',
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
                                                                         whiteSpace: 'pre-wrap',
@@ -188,6 +191,7 @@ describe(ID, () => {
                                                                             text: 'Test TableÂ ',
                                                                             segmentType: 'Text',
                                                                             format: {
+                                                                                lang: 'EN-US',
                                                                                 textColor:
                                                                                     'rgb(0, 0, 0)',
                                                                                 fontFamily:
@@ -199,10 +203,12 @@ describe(ID, () => {
                                                                         },
                                                                     ],
                                                                     segmentFormat: {
+                                                                        lang: 'EN-US',
                                                                         textColor: 'rgb(0, 0, 0)',
                                                                     },
                                                                     blockType: 'Paragraph',
                                                                     format: {
+                                                                        lang: 'EN-US',
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
                                                                         whiteSpace: 'pre-wrap',
@@ -281,6 +287,7 @@ describe(ID, () => {
                                     text: 'Â ',
                                     segmentType: 'Text',
                                     format: {
+                                        lang: 'EN-US',
                                         textColor: 'rgb(0, 0, 0)',
                                         fontFamily:
                                             'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
@@ -289,11 +296,10 @@ describe(ID, () => {
                                     },
                                 },
                             ],
-                            segmentFormat: {
-                                textColor: 'rgb(0, 0, 0)',
-                            },
+                            segmentFormat: { lang: 'EN-US', textColor: 'rgb(0, 0, 0)' },
                             blockType: 'Paragraph',
                             format: {
+                                lang: 'EN-US',
                                 direction: 'ltr',
                                 textAlign: 'start',
                                 whiteSpace: 'pre-wrap',

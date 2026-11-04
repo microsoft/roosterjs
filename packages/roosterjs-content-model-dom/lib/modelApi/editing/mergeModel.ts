@@ -154,10 +154,14 @@ function mergeParagraph(
     option?: MergeModelOption
 ) {
     const { paragraph, marker } = markerPosition;
+    const lang = paragraph.format.lang;
     const newParagraph = mergeToCurrentParagraph
         ? paragraph
         : splitParagraph(markerPosition, newPara.format);
     const segmentIndex = newParagraph.segments.indexOf(marker);
+    const hasExistingContent = newParagraph.segments.some(
+        segment => segment.segmentType != 'SelectionMarker' && segment.segmentType != 'Br'
+    );
 
     if (option?.mergeFormat == 'none' && mergeToCurrentParagraph) {
         newParagraph.segments.forEach(segment => {
@@ -208,6 +212,16 @@ function mergeParagraph(
             ...newParagraph.format,
             ...newPara.format,
         };
+    }
+
+    if (hasExistingContent && newParagraph.format.lang !== lang) {
+        newParagraph.format = { ...newParagraph.format };
+
+        if (lang === undefined) {
+            delete newParagraph.format.lang;
+        } else {
+            newParagraph.format.lang = lang;
+        }
     }
 }
 
@@ -607,7 +621,7 @@ function mergeSegmentFormat(
 function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentModelSegmentFormat {
     const result: ContentModelSegmentFormat = {};
 
-    const { fontWeight, italic, underline } = segmentFormat;
+    const { fontWeight, italic, underline, lang } = segmentFormat;
 
     if (fontWeight && fontWeight != 'normal') {
         result.fontWeight = fontWeight;
@@ -617,6 +631,9 @@ function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentMod
     }
     if (underline) {
         result.underline = underline;
+    }
+    if (lang !== undefined) {
+        result.lang = lang;
     }
 
     return result;

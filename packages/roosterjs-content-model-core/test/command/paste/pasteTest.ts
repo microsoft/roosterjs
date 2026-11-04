@@ -359,6 +359,31 @@ describe('Paste with clipboardData', () => {
         document.getElementById(ID)?.remove();
     });
 
+    it('preserves language attributes through paste sanitizing and conversion', () => {
+        clipboardData.rawHtml =
+            '<html><body><div lang="nl">1 div</div><p lang="nl">2 p</p>' +
+            '<div><span lang="nl">3 span</span></div>' +
+            '<table><tr><td lang="nl">4 td</td></tr></table>' +
+            '<small lang="nl">5 small</small><address lang="nl">6 address</address>' +
+            '<div>Default</div></body></html>';
+
+        paste(editor, clipboardData);
+
+        const target = document.getElementById(ID)!;
+
+        expect(target.innerHTML).toBe(
+            '<div lang="nl" style="color: rgb(0, 0, 0);"><span lang="nl">1 div</span></div>' +
+                '<p lang="nl"><span lang="nl" style="color: rgb(0, 0, 0);">2 p</span></p>' +
+                '<div style="color: rgb(0, 0, 0);"><span lang="nl">3 span</span></div>' +
+                '<table><tbody><tr><td lang="nl">' +
+                '<div lang="nl" style="color: rgb(0, 0, 0);"><span lang="nl">4 td</span></div>' +
+                '</td></tr></tbody></table>' +
+                '<div style="color: rgb(0, 0, 0);"><small lang="nl">5 small</small></div>' +
+                '<address lang="nl">6 address</address>' +
+                '<div style="color: rgb(0, 0, 0);">Default</div><div><br></div>'
+        );
+    });
+
     it('Replace windowtext with set black font color from clipboardContent', () => {
         clipboardData.rawHtml =
             '<html><head></head><body><p style="color: windowtext;">Test</p></body></html>';

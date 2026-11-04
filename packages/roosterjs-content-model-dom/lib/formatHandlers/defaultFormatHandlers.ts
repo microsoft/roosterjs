@@ -18,6 +18,7 @@ import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { imageStateFormatHandler } from './segment/imageStateFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { langFormatHandler } from './common/langFormatHandler';
 import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
@@ -78,6 +79,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     id: idFormatHandler,
     imageState: imageStateFormatHandler,
     italic: italicFormatHandler,
+    lang: langFormatHandler,
     legacyTableBorder: legacyTableBorderFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
@@ -106,6 +108,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
 };
 
 const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'lang',
     'letterSpacing',
     'fontFamily',
     'fontSize',
@@ -123,6 +126,7 @@ const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'superOrSubScript',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
+    'lang',
     'direction',
     'textAlign',
     'textIndent',
@@ -146,7 +150,15 @@ export const defaultFormatKeysPerCategory: {
     listItemThread: ['listItemThread'],
     listLevelThread: ['listLevelThread'],
     listItemElement: [...sharedBlockFormats, 'listItemAlign', 'margin', 'listStyle'],
-    listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
+    listLevel: [
+        'direction',
+        'textAlign',
+        'margin',
+        'padding',
+        'listStyle',
+        'backgroundColor',
+        'lang',
+    ],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     elementBasedSegment: sizeNeutralElementBasedSegmentFormats,
     superOrSubScript: ['superOrSubScript'],
@@ -174,7 +186,7 @@ export const defaultFormatKeysPerCategory: {
         'htmlAlign',
         'size',
     ],
-    tableRow: ['backgroundColor'],
+    tableRow: ['backgroundColor', 'lang'],
     tableColumn: ['size'],
     table: [
         'aria',

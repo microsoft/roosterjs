@@ -9,7 +9,7 @@ import type { ContentModelImageFormat, ElementProcessor } from 'roosterjs-conten
  * @internal
  */
 export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, element, context) => {
-    stackFormat(context, { segment: 'shallowClone' }, () => {
+    stackFormat(context, { segment: 'shallowClone', paragraph: 'shallowClone' }, () => {
         const imageFormat: ContentModelImageFormat = context.segmentFormat;
 
         // Use getAttribute('src') instead of retrieving src directly, in case the src has port and may be stripped by browser

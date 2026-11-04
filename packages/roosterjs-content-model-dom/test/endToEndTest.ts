@@ -10,6 +10,90 @@ import {
 } from 'roosterjs-content-model-types';
 
 describe('End to end test for DOM => Model => DOM/TEXT', () => {
+    function roundTrip(html: string): HTMLDivElement {
+        const source = document.createElement('div');
+        const target = document.createElement('div');
+        source.innerHTML = html;
+
+        const model = domToContentModel(source, createDomToModelContext());
+        contentModelToDom(document, target, model, createModelToDomContext());
+
+        return target;
+    }
+
+    describe('lang attributes', () => {
+        [
+            'span',
+            'div',
+            'p',
+            'b',
+            'i',
+            'em',
+            'strong',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'blockquote',
+            'pre',
+            'code',
+            'small',
+            'address',
+        ].forEach(tag => {
+            it('preserves language on ' + tag, () => {
+                const target = roundTrip('<' + tag + ' lang="nl">text</' + tag + '>');
+
+                expect(target.querySelector('[lang="nl"]')?.textContent).toBe('text');
+            });
+        });
+
+        it('preserves language on tables, rows, and cells', () => {
+            const target = roundTrip(
+                '<table lang="nl"><tr lang="fr"><td lang="de">text</td><th lang="">unknown</th></tr></table>'
+            );
+
+            expect(target.querySelector('table')?.getAttribute('lang')).toBe('nl');
+            expect(target.querySelector('tr')?.getAttribute('lang')).toBe('fr');
+            expect(target.querySelector('td')?.getAttribute('lang')).toBe('de');
+            expect(target.querySelector('th')?.getAttribute('lang')).toBe('');
+        });
+
+        it('preserves language on list levels and items', () => {
+            const target = roundTrip('<ul lang="nl"><li lang="fr">text</li></ul>');
+
+            expect(target.querySelector('ul')?.getAttribute('lang')).toBe('nl');
+            expect(target.querySelector('li')?.getAttribute('lang')).toBe('fr');
+        });
+
+        it('does not apply an image language to following paragraphs', () => {
+            const target = roundTrip('<img src="x" lang="fr"><div>Default</div>');
+
+            expect(target.querySelector('img')?.closest('[lang]')?.getAttribute('lang')).toBe('fr');
+            expect(target.lastElementChild?.closest('[lang]')).toBeNull();
+        });
+
+        it('preserves nested overrides, empty language, and sibling scope across rewrites', () => {
+            const html =
+                '<div lang="nl">Dutch<span lang="fr">French</span>' +
+                '<span lang="">Unknown</span>Dutch again</div><div>Default</div>';
+            const target = roundTrip(roundTrip(html).innerHTML);
+            const languages: (string | null)[] = [];
+            const texts: string[] = [];
+            const walker = document.createTreeWalker(target, NodeFilter.SHOW_TEXT);
+
+            while (walker.nextNode()) {
+                const node = walker.currentNode;
+                texts.push(node.textContent || '');
+                languages.push(node.parentElement?.closest('[lang]')?.getAttribute('lang') ?? null);
+            }
+
+            expect(texts).toEqual(['Dutch', 'French', 'Unknown', 'Dutch again', 'Default']);
+            expect(languages).toEqual(['nl', 'fr', '', 'nl', null]);
+        });
+    });
+
     function runTest(
         html: string,
         expectedModel: ContentModelDocument,

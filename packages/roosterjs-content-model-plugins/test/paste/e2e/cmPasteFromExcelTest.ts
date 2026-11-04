@@ -87,6 +87,7 @@ describe(ID, () => {
                                 fontSize: '',
                                 fontWeight: '',
                                 italic: false,
+                                lang: undefined,
                                 letterSpacing: '',
                                 lineHeight: '',
                                 strikethrough: false,
