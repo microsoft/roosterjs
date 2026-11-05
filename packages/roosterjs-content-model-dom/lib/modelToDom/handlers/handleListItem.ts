@@ -1,5 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { applyMetadata } from '../utils/applyMetadata';
+import { applyWordLikeListStyles } from '../../modelApi/list/applyWordLikeListStyles';
 import { isGenericRoleElement } from '../../domUtils/isGenericRoleElement';
 import { reuseCachedElement } from '../../domUtils/reuseCachedElement';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
@@ -28,6 +29,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     refNode = context.modelHandlers.list(doc, parent, listItem, context, refNode);
 
     const { nodeStack } = context.listFormat;
+    const wordLikeStyles = (context.experimentalFeatures?.indexOf('WordLikeStyles') ?? -1) >= 0;
     const leafLevel: Partial<ModelToDomListStackItem> = nodeStack?.[nodeStack.length - 1] ?? {};
     const itemRefNode = leafLevel.refNode || null;
     const listParent = leafLevel.node || parent;
@@ -66,6 +68,10 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     }
 
     if (level) {
+        if (wordLikeStyles) {
+            applyWordLikeListStyles(listItem, context.implicitFormat.direction);
+        }
+
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
         applyFormat(li, context.formatAppliers.listItemThread, level.format, context);
 

@@ -84,4 +84,10 @@ export type ExperimentalFeature =
     /**
      * Handle the drop event for content that is dropped from the same editor instance.
      */
-    | 'HandleDropInternalContent';
+    | 'HandleDropInternalContent'
+
+    /**
+     * Apply Word-like spacing to list items and their direct element children,
+     * and default images without an explicit vertical alignment to middle.
+     */
+    | 'WordLikeStyles';
