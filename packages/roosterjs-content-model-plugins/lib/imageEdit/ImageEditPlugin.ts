@@ -19,7 +19,6 @@ import { updateRotateHandle } from './Rotator/updateRotateHandle';
 import { updateWrapper } from './utils/updateWrapper';
 import {
     ChangeSource,
-    getSafeIdSelector,
     getSelectedParagraphs,
     isElementOfType,
     isNodeOfType,
@@ -60,6 +59,7 @@ const DefaultOptions: Partial<ImageEditOptions> = {
 const MouseRightButton = 2;
 const DRAG_ID = '_dragging';
 const IMAGE_EDIT_CLASS = 'imageEdit';
+const IMAGE_EDIT_HOST_CLASS = 'r_imageEditHost';
 const IMAGE_EDIT_CLASS_CARET = 'imageEditCaretColor';
 const IMAGE_EDIT_CLASS_CROP_KEYBOARD = 'imageEditCropKeyboard';
 const IMAGE_EDIT_FORMAT_EVENT = 'ImageEditEvent';
@@ -223,6 +223,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
     }
 
     private removeImageEditing(clonedRoot: HTMLElement) {
+        clonedRoot
+            .querySelectorAll<HTMLElement>(`span.${IMAGE_EDIT_HOST_CLASS}`)
+            .forEach(host => unwrap(host));
+
         const images = clonedRoot.querySelectorAll('img');
         images.forEach(image => {
             if (image.dataset.editingInfo) {
@@ -584,8 +588,10 @@ export class ImageEditPlugin implements ImageEditor, EditorPlugin {
         this.croppers = croppers;
         this.zoomScale = editor.getDOMHelper().calculateZoomScale();
 
+        // An id would make this temporary inline-block persist as a format
+        shadowSpan.className = IMAGE_EDIT_HOST_CLASS;
         editor.setEditorStyle(IMAGE_EDIT_CLASS, `outline-style:none!important;`, [
-            `span:has(>img${getSafeIdSelector(this.selectedImage.id)})`,
+            `.${IMAGE_EDIT_HOST_CLASS}`,
         ]);
 
         editor.setEditorStyle(IMAGE_EDIT_CLASS_CARET, `caret-color: transparent;`);
