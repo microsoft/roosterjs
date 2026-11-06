@@ -444,9 +444,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text1',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                     segmentType: 'Text',
                                                 },
                                             ],
@@ -456,14 +454,12 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     ],
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
-                                        fontWeight: 'bold',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                             ],
                             height: 0,
@@ -492,10 +488,10 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     isHeader: false,
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                 },
                             ],
@@ -508,7 +504,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                     },
                     dataset: {
                         editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                            '{"topBorderColor":"#000","bottomBorderColor":"#000","verticalBorderColor":"#000","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":null,"tableBorderFormat":0,"verticalAlign":null,"headerRowCustomStyles":{"fontWeight":"normal","italic":false},"firstColumnCustomStyles":{"fontWeight":"normal","italic":false}}',
                     },
                 },
             ],
@@ -536,9 +532,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text1',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                     segmentType: 'Text',
                                                 },
                                             ],
@@ -548,14 +542,12 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     ],
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
-                                        fontWeight: 'bold',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                                 {
                                     spanAbove: false,
@@ -567,9 +559,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text2',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                     segmentType: 'Text',
                                                 },
                                             ],
@@ -579,14 +569,12 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     ],
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
-                                        fontWeight: 'bold',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                             ],
                             height: 0,
@@ -614,10 +602,10 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     ],
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     isHeader: false,
                                 },
@@ -641,10 +629,10 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     ],
                                     format: {
                                         textAlign: 'start',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     isHeader: false,
                                 },
@@ -658,7 +646,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                     },
                     dataset: {
                         editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                            '{"topBorderColor":"#000","bottomBorderColor":"#000","verticalBorderColor":"#000","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":null,"tableBorderFormat":0,"verticalAlign":null,"headerRowCustomStyles":{"fontWeight":"normal","italic":false},"firstColumnCustomStyles":{"fontWeight":"normal","italic":false}}',
                     },
                 },
             ],
@@ -791,9 +779,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text1',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                     segmentType: 'Text',
                                                 },
                                             ],
@@ -803,14 +789,12 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     ],
                                     format: {
                                         textAlign: 'center',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
-                                        fontWeight: 'bold',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                                 {
                                     spanAbove: false,
@@ -822,9 +806,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                             segments: [
                                                 {
                                                     text: 'text2',
-                                                    format: {
-                                                        fontWeight: 'bold',
-                                                    },
+                                                    format: {},
                                                     segmentType: 'Text',
                                                 },
                                             ],
@@ -834,14 +816,12 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     ],
                                     format: {
                                         textAlign: 'end',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
-                                        backgroundColor: '#ABABAB',
-                                        fontWeight: 'bold',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
-                                    isHeader: true,
+                                    isHeader: false,
                                 },
                             ],
                             height: 0,
@@ -869,10 +849,10 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     ],
                                     format: {
                                         textAlign: 'center',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     isHeader: false,
                                 },
@@ -896,10 +876,10 @@ describe('markdownProcessor: removeEmptyLines', () => {
                                     ],
                                     format: {
                                         textAlign: 'end',
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000',
+                                        borderRight: '1px solid #000',
+                                        borderBottom: '1px solid #000',
+                                        borderLeft: '1px solid #000',
                                     },
                                     isHeader: false,
                                 },
@@ -913,7 +893,7 @@ describe('markdownProcessor: removeEmptyLines', () => {
                     },
                     dataset: {
                         editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":true,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                            '{"topBorderColor":"#000","bottomBorderColor":"#000","verticalBorderColor":"#000","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":null,"tableBorderFormat":0,"verticalAlign":null,"headerRowCustomStyles":{"fontWeight":"normal","italic":false},"firstColumnCustomStyles":{"fontWeight":"normal","italic":false}}',
                     },
                 },
             ],

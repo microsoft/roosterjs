@@ -62,8 +62,11 @@ const initialState: OptionState = {
         codeFormat: {},
     },
     markdownPasteOptions: {
-        autoConversion: false,
+        autoConversion: true,
         undoConversion: false,
+        markdownToModelOptions: {
+            emptyLine: 'merge',
+        },
     },
     editPluginOptions: {
         handleTabKey: {
@@ -76,7 +79,10 @@ const initialState: OptionState = {
     },
     customReplacements: emojiReplacements,
     disableSideResize: false,
-    experimentalFeatures: new Set<ExperimentalFeature>(['HandleDropInternalContent']),
+    experimentalFeatures: new Set<ExperimentalFeature>([
+        'FilterInvisibleUnicode',
+        'HandleDropInternalContent',
+    ]),
 };
 
 export class EditorOptionsPlugin extends SidePanePluginImpl<OptionsPane, OptionPaneProps> {

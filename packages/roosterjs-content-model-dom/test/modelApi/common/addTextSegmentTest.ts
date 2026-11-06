@@ -213,7 +213,11 @@ describe('addTextSegment', () => {
             experimentalFeatures: ['FilterInvisibleUnicode'],
         });
 
-        addTextSegment(group, 'a\u{E0041}b\u{E0042}c', context);
+        addTextSegment(
+            group,
+            'a\u{E0000}b\u{E0041}c\u{E007F}\u{E0080}\u{E0100}\u{E01EF}\u{EFFFF}',
+            context
+        );
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -224,7 +228,7 @@ describe('addTextSegment', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'abc',
+                            text: 'abc\u{E0080}\u{E0100}\u{E01EF}\u{EFFFF}',
                             format: {},
                         },
                     ],
@@ -238,7 +242,11 @@ describe('addTextSegment', () => {
         const group = createContentModelDocument();
         const context = createDomToModelContext();
 
-        addTextSegment(group, 'a\u{E0041}b\u{E0042}c', context);
+        addTextSegment(
+            group,
+            'a\u{E0000}b\u{E0041}c\u{E007F}\u{E0080}\u{E0100}\u{E01EF}\u{EFFFF}',
+            context
+        );
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -249,7 +257,8 @@ describe('addTextSegment', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'a\u{E0041}b\u{E0042}c',
+                            text:
+                                'a\u{E0000}b\u{E0041}c\u{E007F}\u{E0080}\u{E0100}\u{E01EF}\u{EFFFF}',
                             format: {},
                         },
                     ],

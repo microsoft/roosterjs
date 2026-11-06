@@ -10,12 +10,21 @@ export const superOrSubScriptFormatHandler: FormatHandler<SuperOrSubScriptFormat
         const verticalAlign = element.style.verticalAlign || defaultStyle.verticalAlign;
         const fontSize = element.style.fontSize || defaultStyle.fontSize;
 
-        if (isSuperOrSubScript(fontSize, verticalAlign)) {
+        const inheritFontSize =
+            (element.tagName == 'SUP' || element.tagName == 'SUB') && fontSize == 'inherit';
+
+        if (
+            isSuperOrSubScript(fontSize, verticalAlign) ||
+            (inheritFontSize && (verticalAlign == 'super' || verticalAlign == 'sub'))
+        ) {
             format.superOrSubScriptSequence = (format.superOrSubScriptSequence || '')
                 .split(' ')
                 .concat(verticalAlign)
                 .join(' ')
                 .trim();
+            if (inheritFontSize) {
+                format.superOrSubScriptFontSize = 'inherit';
+            }
         }
     },
     apply: (format, element) => {
@@ -27,7 +36,10 @@ export const superOrSubScriptFormatHandler: FormatHandler<SuperOrSubScriptFormat
                     const tagName = value == 'super' ? 'sup' : value == 'sub' ? 'sub' : null;
 
                     if (tagName) {
-                        wrapAllChildNodes(element, tagName);
+                        const wrapper = wrapAllChildNodes(element, tagName);
+                        if (format.superOrSubScriptFontSize) {
+                            wrapper.style.fontSize = format.superOrSubScriptFontSize;
+                        }
                     }
                 });
         }

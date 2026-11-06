@@ -12,6 +12,7 @@ import type {
     BeforePasteEvent,
     ContentModelBlockFormat,
     ContentModelBlockGroup,
+    ContentModelListItem,
     ContentModelListItemLevelFormat,
     ContentModelListLevel,
     ContentModelSegmentFormat,
@@ -19,6 +20,7 @@ import type {
     DomToModelListFormat,
     ElementProcessor,
     FormatParser,
+    PaddingFormat,
 } from 'roosterjs-content-model-types';
 
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
@@ -36,6 +38,10 @@ interface WacContext extends DomToModelListFormat {
      * Array to keep the start of the lists and determine if the start override should be set.
      */
     listItemThread?: number[];
+    /**
+     * Outline counters must survive intervening paragraphs and unrelated lists.
+     */
+    headingNumbers?: Map<string, number[]>;
 }
 
 /**
@@ -53,13 +59,19 @@ const wacSubSuperParser: FormatParser<ContentModelSegmentFormat> = (
     if (verticalAlign === 'sub') {
         format.superOrSubScriptSequence = 'sub';
     }
+    if (
+        (verticalAlign === 'super' || verticalAlign === 'sub') &&
+        element.style.fontSize !== 'smaller'
+    ) {
+        format.superOrSubScriptFontSize = 'inherit';
+    }
 };
 
 /**
  * This processor does:
  * 1) Remove the display and margin of the element.
  * 2) When an element should be ignored but should handle the child elements call the default child processor.
- * 3) Removes the End of Paragraph element to avoid empty lines, we should only remove this if the previous element of the EOP is an EmptyTextRun
+ * 3) Removes selected End of Paragraph markers unless they are the paragraph's only content.
  * 4) Finally call the default processor.
  * @returns
  */
@@ -80,13 +92,25 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
         return;
     }
 
-    if (
-        TEMP_ELEMENTS_CLASSES.some(className => element.classList.contains(className)) ||
-        // This is needed to remove some temporary End of paragraph elements that WAC sometimes preserves
-        (element.classList.contains(SELECTED_CLASS) && element.classList.contains(END_OF_PARAGRAPH))
-    ) {
+    if (TEMP_ELEMENTS_CLASSES.some(className => element.classList.contains(className))) {
         return;
-    } else if (shouldClearListContext(elementTag, element, context)) {
+    }
+
+    if (
+        element.classList.contains(SELECTED_CLASS) &&
+        element.classList.contains(END_OF_PARAGRAPH)
+    ) {
+        const lastBlock = group.blocks[group.blocks.length - 1];
+
+        if (lastBlock?.blockType != 'Paragraph' || lastBlock.segments.length > 0) {
+            return;
+        }
+
+        element.style.removeProperty('background-color');
+        element.style.removeProperty('border-color');
+    }
+
+    if (shouldClearListContext(elementTag, element, context)) {
         const { listFormat } = context;
         listFormat.levels = [];
         listFormat.listParent = undefined;
@@ -132,6 +156,7 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
         if (lastblock.blockType == 'BlockGroup' && lastblock.blockGroupType == 'ListItem') {
             const currentLevel = lastblock.levels[lastblock.levels.length - 1];
             updateStartOverride(currentLevel, element, context);
+            updateHeading(lastblock, element, context);
         }
     }
 
@@ -170,6 +195,20 @@ const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
 ): void => {
     format.marginLeft = undefined;
     format.paddingLeft = BASE_PADDING_WAC_LISTS;
+};
+
+const wacTableCellPaddingParser: FormatParser<PaddingFormat> = (format, element) => {
+    const keys: (keyof PaddingFormat)[] = [
+        'paddingTop',
+        'paddingRight',
+        'paddingBottom',
+        'paddingLeft',
+    ];
+    keys.forEach(key => {
+        if (element.style[key]) {
+            format[key] = element.style[key];
+        }
+    });
 };
 
 /**
@@ -227,6 +266,7 @@ export function processPastedContentWacComponents(ev: BeforePasteEvent) {
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
     addParser(ev.domToModelOption, 'container', wacContainerParser);
     addParser(ev.domToModelOption, 'table', wacContainerParser);
+    addParser(ev.domToModelOption, 'tableCell', wacTableCellPaddingParser);
     addParser(ev.domToModelOption, 'segment', wacCommentParser);
 
     setProcessor(ev.domToModelOption, 'element', wacElementProcessor);
@@ -241,6 +281,80 @@ const wacContainerParser: FormatParser<ContentModelBlockFormat> = (
         delete format.marginLeft;
     }
 };
+
+function updateHeading(
+    listItem: ContentModelListItem,
+    element: HTMLLIElement,
+    context: DomToModelContext
+) {
+    const paragraph = element.querySelector('p');
+    const styleName = paragraph
+        ?.querySelector('[data-ccp-parastyle]')
+        ?.getAttribute('data-ccp-parastyle');
+    const list = element.closest('ol');
+
+    if (!paragraph || !list || !/^heading [1-6]$/i.test(styleName || '')) {
+        return;
+    }
+
+    const headingParagraph = listItem.blocks.find(
+        block => block.blockType == 'Paragraph' && block.decorator?.tagName == 'p'
+    );
+    if (headingParagraph?.blockType == 'Paragraph') {
+        // An inside marker and a block paragraph would occupy separate lines.
+        Object.assign(listItem.format, headingParagraph.format);
+        headingParagraph.isImplicit = true;
+        headingParagraph.format = {};
+        delete headingParagraph.decorator;
+    }
+
+    listItem.levels.forEach(level => {
+        level.format.paddingLeft = '0px';
+        level.format.paddingRight = '0px';
+        level.format.marginTop = '0px';
+        level.format.marginBottom = '0px';
+    });
+    listItem.format.marginLeft = '0px';
+    listItem.format.marginRight = '0px';
+    listItem.format.listStylePosition = 'inside';
+    parseFormat(
+        paragraph,
+        context.formatParsers.segmentOnBlock,
+        listItem.formatHolder.format,
+        context
+    );
+
+    const listId = element.getAttribute('data-listid');
+    const template = element.getAttribute('data-leveltext');
+    const [start, level] = extractWordListMetadata(list, element);
+
+    if (
+        !listId ||
+        !template ||
+        !/^%[1-9](?:\.%[1-9])*[.)]?$/.test(template) ||
+        !(level > 0 && level <= 9) ||
+        !Number.isFinite(start)
+    ) {
+        return;
+    }
+
+    const listFormat = context.listFormat as WacContext;
+    const headings = (listFormat.headingNumbers = listFormat.headingNumbers || new Map());
+    const numbers = headings.get(listId) || [];
+    numbers[level - 1] = start;
+    numbers.length = level;
+    headings.set(listId, numbers);
+
+    let complete = true;
+    const label = template.replace(/%([1-9])/g, (_match, index: string) => {
+        const number = numbers[parseInt(index) - 1];
+        complete = complete && number !== undefined;
+        return number === undefined ? '' : number.toString();
+    });
+    if (complete) {
+        listItem.format.listStyleType = '"' + label + ' "';
+    }
+}
 
 function updateStartOverride(
     currentLevel: ContentModelListLevel | undefined,

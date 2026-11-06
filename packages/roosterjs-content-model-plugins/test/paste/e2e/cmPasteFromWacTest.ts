@@ -29,6 +29,158 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    it('Preserve Word Online outline labels, alignment, and heading marker fonts', () => {
+        const heading = (level: number, number: number, text: string, listId = '11') =>
+            `<div class="ListContainerWrapper"><ol class="NumberListStyle1" start="${number}" style="margin:0;padding:0">
+                <li class="OutlineElement" data-listid="${listId}" data-aria-level="${level}" data-aria-posinset="${number}"
+                    data-leveltext="${Array.from(
+                        { length: level },
+                        (_, index) => '%' + (index + 1)
+                    ).join('.')}"
+                    style="display:block;margin:0;font:10pt Calibri">
+                    <p style="margin:0;color:#1f3864;font-weight:${
+                        level == 3 ? 'bold' : 'normal'
+                    }"><span data-ccp-parastyle="heading ${level}">${text}</span></p>
+                </li></ol></div>`;
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml:
+                '<html><body>' +
+                heading(1, 1, 'Summary') +
+                '<p>Plain introduction</p>' +
+                heading(1, 2, 'Details') +
+                heading(2, 1, 'Teams data') +
+                heading(3, 1, 'Scorecard') +
+                heading(3, 2, 'Velocity') +
+                heading(2, 2, 'Shared knowledge') +
+                heading(1, 7, 'Separate list', '22') +
+                heading(2, 1, 'Separate subsection', '22') +
+                heading(2, 3, 'Work IQ') +
+                '<p>Plain body</p></body></html>',
+        });
+
+        const root = document.getElementById(ID)!;
+        const headings = Array.from(root.querySelectorAll('li')).filter(
+            item => item.style.display != 'block'
+        );
+        const labels = ['1', '2', '2.1', '2.1.1', '2.1.2', '2.2', '7', '7.1', '2.3'];
+        const rootLeft = root.getBoundingClientRect().left;
+
+        expect(headings.length).toBe(labels.length);
+        headings.forEach((item, index) => {
+            const style = getComputedStyle(item);
+            expect(style.listStyleType)
+                .withContext(labels[index])
+                .toBe('"' + labels[index] + ' "');
+            expect(style.listStylePosition).withContext(labels[index]).toBe('inside');
+            expect(style.color).withContext(labels[index]).toBe('rgb(31, 56, 100)');
+            expect(style.fontWeight)
+                .withContext(labels[index])
+                .toBe(index == 3 || index == 4 ? '700' : '400');
+            expect(item.getBoundingClientRect().left - rootLeft)
+                .withContext(labels[index])
+                .toBeCloseTo(0, 1);
+            const text = document.createTreeWalker(item, NodeFilter.SHOW_TEXT).nextNode()!;
+            const range = document.createRange();
+            range.selectNode(text);
+            expect(range.getBoundingClientRect().top - item.getBoundingClientRect().top)
+                .withContext(labels[index] + ' stays on the marker line')
+                .toBeLessThan(parseFloat(style.fontSize));
+        });
+        const body = Array.from(root.querySelectorAll('p')).find(
+            p => p.textContent == 'Plain body'
+        )!;
+        expect(getComputedStyle(body).color).toBe('rgb(0, 0, 0)');
+        expect(getComputedStyle(body).fontWeight).toBe('400');
+    });
+
+    it('Preserve Word Online table padding and explicitly sized superscripts and subscripts', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><body>
+                <div class="ListContainerWrapper"><ul class="BulletListStyle1">
+                    <li class="OutlineElement" data-aria-level="1" style="margin-left:24px">Bullet</li>
+                </ul></div>
+                <p style="font-size:10pt">Date 16<span style="font-size:8pt;vertical-align:super">th</span>
+                    H<span style="font-size:8pt;vertical-align:sub">2</span>O</p>
+                <table><tr><td style="padding:0"><div style="padding:0 7px"><p><b>Owner</b></p></div></td>
+                    <td style="padding:2px 3px"><p>Plain cell</p></td></tr></table>
+                </body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const cells = root.querySelectorAll('td');
+        expect(getComputedStyle(cells[0]).padding).toBe('0px');
+        expect(getComputedStyle(cells[0].firstElementChild!).padding).toBe('0px 7px');
+        expect(getComputedStyle(cells[1]).padding).toBe('2px 3px');
+        ['sup', 'sub'].forEach(tag => {
+            expect(parseFloat(getComputedStyle(root.querySelector(tag)!).fontSize)).toBeCloseTo(
+                10.6667,
+                2
+            );
+        });
+        expect(getComputedStyle(root.querySelector('ul')!).paddingLeft).not.toBe('0px');
+        expect(getComputedStyle(root.querySelector('li')!).marginLeft).toBe('24px');
+    });
+
+    it('Preserve empty Word Online paragraphs after tables without adding lines to populated paragraphs', () => {
+        const emptyParagraph =
+            '<p class="Paragraph" style="margin:0;font-size:10pt;line-height:17.6px">' +
+            '<span class="TextRun"><span class="NormalTextRun"></span></span>' +
+            '<span class="Selected EOP" style="background-color:rgb(96,96,96)!important;border-color:rgb(96,96,96)!important">&nbsp;</span></p>';
+        const table =
+            '<table><tr><td><div class="TableHoverRowHandle"></div>Cell</td></tr></table>';
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml:
+                '<html><body>' +
+                table +
+                emptyParagraph +
+                emptyParagraph +
+                '<p style="margin:0;font-size:10pt;line-height:17.6px">Next section<span class="Selected EOP">&nbsp;</span></p>' +
+                table +
+                emptyParagraph +
+                '<p style="margin:0;font-size:10pt;line-height:17.6px"><br><span class="Selected EOP">&nbsp;</span></p>' +
+                '</body></html>',
+        });
+
+        const root = document.getElementById(ID)!;
+        const paragraphs = Array.from(root.querySelectorAll('p'));
+        const tables = root.querySelectorAll('table');
+
+        expect(paragraphs.length).toBe(5);
+        paragraphs.forEach(paragraph => {
+            expect(paragraph.getBoundingClientRect().height).toBeGreaterThan(0);
+            expect(paragraph.querySelector('[style*="background-color"]')).toBeNull();
+        });
+        expect(paragraphs[0].textContent).toBe('\u00a0');
+        expect(paragraphs[1].textContent).toBe('\u00a0');
+        expect(paragraphs[2].textContent).toBe('Next section');
+        expect(paragraphs[3].textContent).toBe('\u00a0');
+        expect(paragraphs[4].querySelectorAll('br').length).toBe(1);
+        expect(paragraphs[4].textContent).toBe('');
+        expect(
+            paragraphs[2].getBoundingClientRect().top - tables[0].getBoundingClientRect().bottom
+        ).toBeCloseTo(
+            paragraphs[0].getBoundingClientRect().height +
+                paragraphs[1].getBoundingClientRect().height,
+            1
+        );
+        expect(paragraphs[3].getBoundingClientRect().top).toBeCloseTo(
+            tables[1].getBoundingClientRect().bottom,
+            1
+        );
+    });
+
     it('E2E', () => {
         clipboardData.rawHtml =
             '<html>\r\n<body>\r\n<!--StartFragment--><div class="OutlineElement Ltr SCXW119048576 BCX8" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: Calibri, Calibri_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><p class="Paragraph SCXW119048576 BCX8" xml:lang="EN-US" lang="EN-US" paraid="1445671679" paraeid="{56ca519d-7e7d-41fd-839e-df3f4a7a8277}{82}" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW119048576 BCX8" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; font-size: 12pt; line-height: 21.5833px; font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif;"><span class="NormalTextRun SCXW119048576 BCX8" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;">asd</span></span><span class="EOP SCXW119048576 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559685&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21.5833px; font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif;"> </span></p></div><div class="ListContainerWrapper SCXW119048576 BCX8" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: relative; color: rgb(0, 0, 0); font-family: Calibri, Calibri_MSFontService, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><ul class="BulletListStyle1 SCXW119048576 BCX8" role="list" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; list-style-type: disc; font-family: verdana;"><li data-leveltext="" data-font="Symbol" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:1,&quot;335559683&quot;:0,&quot;335559684&quot;:-2,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769226&quot;:&quot;Symbol&quot;,&quot;469769242&quot;:[8226],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr SCXW119048576 BCX8" style="margin: 0px 0px 0px 24px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr; display: block; font-size: 12pt; font-family: Calibri, Calibri_MSFontService, sans-serif; vertical-align: baseline;"><p class="Paragraph SCXW119048576 BCX8" xml:lang="EN-US" lang="EN-US" paraid="797108091" paraeid="{56ca519d-7e7d-41fd-839e-df3f4a7a8277}{26}" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW119048576 BCX8" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; font-size: 12pt; line-height: 20px; font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif;"><span class="NormalTextRun SCXW119048576 BCX8" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;">Test</span></span><span class="EOP SCXW119048576 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:0,&quot;335559740&quot;:240}" style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 20px; font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif;"> </span></p></li></ul></div><!--EndFragment-->\r\n</body>\r\n</html>';
@@ -321,6 +473,7 @@ describe(ID, () => {
                                 letterSpacing: '',
                                 lineHeight: '',
                                 strikethrough: false,
+                                superOrSubScriptFontSize: '',
                                 superOrSubScriptSequence: '',
                                 textColor: '',
                                 underline: false,

@@ -4,6 +4,16 @@
  */
 export enum ImageEditElementClass {
     /**
+     * CSS class name for the image border
+     */
+    ImageBorder = 'r_imageB',
+
+    /**
+     * CSS class and part name for keyboard crop focus targets
+     */
+    CropKeyboardTarget = 'r_cropK',
+
+    /**
      * CSS class name for resize handle
      */
     ResizeHandle = 'r_resizeH',
