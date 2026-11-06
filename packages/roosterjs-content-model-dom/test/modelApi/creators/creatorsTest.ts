@@ -269,24 +269,24 @@ describe('Creators', () => {
     });
 
     it('createText with only invisible unicode characters does not strip by default', () => {
-        const text = '\u{E0000}\u{E007F}\u{EFFFF}';
+        const text = '\u{E0000}\u{E0041}\u{E007F}';
         const result = createText(text);
 
         expect(result).toEqual({
             segmentType: 'Text',
             format: {},
-            text: '\u{E0000}\u{E007F}\u{EFFFF}',
+            text: '\u{E0000}\u{E0041}\u{E007F}',
         });
     });
 
     it('createText with invisible unicode at boundary range does not strip by default', () => {
-        const text = '\u{DFFFF}start\u{E0000}mid\u{EFFFF}end\u{F0000}';
+        const text = '\u{DFFFF}start\u{E0000}mid\u{E007F}end\u{E0080}';
         const result = createText(text);
 
         expect(result).toEqual({
             segmentType: 'Text',
             format: {},
-            text: '\u{DFFFF}start\u{E0000}mid\u{EFFFF}end\u{F0000}',
+            text: '\u{DFFFF}start\u{E0000}mid\u{E007F}end\u{E0080}',
         });
     });
 

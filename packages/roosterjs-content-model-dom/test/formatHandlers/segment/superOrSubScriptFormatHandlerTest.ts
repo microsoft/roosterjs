@@ -1,5 +1,6 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { EmptySegmentFormat } from '../../../lib/constants/EmptySegmentFormat';
 import { superOrSubScriptFormatHandler } from '../../../lib/formatHandlers/segment/superOrSubScriptFormatHandler';
 import {
     DomToModelContext,
@@ -68,6 +69,20 @@ describe('superOrSubScriptFormatHandler.parse', () => {
         expect(format.superOrSubScriptSequence).toBe('sub');
     });
 
+    it('Preserve superscript font-size inheritance when reparsing rendered HTML', () => {
+        const sup = document.createElement('sup');
+        sup.style.fontSize = 'inherit';
+        superOrSubScriptFormatHandler.parse(format, sup, context, {
+            fontSize: 'smaller',
+            verticalAlign: 'super',
+        });
+
+        expect(format).toEqual({
+            superOrSubScriptSequence: 'super',
+            superOrSubScriptFontSize: 'inherit',
+        });
+    });
+
     it('Other font size with sub/sup', () => {
         div.style.fontSize = '20px';
         div.style.verticalAlign = 'sub';
@@ -128,6 +143,28 @@ describe('superOrSubScriptFormatHandler.apply', () => {
         superOrSubScriptFormatHandler.apply(format, div, context);
 
         expect(div.outerHTML).toEqual('<div><sup></sup></div>');
+    });
+
+    it('Keep an explicitly sized segment from shrinking again inside sup/sub', () => {
+        format.superOrSubScriptSequence = 'sub super';
+        format.superOrSubScriptFontSize = 'inherit';
+        div.textContent = 'test';
+
+        superOrSubScriptFormatHandler.apply(format, div, context);
+
+        expect(div.innerHTML).toBe(
+            '<sub style="font-size: inherit;"><sup style="font-size: inherit;">test</sup></sub>'
+        );
+    });
+
+    it('Restore normal superscript sizing when segment formatting is reset', () => {
+        format.superOrSubScriptFontSize = 'inherit';
+        Object.assign(format, EmptySegmentFormat, { superOrSubScriptSequence: 'super' });
+        div.textContent = 'test';
+
+        superOrSubScriptFormatHandler.apply(format, div, context);
+
+        expect(div.innerHTML).toBe('<sup>test</sup>');
     });
 
     it('Has sub,sup and text', () => {

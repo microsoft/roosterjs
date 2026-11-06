@@ -4,6 +4,7 @@ import * as getNodePositionFromEventFile from 'roosterjs-content-model-dom/lib/d
 import * as isSingleImageInSelection from '../../../lib/corePlugin/selection/isSingleImageInSelection';
 import * as parseTableCells from 'roosterjs-content-model-dom/lib/domUtils/table/parseTableCells';
 import { createDOMHelper } from '../../../lib/editor/core/DOMHelperImpl';
+import { Editor } from '../../../lib/editor/Editor';
 import { getDOMSelection } from '../../../lib/coreApi/getDOMSelection/getDOMSelection';
 import {
     createSelectionPlugin,
@@ -20,6 +21,122 @@ import {
 } from 'roosterjs-content-model-types';
 
 const DEFAULT_DARK_COLOR_SUFFIX_COLOR = 'DarkColorMock-';
+
+describe('SelectionPlugin native range selection style', () => {
+    let contentDiv: HTMLDivElement;
+    let editor: Editor;
+
+    beforeEach(() => {
+        contentDiv = document.createElement('div');
+        document.body.appendChild(contentDiv);
+    });
+
+    afterEach(() => {
+        editor.dispose();
+        contentDiv.remove();
+    });
+
+    [false, true].forEach(inDarkMode => {
+        it(`styles programmatic range selections immediately in ${
+            inDarkMode ? 'dark' : 'light'
+        } mode`, () => {
+            editor = new Editor(contentDiv, {
+                inDarkMode,
+                textSelectionColor: 'rgba(128, 128, 128, 0.3)',
+                getDarkColor: () => 'rgba(255, 255, 255, 0.3)',
+            });
+            contentDiv.innerHTML = '<span style="color: rgb(200, 100, 50)">Selected text</span>';
+            const span = contentDiv.firstElementChild!;
+            const range = document.createRange();
+            range.selectNodeContents(span);
+
+            editor.setDOMSelection({ type: 'range', range, isReverted: false });
+
+            expect(getComputedStyle(span, '::selection').backgroundColor).toBe(
+                inDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(128, 128, 128, 0.3)'
+            );
+            expect(getComputedStyle(span, '::selection').color).toBe('rgb(200, 100, 50)');
+        });
+
+        it(`styles native range selections in ${inDarkMode ? 'dark' : 'light'} mode`, () => {
+            editor = new Editor(contentDiv, {
+                inDarkMode,
+                textSelectionColor: 'rgba(128, 128, 128, 0.3)',
+                getDarkColor: () => 'rgba(255, 255, 255, 0.3)',
+            });
+            contentDiv.innerHTML =
+                '<div>Text<span style="color: rgb(200, 100, 50)">Nested text</span></div>';
+            const span = contentDiv.querySelector('span')!;
+            const range = document.createRange();
+            range.selectNodeContents(contentDiv);
+
+            expect(getComputedStyle(contentDiv, '::selection').backgroundColor).toBe(
+                'rgba(0, 0, 0, 0)'
+            );
+
+            editor.focus();
+            editor.getDOMHelper().setSelectionRange(range);
+            document.dispatchEvent(new Event('selectionchange'));
+
+            const color = inDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(128, 128, 128, 0.3)';
+            expect(
+                getComputedStyle(contentDiv.firstElementChild!, '::selection').backgroundColor
+            ).toBe(color);
+            expect(getComputedStyle(span, '::selection').backgroundColor).toBe(color);
+            expect(getComputedStyle(span, '::selection').color).toBe('rgb(200, 100, 50)');
+            expect(getComputedStyle(document.body, '::selection').backgroundColor).toBe(
+                'rgba(0, 0, 0, 0)'
+            );
+
+            const image = document.createElement('img');
+            contentDiv.appendChild(image);
+            editor.setDOMSelection({ type: 'image', image });
+            document.dispatchEvent(new Event('selectionchange'));
+            expect(getComputedStyle(image, '::selection').backgroundColor).toBe('rgba(0, 0, 0, 0)');
+
+            editor.setDOMSelection({ type: 'range', range, isReverted: false });
+            document.dispatchEvent(new Event('selectionchange'));
+            expect(getComputedStyle(span, '::selection').backgroundColor).toBe(color);
+
+            const table = document.createElement('table');
+            const cell = table.insertRow().insertCell();
+            cell.textContent = 'Cell text';
+            contentDiv.appendChild(table);
+            editor.setDOMSelection({
+                type: 'table',
+                table,
+                firstRow: 0,
+                lastRow: 0,
+                firstColumn: 0,
+                lastColumn: 0,
+            });
+            document.dispatchEvent(new Event('selectionchange'));
+            expect(getComputedStyle(cell, '::selection').backgroundColor).toBe('rgba(0, 0, 0, 0)');
+            expect(getComputedStyle(cell).backgroundColor).toBe('rgb(198, 198, 198)');
+        });
+
+        it(`uses browser defaults without a text selection color in ${
+            inDarkMode ? 'dark' : 'light'
+        } mode`, () => {
+            editor = new Editor(contentDiv, { inDarkMode });
+            const span = document.createElement('span');
+            span.textContent = 'Selected text';
+            contentDiv.appendChild(span);
+            const defaultStyle = getComputedStyle(span, '::selection');
+            const defaultBackground = defaultStyle.backgroundColor;
+            const defaultColor = defaultStyle.color;
+            const range = document.createRange();
+            range.selectNodeContents(span);
+
+            editor.focus();
+            editor.getDOMHelper().setSelectionRange(range);
+            document.dispatchEvent(new Event('selectionchange'));
+
+            expect(getComputedStyle(span, '::selection').backgroundColor).toBe(defaultBackground);
+            expect(getComputedStyle(span, '::selection').color).toBe(defaultColor);
+        });
+    });
+});
 
 describe('SelectionPlugin', () => {
     it('init and dispose', () => {
@@ -66,6 +183,7 @@ describe('SelectionPlugin', () => {
         const plugin = createSelectionPlugin({
             imageSelectionBorderColor: 'red',
             tableCellSelectionBackgroundColor: 'blue',
+            textSelectionColor: 'rgba(128, 128, 128, 0.3)',
         });
         const state = plugin.getState();
         const addEventListenerSpy = jasmine.createSpy('addEventListener');
@@ -92,6 +210,8 @@ describe('SelectionPlugin', () => {
             tableCellSelectionBackgroundColor: 'blue',
             imageSelectionBorderColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}red`,
             tableCellSelectionBackgroundColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}blue`,
+            textSelectionColor: 'rgba(128, 128, 128, 0.3)',
+            textSelectionColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}rgba(128, 128, 128, 0.3)`,
             tableSelection: null,
         });
 
@@ -104,6 +224,7 @@ describe('SelectionPlugin', () => {
         const plugin = createSelectionPlugin({
             imageSelectionBorderColor: 'transparent',
             tableCellSelectionBackgroundColor: 'transparent',
+            textSelectionColor: 'transparent',
         });
         const state = plugin.getState();
         const addEventListenerSpy = jasmine.createSpy('addEventListener');
@@ -130,6 +251,8 @@ describe('SelectionPlugin', () => {
             tableCellSelectionBackgroundColor: 'transparent',
             imageSelectionBorderColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}transparent`,
             tableCellSelectionBackgroundColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}transparent`,
+            textSelectionColor: 'transparent',
+            textSelectionColorDark: `${DEFAULT_DARK_COLOR_SUFFIX_COLOR}transparent`,
             tableSelection: null,
         });
 
@@ -3366,6 +3489,8 @@ describe('SelectionPlugin on Safari', () => {
         });
 
         editor = ({
+            isDarkMode: () => false,
+            setEditorStyle: jasmine.createSpy('setEditorStyle'),
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({
@@ -3616,6 +3741,8 @@ describe('SelectionPlugin selectionChange on image selected', () => {
     let getRangeAtSpy: jasmine.Spy;
     let getSelectionSpy: jasmine.Spy;
     let mockedRange: Range;
+    let isDarkModeSpy: jasmine.Spy;
+    let setEditorStyleSpy: jasmine.Spy;
 
     beforeEach(() => {
         disposer = jasmine.createSpy('disposer');
@@ -3650,8 +3777,12 @@ describe('SelectionPlugin selectionChange on image selected', () => {
         getDOMHelperSpy = jasmine.createSpy('getDOMHelper').and.returnValue({
             getSelectionRange: () => mockedRange,
         });
+        isDarkModeSpy = jasmine.createSpy('isDarkMode').and.returnValue(false);
+        setEditorStyleSpy = jasmine.createSpy('setEditorStyle');
 
         editor = ({
+            isDarkMode: isDarkModeSpy,
+            setEditorStyle: setEditorStyleSpy,
             getDocument: getDocumentSpy,
             attachDomEvent,
             getEnvironment: () => ({
@@ -3697,6 +3828,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             isReverted: true,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
     });
 
     it('onSelectionChange on image | 2', () => {
@@ -3729,6 +3861,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
 
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
     });
 
     it('onSelectionChange on image | 3', () => {
@@ -3760,6 +3893,7 @@ describe('SelectionPlugin selectionChange on image selected', () => {
 
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
     });
 
     it('onSelectionChange on image | 4', () => {
@@ -3795,6 +3929,100 @@ describe('SelectionPlugin selectionChange on image selected', () => {
             image,
         });
         expect(getDOMSelectionSpy).toHaveBeenCalledTimes(1);
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
+    });
+
+    it('styles a range selection in dark mode without resetting the DOM selection', () => {
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+        const plugin = createSelectionPlugin({});
+        plugin.initialize(editor);
+        const state = plugin.getState();
+        state.textSelectionColor = 'rgba(128, 128, 128, 0.3)';
+        state.textSelectionColorDark = 'rgba(255, 255, 255, 0.3)';
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        isDarkModeSpy.and.returnValue(true);
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: mockedRange,
+            isReverted: false,
+        });
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as () => void;
+        onSelectionChange();
+
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+        expect(setEditorStyleSpy.calls.first().args).toEqual(['_RangeSelection', null]);
+        expect(setEditorStyleSpy).toHaveBeenCalledTimes(2);
+        expect(setEditorStyleSpy).toHaveBeenCalledWith(
+            '_RangeSelection',
+            'background-color: rgba(255, 255, 255, 0.3) !important; color: currentColor !important;',
+            ['*::selection']
+        );
+
+        isDarkModeSpy.and.returnValue(false);
+        onSelectionChange();
+        expect(setEditorStyleSpy.calls.mostRecent().args).toEqual([
+            '_RangeSelection',
+            'background-color: rgba(128, 128, 128, 0.3) !important; color: currentColor !important;',
+            ['*::selection'],
+        ]);
+
+        state.textSelectionColor = undefined;
+        setEditorStyleSpy.calls.reset();
+        onSelectionChange();
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
+
+        state.textSelectionColorDark = undefined;
+        isDarkModeSpy.and.returnValue(true);
+        setEditorStyleSpy.calls.reset();
+        onSelectionChange();
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
+    });
+
+    it('clears range styles when the native selection collapses', () => {
+        spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+        const plugin = createSelectionPlugin({});
+        plugin.initialize(editor);
+        plugin.getState().textSelectionColor = 'red';
+        hasFocusSpy.and.returnValue(true);
+        isInShadowEditSpy.and.returnValue(false);
+        const range = document.createRange();
+        getDOMSelectionSpy.and.returnValue({ type: 'range', range, isReverted: false });
+        getDOMHelperSpy.and.returnValue({ getSelectionRange: () => range });
+
+        const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as () => void;
+        onSelectionChange();
+
+        expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    [
+        { name: 'unfocused editor', hasFocus: false, isInShadowEdit: false, type: 'range' },
+        { name: 'shadow edit', hasFocus: true, isInShadowEdit: true, type: 'range' },
+        { name: 'table selection', hasFocus: true, isInShadowEdit: false, type: 'table' },
+        { name: 'null selection', hasFocus: true, isInShadowEdit: false, type: null },
+    ].forEach(testCase => {
+        it(`does not apply range styles for ${testCase.name}`, () => {
+            spyOn(isSingleImageInSelection, 'isSingleImageInSelection').and.returnValue(null);
+            const plugin = createSelectionPlugin({});
+            plugin.initialize(editor);
+            hasFocusSpy.and.returnValue(testCase.hasFocus);
+            isInShadowEditSpy.and.returnValue(testCase.isInShadowEdit);
+            getDOMSelectionSpy.and.returnValue(
+                testCase.type ? { type: testCase.type, range: mockedRange } : null
+            );
+
+            const onSelectionChange = addEventListenerSpy.calls.argsFor(0)[1] as () => void;
+            onSelectionChange();
+
+            if (testCase.hasFocus && !testCase.isInShadowEdit) {
+                expect(setEditorStyleSpy.calls.allArgs()).toEqual([['_RangeSelection', null]]);
+            } else {
+                expect(setEditorStyleSpy).not.toHaveBeenCalled();
+            }
+        });
     });
 
     it('onSelectionChange on image | 5, keeps image selection when range is collapsed', () => {

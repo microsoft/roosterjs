@@ -1890,6 +1890,7 @@ describe('Google Sheets E2E', () => {
                                 letterSpacing: '',
                                 lineHeight: '',
                                 strikethrough: false,
+                                superOrSubScriptFontSize: '',
                                 superOrSubScriptSequence: '',
                                 underline: false,
                             },

@@ -6,13 +6,18 @@ describe('stripInvisibleUnicode', () => {
     });
 
     it('should strip all characters when input contains only invisible unicode', () => {
-        expect(stripInvisibleUnicode('\u{E0000}\u{E007F}\u{EFFFF}')).toBe('');
+        expect(stripInvisibleUnicode('\u{E0000}\u{E0041}\u{E007F}')).toBe('');
     });
 
-    it('should strip characters at range boundaries (U+E0000 and U+EFFFF)', () => {
-        expect(stripInvisibleUnicode('\u{DFFFF}start\u{E0000}mid\u{EFFFF}end\u{F0000}')).toBe(
-            '\u{DFFFF}startmidend\u{F0000}'
+    it('should strip characters at range boundaries (U+E0000 and U+E007F)', () => {
+        expect(stripInvisibleUnicode('\u{DFFFF}start\u{E0000}mid\u{E007F}end\u{E0080}')).toBe(
+            '\u{DFFFF}startmidend\u{E0080}'
         );
+    });
+
+    it('should preserve characters above the tag range, including variation selectors', () => {
+        const text = '\u{E0080}\u{E0100}\u{E01EF}\u{EFFFF}\u{F0000}';
+        expect(stripInvisibleUnicode(text)).toBe(text);
     });
 
     it('should preserve meaningful invisible characters outside the tag range', () => {
@@ -37,8 +42,8 @@ describe('stripInvisibleUnicode', () => {
         expect(stripInvisibleUnicode('')).toBe('');
     });
 
-    it('should handle a long sequence of tag characters', () => {
-        const tags = Array.from({ length: 100 }, (_, i) => String.fromCodePoint(0xe0000 + i)).join(
+    it('should strip every character in the tag range', () => {
+        const tags = Array.from({ length: 128 }, (_, i) => String.fromCodePoint(0xe0000 + i)).join(
             ''
         );
         expect(stripInvisibleUnicode('before' + tags + 'after')).toBe('beforeafter');
