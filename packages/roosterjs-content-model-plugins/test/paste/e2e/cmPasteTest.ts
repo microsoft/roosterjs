@@ -226,6 +226,7 @@ describe(ID, () => {
                                 letterSpacing: '',
                                 lineHeight: '',
                                 strikethrough: false,
+                                superOrSubScriptFontSize: '',
                                 superOrSubScriptSequence: '',
                                 textColor: '',
                                 underline: false,
