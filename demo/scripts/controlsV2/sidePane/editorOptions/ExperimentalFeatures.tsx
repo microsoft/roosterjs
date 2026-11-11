@@ -15,6 +15,7 @@ export class ExperimentalFeatures extends React.Component<DefaultFormatProps, {}
                 {this.renderFeature('ShadowDom')}
                 {this.renderFeature('FilterInvisibleUnicode')}
                 {this.renderFeature('HandleDropInternalContent')}
+                {this.renderFeature('WordLikeStyles')}
             </>
         );
     }
