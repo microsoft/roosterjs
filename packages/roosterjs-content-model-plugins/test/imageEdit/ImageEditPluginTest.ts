@@ -524,7 +524,7 @@ describe('ImageEditPlugin', () => {
         expect(editor.setEditorStyle).toHaveBeenCalledWith(
             'imageEdit',
             'outline-style:none!important;',
-            ['span:has(>img[id="0"])']
+            ['.r_imageEditHost']
         );
     });
 
@@ -806,7 +806,7 @@ describe('ImageEditPlugin', () => {
         expect(editor.setEditorStyle).toHaveBeenCalledWith(
             'imageEdit',
             'outline-style:none!important;',
-            ['span:has(>img#image_0)']
+            ['.r_imageEditHost']
         );
         expect(editor.setEditorStyle).toHaveBeenCalledWith(
             'imageEditCaretColor',
@@ -1050,7 +1050,7 @@ describe('ImageEditPlugin - applyFormatWithContentModel', () => {
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 'imageEdit',
                 'outline-style:none!important;',
-                [`span:has(>img)`]
+                ['.r_imageEditHost']
             );
             expect(setEditorStyleSpy).toHaveBeenCalledWith(
                 'imageEditCaretColor',
