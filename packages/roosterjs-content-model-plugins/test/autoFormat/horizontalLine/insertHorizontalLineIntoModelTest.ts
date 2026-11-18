@@ -2,10 +2,7 @@ import * as addBlockFile from 'roosterjs-content-model-dom/lib/modelApi/common/a
 import * as createContentModelDocumentFile from 'roosterjs-content-model-dom/lib/modelApi/creators/createContentModelDocument';
 import * as createDividerFile from 'roosterjs-content-model-dom/lib/modelApi/creators/createDivider';
 import * as mergeModelFile from 'roosterjs-content-model-dom/lib/modelApi/editing/mergeModel';
-import {
-    insertHorizontalLineIntoModel,
-    checkAndInsertHorizontalLine,
-} from '../../../lib/autoFormat/horizontalLine/checkAndInsertHorizontalLine';
+import { checkAndInsertHorizontalLine } from '../../../lib/autoFormat/horizontalLine/checkAndInsertHorizontalLine';
 import {
     addBlock,
     createContentModelDocument,
@@ -17,6 +14,7 @@ import {
 } from 'roosterjs-content-model-dom';
 import {
     FormatContentModelContext,
+    ContentModelParagraph,
     ShallowMutableContentModelDocument,
 } from 'roosterjs-content-model-types';
 
@@ -25,23 +23,26 @@ const commonStyles = {
     display: 'inline-block',
 };
 
-describe('insertHorizontalLineIntoModel', () => {
+describe('checkAndInsertHorizontalLine', () => {
     let model: ShallowMutableContentModelDocument;
     let context: FormatContentModelContext;
+    let paragraph: ContentModelParagraph;
 
     beforeEach(() => {
         model = createContentModelDocument();
-        addBlock(model, {
-            blockType: 'Paragraph',
-            segments: [createSelectionMarker()],
-            format: {},
-        });
+        paragraph = createParagraph();
+        paragraph.segments.push(createSelectionMarker());
+        addBlock(model, paragraph);
         context = {} as FormatContentModelContext;
     });
 
     it('should insert a horizontal line into the model', () => {
-        insertHorizontalLineIntoModel(model, context, '#');
+        paragraph.segments.unshift(createText('###'));
+        const result = checkAndInsertHorizontalLine(model, paragraph, context);
 
+        expect(result).toBe(true);
+        expect(context.canUndoByBackspace).toBe(true);
+        expect(paragraph.segments.some(segment => segment.segmentType == 'Text')).toBe(false);
         expect(model.blocks.length).toBe(2);
         expect(model.blocks[0].blockType).toBe('Divider');
         expect((model.blocks[0] as any).tagName).toBe('hr');
@@ -56,7 +57,8 @@ describe('insertHorizontalLineIntoModel', () => {
         const mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => null);
         const addBlockSpy = spyOn(addBlockFile, 'addBlock').and.callFake(() => {});
 
-        insertHorizontalLineIntoModel(model, context, '-');
+        paragraph.segments.unshift(createText('---'));
+        checkAndInsertHorizontalLine(model, paragraph, context);
 
         expect(createDividerSpy).toHaveBeenCalledWith('hr', {
             borderTop: '1px none',
@@ -79,7 +81,8 @@ describe('insertHorizontalLineIntoModel', () => {
         const mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => null);
         const addBlockSpy = spyOn(addBlockFile, 'addBlock').and.callFake(() => {});
 
-        insertHorizontalLineIntoModel(model, context, '=');
+        paragraph.segments.unshift(createText('==='));
+        checkAndInsertHorizontalLine(model, paragraph, context);
 
         expect(createDividerSpy).toHaveBeenCalledWith(
             'hr',
@@ -106,7 +109,8 @@ describe('insertHorizontalLineIntoModel', () => {
         const mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => null);
         const addBlockSpy = spyOn(addBlockFile, 'addBlock').and.callFake(() => {});
 
-        insertHorizontalLineIntoModel(model, context, '_');
+        paragraph.segments.unshift(createText('___'));
+        checkAndInsertHorizontalLine(model, paragraph, context);
 
         expect(createDividerSpy).toHaveBeenCalledWith('hr', {
             borderTop: '1px solid',
@@ -129,7 +133,8 @@ describe('insertHorizontalLineIntoModel', () => {
         const mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => null);
         const addBlockSpy = spyOn(addBlockFile, 'addBlock').and.callFake(() => {});
 
-        insertHorizontalLineIntoModel(model, context, '*');
+        paragraph.segments.unshift(createText('***'));
+        checkAndInsertHorizontalLine(model, paragraph, context);
 
         expect(createDividerSpy).toHaveBeenCalledWith(
             'hr',
@@ -156,7 +161,8 @@ describe('insertHorizontalLineIntoModel', () => {
         const mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => null);
         const addBlockSpy = spyOn(addBlockFile, 'addBlock').and.callFake(() => {});
 
-        insertHorizontalLineIntoModel(model, context, '~');
+        paragraph.segments.unshift(createText('~~~'));
+        checkAndInsertHorizontalLine(model, paragraph, context);
 
         expect(createDividerSpy).toHaveBeenCalledWith(
             'hr',
@@ -183,7 +189,8 @@ describe('insertHorizontalLineIntoModel', () => {
         const mergeModelSpy = spyOn(mergeModelFile, 'mergeModel').and.callFake(() => null);
         const addBlockSpy = spyOn(addBlockFile, 'addBlock').and.callFake(() => {});
 
-        insertHorizontalLineIntoModel(model, context, '#');
+        paragraph.segments.unshift(createText('###'));
+        checkAndInsertHorizontalLine(model, paragraph, context);
 
         expect(createDividerSpy).toHaveBeenCalledWith('hr', {
             borderTop: '3pt double',
