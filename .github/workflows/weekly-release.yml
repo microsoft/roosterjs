@@ -1,0 +1,134 @@
+name: Weekly release PR
+
+on:
+    schedule:
+        - cron: '0 9 * * 5'
+          timezone: 'America/Los_Angeles'
+    workflow_dispatch:
+
+permissions:
+    contents: write
+    pull-requests: write
+
+concurrency:
+    group: weekly-release-pr
+    cancel-in-progress: false
+
+jobs:
+    prepare-release:
+        if: github.ref == 'refs/heads/master'
+        runs-on: ubuntu-latest
+        timeout-minutes: 60
+        env:
+            GH_TOKEN: ${{ github.token }}
+            GH_REPO: ${{ github.repository }}
+            BASE: release
+            SOURCE: master
+
+        steps:
+            - name: Checkout master
+              uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  ref: master
+                  fetch-depth: 0
+                  persist-credentials: false
+
+            - name: Check whether preparation is needed
+              id: check
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  existing=$(gh pr list --repo "$GH_REPO" --base "$BASE" --state open \
+                    --limit 1000 --json headRefName \
+                    --jq '[.[] | select(.headRefName == "master" or (.headRefName | startswith("automation/weekly-release-")))] | length')
+                  if [ "$existing" -gt 0 ]; then
+                    echo "A release preparation PR is already open." >> "$GITHUB_STEP_SUMMARY"
+                    exit 0
+                  fi
+                  if [ "$(git rev-list --count "origin/$BASE..origin/$SOURCE")" -eq 0 ]; then
+                    echo "No unreleased commits." >> "$GITHUB_STEP_SUMMARY"
+                    exit 0
+                  fi
+                  echo "needed=true" >> "$GITHUB_OUTPUT"
+
+            - name: Set Node version
+              if: steps.check.outputs.needed == 'true'
+              uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+              with:
+                  node-version: '24'
+
+            - name: Install dependencies
+              if: steps.check.outputs.needed == 'true'
+              run: yarn --frozen-lockfile
+
+            - name: Snapshot released declarations
+              if: steps.check.outputs.needed == 'true'
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  cp tools/weeklyRelease.js "$RUNNER_TEMP/weeklyRelease.js"
+                  git worktree add --detach "$RUNNER_TEMP/weekly-release-baseline" "origin/$BASE"
+                  ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/weekly-release-baseline/node_modules"
+                  node "$RUNNER_TEMP/weeklyRelease.js" snapshot \
+                    "$RUNNER_TEMP/weekly-release-baseline" "$RUNNER_TEMP/weekly-release-baseline.json"
+
+            - name: Merge master into a preparation branch
+              if: steps.check.outputs.needed == 'true'
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  branch="automation/weekly-release-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+                  echo "RELEASE_BRANCH=$branch" >> "$GITHUB_ENV"
+                  git switch -c "$branch" "origin/$BASE"
+                  # Conflicts require human resolution; never automatically prefer one side.
+                  git merge --no-ff --no-edit "origin/$SOURCE"
+
+            - name: Install merged dependencies
+              if: steps.check.outputs.needed == 'true'
+              run: yarn --frozen-lockfile
+
+            - name: Recommend and update versions
+              if: steps.check.outputs.needed == 'true'
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  node "$RUNNER_TEMP/weeklyRelease.js" prepare \
+                    "$RUNNER_TEMP/weekly-release-baseline.json" "$RUNNER_TEMP/weekly-release-pr.md"
+                  cat "$RUNNER_TEMP/weekly-release-pr.md" >> "$GITHUB_STEP_SUMMARY"
+
+            - name: Build and lint
+              if: steps.check.outputs.needed == 'true'
+              run: yarn build
+
+            - name: Test
+              if: steps.check.outputs.needed == 'true'
+              run: xvfb-run --auto-servernum yarn test:fast
+
+            - name: Push branch and open draft PR
+              if: steps.check.outputs.needed == 'true'
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  git diff --check
+                  git add versions.json
+                  if ! git diff --cached --quiet; then
+                    git -c core.hooksPath=/dev/null commit -m "Update recommended release versions"
+                  fi
+                  gh auth setup-git
+                  git push origin "HEAD:refs/heads/$RELEASE_BRANCH"
+                  gh pr create --repo "$GH_REPO" --draft --base "$BASE" --head "$RELEASE_BRANCH" \
+                    --title "Prepare weekly release" --body-file "$RUNNER_TEMP/weekly-release-pr.md"
+
+            - name: Report failure
+              if: failure()
+              run: echo "::error::Release preparation failed. Check the failed step; no release was published."
+
+            - name: Remove baseline worktree
+              if: always() && steps.check.outputs.needed == 'true'
+              shell: bash
+              run: |
+                  if [ -d "$RUNNER_TEMP/weekly-release-baseline" ]; then
+                    git worktree remove --force "$RUNNER_TEMP/weekly-release-baseline"
+                  fi

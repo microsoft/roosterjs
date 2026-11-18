@@ -18,6 +18,30 @@ To view the demo site, please click the link below:
 
 Please see [here](https://github.com/microsoft/roosterjs/wiki/RoosterJs-9).
 
+## Weekly release preparation
+
+The [weekly release workflow](.github/workflows/weekly-release.yml) runs on Fridays at
+09:00 Seattle time (`America/Los_Angeles`, automatically adjusting for daylight saving time),
+or manually from `master`. Scheduled runs may be delayed.
+It creates a preparation branch from `release`, merges `master`, recommends versions in
+[versions.json](versions.json), runs build/lint/tests, and opens a draft PR targeting `release`.
+An existing preparation PR prevents another one from being created. Merge conflicts,
+unsupported release versions, and per-package version overrides require manual preparation.
+
+Recommendations compare TypeScript declarations: changed/removed declarations suggest major,
+additions suggest minor, and implementation-only changes suggest patch. This deliberately
+includes internal declarations and propagates the main group's bump to dependent groups,
+so it can overestimate bumps. It cannot reliably identify behavioral breaking changes.
+Reviewers must check the evidence and adjust versions on the preparation branch before
+merging. Versions start from `release`, not the development placeholders on `master`.
+Groups at `0.0.0` remain unpublished. Merging triggers the existing publish workflow;
+preparation never publishes or merges automatically.
+
+Enable Actions to create pull requests in repository settings (organization policy must
+also permit this). PR workflows triggered by `GITHUB_TOKEN` may require approval to run.
+This workflow can also exist on `release`: its schedule runs only from the default branch,
+and its job guard prevents manual execution from branches other than `master`.
+
 ## Features
 
 ### Packages
