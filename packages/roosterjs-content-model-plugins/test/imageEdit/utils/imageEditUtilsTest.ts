@@ -63,7 +63,7 @@ describe('imageEditUtils', () => {
             const image = document.createElement('img');
             image.style.borderStyle = 'dotted';
             image.style.borderWidth = '1px';
-            setWrapperSizeDimensions(wrapper, image, 10, 10, false);
+            setWrapperSizeDimensions(wrapper, image, 10, 10);
             expect(wrapper.style.width).toBe('12px');
             expect(wrapper.style.height).toBe('12px');
         });
@@ -71,12 +71,12 @@ describe('imageEditUtils', () => {
         it('without border style', () => {
             const wrapper = document.createElement('span');
             const image = document.createElement('img');
-            setWrapperSizeDimensions(wrapper, image, 10, 10, false);
+            setWrapperSizeDimensions(wrapper, image, 10, 10);
             expect(wrapper.style.width).toBe('10px');
             expect(wrapper.style.height).toBe('10px');
         });
 
-        it('with border style during rotation', () => {
+        it('uses the supplied dimensions rather than the original image size with borders', () => {
             const wrapper = document.createElement('span');
             const image = document.createElement('img');
             image.style.borderStyle = 'dotted';
@@ -84,10 +84,9 @@ describe('imageEditUtils', () => {
             image.style.width = '20px';
             image.style.height = '15px';
 
-            // During rotation, should use image.style dimensions instead of provided width/height
-            setWrapperSizeDimensions(wrapper, image, 10, 10, true);
-            expect(wrapper.style.width).toBe('22px'); // 20 + 2 (border width)
-            expect(wrapper.style.height).toBe('17px'); // 15 + 2 (border width)
+            setWrapperSizeDimensions(wrapper, image, 10, 10);
+            expect(wrapper.style.width).toBe('12px');
+            expect(wrapper.style.height).toBe('12px');
         });
 
         it('with border style but no explicit border width', () => {
@@ -95,15 +94,17 @@ describe('imageEditUtils', () => {
             const image = document.createElement('img');
             image.style.borderStyle = 'dotted';
             // No borderWidth set, should default to 2px
-            setWrapperSizeDimensions(wrapper, image, 10, 10, false);
+            setWrapperSizeDimensions(wrapper, image, 10, 10);
             expect(wrapper.style.width).toBe('12px'); // 10 + 2 (default border width)
             expect(wrapper.style.height).toBe('12px'); // 10 + 2 (default border width)
         });
 
-        it('without border style during rotation', () => {
+        it('uses the supplied dimensions rather than the original image size without borders', () => {
             const wrapper = document.createElement('span');
             const image = document.createElement('img');
-            setWrapperSizeDimensions(wrapper, image, 10, 10, true);
+            image.style.width = '20px';
+            image.style.height = '15px';
+            setWrapperSizeDimensions(wrapper, image, 10, 10);
             expect(wrapper.style.width).toBe('10px');
             expect(wrapper.style.height).toBe('10px');
         });
