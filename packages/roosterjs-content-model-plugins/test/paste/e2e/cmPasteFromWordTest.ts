@@ -37,6 +37,183 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    [false, true].forEach(classlessFirst => {
+        itChromeOnly(
+            'E2E align Word list paragraphs with mixed class and inline indentation' +
+                (classlessFirst ? ' starting classless' : ' starting classed'),
+            () => {
+                const classed =
+                    '<p class="MsoListParagraph" style="mso-list:l0 level1 lfo1"><span>First item</span></p>';
+                const classless = `<p style="margin-left:${
+                    classlessFirst ? '36pt' : '.5in'
+                };text-indent:-.25in;mso-list:l0 level1 lfo1"><span>Second item</span></p>`;
+
+                paste(editor, {
+                    types: ['text/html'],
+                    text: '',
+                    image: null,
+                    customValues: {},
+                    rawHtml: `<html><head>
+                        <meta name="ProgId" content="Word.Document">
+                        <style>
+                            p.MsoListParagraph { margin:0 0 8pt .5in; font-family:Calibri, sans-serif; }
+                            @list l0:level1 { mso-level-number-format:bullet; }
+                            @list l0:level3 { mso-level-number-format:bullet; mso-level-text: \\F0A7; }
+                        </style>
+                        </head><body><!--StartFragment-->
+                        ${classlessFirst ? classless + classed : classed + classless}
+                        <p style="margin-left:36pt;text-indent:-18pt;mso-list:l0 level1 lfo1"><span>Third item</span></p>
+                        <p class="MsoListParagraph" style="margin-left:1.5in;text-indent:-.25in;mso-list:l0 level3 lfo1"><span>Nested item</span></p>
+                        <!--EndFragment--></body></html>`,
+                });
+
+                const items = Array.from(document.getElementById(ID)!.querySelectorAll('li'));
+                const getTextLeft = (item: HTMLElement) => {
+                    const range = document.createRange();
+                    range.selectNodeContents(item);
+                    return range.getBoundingClientRect().left;
+                };
+
+                expect(items.length).toBe(4);
+                expect(getComputedStyle(items[0].parentElement!).paddingLeft).toBe('40px');
+                items.slice(1, 3).forEach(item => {
+                    expect(item.parentElement).toBe(items[0].parentElement);
+                    expect(item.getBoundingClientRect().left).toBeCloseTo(
+                        items[0].getBoundingClientRect().left,
+                        1
+                    );
+                    expect(getTextLeft(item)).toBeCloseTo(getTextLeft(items[0]), 1);
+                });
+                expect(getTextLeft(items[3])).toBeGreaterThan(getTextLeft(items[0]));
+                expect(getComputedStyle(items[3].parentElement!).paddingLeft).toBe('40px');
+            }
+        );
+    });
+
+    itChromeOnly('E2E retain custom Word list indentation and non-list margins', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head>
+                <meta name="ProgId" content="Word.Document">
+                <style>
+                    p.MsoListParagraph { margin:0 0 8pt .5in; }
+                    @list l0:level1 { mso-level-number-format:bullet; }
+                </style>
+                </head><body><!--StartFragment-->
+                <p class="MsoListParagraph" style="mso-list:l0 level1 lfo1">Default item</p>
+                <p style="margin-left:1in;mso-list:l0 level1 lfo1">Custom item</p>
+                <p style="margin-left:.5in">Not a list</p>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const items = Array.from(root.querySelectorAll('li'));
+        const paragraph = root.querySelector('p')!;
+
+        expect(items.length).toBe(2);
+        expect(
+            items[1].getBoundingClientRect().left - items[0].getBoundingClientRect().left
+        ).toBeCloseTo(96, 1);
+        expect(
+            paragraph.getBoundingClientRect().left - root.getBoundingClientRect().left
+        ).toBeCloseTo(48, 1);
+    });
+
+    itChromeOnly('E2E preserve Word line spacing on lists and inline text', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head>
+                <meta name="ProgId" content="Word.Document">
+                <style>
+                    p.MsoNormal { margin: 0; line-height: 107%; font-size: 11pt; font-family: Calibri, sans-serif; }
+                    p.MsoListParagraphCxSpFirst, p.MsoListParagraphCxSpMiddle {
+                        margin: 0 0 0 .5in; line-height: 107%; font-size: 11pt; font-family: Calibri, sans-serif;
+                    }
+                    p.MsoListParagraphCxSpLast {
+                        margin: 0 0 8pt .5in; line-height: 107%; font-size: 11pt; font-family: Calibri, sans-serif;
+                    }
+                    @list l0:level1 { mso-level-number-format: bullet; }
+                    @list l0:level3 { mso-level-number-format: bullet; mso-level-text: \\F0A7; }
+                </style>
+                </head><body><!--StartFragment-->
+                <p class="MsoNormal"><span style="font-size:12pt;line-height:107%">Before list</span></p>
+                <p class="MsoListParagraphCxSpFirst" style="mso-list:l0 level1 lfo1">
+                    <span style="font:12pt Symbol;line-height:107%;mso-list:Ignore">x</span><span style="font-size:12pt;line-height:107%">First item<br>Wrapped line</span>
+                </p>
+                <p class="MsoListParagraphCxSpMiddle" style="margin-left:1.5in;mso-list:l0 level3 lfo1">
+                    <span style="font:12pt Wingdings;line-height:107%;mso-list:Ignore">x</span><span style="font-size:12pt;line-height:107%">Nested item</span>
+                </p>
+                <p class="MsoListParagraphCxSpLast" style="mso-list:l0 level1 lfo1">
+                    <span style="font:12pt Symbol;line-height:107%;mso-list:Ignore">x</span><span style="font-size:12pt;line-height:107%">Last item</span>
+                </p>
+                <p class="MsoNormal"><span style="font-size:12pt;line-height:107%">After list</span></p>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const items = Array.from(root.querySelectorAll('li'));
+        const spans = Array.from(root.querySelectorAll('span')).filter(
+            span => !!span.textContent?.trim()
+        );
+
+        expect(items.length).toBe(3);
+        [...items, ...spans].forEach(element => {
+            const style = getComputedStyle(element);
+
+            expect(parseFloat(style.lineHeight) / parseFloat(style.fontSize))
+                .withContext(element.textContent || '')
+                .toBeCloseTo(1.284, 3);
+        });
+        expect(getComputedStyle(items[0]).marginBottom).toBe('0px');
+        expect(getComputedStyle(items[1]).marginBottom).toBe('0px');
+        expect(parseFloat(getComputedStyle(items[2]).marginBottom)).toBeCloseTo(10.6667, 3);
+        expect(getComputedStyle(items[1].parentElement!).paddingLeft).toBe('40px');
+        expect(items[1].parentElement!.parentElement!.tagName).toBe('UL');
+
+        const range = document.createRange();
+        range.selectNodeContents(spans[1]);
+        const lineTops = Array.from(
+            new Set(Array.from(range.getClientRects()).map(rect => rect.top))
+        );
+
+        expect(lineTops.length).toBe(2);
+        expect(lineTops[1] - lineTops[0]).toBeGreaterThanOrEqual(16 * 1.284 - 0.1);
+        expect(lineTops[1] - lineTops[0]).toBeLessThan(16 * 1.284 + 2);
+        expect(root.querySelectorAll('p').length).toBe(2);
+    });
+
+    itChromeOnly('E2E keep explicit Word list gaps and non-percentage line heights', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head>
+                <meta name="ProgId" content="Word.Document">
+                <style>@list l0:level1 { mso-level-number-format: bullet; }</style>
+                </head><body><!--StartFragment-->
+                <p style="margin:0 0 6pt;line-height:24pt;mso-list:l0 level1 lfo1"><span style="line-height:24pt">Exact spacing</span></p>
+                <p style="margin:0;line-height:1.5;mso-list:l0 level1 lfo1"><span style="line-height:1.5">Unitless spacing</span></p>
+                <p style="margin:0;line-height:normal;mso-list:l0 level1 lfo1"><span style="line-height:normal">Normal spacing</span></p>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const items = Array.from(document.getElementById(ID)!.querySelectorAll('li'));
+
+        expect(getComputedStyle(items[0]).lineHeight).toBe('32px');
+        expect(getComputedStyle(items[0]).marginBottom).toBe('8px');
+        expect(items[1].style.lineHeight).toBe('1.5');
+        expect(items[2].style.lineHeight).toBe('120%');
+        expect(getComputedStyle(items[1]).marginBottom).toBe('0px');
+        expect(getComputedStyle(items[2]).marginBottom).toBe('0px');
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],
@@ -994,7 +1171,7 @@ describe(ID, () => {
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '115%' },
+                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '1.38' },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -1038,7 +1215,7 @@ describe(ID, () => {
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '115%' },
+                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '1.38' },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -1082,7 +1259,7 @@ describe(ID, () => {
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '115%' },
+                    format: { marginTop: '0cm', marginBottom: '0cm', lineHeight: '1.38' },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -1138,7 +1315,7 @@ describe(ID, () => {
                     format: {
                         marginTop: '0cm',
                         marginBottom: '0cm',
-                        lineHeight: '115%',
+                        lineHeight: '1.38',
                     },
                     blockGroupType: 'ListItem',
                     blocks: [
@@ -1194,7 +1371,7 @@ describe(ID, () => {
                     format: {
                         marginTop: '0cm',
                         marginBottom: '0cm',
-                        lineHeight: '115%',
+                        lineHeight: '1.38',
                     },
                     blockGroupType: 'ListItem',
                     blocks: [
@@ -1239,7 +1416,7 @@ describe(ID, () => {
                         },
                     ],
                     blockType: 'BlockGroup',
-                    format: { marginTop: '0cm', marginBottom: '8pt', lineHeight: '115%' },
+                    format: { marginTop: '0cm', marginBottom: '8pt', lineHeight: '1.38' },
                     blockGroupType: 'ListItem',
                     blocks: [
                         {
@@ -1372,7 +1549,7 @@ describe(ID, () => {
                                                 },
                                             ],
                                             blockType: 'BlockGroup',
-                                            format: { lineHeight: 'normal', marginBottom: '0cm' },
+                                            format: { lineHeight: '120%', marginBottom: '0cm' },
                                             blockGroupType: 'ListItem',
                                             blocks: [
                                                 {
@@ -1420,7 +1597,7 @@ describe(ID, () => {
                                                 },
                                             ],
                                             blockType: 'BlockGroup',
-                                            format: { lineHeight: 'normal', marginBottom: '0cm' },
+                                            format: { lineHeight: '120%', marginBottom: '0cm' },
                                             blockGroupType: 'ListItem',
                                             blocks: [
                                                 {
@@ -1468,7 +1645,7 @@ describe(ID, () => {
                                                 },
                                             ],
                                             blockType: 'BlockGroup',
-                                            format: { lineHeight: 'normal', marginBottom: '0cm' },
+                                            format: { lineHeight: '120%', marginBottom: '0cm' },
                                             blockGroupType: 'ListItem',
                                             blocks: [
                                                 {
@@ -1525,7 +1702,7 @@ describe(ID, () => {
                                                 },
                                             ],
                                             blockType: 'BlockGroup',
-                                            format: { lineHeight: 'normal', marginBottom: '0cm' },
+                                            format: { lineHeight: '120%', marginBottom: '0cm' },
                                             blockGroupType: 'ListItem',
                                             blocks: [
                                                 {
@@ -1583,7 +1760,7 @@ describe(ID, () => {
                                                 },
                                             ],
                                             blockType: 'BlockGroup',
-                                            format: { lineHeight: 'normal', marginBottom: '0cm' },
+                                            format: { lineHeight: '120%', marginBottom: '0cm' },
                                             blockGroupType: 'ListItem',
                                             blocks: [
                                                 {
@@ -1641,7 +1818,7 @@ describe(ID, () => {
                                                 },
                                             ],
                                             blockType: 'BlockGroup',
-                                            format: { lineHeight: 'normal', marginBottom: '0cm' },
+                                            format: { lineHeight: '120%', marginBottom: '0cm' },
                                             blockGroupType: 'ListItem',
                                             blocks: [
                                                 {

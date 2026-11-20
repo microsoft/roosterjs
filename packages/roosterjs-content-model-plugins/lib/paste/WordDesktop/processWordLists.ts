@@ -5,6 +5,7 @@ import {
     isElementOfType,
     isEmpty,
     isNodeOfType,
+    parseValueWithUnit,
 } from 'roosterjs-content-model-dom';
 import type { WordMetadata } from './WordMetadata';
 import type {
@@ -47,7 +48,8 @@ export function processWordList(
     group: ContentModelBlockGroup,
     element: HTMLElement,
     context: DomToModelContext,
-    metadata: Map<string, WordMetadata>
+    metadata: Map<string, WordMetadata>,
+    listParagraphStyles: Record<string, string> = {}
 ) {
     const listFormat = context.listFormat as WordDesktopListFormat;
     if (!listFormat.wordKnownLevels) {
@@ -75,6 +77,13 @@ export function processWordList(
     if (wordListStyle && group && typeof listFormat.wordLevel === 'number') {
         const { wordLevel, wordList } = listFormat;
         const isHeading = /^H[1-6]$/.test(element.tagName);
+        const hasDefaultMargin =
+            !isHeading &&
+            wordLevel == 1 &&
+            hasDefaultListParagraphMargin(
+                element,
+                listParagraphStyles[element.tagName.toLowerCase()]
+            );
         // Retrieve the Fake bullet on the element and also the list type
         const listMetadata = metadata.get(`${lNumber}:${level}`);
         const listType =
@@ -84,7 +93,7 @@ export function processWordList(
 
         // Create the new level of the list item and parse the format
         setupListFormat(listType, element, context, wordLevel, listFormat, group, [
-            wordListPaddingParser,
+            (format, listElement) => wordListPaddingParser(format, listElement, hasDefaultMargin),
         ]);
         const currentLevelFormat = listFormat.levels[listFormat.levels.length - 1]
             .format as WordListFormat;
@@ -134,6 +143,9 @@ export function processWordList(
                     } else if (wordLevel > 1 && !isHeading) {
                         delete listItem.format.marginLeft;
                         delete listItem.format.marginRight;
+                    } else if (hasDefaultMargin) {
+                        // The list wrapper already provides the normalized paragraph indentation.
+                        delete listItem.format.marginLeft;
                     }
 
                     if (listType == 'OL') {
@@ -155,6 +167,20 @@ export function processWordList(
     }
 
     return false;
+}
+
+function hasDefaultListParagraphMargin(element: HTMLElement, paragraphStyles: string | undefined) {
+    if (!paragraphStyles || !element.style.marginLeft) {
+        return false;
+    }
+
+    const defaultParagraph = element.ownerDocument.createElement(element.tagName);
+    defaultParagraph.style.cssText = paragraphStyles;
+    const defaultMargin = parseValueWithUnit(defaultParagraph.style.marginLeft, element);
+
+    return (
+        defaultMargin > 0 && parseValueWithUnit(element.style.marginLeft, element) == defaultMargin
+    );
 }
 
 function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType: 'OL' | 'UL') {
@@ -261,9 +287,10 @@ function getLastNotEmptyBlock(listParent: ContentModelBlockGroup | undefined) {
 
 function wordListPaddingParser(
     format: ContentModelListItemLevelFormat,
-    element: HTMLElement
+    element: HTMLElement,
+    hasDefaultMargin: boolean
 ): void {
-    if (element.style.marginLeft && parseInt(element.style.marginLeft) != 0) {
+    if (!hasDefaultMargin && element.style.marginLeft && parseInt(element.style.marginLeft) != 0) {
         format.paddingLeft = '0px';
     }
     if (element.style.marginRight && parseInt(element.style.marginRight) != 0) {

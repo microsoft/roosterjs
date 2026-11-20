@@ -1508,7 +1508,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginTop: '0in',
                                 marginRight: '0in',
                                 marginBottom: '0in',
-                                marginLeft: '0.5in',
                             },
                         },
                     ],
@@ -1998,7 +1997,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     text: ' ',
                                     format: {
                                         fontSize: '11pt',
-                                        lineHeight: '116%',
+                                        lineHeight: '1.392',
                                     },
                                 },
                             ],
@@ -2753,11 +2752,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginRight: '0in',
                                 marginBottom: '0in',
-                                marginLeft: '0.5in',
                             },
                         },
                         {
@@ -2811,7 +2809,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -2876,7 +2874,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -2950,7 +2948,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3033,7 +3031,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3125,7 +3123,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3226,7 +3224,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3336,7 +3334,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3455,7 +3453,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3564,7 +3562,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3664,7 +3662,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3755,7 +3753,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3837,7 +3835,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3910,7 +3908,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -3974,7 +3972,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -4029,7 +4027,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginBottom: '0in',
                             },
@@ -4075,11 +4073,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: { fontFamily: 'Aptos, sans-serif', fontSize: '12pt' },
                             },
                             format: {
-                                lineHeight: '116%',
+                                lineHeight: '1.392',
                                 marginTop: '0in',
                                 marginRight: '0in',
                                 marginBottom: '8pt',
-                                marginLeft: '0.5in',
                             },
                         },
                     ],
@@ -4173,7 +4170,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '107%',
+                                lineHeight: '1.284',
                                 marginBottom: '8pt',
                             },
                         },
@@ -4212,7 +4209,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '107%',
+                                lineHeight: '1.284',
                                 marginBottom: '8pt',
                             },
                         },
@@ -4260,7 +4257,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '107%',
+                                lineHeight: '1.284',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
                             },
@@ -4300,7 +4297,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '107%',
+                                lineHeight: '1.284',
                                 marginBottom: '8pt',
                             },
                         },
@@ -4348,7 +4345,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '107%',
+                                lineHeight: '1.284',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
                             },
@@ -4406,7 +4403,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '107%',
+                                lineHeight: '1.284',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
                             },
@@ -4446,7 +4443,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '107%',
+                                lineHeight: '1.284',
                                 marginBottom: '8pt',
                             },
                         },
@@ -4494,7 +4491,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '107%',
+                                lineHeight: '1.284',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
                             },
@@ -4591,7 +4588,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '107%',
+                                lineHeight: '1.284',
                                 marginBottom: '8pt',
                             },
                         },
@@ -4639,7 +4636,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '105%',
+                                lineHeight: '1.26',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
                             },
@@ -4679,7 +4676,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '105%',
+                                lineHeight: '1.26',
                                 marginBottom: '8pt',
                             },
                         },
@@ -4732,7 +4729,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {},
                             },
                             format: {
-                                lineHeight: '105%',
+                                lineHeight: '1.26',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
                             },

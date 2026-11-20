@@ -27,12 +27,20 @@ export function processPastedContentFromWordDesktop(
     htmlString: string,
     globalCssRules: CssRule[] = []
 ) {
-    removeListParagraphMargins(globalCssRules);
+    const listParagraphStyles = removeListParagraphMargins(globalCssRules);
 
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
 
-    setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
+    setProcessor(
+        domToModelOption,
+        'element',
+        wordDesktopElementProcessor(metadataMap, listParagraphStyles)
+    );
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
+    // Inline run and list item line heights otherwise override the adjusted block spacing.
+    addParser(domToModelOption, 'listItemElement', adjustPercentileLineHeight);
+    addParser(domToModelOption, 'segment', adjustPercentileLineHeight);
+    addParser(domToModelOption, 'styleBasedSegment', adjustPercentileLineHeight);
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', adjustWordListMarginParser);
@@ -43,15 +51,22 @@ export function processPastedContentFromWordDesktop(
 }
 
 const wordDesktopElementProcessor = (
-    metadataKey: Map<string, WordMetadata>
+    metadataKey: Map<string, WordMetadata>,
+    listParagraphStyles: Record<string, string>
 ): ElementProcessor<HTMLElement> => {
     return (group, element, context) => {
         const styles = getStyles(element);
         // Process Word Lists or Word Commands, otherwise use the default processor on this element.
         if (
             !(
-                processWordList(styles, group, element, context, metadataKey) ||
-                processWordComments(styles, element)
+                processWordList(
+                    styles,
+                    group,
+                    element,
+                    context,
+                    metadataKey,
+                    listParagraphStyles
+                ) || processWordComments(styles, element)
             )
         ) {
             context.defaultElementProcessors.element(group, element, context);
