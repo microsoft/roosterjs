@@ -132,8 +132,11 @@ function splitCssValue(value: string): string[] {
  *
  * The array is mutated in place so the changes are reflected when convertInlineCss
  * subsequently processes the same array reference.
+ * @returns Original list paragraph styles by tag, used to normalize equivalent inline margins
  */
-export function removeListParagraphMargins(globalCssRules: CssRule[]): void {
+export function removeListParagraphMargins(globalCssRules: CssRule[]): Record<string, string> {
+    const listParagraphStyles: Record<string, string> = {};
+
     // Iterate in reverse so that splice insertions don't shift unvisited indices.
     for (let i = globalCssRules.length - 1; i >= 0; i--) {
         const rule = globalCssRules[i];
@@ -142,6 +145,14 @@ export function removeListParagraphMargins(globalCssRules: CssRule[]): void {
         if (matchingSelectors.length === 0) {
             continue;
         }
+
+        matchingSelectors.forEach(selector => {
+            const [tagName, className] = selector.split('.');
+
+            if (className == 'MsoListParagraph') {
+                listParagraphStyles[tagName] = rule.text + (listParagraphStyles[tagName] || '');
+            }
+        });
 
         const nonMatchingSelectors = rule.selectors.filter(
             s => !WORD_LIST_PARAGRAPH_SELECTORS.has(s)
@@ -160,4 +171,6 @@ export function removeListParagraphMargins(globalCssRules: CssRule[]): void {
             });
         }
     }
+
+    return listParagraphStyles;
 }
