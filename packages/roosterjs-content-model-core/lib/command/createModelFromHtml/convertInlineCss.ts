@@ -1,17 +1,6 @@
 import { toArray } from 'roosterjs-content-model-dom';
+import { getCssSelectorSpecificity, splitCssSelectorList } from './getCssSelectorSpecificity';
 import type { CssRule } from 'roosterjs-content-model-types';
-
-/**
- * @internal
- *
- * Splits CSS selectors, avoiding splits within parentheses
- * @param selectorText The CSS selector string
- * @return Array of trimmed selectors
- */
-function splitSelectors(selectorText: string) {
-    const regex = /(?![^(]*\)),/;
-    return selectorText.split(regex).map(s => s.trim());
-}
 
 /**
  * @internal
@@ -29,7 +18,7 @@ export function retrieveCssRules(doc: Document): CssRule[] {
 
                 if (rule.type == CSSRule.STYLE_RULE && rule.selectorText) {
                     result.push({
-                        selectors: splitSelectors(rule.selectorText),
+                        selectors: splitCssSelectorList(rule.selectorText),
                         text: rule.style.cssText,
                     });
                 }
@@ -46,22 +35,47 @@ export function retrieveCssRules(doc: Document): CssRule[] {
  * @internal
  */
 export function convertInlineCss(root: ParentNode, cssRules: CssRule[]) {
-    for (let i = cssRules.length - 1; i >= 0; i--) {
-        const { selectors, text } = cssRules[i];
+    const rankedRules: {
+        selector: string;
+        text: string;
+        specificity: [number, number, number];
+        order: number;
+    }[] = [];
 
-        for (const selector of selectors) {
-            if (!selector || !selector.trim()) {
-                continue;
-            }
+    cssRules.forEach(({ selectors, text }) => {
+        selectors.forEach(selectorText => {
+            splitCssSelectorList(selectorText).forEach(selector => {
+                if (selector) {
+                    rankedRules.push({
+                        selector,
+                        text,
+                        specificity: getCssSelectorSpecificity(selector),
+                        order: rankedRules.length,
+                    });
+                }
+            });
+        });
+    });
 
-            const nodes = toArray(root.querySelectorAll(selector));
+    rankedRules.sort(
+        (a, b) =>
+            a.specificity[0] - b.specificity[0] ||
+            a.specificity[1] - b.specificity[1] ||
+            a.specificity[2] - b.specificity[2] ||
+            a.order - b.order
+    );
 
-            // Always put existing styles after so that they have higher priority
-            // Which means if both global style and inline style apply to the same element,
-            // inline style will have higher priority
-            nodes.forEach(node =>
-                node.setAttribute('style', text + (node.getAttribute('style') || ''))
-            );
-        }
+    // Match before adding style attributes, which can themselves be used by selectors.
+    const matchedRules = rankedRules.map(({ selector, text }) => ({
+        text,
+        nodes: toArray(root.querySelectorAll(selector)),
+    }));
+
+    for (let i = matchedRules.length - 1; i >= 0; i--) {
+        const { nodes, text } = matchedRules[i];
+        // Inline declarations stay last; the browser also retains !important precedence.
+        nodes.forEach(node =>
+            node.setAttribute('style', text + (node.getAttribute('style') || ''))
+        );
     }
 }
