@@ -17,12 +17,13 @@ export function insertHorizontalLineIntoModel(
     model: ReadonlyContentModelDocument,
     context: FormatContentModelContext,
     format: ContentModelDividerFormat = {
-        borderTop: '1px none',
-        borderRight: '1px none',
+        borderTop: '1px solid',
+        borderRight: '1px solid',
         borderBottom: '1px solid',
-        borderLeft: '1px none',
+        borderLeft: '1px solid',
         width: '98%',
-        display: 'inline-block',
+        display: 'table',
+        height: '1px',
     }
 ): boolean {
     const doc = createContentModelDocument();
