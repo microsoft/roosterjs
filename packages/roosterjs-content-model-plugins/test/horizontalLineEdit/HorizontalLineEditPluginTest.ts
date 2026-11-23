@@ -546,17 +546,19 @@ describe('HorizontalLineEditPlugin', () => {
         );
         line.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerType: 'touch' }));
         const handle = getHandle();
-        const start = new Touch({ identifier: 1, target: handle, pageX: 100, pageY: 100 });
-        const end = new Touch({ identifier: 1, target: handle, pageX: 130, pageY: 110 });
-        handle.dispatchEvent(
-            new TouchEvent('touchstart', { targetTouches: [start], cancelable: true })
-        );
-        document.dispatchEvent(
-            new TouchEvent('touchmove', { targetTouches: [end], cancelable: true })
-        );
-        document.dispatchEvent(
-            new TouchEvent('touchend', { changedTouches: [end], cancelable: true })
-        );
+        [
+            { type: 'touchstart', target: handle, clientX: 100, clientY: 100 },
+            { type: 'touchmove', target: document, clientX: 130, clientY: 110 },
+            { type: 'touchend', target: document, clientX: 130, clientY: 110 },
+        ].forEach(({ type, target, clientX, clientY }) => {
+            const event = new Event(type, { bubbles: true, cancelable: true });
+            const touch = { clientX, clientY, pageX: clientX, pageY: clientY };
+            Object.defineProperties(event, {
+                targetTouches: { value: type == 'touchend' ? [] : [touch] },
+                changedTouches: { value: [touch] },
+            });
+            target.dispatchEvent(event);
+        });
         expect(root.querySelector('hr')!.style.width).toBe('230px');
         expectThickness(root.querySelector('hr')!, 16);
         expect(getHost()).toBeNull();
