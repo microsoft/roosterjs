@@ -8,6 +8,8 @@ import type { HorizontalLineEditOptions } from './HorizontalLineEditOptions';
 import type { HorizontalLineResizeContext } from './types/HorizontalLineResizeContext';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
 
+const CARET_STYLE_KEY = 'horizontalLineEditCaretColor';
+
 /**
  * Adds NW, N, NE, E, SE, S, SW, and W resize handles when a horizontal line is clicked.
  * Drag a handle, or focus it and use the arrow keys (Shift for 10px steps).
@@ -18,6 +20,8 @@ import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model
  * The preview and committed horizontal line use display: table.
  * The preview preserves inline HR styles without copying computed defaults.
  * The editing outline has a 4px gap around the line, with 6px resize handles.
+ * The line is selected while its editing UI is open so formatting commands target it.
+ * The text caret is hidden during editing and restored when the editing UI closes.
  *
  * @example
  * ```typescript
@@ -191,6 +195,10 @@ export class HorizontalLineEditPlugin implements EditorPlugin {
         createHorizontalLineResizeHandles(context, editor, this.options, zoomScale, () =>
             this.finishEditing()
         );
+        const range = line.ownerDocument.createRange();
+        range.selectNode(context.host);
+        editor.setDOMSelection({ type: 'range', range, isReverted: false });
+        editor.setEditorStyle(CARET_STYLE_KEY, 'caret-color: transparent;');
     }
 
     private onFocusOut = (event: Event) => {
@@ -217,6 +225,7 @@ export class HorizontalLineEditPlugin implements EditorPlugin {
         const context = this.resizeContext;
         this.resizeContext = null;
         if (context) {
+            this.editor?.setEditorStyle(CARET_STYLE_KEY, null);
             context.helpers.forEach(helper => helper.dispose());
             const { host } = context;
             if (host.parentNode) {

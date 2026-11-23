@@ -3,6 +3,7 @@ import { ContentModelBlockFormat } from 'roosterjs-content-model-types';
 import { setModelAlignment } from '../../../lib/modelApi/block/setModelAlignment';
 import {
     createContentModelDocument,
+    createDivider,
     createListItem,
     createListLevel,
     createParagraph as originalCreateParagraph,
@@ -10,6 +11,74 @@ import {
     createTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
+
+describe('align divider', () => {
+    (['hr', 'div'] as const).forEach(tagName => {
+        ([undefined, 'ltr', 'rtl'] as const).forEach(direction => {
+            (['left', 'center', 'right'] as const).forEach(alignment => {
+                it(`align ${tagName} ${alignment} in ${direction || 'default'} direction`, () => {
+                    const model = createContentModelDocument();
+                    const divider = createDivider(tagName, {
+                        direction,
+                        width: '50%',
+                        marginTop: '10px',
+                        marginLeft: '20px',
+                        marginRight: '30px',
+                    });
+                    const unselectedDivider = createDivider(tagName);
+
+                    divider.isSelected = true;
+                    model.blocks.push(divider, unselectedDivider);
+
+                    const result = setModelAlignment(model, alignment);
+                    const alignLeft =
+                        direction === 'rtl' ? alignment === 'right' : alignment === 'left';
+                    const alignRight =
+                        direction === 'rtl' ? alignment === 'left' : alignment === 'right';
+
+                    expect(result).toBeTrue();
+                    expect(divider.format).toEqual({
+                        direction,
+                        width: '50%',
+                        marginTop: '10px',
+                        marginLeft: alignLeft ? '' : 'auto',
+                        marginRight: alignRight ? '' : 'auto',
+                    });
+                    expect(divider.isSelected).toBeTrue();
+                    expect(unselectedDivider.format).toEqual({});
+                });
+            });
+        });
+
+        it(`does not align an unselected ${tagName}`, () => {
+            const model = createContentModelDocument();
+            const divider = createDivider(tagName);
+
+            model.blocks.push(divider);
+
+            expect(setModelAlignment(model, 'center')).toBeFalse();
+            expect(divider.format).toEqual({});
+        });
+
+        it(`preserves ${tagName} margins when justifying`, () => {
+            const model = createContentModelDocument();
+            const divider = createDivider(tagName, {
+                marginLeft: '20px',
+                marginRight: '30px',
+            });
+
+            divider.isSelected = true;
+            model.blocks.push(divider);
+
+            expect(setModelAlignment(model, 'justify')).toBeTrue();
+            expect(divider.format).toEqual({
+                marginLeft: '20px',
+                marginRight: '30px',
+                textAlign: 'justify',
+            });
+        });
+    });
+});
 
 describe('align left', () => {
     const mockedCachedElement = 'CACHE' as any;

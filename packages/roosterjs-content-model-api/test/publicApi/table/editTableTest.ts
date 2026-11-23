@@ -1,4 +1,4 @@
-import * as alignTable from '../../../lib/modelApi/table/alignTable';
+import * as alignTableAndDivider from '../../../lib/modelApi/block/alignTableAndDivider';
 import * as alignTableCell from '../../../lib/modelApi/table/alignTableCell';
 import * as deleteTable from '../../../lib/modelApi/table/deleteTable';
 import * as deleteTableColumn from '../../../lib/modelApi/table/deleteTableColumn';
@@ -97,11 +97,11 @@ describe('editTable', () => {
         });
     });
 
-    describe('alignTable', () => {
+    describe('alignTableAndDivider', () => {
         let spy: jasmine.Spy;
 
         beforeEach(() => {
-            spy = spyOn(alignTable, 'alignTable');
+            spy = spyOn(alignTableAndDivider, 'alignTableAndDivider');
         });
 
         it('alignCenter', () => {

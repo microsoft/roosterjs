@@ -6,8 +6,9 @@ import {
     domToContentModel,
 } from 'roosterjs-content-model-dom';
 import { redo, undo } from 'roosterjs-content-model-core';
+import { setAlignment } from 'roosterjs-content-model-api';
 import type { HorizontalLineEditOptions } from '../../lib/horizontalLineEdit/HorizontalLineEditOptions';
-import type { IEditor } from 'roosterjs-content-model-types';
+import type { ContentModelDivider, IEditor } from 'roosterjs-content-model-types';
 
 describe('HorizontalLineEditPlugin', () => {
     let editor: IEditor;
@@ -89,6 +90,58 @@ describe('HorizontalLineEditPlugin', () => {
         expect(plugin.getName()).toBe('HorizontalLineEdit');
     });
 
+    it('hides the text caret while editing and when switching lines', () => {
+        initialize();
+        expect(getComputedStyle(root).caretColor).not.toBe('rgba(0, 0, 0, 0)');
+
+        selectLine();
+        expect(getComputedStyle(root).caretColor).toBe('rgba(0, 0, 0, 0)');
+        expect(getComputedStyle(root.querySelector('div')!).caretColor).toBe('rgba(0, 0, 0, 0)');
+
+        selectLine(1);
+        expect(getComputedStyle(root).caretColor).toBe('rgba(0, 0, 0, 0)');
+    });
+
+    [
+        { name: 'cancelling', exit: () => key('Escape') },
+        { name: 'committing', exit: () => key('Enter') },
+        {
+            name: 'clicking elsewhere',
+            exit: () =>
+                root
+                    .querySelector('div')!
+                    .dispatchEvent(new MouseEvent('mousedown', { bubbles: true })),
+        },
+        {
+            name: 'losing focus',
+            exit: () =>
+                root.dispatchEvent(new FocusEvent('blur', { relatedTarget: document.body })),
+        },
+        { name: 'taking a snapshot', exit: () => editor.takeSnapshot() },
+        { name: 'formatting the line', exit: () => setAlignment(editor, 'center') },
+        {
+            name: 'replacing content',
+            exit: () => plugin.onPluginEvent({ eventType: 'beforeSetContent', newContent: '' }),
+        },
+        {
+            name: 'changing the logical root',
+            exit: () => editor.setLogicalRoot(root.querySelector('div')!),
+        },
+        { name: 'disposing the plugin', exit: () => plugin.dispose() },
+    ].forEach(({ name, exit }) => {
+        it('restores the text caret after ' + name, () => {
+            initialize();
+            const originalCaretColor = getComputedStyle(root).caretColor;
+            selectLine();
+            expect(getComputedStyle(root).caretColor).toBe('rgba(0, 0, 0, 0)');
+
+            exit();
+
+            expect(getHost()).toBeNull();
+            expect(getComputedStyle(root).caretColor).toBe(originalCaretColor);
+        });
+    });
+
     it('wraps only the clicked line and keeps editing UI outside the content model', () => {
         initialize();
         const original = editor.getContentModelCopy('clean');
@@ -117,6 +170,65 @@ describe('HorizontalLineEditPlugin', () => {
         expect(preview.style.opacity).toBe('');
         expect(preview.style.paddingTop).toBe('');
         expect(preview.style.paddingBottom).toBe('');
+    });
+
+    it('selects only the line whose editing UI is open', () => {
+        initialize();
+        selectLine(1);
+
+        const model = editor.getContentModelCopy('disconnected');
+        const dividers = model.blocks.filter(
+            (block): block is ContentModelDivider => block.blockType == 'Divider'
+        );
+
+        expect(dividers.length).toBe(2);
+        expect(dividers[0].isSelected).not.toBeTrue();
+        expect(dividers[1].isSelected).toBeTrue();
+        expect(model.blocks.some(block => block.blockType == 'Paragraph')).toBeTrue();
+    });
+
+    it('moves selection when editing another line', () => {
+        initialize();
+        selectLine();
+        selectLine(1);
+
+        const dividers = editor
+            .getContentModelCopy('disconnected')
+            .blocks.filter((block): block is ContentModelDivider => block.blockType == 'Divider');
+
+        expect(dividers[0].isSelected).not.toBeTrue();
+        expect(dividers[1].isSelected).toBeTrue();
+    });
+
+    it('keeps the editing line selected when a resize handle receives focus', () => {
+        initialize();
+        selectLine();
+        getHandle().focus();
+
+        const divider = editor
+            .getContentModelCopy('disconnected')
+            .blocks.find((block): block is ContentModelDivider => block.blockType == 'Divider')!;
+
+        expect(getHost()).not.toBeNull();
+        expect(divider.isSelected).toBeTrue();
+    });
+
+    it('aligns the editing line without changing another line', () => {
+        initialize();
+        selectLine();
+
+        setAlignment(editor, 'right');
+
+        const lines = root.querySelectorAll('hr');
+        expect(lines[0].style.marginLeft).toBe('auto');
+        expect(lines[0].style.marginRight).toBe('0px');
+        expect(lines[1].style.marginLeft).toBe('');
+        expect(lines[1].style.marginRight).toBe('');
+        expect(getHost()).toBeNull();
+        const divider = editor
+            .getContentModelCopy('disconnected')
+            .blocks.find((block): block is ContentModelDivider => block.blockType == 'Divider')!;
+        expect(divider.isSelected).toBeTrue();
     });
 
     it('preserves custom inline appearance in the preview', () => {
