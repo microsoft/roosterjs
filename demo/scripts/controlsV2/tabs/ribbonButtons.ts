@@ -3,6 +3,7 @@ import { changeCapitalizationButton } from '../demoButtons/changeCapitalizationB
 import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
 import { createImageEditButtons } from '../demoButtons/createImageEditButtons';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
+import { formatHorizontalLineButton } from '../demoButtons/formatHorizontalLineButton';
 import { formatTableButton } from '../demoButtons/formatTableButton';
 import { imageBorderColorButton } from '../demoButtons/imageBorderColorButton';
 import { imageBorderRemoveButton } from '../demoButtons/imageBorderRemoveButton';
@@ -118,6 +119,7 @@ const insertButtons: RibbonButton<any>[] = [
     insertTableButton,
     insertImageButton,
     insertHorizontalLineButton,
+    formatHorizontalLineButton,
 ];
 
 const paragraphButtons: RibbonButton<any>[] = [
@@ -169,6 +171,7 @@ const allButtons: RibbonButton<any>[] = [
     insertTableButton,
     insertImageButton,
     insertHorizontalLineButton,
+    formatHorizontalLineButton,
     superscriptButton,
     subscriptButton,
     strikethroughButton,

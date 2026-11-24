@@ -24,6 +24,7 @@ export { setListStyle } from './publicApi/list/setListStyle';
 export { setListStartNumber } from './publicApi/list/setListStartNumber';
 export { setIndentation } from './publicApi/block/setIndentation';
 export { insertHorizontalLine } from './publicApi/block/insertHorizontalLine';
+export { formatHorizontalLine } from './publicApi/block/formatHorizontalLine';
 export { setAlignment } from './publicApi/block/setAlignment';
 export { setDirection } from './publicApi/block/setDirection';
 export { setHeadingLevel } from './publicApi/block/setHeadingLevel';
