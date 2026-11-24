@@ -202,10 +202,32 @@ Create a draft PR targeting the `release` branch using the `gh` CLI:
 -   #124 Fix bug Y (https://github.com/microsoft/roosterjs/pull/124)
 ```
 
+3. Merge instructions that preserve branch ancestry:
+
+```markdown
+## Merge instructions
+
+-   [ ] Confirm the target branch is `release`
+-   [ ] Use **Create a merge commit**
+-   [ ] Do not squash or rebase this PR
+```
+
 Command:
 
 ```bash
 gh pr create --draft --base release --title "<title>" --body "<description>"
+```
+
+After creating the PR, verify that its base branch is `release`:
+
+```bash
+gh pr view --json baseRefName,url
+```
+
+If `baseRefName` is not `release`, update it before continuing:
+
+```bash
+gh pr edit --base release
 ```
 
 ### Step 16: Show the PR link

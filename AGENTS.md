@@ -133,6 +133,7 @@ context/          – DomToModelContext, ModelToDomContext, ElementProcessor, Fo
     -   **Tests**: `yarn test:fast`
     -   **Build**: `yarn b`
 -   PRs go against the `master` branch.
+-   Version bump PRs are the exception: they target `release` and must use **Create a merge commit**, never squash or rebase, so `master` remains an ancestor of `release`.
 
 ## Repo Metadata
 
