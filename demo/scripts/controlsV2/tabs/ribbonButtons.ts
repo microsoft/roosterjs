@@ -3,6 +3,7 @@ import { changeCapitalizationButton } from '../demoButtons/changeCapitalizationB
 import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
 import { createImageEditButtons } from '../demoButtons/createImageEditButtons';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
+import { formatHorizontalLineButton } from '../demoButtons/formatHorizontalLineButton';
 import { formatTableButton } from '../demoButtons/formatTableButton';
 import { imageBorderColorButton } from '../demoButtons/imageBorderColorButton';
 import { imageBorderRemoveButton } from '../demoButtons/imageBorderRemoveButton';
@@ -10,6 +11,7 @@ import { imageBorderStyleButton } from '../demoButtons/imageBorderStyleButton';
 import { imageBorderWidthButton } from '../demoButtons/imageBorderWidthButton';
 import { imageBoxShadowButton } from '../demoButtons/imageBoxShadowButton';
 import { ImageEditor } from 'roosterjs-content-model-types';
+import { insertHorizontalLineButton } from '../demoButtons/insertHorizontalLineButton';
 import { listStartNumberButton } from '../demoButtons/listStartNumberButton';
 import { pasteAsMarkdownButton } from '../demoButtons/pasteAsMarkdownButton';
 import { pasteButton } from '../demoButtons/pasteButton';
@@ -116,6 +118,8 @@ const insertButtons: RibbonButton<any>[] = [
     removeLinkButton,
     insertTableButton,
     insertImageButton,
+    insertHorizontalLineButton,
+    formatHorizontalLineButton,
 ];
 
 const paragraphButtons: RibbonButton<any>[] = [
@@ -166,6 +170,8 @@ const allButtons: RibbonButton<any>[] = [
     removeLinkButton,
     insertTableButton,
     insertImageButton,
+    insertHorizontalLineButton,
+    formatHorizontalLineButton,
     superscriptButton,
     subscriptButton,
     strikethroughButton,

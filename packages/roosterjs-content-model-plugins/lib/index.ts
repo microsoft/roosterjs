@@ -41,6 +41,8 @@ export { PickerSelectionChangMode, PickerDirection, PickerHandler } from './pick
 export { CustomReplacePlugin, CustomReplace } from './customReplace/CustomReplacePlugin';
 export { ImageEditPlugin } from './imageEdit/ImageEditPlugin';
 export { ImageEditOptions } from './imageEdit/types/ImageEditOptions';
+export { HorizontalLineEditPlugin } from './horizontalLineEdit/HorizontalLineEditPlugin';
+export { HorizontalLineEditOptions } from './horizontalLineEdit/HorizontalLineEditOptions';
 export { CropAccessibilityLabels } from './imageEdit/types/CropAccessibilityLabels';
 export { HiddenPropertyPlugin } from './hiddenProperty/HiddenPropertyPlugin';
 export { HiddenPropertyOptions } from './hiddenProperty/HiddenPropertyOptions';

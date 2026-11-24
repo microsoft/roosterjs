@@ -1,3 +1,5 @@
+import { getOperationalBlocks } from 'roosterjs-content-model-dom';
+import { insertHorizontalLineIntoModel } from 'roosterjs-content-model-api';
 import type {
     ContentModelDividerFormat,
     ContentModelListItem,
@@ -5,13 +7,6 @@ import type {
     ReadonlyContentModelDocument,
     ShallowMutableContentModelParagraph,
 } from 'roosterjs-content-model-types';
-import {
-    addBlock,
-    createContentModelDocument,
-    createDivider,
-    getOperationalBlocks,
-    mergeModel,
-} from 'roosterjs-content-model-dom';
 
 /**
  * @internal
@@ -98,31 +93,13 @@ const HorizontalLineStyles: Map<
 ]);
 
 /**
- * @internal exported only for unit test
- *
- * Create a horizontal line and insert it into the model
- *
- * @param model the model to insert horizontal line into
- * @param context the formatting context
- */
-export function insertHorizontalLineIntoModel(
-    model: ReadonlyContentModelDocument,
-    context: FormatContentModelContext,
-    triggerChar: HorizontalLineTriggerCharacter
-) {
-    const hr = createDivider('hr', HorizontalLineStyles.get(triggerChar));
-    const doc = createContentModelDocument();
-    addBlock(doc, hr);
-    mergeModel(model, doc, context);
-}
-
-/**
  * @internal
  *
  * Check if the current line should be formatted as horizontal line, and insert horizontal line if needed
  *
- * @param editor The editor to check and insert horizontal line
- * @param event The keydown event
+ * @param model The model to check and insert horizontal line into
+ * @param paragraph The paragraph to check for trigger characters
+ * @param context The formatting context
  * @returns True if horizontal line is inserted, otherwise false
  */
 export const checkAndInsertHorizontalLine = (
@@ -157,7 +134,11 @@ export const checkAndInsertHorizontalLine = (
         const shouldFormat = allText.split('').every(char => char === triggerCharacter);
         if (shouldFormat) {
             paragraph.segments = paragraph.segments.filter(s => s.segmentType != 'Text');
-            insertHorizontalLineIntoModel(model, context, triggerCharacter);
+            insertHorizontalLineIntoModel(
+                model,
+                context,
+                HorizontalLineStyles.get(triggerCharacter)
+            );
             context.canUndoByBackspace = true;
         }
         return shouldFormat;

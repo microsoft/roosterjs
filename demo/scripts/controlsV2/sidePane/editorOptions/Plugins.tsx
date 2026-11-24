@@ -378,6 +378,7 @@ export class Plugins extends PluginsBase<keyof BuildInPluginList> {
                             )}
                         </>
                     )}
+                    {this.renderPluginItem('horizontalLineEditPlugin', 'HorizontalLineEditPlugin')}
                     {this.renderPluginItem('hiddenProperty', 'Hidden Property')}
                     {this.renderPluginItem('touch', 'Touch')}
                     {this.renderPluginItem('announce', 'Announce')}
