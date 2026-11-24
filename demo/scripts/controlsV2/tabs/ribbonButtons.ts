@@ -2,6 +2,7 @@ import { changeImageButton } from '../demoButtons/changeImageButton';
 import { changeCapitalizationButton } from '../demoButtons/changeCapitalizationButton';
 import { createFormatPainterButton } from '../demoButtons/formatPainterButton';
 import { createImageEditButtons } from '../demoButtons/createImageEditButtons';
+import { createTableCellSizeButtons } from '../demoButtons/tableCellSizeButtons';
 import { FormatPainterPlugin } from '../plugins/FormatPainterPlugin';
 import { formatTableButton } from '../demoButtons/formatTableButton';
 import { imageBorderColorButton } from '../demoButtons/imageBorderColorButton';
@@ -33,7 +34,7 @@ import {
     tableMergeButton,
     tableSplitButton,
 } from '../demoButtons/tableEditButtons';
-import type { RibbonButton } from 'roosterjs-react';
+import type { RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import {
     alignCenterButton,
     alignJustifyButton,
@@ -207,7 +208,8 @@ const allButtons: RibbonButton<any>[] = [
 export function getButtons(
     id: tabNames,
     formatPlainerPlugin?: FormatPainterPlugin,
-    imageEditor?: ImageEditor
+    imageEditor?: ImageEditor,
+    ribbonPlugin?: RibbonPlugin
 ) {
     switch (id) {
         case 'text':
@@ -221,8 +223,18 @@ export function getButtons(
                 ? [...imageButtons, ...createImageEditButtons(imageEditor)]
                 : imageButtons;
         case 'table':
-            return tableButtons;
+            return ribbonPlugin
+                ? [
+                      tableButtons[0],
+                      ...createTableCellSizeButtons(ribbonPlugin),
+                      ...tableButtons.slice(1),
+                  ]
+                : tableButtons;
         case 'all':
-            return [createFormatPainterButton(formatPlainerPlugin), ...allButtons];
+            return [
+                createFormatPainterButton(formatPlainerPlugin),
+                ...allButtons,
+                ...(ribbonPlugin ? createTableCellSizeButtons(ribbonPlugin) : []),
+            ];
     }
 }
