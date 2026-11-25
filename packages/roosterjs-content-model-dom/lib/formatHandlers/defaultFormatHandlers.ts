@@ -170,6 +170,7 @@ export const defaultFormatKeysPerCategory: {
         'padding',
         'verticalAlign',
         'wordBreak',
+        'whiteSpace',
         'textColor',
         'htmlAlign',
         'size',

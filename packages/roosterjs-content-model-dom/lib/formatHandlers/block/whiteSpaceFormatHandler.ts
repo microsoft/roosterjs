@@ -7,7 +7,12 @@ import type { WhiteSpaceFormat } from 'roosterjs-content-model-types';
  */
 export const whiteSpaceFormatHandler: FormatHandler<WhiteSpaceFormat> = {
     parse: (format, element, _, defaultStyle) => {
-        const whiteSpace = element.style.whiteSpace || defaultStyle.whiteSpace;
+        const whiteSpace =
+            element.style.whiteSpace ||
+            defaultStyle.whiteSpace ||
+            ((element.tagName == 'TD' || element.tagName == 'TH') && element.hasAttribute('nowrap')
+                ? 'nowrap'
+                : undefined);
 
         if (shouldSetValue(whiteSpace, 'normal', format.whiteSpace, defaultStyle.whiteSpace)) {
             format.whiteSpace = whiteSpace;
