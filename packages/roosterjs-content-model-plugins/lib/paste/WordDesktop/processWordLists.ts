@@ -28,6 +28,7 @@ interface WordDesktopListFormat extends DomToModelListFormat {
     wordLevel?: number | '';
     wordList?: string;
     wordKnownLevels?: Map<string, ContentModelListLevel[]>;
+    wordConvertedItems?: WeakSet<ContentModelBlockGroup>;
 }
 
 interface WordListFormat extends ContentModelListItemFormat {
@@ -55,13 +56,18 @@ export function processWordList(
     }
     const wordListStyle = styles[MSO_LIST] || '';
 
-    // If the element contains Ignore style, do not process it,
-    // Usually this element contains the fake bullet used in Word Desktop.
+    // Suppress presentation markers only inside successfully converted Word list items.
     if (wordListStyle.toLowerCase() === MSO_LIST_IGNORE) {
-        return true;
+        return listFormat.wordConvertedItems?.has(group) || false;
     }
 
     const [lNumber, level] = wordListStyle.split(' ');
+    const listMetadata = metadata.get(`${lNumber}:${level}`);
+
+    if (wordListStyle && !listMetadata) {
+        return false;
+    }
+
     // Try get the list metadata from word, which follows this format: l1 level1 lfo2
     // If we are able to get the level property means we can process this element to be a list
     listFormat.wordLevel = level && parseInt(level.substr('level'.length));
@@ -76,7 +82,6 @@ export function processWordList(
         const { wordLevel, wordList } = listFormat;
         const isHeading = /^H[1-6]$/.test(element.tagName);
         // Retrieve the Fake bullet on the element and also the list type
-        const listMetadata = metadata.get(`${lNumber}:${level}`);
         const listType =
             listMetadata?.['mso-level-number-format']?.toLowerCase() != BULLET_METADATA
                 ? 'OL'
@@ -121,6 +126,11 @@ export function processWordList(
                 listFormatMetadata,
                 bulletElement,
                 listItem => {
+                    if (!listFormat.wordConvertedItems) {
+                        listFormat.wordConvertedItems = new WeakSet<ContentModelBlockGroup>();
+                    }
+                    listFormat.wordConvertedItems.add(listItem);
+
                     if (isHeading && listType == 'OL') {
                         listItem.format.marginLeft = '0px';
                         listItem.format.marginRight = '0px';

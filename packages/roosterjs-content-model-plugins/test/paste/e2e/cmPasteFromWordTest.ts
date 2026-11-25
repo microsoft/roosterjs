@@ -37,6 +37,75 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    [
+        { nested: false, metadata: '' },
+        { nested: true, metadata: '' },
+        { nested: true, metadata: '@list l0:level1 { mso-level-number-format:bullet; }' },
+    ].forEach(({ nested, metadata }) => {
+        it(
+            'Preserve Word presentation markers with ' +
+                (nested ? 'nested' : 'direct') +
+                ' markup and ' +
+                (metadata ? 'available' : 'missing') +
+                ' metadata',
+            () => {
+                const marker = '<span style="mso-list:Ignore">·<span>&nbsp;&nbsp;</span></span>';
+
+                paste(editor, {
+                    types: ['text/html'],
+                    text: '',
+                    image: null,
+                    customValues: {},
+                    rawHtml: `<html><head><meta name="ProgId" content="Word.Document">
+                        <style>${metadata}</style></head><body><!--StartFragment-->
+                        <p class="MsoListParagraph" style="mso-list:l0 level1 lfo1">${
+                            nested
+                                ? '<span style="font-family:Symbol">' + marker + '</span>'
+                                : marker
+                        }Body</p><!--EndFragment--></body></html>`,
+                });
+
+                const root = document.getElementById(ID)!;
+
+                expect(root.querySelectorAll('ol').length).toBe(0);
+                expect(root.querySelectorAll('ul').length).toBe(metadata ? 1 : 0);
+                expect(root.textContent).toBe(metadata ? 'Body' : '·\u00a0\u00a0Body');
+                if (!metadata) {
+                    expect(root.querySelectorAll('p').length).toBe(1);
+                    if (nested) {
+                        expect(root.querySelector('span[style*="Symbol"]')).not.toBeNull();
+                    }
+                }
+            }
+        );
+    });
+
+    it('Preserve a missing Word list level between successfully converted items', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document">
+                <style>@list l0:level1 { mso-level-number-format:bullet; }</style>
+                </head><body><!--StartFragment-->
+                <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">·</span>First</p>
+                <p style="mso-list:l0 level2 lfo1"><span><span style="mso-list:Ignore">o&nbsp;</span></span>Fallback</p>
+                <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">·</span>Last</p>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const fallback = Array.from(root.querySelectorAll('p')).find(item =>
+            item.textContent?.includes('Fallback')
+        );
+
+        expect(root.textContent).toBe('Firsto\u00a0FallbackLast');
+        expect(fallback).toBeDefined();
+        expect(fallback?.closest('li')).toBeNull();
+        expect(root.querySelectorAll('li').length).toBe(2);
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],
