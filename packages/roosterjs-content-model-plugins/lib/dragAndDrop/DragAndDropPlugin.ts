@@ -1,5 +1,11 @@
+import { DefaultSanitizers } from '../pluginUtils/Sanitizers/DefaultSanitizers';
 import { handleDroppedExternalContent } from './utils/handleDroppedExternalContent';
-import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import type {
+    DomToModelOptionForSanitizing,
+    EditorPlugin,
+    IEditor,
+    PluginEvent,
+} from 'roosterjs-content-model-types';
 import { handleDroppedInternalContent } from './utils/handleDroppedInternalContent';
 import { ChangeSource, deleteSelection } from 'roosterjs-content-model-dom';
 import { reorderList } from './utils/reorderList';
@@ -9,15 +15,16 @@ import { reorderList } from './utils/reorderList';
  */
 export interface DragAndDropOptions {
     /**
+     * @deprecated Use the domToModelForSanitizing constructor parameter instead (e.g. additionalDisallowedTags).
+     * Dropped HTML is sanitized the same way as pasted content, so elements like iframe, script and object
+     * are already removed by default.
      * Forbidden elements that cannot be dropped in the editor
-     * @default ['iframe']
+     * @default []
      */
     forbiddenElements?: string[];
 }
 
-const DefaultOptions = {
-    forbiddenElements: ['iframe'],
-};
+const DefaultOptions: DragAndDropOptions = {};
 
 const DeleteByDragInputType = 'deleteByDrag';
 
@@ -33,8 +40,25 @@ export class DragAndDropPlugin implements EditorPlugin {
 
     /**
      * Construct a new instance of DragAndDropPlugin
+     * @param options Options for DragAndDrop plugin
+     * @param domToModelForSanitizing Sanitizing options used when converting dropped external HTML to Content Model.
+     * Use additionalDisallowedTags to remove extra elements from dropped content
      */
-    constructor(options: DragAndDropOptions = DefaultOptions) {
+    constructor(
+        options: DragAndDropOptions = DefaultOptions,
+        private domToModelForSanitizing: Pick<
+            DomToModelOptionForSanitizing,
+            | 'additionalAllowedTags'
+            | 'additionalDisallowedTags'
+            | 'styleSanitizers'
+            | 'attributeSanitizers'
+        > = {
+            styleSanitizers: DefaultSanitizers,
+            additionalAllowedTags: [],
+            additionalDisallowedTags: [],
+            attributeSanitizers: {},
+        }
+    ) {
         this.forbiddenElements = options.forbiddenElements ?? [];
     }
 
@@ -107,7 +131,12 @@ export class DragAndDropPlugin implements EditorPlugin {
             ) {
                 handleDroppedInternalContent(this.editor, dropEvent);
             } else if (!this.internalDrag) {
-                handleDroppedExternalContent(this.editor, dropEvent, this.forbiddenElements);
+                handleDroppedExternalContent(
+                    this.editor,
+                    dropEvent,
+                    this.forbiddenElements,
+                    this.domToModelForSanitizing
+                );
             }
             this.internalDrag = false;
         }

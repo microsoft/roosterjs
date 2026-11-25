@@ -10,6 +10,14 @@ import {
     IEditor,
 } from 'roosterjs-content-model-types';
 import { ChangeSource } from 'roosterjs-content-model-dom';
+import { DefaultSanitizers } from '../../lib/pluginUtils/Sanitizers/DefaultSanitizers';
+
+const defaultSanitizingOptions = {
+    styleSanitizers: DefaultSanitizers,
+    additionalAllowedTags: [],
+    additionalDisallowedTags: [],
+    attributeSanitizers: {},
+};
 
 describe('DragAndDropPlugin', () => {
     let plugin: DragAndDropPlugin;
@@ -237,9 +245,12 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
-                'iframe',
-            ]);
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                [],
+                defaultSanitizingOptions
+            );
         });
 
         it('should use custom forbidden elements', () => {
@@ -259,10 +270,43 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
-                'script',
-                'object',
-            ]);
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                ['script', 'object'],
+                defaultSanitizingOptions
+            );
+        });
+
+        it('should pass custom sanitizing options', () => {
+            const sanitizingOptions = {
+                styleSanitizers: { color: false },
+                additionalAllowedTags: ['custom-allowed' as const],
+                additionalDisallowedTags: ['custom-disallowed' as const],
+                attributeSanitizers: { title: false },
+            };
+
+            plugin.dispose();
+            plugin = new DragAndDropPlugin(undefined, sanitizingOptions);
+            plugin.initialize(editor);
+
+            const dropEvent = {
+                dataTransfer: {
+                    getData: () => '<div>dropped content</div>',
+                },
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: 'beforeDrop',
+                rawEvent: dropEvent,
+            });
+
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                [],
+                sanitizingOptions
+            );
         });
 
         it('should call handleDroppedContent even when dataTransfer has no HTML', () => {
@@ -277,9 +321,12 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
-                'iframe',
-            ]);
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                [],
+                defaultSanitizingOptions
+            );
         });
 
         it('should call handleDroppedContent when only plain text is dropped', () => {
@@ -295,9 +342,12 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
-                'iframe',
-            ]);
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                [],
+                defaultSanitizingOptions
+            );
         });
 
         it('should call handleDroppedContent when both HTML and plain text are present', () => {
@@ -314,9 +364,12 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
-                'iframe',
-            ]);
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                [],
+                defaultSanitizingOptions
+            );
         });
 
         it('should call handleDroppedContent even when dataTransfer is null', () => {
@@ -329,9 +382,12 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, [
-                'iframe',
-            ]);
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                [],
+                defaultSanitizingOptions
+            );
         });
 
         it('should not call handleDroppedContent for internal drag and drop', () => {
@@ -496,7 +552,12 @@ describe('DragAndDropPlugin', () => {
                 rawEvent: dropEvent,
             });
 
-            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(editor, dropEvent, []);
+            expect(handleDroppedExternalContentSpy).toHaveBeenCalledWith(
+                editor,
+                dropEvent,
+                [],
+                defaultSanitizingOptions
+            );
         });
     });
 });

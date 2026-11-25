@@ -1,4 +1,5 @@
 import { cleanForbiddenElements } from './cleanForbiddenElements';
+import { createModelFromHtml } from 'roosterjs-content-model-core';
 import {
     createDomToModelContext,
     createPasteFragment,
@@ -7,7 +8,12 @@ import {
     getNodePositionFromEvent,
     mergeModel,
 } from 'roosterjs-content-model-dom';
-import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelDocument,
+    DOMCreator,
+    DomToModelOptionForSanitizing,
+    IEditor,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -16,7 +22,8 @@ import type { ContentModelDocument, IEditor } from 'roosterjs-content-model-type
 export async function handleDroppedExternalContent(
     editor: IEditor,
     event: DragEvent,
-    forbiddenElements: string[]
+    forbiddenElements: string[],
+    domToModelForSanitizing?: Partial<DomToModelOptionForSanitizing>
 ): Promise<void> {
     const items = getSupportedItems(event.dataTransfer);
     if (items.length == 0) {
@@ -30,7 +37,12 @@ export async function handleDroppedExternalContent(
         event.preventDefault();
         event.stopPropagation();
 
-        const droppedModel = await getDroppedModel(editor, items, forbiddenElements);
+        const droppedModel = await getDroppedModel(
+            editor,
+            items,
+            forbiddenElements,
+            domToModelForSanitizing
+        );
         if (!droppedModel) {
             return;
         }
@@ -60,18 +72,31 @@ export async function handleDroppedExternalContent(
 async function getDroppedModel(
     editor: IEditor,
     items: DataTransferItem[],
-    forbiddenElements: string[]
+    forbiddenElements: string[],
+    domToModelForSanitizing?: Partial<DomToModelOptionForSanitizing>
 ): Promise<ContentModelDocument | undefined> {
     const clipboardData = await extractClipboardItems(items, undefined);
-    const domCreator = editor.getDOMCreator();
 
-    const doc = clipboardData.rawHtml ? domCreator.htmlToDOM(clipboardData.rawHtml) : null;
+    if (clipboardData.rawHtml) {
+        const editorDomCreator = editor.getDOMCreator();
+        const domCreator: DOMCreator = {
+            ...editorDomCreator,
+            htmlToDOM: (html: string) => {
+                const doc = editorDomCreator.htmlToDOM(html);
+                cleanForbiddenElements(doc, forbiddenElements);
+                return doc;
+            },
+        };
 
-    if (doc) {
-        cleanForbiddenElements(doc, forbiddenElements);
+        return createModelFromHtml(clipboardData.rawHtml, domToModelForSanitizing, domCreator);
     }
 
-    const fragment = createPasteFragment(editor.getDocument(), clipboardData, 'normal', doc?.body);
+    const fragment = createPasteFragment(
+        editor.getDocument(),
+        clipboardData,
+        'normal',
+        undefined /* root */
+    );
 
     return domToContentModel(fragment, createDomToModelContext());
 }

@@ -1,7 +1,7 @@
 import { addParser } from './utils/addParser';
 import { blockElementParser } from './parsers/blockElementParser';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
-import { DefaultSanitizers } from './DefaultSanitizers';
+import { DefaultSanitizers } from '../pluginUtils/Sanitizers/DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
 import { getDocumentSource } from './pasteSourceValidations/getDocumentSource';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
