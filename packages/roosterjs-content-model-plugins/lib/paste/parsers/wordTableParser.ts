@@ -7,7 +7,15 @@ import type { ContentModelTableFormat, FormatParser } from 'roosterjs-content-mo
  * @param element The HTML element being processed
  */
 export const wordTableParser: FormatParser<ContentModelTableFormat> = (format, element): void => {
-    if (format.marginLeft?.startsWith('-')) {
+    const align = element.getAttribute('align')?.toLowerCase();
+    const float = element.style.float;
+    const isFloating = float == 'left' || float == 'right' || align == 'left' || align == 'right';
+
+    // An explicit nonfloating table indent is layout, not list/float compensation.
+    if (
+        format.marginLeft?.startsWith('-') &&
+        (isFloating || !element.style.marginLeft.startsWith('-'))
+    ) {
         delete format.marginLeft;
     }
     if (format.htmlAlign) {

@@ -37,6 +37,75 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    [true, false].forEach(word => {
+        it('Preserve explicit negative table indent: Word=' + word, () => {
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head>${
+                    word ? '<meta name="ProgId" content="Word.Document">' : ''
+                }</head><body><!--StartFragment-->
+                    <table style="margin-left:-18pt;width:144pt"><tr><td>Indented</td></tr></table>
+                    <!--EndFragment--></body></html>`,
+            });
+
+            const table = document.getElementById(ID)!.querySelector('table')!;
+
+            expect(table.style.marginLeft).toBe('-18pt');
+            expect(table.style.width).toBe('144pt');
+            expect(table.textContent).toBe('Indented');
+        });
+    });
+
+    it('Preserve Word centered table wrapper and explicit cell spacing', () => {
+        const root = document.getElementById(ID)!;
+        root.style.width = '500px';
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment--><div align="center"><table width="200"
+                cellspacing="8" style="mso-cellspacing:6pt"><tr><td>Centered</td></tr></table></div>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const table = root.querySelector('table')!;
+        const rect = table.getBoundingClientRect();
+        const container = root.getBoundingClientRect();
+
+        expect(getComputedStyle(table).borderSpacing).toBe('8px');
+        expect(
+            Math.abs((rect.left + rect.right - container.left - container.right) / 2)
+        ).toBeLessThan(1);
+    });
+
+    it('Preserve collapsed Word table cell CSS with explicit negative indent', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment--><table cellspacing="0" cellpadding="0"
+                style="margin-left:-18pt;border-collapse:collapse">
+                <tr><td style="padding:0pt 5.4pt" valign="bottom">Cell</td></tr></table>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const table = document.getElementById(ID)!.querySelector('table')!;
+        const cell = table.querySelector('td')!;
+
+        expect(table.style.marginLeft).toBe('-18pt');
+        expect(table.style.borderCollapse).toBe('collapse');
+        expect(cell.style.paddingLeft).toBe('5.4pt');
+        expect(cell.style.paddingRight).toBe('5.4pt');
+        expect(cell.style.verticalAlign).toBe('bottom');
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],

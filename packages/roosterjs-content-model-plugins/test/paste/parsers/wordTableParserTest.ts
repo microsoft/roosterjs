@@ -14,6 +14,35 @@ describe('wordTableParser', () => {
         defaultStyle = {};
     });
 
+    it('preserves an explicitly supplied nonfloating negative table margin', () => {
+        element.style.marginLeft = '-18pt';
+        format.marginLeft = '-18pt';
+
+        wordTableParser(format, element, context, defaultStyle);
+
+        expect(format.marginLeft).toBe('-18pt');
+    });
+
+    it('retains negative-margin cleanup for floating table shapes', () => {
+        ['left', 'right'].forEach(side => {
+            [true, false].forEach(cssFloat => {
+                element = document.createElement('table');
+                element.style.marginLeft = '-18pt';
+                if (cssFloat) {
+                    element.style.float = side;
+                } else {
+                    element.setAttribute('align', side);
+                }
+                format = { marginLeft: '-18pt', htmlAlign: side as 'left' | 'right' };
+
+                wordTableParser(format, element, context, defaultStyle);
+
+                expect(format.marginLeft).toBeUndefined();
+                expect(format.htmlAlign).toBeUndefined();
+            });
+        });
+    });
+
     it('should remove marginLeft when it starts with negative value', () => {
         format.marginLeft = '-5px';
         wordTableParser(format, element, context, defaultStyle);

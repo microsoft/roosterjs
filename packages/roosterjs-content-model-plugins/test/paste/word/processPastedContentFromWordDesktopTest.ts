@@ -392,7 +392,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
         });
     });
 
-    it('Remove Negative Left margin from table', () => {
+    it('Preserve explicit negative left margin on a nonfloating table', () => {
         runTest(
             '<div><table style="margin-left: -5px;"><tbody><tr><td>Test</td></tr><tbody></table></div>',
             {
@@ -430,7 +430,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 ],
                             },
                         ],
-                        format: {},
+                        format: { marginLeft: '-5px' },
                         widths: [],
                         dataset: {},
                     },
