@@ -1,5 +1,5 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
+import { ClipboardData, ContentModelListItem, IEditor } from 'roosterjs-content-model-types';
 import { cloneModel } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
@@ -69,7 +69,7 @@ describe(ID, () => {
 
                 expect(root.querySelectorAll('ol').length).toBe(0);
                 expect(root.querySelectorAll('ul').length).toBe(metadata ? 1 : 0);
-                expect(root.textContent).toBe(metadata ? 'Body' : '·\u00a0\u00a0Body');
+                expect(root.textContent).toBe(metadata ? 'Body' : '·\u00a0 Body');
                 if (!metadata) {
                     expect(root.querySelectorAll('p').length).toBe(1);
                     if (nested) {
@@ -100,10 +100,42 @@ describe(ID, () => {
             item.textContent?.includes('Fallback')
         );
 
-        expect(root.textContent).toBe('Firsto\u00a0FallbackLast');
+        expect(root.textContent).toBe('Firsto FallbackLast');
         expect(fallback).toBeDefined();
         expect(fallback?.closest('li')).toBeNull();
         expect(root.querySelectorAll('li').length).toBe(2);
+    });
+
+    it('Preserve decimal marker numbers and discontinuities without Word list metadata', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment-->
+                <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">3.</span>Three</p>
+                <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">4.</span>Four</p>
+                <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">7)</span>Seven</p>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const items = editor
+            .getContentModelCopy('disconnected')
+            .blocks.filter(
+                (block): block is ContentModelListItem =>
+                    block.blockType == 'BlockGroup' && block.blockGroupType == 'ListItem'
+            );
+        const root = document.getElementById(ID)!;
+
+        expect(items.map(item => item.levels[0].format.startNumberOverride)).toEqual([
+            3,
+            undefined,
+            7,
+        ]);
+        expect(root.querySelector('ol')!.start).toBe(3);
+        expect(root.querySelectorAll('li')[2].style.listStyleType).toBe('"7) "');
+        expect(root.textContent).toBe('ThreeFourSeven');
     });
 
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {

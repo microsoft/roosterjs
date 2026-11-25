@@ -29,6 +29,7 @@ interface WordDesktopListFormat extends DomToModelListFormat {
     wordList?: string;
     wordKnownLevels?: Map<string, ContentModelListLevel[]>;
     wordConvertedItems?: WeakSet<ContentModelBlockGroup>;
+    wordMarkerNumbers?: Map<string, number>;
 }
 
 interface WordListFormat extends ContentModelListItemFormat {
@@ -62,10 +63,19 @@ export function processWordList(
     }
 
     const [lNumber, level] = wordListStyle.split(' ');
-    const listMetadata = metadata.get(`${lNumber}:${level}`);
+    let listMetadata = metadata.get(`${lNumber}:${level}`);
+    const bulletElement = wordListStyle ? getBulletElement(element) : undefined;
+    const marker = !listMetadata && wordListStyle ? bulletElement?.textContent?.trim() : undefined;
+    const decimalMarker = marker?.match(/^([1-9]\d*)([.)])$/);
+    const markerNumber = decimalMarker ? Number(decimalMarker[1]) : undefined;
 
-    if (wordListStyle && !listMetadata) {
+    // Preserve unknown markers instead of guessing OL; retain markerless and decimal compatibility.
+    if (marker !== undefined && !Number.isSafeInteger(markerNumber)) {
         return false;
+    }
+
+    if (decimalMarker?.[2] == ')') {
+        listMetadata = { 'mso-level-text': '%1)' };
     }
 
     // Try get the list metadata from word, which follows this format: l1 level1 lfo2
@@ -107,7 +117,6 @@ export function processWordList(
         }
 
         const bullet = getBulletFromMetadata(listMetadata, listType);
-        const bulletElement = getBulletElement(element);
         const listFormatMetadata = bullet
             ? {
                   unorderedStyleType: listType == 'UL' ? bullet : undefined,
@@ -148,6 +157,20 @@ export function processWordList(
 
                     if (listType == 'OL') {
                         setStartNumber(listItem, context, listMetadata, element);
+
+                        if (markerNumber !== undefined) {
+                            if (!listFormat.wordMarkerNumbers) {
+                                listFormat.wordMarkerNumbers = new Map<string, number>();
+                            }
+                            const previous = listFormat.wordMarkerNumbers.get(wordListStyle) || 0;
+
+                            if (markerNumber != previous + 1) {
+                                listItem.levels[
+                                    listItem.levels.length - 1
+                                ].format.startNumberOverride = markerNumber;
+                            }
+                            listFormat.wordMarkerNumbers.set(wordListStyle, markerNumber);
+                        }
                     }
                 }
             );
