@@ -1,4 +1,5 @@
 import { HorizontalLineEditPlugin } from '../../lib/horizontalLineEdit/HorizontalLineEditPlugin';
+import { EditPlugin } from '../../lib/edit/EditPlugin';
 import { initEditor, removeElement } from '../TestHelper';
 import {
     cloneModel,
@@ -7,16 +8,16 @@ import {
 } from 'roosterjs-content-model-dom';
 import { redo, undo } from 'roosterjs-content-model-core';
 import type { HorizontalLineEditOptions } from '../../lib/horizontalLineEdit/HorizontalLineEditOptions';
-import type { IEditor } from 'roosterjs-content-model-types';
+import type { EditorPlugin, IEditor } from 'roosterjs-content-model-types';
 
 describe('HorizontalLineEditPlugin', () => {
     let editor: IEditor;
     let plugin: HorizontalLineEditPlugin;
     let root: HTMLElement;
 
-    function initialize(options?: HorizontalLineEditOptions) {
+    function initialize(options?: HorizontalLineEditOptions, plugins: EditorPlugin[] = []) {
         plugin = new HorizontalLineEditPlugin(options);
-        editor = initEditor('horizontalLineEditTest', [plugin]);
+        editor = initEditor('horizontalLineEditTest', [...plugins, plugin]);
         root = document.getElementById('horizontalLineEditTest')!;
         root.innerHTML =
             '<hr style="width:200px;height:4px;border:1px solid black">' +
@@ -89,6 +90,189 @@ describe('HorizontalLineEditPlugin', () => {
         expect(plugin.getName()).toBe('HorizontalLineEdit');
     });
 
+    it('hides the caret while editing and restores the existing caret color afterward', () => {
+        initialize();
+        editor.setEditorStyle('customCaretColor', 'caret-color: rgb(12, 34, 56);');
+        expect(getComputedStyle(root).caretColor).toBe('rgb(12, 34, 56)');
+        selectLine();
+        expect(getComputedStyle(root).caretColor).toBe('rgba(0, 0, 0, 0)');
+        key('ArrowRight');
+        expect(getComputedStyle(root).caretColor).toBe('rgba(0, 0, 0, 0)');
+        key('Enter');
+        expect(getComputedStyle(root).caretColor).toBe('rgb(12, 34, 56)');
+    });
+
+    [
+        { name: 'cancelling', finish: () => key('Escape') },
+        { name: 'pressing Tab', finish: () => key('Tab') },
+        {
+            name: 'clicking elsewhere',
+            finish: () =>
+                root
+                    .querySelector('div')!
+                    .dispatchEvent(new MouseEvent('mousedown', { bubbles: true })),
+        },
+        {
+            name: 'losing focus',
+            finish: () =>
+                root.dispatchEvent(new FocusEvent('blur', { relatedTarget: document.body })),
+        },
+        {
+            name: 'replacing content',
+            finish: () => plugin.onPluginEvent({ eventType: 'beforeSetContent', newContent: '' }),
+        },
+        { name: 'taking a snapshot', finish: () => editor.takeSnapshot() },
+        {
+            name: 'changing logical root',
+            finish: () => editor.setLogicalRoot(root.querySelector('div')!),
+        },
+        { name: 'disposing', finish: () => plugin.dispose() },
+    ].forEach(({ name, finish }) => {
+        it('restores the caret when ' + name, () => {
+            initialize();
+            const originalCaretColor = getComputedStyle(root).caretColor;
+            selectLine();
+            expect(getComputedStyle(root).caretColor).toBe('rgba(0, 0, 0, 0)');
+            finish();
+            expect(getHost()).toBeNull();
+            expect(getComputedStyle(root).caretColor).toBe(originalCaretColor);
+        });
+    });
+
+    it('keeps the caret hidden when switching lines', () => {
+        initialize();
+        const originalCaretColor = getComputedStyle(root).caretColor;
+        selectLine();
+        selectLine(1);
+        expect(getComputedStyle(root).caretColor).toBe('rgba(0, 0, 0, 0)');
+        key('Enter');
+        expect(getComputedStyle(root).caretColor).toBe(originalCaretColor);
+    });
+
+    it('keeps the same wrapper and pending dimensions across repeated drags', () => {
+        initialize();
+        const line = selectLine();
+        const host = getHost();
+        const handle = getHandle();
+        const format = spyOn(editor, 'formatContentModel').and.callThrough();
+        drag(20, 10);
+        expect(getHost()).toBe(host);
+        expect(getHandle()).toBe(handle);
+        expect(line.style.width).toBe('200px');
+        expect(line.style.height).toBe('4px');
+        expect(getComputedStyle(root).caretColor).toBe('rgba(0, 0, 0, 0)');
+        expectThickness(host.shadowRoot!.querySelector('hr')!, 16);
+        drag(30, 2);
+        expect(getHost()).toBe(host);
+        expect(host.shadowRoot!.firstElementChild!.getBoundingClientRect().width).toBe(252);
+        expectThickness(host.shadowRoot!.querySelector('hr')!, 18);
+        expect(format).not.toHaveBeenCalled();
+        key('Enter');
+        expect(root.querySelector('hr')!.style.width).toBe('250px');
+        expectThickness(root.querySelector('hr')!, 18);
+        expect(getHost()).toBeNull();
+        expect(format.calls.count()).toBe(1);
+    });
+
+    it('keeps pending drag changes when clicking or tapping the same line again', () => {
+        initialize();
+        const line = selectLine();
+        const host = getHost();
+        const format = spyOn(editor, 'formatContentModel').and.callThrough();
+        drag(20, 10);
+        selectLine();
+        expect(getHost()).toBe(host);
+        line.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerType: 'touch' }));
+        expect(getHost()).toBe(host);
+        expect(format).not.toHaveBeenCalled();
+        expect(line.style.width).toBe('200px');
+        expectThickness(host.shadowRoot!.querySelector('hr')!, 16);
+        key('Enter');
+        expect(root.querySelector('hr')!.style.width).toBe('220px');
+        expectThickness(root.querySelector('hr')!, 16);
+    });
+
+    [
+        {
+            name: 'clicking elsewhere',
+            dismiss: () =>
+                root
+                    .querySelector('div')!
+                    .dispatchEvent(new MouseEvent('mousedown', { bubbles: true })),
+        },
+        {
+            name: 'editor blur',
+            dismiss: () =>
+                root.dispatchEvent(new FocusEvent('blur', { relatedTarget: document.body })),
+        },
+        {
+            name: 'blur without a related target',
+            dismiss: () => root.dispatchEvent(new FocusEvent('blur', { relatedTarget: null })),
+        },
+        {
+            name: 'typing in the editor',
+            dismiss: () =>
+                root.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true })),
+        },
+        { name: 'Tab', dismiss: () => key('Tab') },
+    ].forEach(({ name, dismiss }) => {
+        it('commits pending drag changes when dismissed by ' + name, () => {
+            initialize();
+            const caretColor = getComputedStyle(root).caretColor;
+            selectLine();
+            drag(20, 10);
+            expect(getHost()).not.toBeNull();
+            dismiss();
+            expect(getHost()).toBeNull();
+            expect(root.querySelector('hr')!.style.width).toBe('220px');
+            expectThickness(root.querySelector('hr')!, 16);
+            expect(getComputedStyle(root).caretColor).toBe(caretColor);
+        });
+    });
+
+    it('cancels all pending drag changes on Escape', () => {
+        initialize();
+        selectLine();
+        drag(20, 10);
+        drag(30, 2);
+        key('Escape');
+        expect(getHost()).toBeNull();
+        expect(root.querySelector('hr')!.style.width).toBe('200px');
+        expect(root.querySelector('hr')!.style.height).toBe('4px');
+    });
+
+    ['Enter', 'Backspace', 'Delete', 'Tab', 'a', 'ArrowRight'].forEach(keyName => {
+        it('commits before EditPlugin processes ' + keyName + ' in the editor', () => {
+            const editPlugin = new EditPlugin();
+            initialize(undefined, [editPlugin]);
+            const text = root.querySelector('div')!.firstChild!;
+            const range = document.createRange();
+            range.setStart(text, 1);
+            range.setEnd(text, 2);
+            editor.setDOMSelection({ type: 'range', range, isReverted: false });
+            selectLine();
+            drag(20, 10);
+            const onPluginEvent = spyOn(editPlugin, 'onPluginEvent').and.callThrough();
+            root.dispatchEvent(
+                new KeyboardEvent('keydown', {
+                    key: keyName,
+                    bubbles: true,
+                    cancelable: true,
+                })
+            );
+            expect(getHost()).toBeNull();
+            expect(root.querySelector('hr')!.style.width).toBe('220px');
+            expectThickness(root.querySelector('hr')!, 16);
+            expect(
+                onPluginEvent.calls.allArgs().filter(([event]) => event.eventType == 'keyDown')
+                    .length
+            ).toBe(1);
+            if (keyName == 'Backspace' || keyName == 'Delete') {
+                expect(root.textContent).toBe('Txt');
+            }
+        });
+    });
+
     it('wraps only the clicked line and keeps editing UI outside the content model', () => {
         initialize();
         const original = editor.getContentModelCopy('clean');
@@ -154,6 +338,8 @@ describe('HorizontalLineEditPlugin', () => {
         expect(line.style.borderTopWidth).toBe('1px');
         expect(line.style.borderBottomWidth).toBe('1px');
         document.dispatchEvent(new MouseEvent('mouseup'));
+        expect(getHost()).not.toBeNull();
+        key('Enter');
         const result = root.querySelector('hr')!;
         expect(result.style.width).toBe('250px');
         expectThickness(result, before.height + 10);
@@ -180,6 +366,7 @@ describe('HorizontalLineEditPlugin', () => {
         initialize();
         selectLine();
         drag(30, 0, 'se');
+        key('Enter');
         expect(root.querySelector('hr')!.style.width).toBe('230px');
         expect(root.querySelector('hr')!.style.display).toBe('table');
         expect(root.querySelector('hr')!.style.height).toBe('4px');
@@ -187,6 +374,7 @@ describe('HorizontalLineEditPlugin', () => {
         expect(root.querySelector('hr')!.style.borderBottomWidth).toBe('1px');
         selectLine();
         drag(30, 20, 's');
+        key('Enter');
         expect(root.querySelector('hr')!.style.width).toBe('230px');
         expectThickness(root.querySelector('hr')!, 26);
     });
@@ -210,10 +398,84 @@ describe('HorizontalLineEditPlugin', () => {
         root.querySelector('hr')!.style.boxSizing = 'border-box';
         selectLine();
         drag(50, 10);
+        key('Enter');
         const line = root.querySelector('hr')!;
         expect(line.style.boxSizing).toBe('border-box');
         expect(line.getBoundingClientRect().width).toBe(250);
         expectThickness(line, 14);
+    });
+
+    ['content-box', 'border-box'].forEach(boxSizing => {
+        [-50, 50].forEach(deltaX => {
+            const name = 'matches width preview beyond bounds: ' + boxSizing + ', ' + deltaX;
+            it(name, () => {
+                initialize();
+                const line = root.querySelector('hr')!;
+                line.style.boxSizing = boxSizing;
+                line.style.minWidth = '200px';
+                line.style.maxWidth = '200px';
+                line.style.minHeight = '4px';
+                line.style.maxHeight = '4px';
+                const before = line.getBoundingClientRect();
+                selectLine();
+                drag(deltaX, 0, 'e');
+                const preview = getHost().shadowRoot!.querySelector('hr')!.getBoundingClientRect();
+                expect(preview.width).toBe(before.width + deltaX);
+                key('Enter');
+                const result = root.querySelector('hr')!;
+                expect(result.getBoundingClientRect().width).toBe(preview.width);
+                expect(result.getBoundingClientRect().height).toBe(preview.height);
+                expect(result.style.minWidth).toBe('0px');
+                expect(result.style.maxWidth).toBe('none');
+                expect(result.style.minHeight).toBe('4px');
+                expect(result.style.maxHeight).toBe('4px');
+            });
+        });
+
+        [-10, 10].forEach(deltaY => {
+            const name = 'matches height preview beyond bounds: ' + boxSizing + ', ' + deltaY;
+            it(name, () => {
+                initialize();
+                const line = root.querySelector('hr')!;
+                line.style.boxSizing = boxSizing;
+                line.style.minWidth = '200px';
+                line.style.maxWidth = '200px';
+                line.style.height = '20px';
+                line.style.minHeight = '20px';
+                line.style.maxHeight = '20px';
+                const before = line.getBoundingClientRect();
+                selectLine();
+                drag(0, deltaY, 's');
+                const preview = getHost().shadowRoot!.querySelector('hr')!.getBoundingClientRect();
+                expect(preview.height).toBe(before.height + deltaY);
+                key('Enter');
+                const result = root.querySelector('hr')!;
+                expect(result.getBoundingClientRect().width).toBe(preview.width);
+                expect(result.getBoundingClientRect().height).toBe(preview.height);
+                expect(result.style.minWidth).toBe('0px');
+                expect(result.style.maxWidth).toBe('none');
+                expect(result.style.minHeight).toBe('0px');
+                expect(result.style.maxHeight).toBe('none');
+            });
+        });
+    });
+
+    ['Enter', 'Escape'].forEach(keyName => {
+        it('preserves size constraints when dismissed without resizing via ' + keyName, () => {
+            initialize();
+            const line = root.querySelector('hr')!;
+            line.style.minWidth = '200px';
+            line.style.maxWidth = '200px';
+            line.style.minHeight = '4px';
+            line.style.maxHeight = '4px';
+            const originalStyle = line.style.cssText;
+            const format = spyOn(editor, 'formatContentModel').and.callThrough();
+            selectLine();
+            key(keyName);
+            expect(getHost()).toBeNull();
+            expect(root.querySelector('hr')!.style.cssText).toBe(originalStyle);
+            expect(format).not.toHaveBeenCalled();
+        });
     });
 
     it('resizes only the selected line inside a table', () => {
@@ -223,6 +485,7 @@ describe('HorizontalLineEditPlugin', () => {
             '<td><hr style="width:100px;height:2px;border:0"></td></tr></table>';
         selectLine();
         drag(50, 10);
+        key('Enter');
         const lines = root.querySelectorAll('hr');
         expect(lines[0].style.width).toBe('248px');
         expect(lines[0].getBoundingClientRect().width).toBe(250);
@@ -241,6 +504,7 @@ describe('HorizontalLineEditPlugin', () => {
         expect(getHost().firstChild).toBe(root.querySelectorAll('hr')[1]);
         const before = getHost().shadowRoot!.firstElementChild!.getBoundingClientRect();
         drag(20, 10);
+        key('Enter');
         expect(root.querySelectorAll('hr')[1].getBoundingClientRect().width).toBe(
             before.width + 20
         );
@@ -250,6 +514,7 @@ describe('HorizontalLineEditPlugin', () => {
         initialize({ minWidth: 40, minHeight: 8 });
         selectLine();
         drag(-1000, -1000);
+        key('Enter');
         const rect = root.querySelector('hr')!.getBoundingClientRect();
         expect(rect.width).toBe(40);
         expect(rect.height).toBe(8);
@@ -266,12 +531,13 @@ describe('HorizontalLineEditPlugin', () => {
         } as DOMRect);
         selectLine();
         drag(40, 20);
+        key('Enter');
         expect(root.querySelector('hr')!.style.width).toBe('220px');
         expectThickness(root.querySelector('hr')!, 16);
     });
 
     it('supports keyboard resizing and commits on Enter', () => {
-        initialize({ resizeHandleLabel: 'Resize horizontal line' });
+        initialize({ resizeHandleLabel: 'Resize horizontal line' }, [new EditPlugin()]);
         selectLine();
         expect(getHandle().getAttribute('aria-label')).toBe('Resize horizontal line');
         key('ArrowRight');
@@ -289,6 +555,7 @@ describe('HorizontalLineEditPlugin', () => {
         key('ArrowLeft', true, 'w');
         key('ArrowDown', true, 's');
         drag(5, 2);
+        key('Enter');
         const line = root.querySelector('hr')!;
         expect(line.style.width).toBe('225px');
         expectThickness(line, 18);
@@ -318,15 +585,35 @@ describe('HorizontalLineEditPlugin', () => {
         expect(getHost().shadowRoot!.firstElementChild!.getBoundingClientRect().width).toBe(203);
     });
 
-    it('keeps editing on Tab and commits on other unhandled handle keys', () => {
-        initialize();
+    it('does not forward a consumed non-cancelable resize key to other plugins', () => {
+        const editPlugin = new EditPlugin();
+        initialize(undefined, [editPlugin]);
         selectLine();
-        key('ArrowRight', true);
-        key('Tab');
+        const onPluginEvent = spyOn(editPlugin, 'onPluginEvent').and.callThrough();
+        getHandle().dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'ArrowRight',
+                bubbles: true,
+                composed: true,
+            })
+        );
+        expect(onPluginEvent).not.toHaveBeenCalledWith(
+            jasmine.objectContaining({ eventType: 'keyDown' })
+        );
         expect(getHost()).not.toBeNull();
-        key('a');
-        expect(getHost()).toBeNull();
-        expect(root.querySelector('hr')!.style.width).toBe('210px');
+        key('Enter');
+        expect(root.querySelector('hr')!.style.width).toBe('201px');
+    });
+
+    ['Tab', 'a'].forEach(keyName => {
+        it('commits on the unhandled handle key ' + keyName, () => {
+            initialize();
+            selectLine();
+            key('ArrowRight', true);
+            key(keyName);
+            expect(getHost()).toBeNull();
+            expect(root.querySelector('hr')!.style.width).toBe('210px');
+        });
     });
 
     it('cancels pending handle edits on Escape from the editor', () => {
@@ -358,6 +645,7 @@ describe('HorizontalLineEditPlugin', () => {
         const height = getHost().shadowRoot!.firstElementChild!.getBoundingClientRect().height;
         const before = getHost().shadowRoot!.firstElementChild!.getBoundingClientRect();
         drag(20, 10);
+        key('Enter');
         const line = root.querySelectorAll('hr')[1];
         expect(getComputedStyle(line).boxSizing).toBe('content-box');
         expect(line.getBoundingClientRect().width).toBe(before.width + 20);
@@ -367,7 +655,7 @@ describe('HorizontalLineEditPlugin', () => {
     });
 
     it('cancels keyboard resizing with Escape', () => {
-        initialize();
+        initialize(undefined, [new EditPlugin()]);
         selectLine();
         key('ArrowRight', true);
         key('Escape');
@@ -375,14 +663,13 @@ describe('HorizontalLineEditPlugin', () => {
         expect(getHost()).toBeNull();
     });
 
-    it('commits pending keyboard edits on focusout only when leaving the handles', () => {
+    it('commits pending keyboard edits on blur only when leaving the handles', () => {
         initialize();
         selectLine();
         const handle = getHandle();
         key('ArrowRight', true);
         handle.dispatchEvent(
-            new FocusEvent('focusout', {
-                bubbles: true,
+            new FocusEvent('blur', {
                 composed: true,
                 relatedTarget: getHandle('e'),
             })
@@ -391,9 +678,7 @@ describe('HorizontalLineEditPlugin', () => {
         expect(root.querySelector('hr')!.style.width).toBe('200px');
         const outside = document.createElement('button');
         document.body.appendChild(outside);
-        handle.dispatchEvent(
-            new FocusEvent('focusout', { bubbles: true, composed: true, relatedTarget: outside })
-        );
+        handle.dispatchEvent(new FocusEvent('blur', { composed: true, relatedTarget: outside }));
         outside.remove();
         expect(root.querySelector('hr')!.style.width).toBe('210px');
         expect(getHost()).toBeNull();
@@ -436,6 +721,9 @@ describe('HorizontalLineEditPlugin', () => {
         selectLine();
         drag(0, 0);
         expect(format).not.toHaveBeenCalled();
+        expect(getHost()).not.toBeNull();
+        key('Enter');
+        expect(format).not.toHaveBeenCalled();
         expect(getHost()).toBeNull();
     });
 
@@ -443,6 +731,7 @@ describe('HorizontalLineEditPlugin', () => {
         initialize();
         selectLine();
         drag(50, 10);
+        key('Enter');
         undo(editor);
         expect(root.querySelector('hr')!.style.width).toBe('200px');
         expect(root.querySelector('hr')!.style.height).toBe('4px');
@@ -559,6 +848,9 @@ describe('HorizontalLineEditPlugin', () => {
             });
             target.dispatchEvent(event);
         });
+        expect(getHost()).not.toBeNull();
+        expect(root.querySelector('hr')!.style.width).toBe('200px');
+        key('Enter');
         expect(root.querySelector('hr')!.style.width).toBe('230px');
         expectThickness(root.querySelector('hr')!, 16);
         expect(getHost()).toBeNull();
@@ -568,6 +860,7 @@ describe('HorizontalLineEditPlugin', () => {
         initialize();
         selectLine();
         drag(0, -100);
+        key('Enter');
         expectThickness(root.querySelector('hr')!, 2);
     });
 
@@ -576,6 +869,7 @@ describe('HorizontalLineEditPlugin', () => {
         root.querySelector('hr')!.style.padding = '3px 5px';
         selectLine();
         drag(20, 10);
+        key('Enter');
         const line = root.querySelector('hr')!;
         expect(line.getBoundingClientRect().width).toBe(232);
         expectThickness(line, 22);
@@ -703,10 +997,12 @@ describe('HorizontalLineEditPlugin', () => {
             initialize();
             selectLine();
             drag(deltaX, deltaY, direction);
+            key('Enter');
             expect(root.querySelector('hr')!.style.width).toBe(width);
             expectThickness(root.querySelector('hr')!, 16);
             selectLine();
             drag(-deltaX, -deltaY, direction);
+            key('Enter');
             expect(root.querySelector('hr')!.style.width).toBe('200px');
             expectThickness(root.querySelector('hr')!, 6);
         });
@@ -720,6 +1016,7 @@ describe('HorizontalLineEditPlugin', () => {
             initialize({ minHeight: 20 });
             selectLine();
             drag(deltaX, 100, direction);
+            key('Enter');
             let line = root.querySelector('hr')!;
             expect(line.style.width).toBe('230px');
             expect(line.style.height).toBe('4px');
@@ -728,6 +1025,7 @@ describe('HorizontalLineEditPlugin', () => {
             expect(line.getBoundingClientRect().height).toBe(6);
             selectLine();
             drag(-deltaX, -100, direction);
+            key('Enter');
             line = root.querySelector('hr')!;
             expect(line.style.width).toBe('200px');
             expect(line.style.height).toBe('4px');

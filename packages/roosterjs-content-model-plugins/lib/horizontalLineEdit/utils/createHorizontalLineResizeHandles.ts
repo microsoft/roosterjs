@@ -21,14 +21,13 @@ const HANDLE_DIRECTIONS = [
 
 /**
  * @internal
- * Register the eight handles and wire mouse and touch resizing.
+ * Register the eight handles and wire mouse and touch preview resizing.
  */
 export function createHorizontalLineResizeHandles(
     context: HorizontalLineResizeContext,
     editor: IEditor,
     options: HorizontalLineEditOptions,
-    zoomScale: number,
-    onFinish: () => void
+    zoomScale: number
 ) {
     HANDLE_DIRECTIONS.forEach(({ horizontal, vertical, direction }) => {
         const handleContext = { context, horizontal, vertical, options };
@@ -39,7 +38,8 @@ export function createHorizontalLineResizeHandles(
             new DragAndDropHelper(
                 handle,
                 handleContext,
-                onFinish,
+                // Releasing a handle leaves the preview active until editing is dismissed.
+                () => {},
                 HorizontalLineResizer,
                 zoomScale,
                 editor.getEnvironment().isMobileOrTablet,

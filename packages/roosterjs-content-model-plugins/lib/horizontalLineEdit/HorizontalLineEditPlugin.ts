@@ -6,23 +6,17 @@ import { isElementOfType, isNodeOfType, unwrap } from 'roosterjs-content-model-d
 import { WRAPPER_ATTRIBUTE } from './constants';
 import type { HorizontalLineEditOptions } from './HorizontalLineEditOptions';
 import type { HorizontalLineResizeContext } from './types/HorizontalLineResizeContext';
-import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-content-model-types';
+import type {
+    EditorPlugin,
+    IEditor,
+    KeyDownEvent,
+    PluginEvent,
+} from 'roosterjs-content-model-types';
+
+const HORIZONTAL_LINE_EDIT_CLASS_CARET = 'horizontalLineEditCaretColor';
 
 /**
- * Adds NW, N, NE, E, SE, S, SW, and W resize handles when a horizontal line is clicked.
- * Drag a handle, or focus it and use the arrow keys (Shift for 10px steps).
- * Mouse/touch release or Enter commits the dimensions; Escape cancels.
- * Clicking elsewhere in the editor or moving focus outside it also finishes editing.
- * Vertical resizing uses a 1px solid gray border and a transparent center,
- * with zero vertical padding and a minimum outer height of 2px.
- * The preview and committed horizontal line use display: table.
- * The preview preserves inline HR styles without copying computed defaults.
- * The editing outline has a 4px gap around the line, with 6px resize handles.
- *
- * @example
- * ```typescript
- * new Editor(contentDiv, { plugins: [new HorizontalLineEditPlugin()] });
- * ```
+ * Adds drag handles to resize a horizontal line when clicked.
  */
 export class HorizontalLineEditPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
@@ -57,6 +51,13 @@ export class HorizontalLineEditPlugin implements EditorPlugin {
     }
 
     /**
+     * Finish resizing before other plugins can change the content on keydown.
+     */
+    willHandleEventExclusively(event: PluginEvent) {
+        return !!this.editor && !!this.resizeContext && event.eventType == 'keyDown';
+    }
+
+    /**
      * Handle editor events.
      */
     onPluginEvent(event: PluginEvent) {
@@ -73,7 +74,7 @@ export class HorizontalLineEditPlugin implements EditorPlugin {
                 this.onMouseUp(event.rawEvent);
                 break;
             case 'keyDown':
-                this.onKeyDown(event.rawEvent);
+                this.onKeyDown(this.editor, event);
                 break;
             case 'beforeLogicalRootChange':
                 this.onBeforeLogicalRootChange();
@@ -113,23 +114,31 @@ export class HorizontalLineEditPlugin implements EditorPlugin {
         }
     }
 
-    private onKeyDown(event: KeyboardEvent) {
-        if (this.editor && this.resizeContext) {
-            const handled = handleHorizontalLineResizeKeyDown(
+    private onKeyDown(editor: IEditor, event: KeyDownEvent) {
+        const { rawEvent } = event;
+
+        if (
+            !this.resizeContext ||
+            handleHorizontalLineResizeKeyDown(
                 this.resizeContext,
-                event,
-                this.editor,
+                rawEvent,
+                editor,
                 () => this.finishEditing(),
                 () => this.cleanUp()
-            );
+            )
+        ) {
+            return;
+        }
 
-            if (handled) {
-                return;
-            } else if (event.key == 'Escape') {
-                event.preventDefault();
-                this.cleanUp();
-            } else if (event.key != 'Tab') {
-                this.finishEditing();
+        if (rawEvent.key == 'Escape') {
+            rawEvent.preventDefault();
+            this.cleanUp();
+        } else {
+            this.finishEditing();
+
+            if (!rawEvent.defaultPrevented) {
+                // Editing has finished, so dispatch the unconsumed key normally.
+                editor.triggerEvent('keyDown', event);
             }
         }
     }
@@ -152,16 +161,17 @@ export class HorizontalLineEditPlugin implements EditorPlugin {
                 beforeDispatch: event => {
                     const pointerEvent = event as PointerEvent;
                     const line = this.getEditableLine(pointerEvent.target);
-                    if (line && pointerEvent.pointerType != 'mouse' && pointerEvent.button == 0) {
+                    if (
+                        line &&
+                        line !== this.resizeContext?.line &&
+                        pointerEvent.pointerType != 'mouse' &&
+                        pointerEvent.button == 0
+                    ) {
                         this.startEditing(this.finishEditing(line) ?? line);
                     }
                 },
             },
             blur: {
-                capture: true,
-                beforeDispatch: this.onFocusOut,
-            },
-            focusout: {
                 capture: true,
                 beforeDispatch: this.onFocusOut,
             },
@@ -188,9 +198,8 @@ export class HorizontalLineEditPlugin implements EditorPlugin {
         const zoomScale = editor.getDOMHelper().calculateZoomScale();
         const context = createHorizontalLineResizeContext(line, zoomScale, this.options);
         this.resizeContext = context;
-        createHorizontalLineResizeHandles(context, editor, this.options, zoomScale, () =>
-            this.finishEditing()
-        );
+        editor.setEditorStyle(HORIZONTAL_LINE_EDIT_CLASS_CARET, 'caret-color: transparent;');
+        createHorizontalLineResizeHandles(context, editor, this.options, zoomScale);
     }
 
     private onFocusOut = (event: Event) => {
@@ -217,6 +226,7 @@ export class HorizontalLineEditPlugin implements EditorPlugin {
         const context = this.resizeContext;
         this.resizeContext = null;
         if (context) {
+            this.editor?.setEditorStyle(HORIZONTAL_LINE_EDIT_CLASS_CARET, null);
             context.helpers.forEach(helper => helper.dispose());
             const { host } = context;
             if (host.parentNode) {

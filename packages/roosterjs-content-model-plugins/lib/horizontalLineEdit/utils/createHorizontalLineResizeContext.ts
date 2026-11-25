@@ -28,10 +28,9 @@ export function createHorizontalLineResizeContext(
     preview.style.margin = '0';
     preview.style.boxSizing = 'border-box';
     preview.style.width = '100%';
-    preview.style.height = '100%';
     preview.style.minWidth = preview.style.minHeight = '0';
     preview.style.maxWidth = preview.style.maxHeight = 'none';
-    wrapper.style.cssText = 'position:relative;box-sizing:border-box;user-select:none;';
+    wrapper.style.cssText = 'position:relative;user-select:none;';
     wrapper.contentEditable = 'false';
     wrapper.style.marginTop = style.marginTop;
     wrapper.style.marginBottom = style.marginBottom;

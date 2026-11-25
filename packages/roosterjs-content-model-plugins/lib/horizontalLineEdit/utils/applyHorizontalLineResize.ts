@@ -5,7 +5,8 @@ import type { ContentModelDivider, IEditor } from 'roosterjs-content-model-types
 
 /**
  * @internal
- * Commit the dimensions and resolve the next line if rendering replaces its DOM node.
+ * Commit explicit dimensions without their original size constraints, and resolve the next line
+ * if rendering replaces its DOM node. Preserve height constraints when height is unchanged.
  */
 export function applyHorizontalLineResize(
     editor: IEditor,
@@ -67,8 +68,12 @@ export function applyHorizontalLineResize(
                                     dimensions.width -
                                     (useBorderBox ? 0 : resizedWidthAdjustment) +
                                     'px';
+                                divider.format.minWidth = '0';
+                                divider.format.maxWidth = 'none';
                                 if (heightFormat) {
                                     Object.assign(divider.format, heightFormat);
+                                    divider.format.minHeight = '0';
+                                    divider.format.maxHeight = 'none';
                                 }
                                 changed = true;
                             }
