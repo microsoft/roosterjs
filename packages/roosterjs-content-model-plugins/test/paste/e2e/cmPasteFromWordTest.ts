@@ -37,6 +37,41 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    it('preserves all caps and nested case resets without changing stored text', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment--><p style="text-transform:uppercase">Mixed
+                <span style="text-transform:none">Original</span>
+                <span style="text-transform:inherit">Inherited</span></p>
+                <table><tr><td style="text-transform:uppercase">Cell</td></tr></table>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        const styles: Record<string, string> = {};
+
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            const text = node.textContent?.trim();
+
+            if (text) {
+                styles[text] = getComputedStyle(node.parentElement!).textTransform;
+            }
+        }
+
+        expect(styles.Mixed).toBe('uppercase');
+        expect(styles.Original).toBe('none');
+        expect(styles.Inherited).toBe('uppercase');
+        expect(styles.Cell).toBe('uppercase');
+        expect(root.textContent).toContain('Mixed');
+        expect(root.textContent).toContain('Original');
+        expect(root.textContent).not.toContain('MIXED');
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],
@@ -227,6 +262,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textTransform: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -391,6 +427,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textTransform: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -946,6 +983,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textTransform: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -1278,6 +1316,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textTransform: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -1729,6 +1768,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textTransform: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -2429,6 +2469,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textTransform: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',

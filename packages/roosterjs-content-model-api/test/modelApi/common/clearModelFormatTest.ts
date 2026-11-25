@@ -26,6 +26,24 @@ import {
 describe('clearModelFormat', () => {
     const mockedCachedElement = 'CACHE' as any;
 
+    it('clears case presentation to the document default without changing text', () => {
+        const model = createContentModelDocument();
+        const paragraph = originalCreateParagraph();
+        const text = createText('Mixed', { textTransform: 'uppercase' });
+
+        text.isSelected = true;
+        paragraph.segments.push(text);
+        model.blocks.push(paragraph);
+        clearModelFormat(model, [], [], []);
+        expect(text.format).toEqual({});
+        expect(text.text).toBe('Mixed');
+
+        model.format = { textTransform: 'none' };
+        text.format = { textTransform: 'uppercase' };
+        clearModelFormat(model, [], [], []);
+        expect(text.format).toEqual({ textTransform: 'none' });
+    });
+
     function createDivider(tagName: 'hr' | 'div', format?: Readonly<ContentModelBlockFormat>) {
         const result = originalCreateDivider(tagName, format);
         result.cachedElement = mockedCachedElement;

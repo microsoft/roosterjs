@@ -33,6 +33,7 @@ import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
+import type { TextTransformFormat } from './formatParts/TextTransformFormat';
 import type { UndeletableFormat } from './formatParts/UndeletableFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
@@ -43,6 +44,11 @@ import type { WordBreakFormat } from './formatParts/WordBreakFormat';
  * Represents a record of all format handlers
  */
 export interface FormatHandlerTypeMap {
+    /**
+     * Format for text case presentation
+     */
+    textTransform: TextTransformFormat;
+
     /**
      * Format for AriaFormat
      */

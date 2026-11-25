@@ -20,6 +20,7 @@ import { imageStateFormatHandler } from './segment/imageStateFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
+import { textTransformFormatHandler } from './segment/textTransformFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemAlignFormatHandler } from './list/listItemAlignFormatHandler';
@@ -80,6 +81,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     italic: italicFormatHandler,
     legacyTableBorder: legacyTableBorderFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
+    textTransform: textTransformFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
     listItemAlign: listItemAlignFormatHandler,
@@ -106,6 +108,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
 };
 
 const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'textTransform',
     'letterSpacing',
     'fontFamily',
     'fontSize',

@@ -1241,6 +1241,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textTransform: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',

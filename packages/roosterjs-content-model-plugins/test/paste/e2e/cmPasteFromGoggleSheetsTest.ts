@@ -1888,6 +1888,7 @@ describe('Google Sheets E2E', () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textTransform: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
