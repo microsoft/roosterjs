@@ -23,6 +23,7 @@ import type { LinkFormat } from './formatParts/LinkFormat';
 import type { ListStyleFormat } from './formatParts/ListStyleFormat';
 import type { ListThreadFormat } from './formatParts/ListThreadFormat';
 import type { MarginFormat } from './formatParts/MarginFormat';
+import type { NoShadeFormat } from './formatParts/NoShadeFormat';
 import type { PaddingFormat } from './formatParts/PaddingFormat';
 import type { RoleFormat } from './formatParts/RoleFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
@@ -43,6 +44,11 @@ import type { WordBreakFormat } from './formatParts/WordBreakFormat';
  * Represents a record of all format handlers
  */
 export interface FormatHandlerTypeMap {
+    /**
+     * Format for native horizontal-rule shading
+     */
+    noShade: NoShadeFormat;
+
     /**
      * Format for AriaFormat
      */

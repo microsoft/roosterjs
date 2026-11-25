@@ -20,6 +20,7 @@ import { imageStateFormatHandler } from './segment/imageStateFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
+import { noShadeFormatHandler } from './common/noShadeFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemAlignFormatHandler } from './list/listItemAlignFormatHandler';
@@ -80,6 +81,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     italic: italicFormatHandler,
     legacyTableBorder: legacyTableBorderFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
+    noShade: noShadeFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
     listItemAlign: listItemAlignFormatHandler,
@@ -222,7 +224,14 @@ export const defaultFormatKeysPerCategory: {
     code: ['fontFamily', 'display'],
     data: ['dataValue'],
     dataset: ['dataset'],
-    divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
+    divider: [
+        ...sharedBlockFormats,
+        ...sharedContainerFormats,
+        'display',
+        'size',
+        'htmlAlign',
+        'noShade',
+    ],
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display', 'id'],
     entity: ['entity'],
     general: ['textColor', 'backgroundColor'], // General model still need to do color transformation in dark mode

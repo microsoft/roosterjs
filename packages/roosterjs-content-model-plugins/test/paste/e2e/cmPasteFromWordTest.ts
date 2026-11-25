@@ -37,6 +37,50 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    it('preserves noshade rule appearance without changing supplied geometry', () => {
+        const root = document.getElementById(ID)!;
+        const reference = document.createElement('div');
+        const fragment =
+            '<hr size="4" width="50%" noshade align="right">' +
+            '<hr size="4" width="50%" align="right">';
+
+        root.style.width = reference.style.width = '600px';
+        reference.innerHTML = fragment;
+        document.body.appendChild(reference);
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment-->${fragment}<!--EndFragment--></body></html>`,
+        });
+
+        const rules = root.querySelectorAll('hr');
+        const referenceRules = reference.querySelectorAll('hr');
+
+        rules.forEach((rule, index) => {
+            const style = getComputedStyle(rule);
+            const expected = getComputedStyle(referenceRules[index]);
+            const rect = rule.getBoundingClientRect();
+            const referenceRect = referenceRules[index].getBoundingClientRect();
+
+            expect(style.borderStyle).toBe(expected.borderStyle);
+            expect(style.borderColor).toBe(expected.borderColor);
+            expect(style.backgroundColor).toBe(expected.backgroundColor);
+            expect(rect.width).toBeCloseTo(referenceRect.width, 1);
+            expect(rect.height).toBeCloseTo(referenceRect.height, 1);
+            expect(rect.left - root.getBoundingClientRect().left).toBeCloseTo(
+                referenceRect.left - reference.getBoundingClientRect().left,
+                1
+            );
+            expect(rule.size).toBe('4');
+        });
+        expect(rules[0].hasAttribute('noshade')).toBe(true);
+        expect(rules[1].hasAttribute('noshade')).toBe(false);
+        reference.remove();
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],
