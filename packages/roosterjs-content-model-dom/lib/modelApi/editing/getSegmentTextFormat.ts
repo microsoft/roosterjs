@@ -21,6 +21,7 @@ export function getSegmentTextFormat(
         backgroundColor: format.backgroundColor,
         letterSpacing: format.letterSpacing,
         lineHeight: format.lineHeight,
+        lang: format.lang,
         fontWeight: includingBIU ? format.fontWeight : undefined,
         italic: includingBIU ? format.italic : undefined,
         underline: includingBIU ? format.underline : undefined,

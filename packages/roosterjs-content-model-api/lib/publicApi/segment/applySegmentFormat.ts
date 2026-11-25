@@ -19,6 +19,9 @@ export function applySegmentFormat(
             format.fontSize = newFormat.fontSize;
             format.fontWeight = newFormat.fontWeight;
             format.italic = newFormat.italic;
+            if (newFormat.lang !== undefined) {
+                format.lang = newFormat.lang;
+            }
             format.strikethrough = newFormat.strikethrough;
             format.superOrSubScriptSequence = newFormat.superOrSubScriptSequence;
             format.textColor = newFormat.textColor;

@@ -5,6 +5,7 @@ import type { FontSizeFormat } from './formatParts/FontSizeFormat';
 import type { ItalicFormat } from './formatParts/ItalicFormat';
 import type { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import type { LineHeightFormat } from './formatParts/LineHeightFormat';
+import type { LanguageFormat } from './formatParts/LanguageFormat';
 import type { StrikeFormat } from './formatParts/StrikeFormat';
 import type { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
@@ -23,4 +24,5 @@ export type ContentModelSegmentFormat = TextColorFormat &
     UnderlineFormat &
     StrikeFormat &
     SuperOrSubScriptFormat &
-    LineHeightFormat;
+    LineHeightFormat &
+    LanguageFormat;

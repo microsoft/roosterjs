@@ -117,7 +117,12 @@ function clearSegmentsFormat(
     defaultSegmentFormat: Readonly<ContentModelSegmentFormat> | undefined
 ) {
     segmentsToClear.forEach(x => {
+        const lang = defaultSegmentFormat?.lang ?? (x.format.lang !== undefined ? '' : undefined);
         x.format = { ...(defaultSegmentFormat || {}) };
+
+        if (lang !== undefined) {
+            x.format.lang = lang;
+        }
 
         if (x.link) {
             delete x.link.format.textColor;
