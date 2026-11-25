@@ -77,7 +77,7 @@ async function getDroppedModel(
 ): Promise<ContentModelDocument | undefined> {
     const clipboardData = await extractClipboardItems(items, undefined);
 
-    if (clipboardData.rawHtml) {
+    if (clipboardData.rawHtml && (clipboardData.text || !clipboardData.imageDataUri)) {
         const editorDomCreator = editor.getDOMCreator();
         const domCreator: DOMCreator = {
             ...editorDomCreator,
