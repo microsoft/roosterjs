@@ -37,6 +37,68 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    it('Preserve non-heading Word composite labels without changing list spacing', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document">
+                <style>
+                    @list l0:level1 { mso-level-start-at:2; }
+                    @list l0:level2 { mso-level-text:"%1\\.%2"; }
+                </style></head><body><!--StartFragment-->
+                <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">2.</span>Parent</p>
+                <p style="margin:0 0 8pt 1in;mso-list:l0 level2 lfo1">
+                    <span><span style="mso-list:Ignore">2.1<span>&nbsp;&nbsp;</span></span></span>Child one</p>
+                <p style="margin:0 0 8pt 1in;mso-list:l0 level2 lfo1">
+                    <span style="mso-list:Ignore">2.2<span>&nbsp;&nbsp;</span></span>Child two</p>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const children = Array.from(root.querySelectorAll('li')).filter(item =>
+            item.textContent?.startsWith('Child')
+        );
+
+        expect(children.length).toBe(2);
+        children.forEach((item, index) => {
+            expect(item.style.listStyleType).toBe('"2.' + (index + 1) + ' "');
+            expect(item.style.listStylePosition).toBe('');
+            expect(getComputedStyle(item).marginLeft).toBe('0px');
+            expect(parseFloat(getComputedStyle(item).marginBottom)).toBeCloseTo(10.6667, 2);
+            expect(getComputedStyle(item.parentElement!).paddingLeft).toBe('40px');
+        });
+        expect(root.querySelector('ol')!.start).toBe(2);
+        expect(root.querySelectorAll('ol').length).toBe(2);
+        expect(root.textContent?.replace(/\s+/g, ' ').trim()).toBe('ParentChild oneChild two');
+    });
+
+    [
+        { template: '%1\\.%2', marker: 'ordinary prose' },
+        { template: '%1\\.%2', marker: '2.1 extra' },
+        { template: '%1)', marker: '2.1' },
+    ].forEach(({ template, marker }) => {
+        it('Do not recover a composite Word label from ' + template + ' and ' + marker, () => {
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head><meta name="ProgId" content="Word.Document">
+                    <style>@list l0:level1 { mso-level-text:"${template}"; }</style>
+                    </head><body><!--StartFragment-->
+                    <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">${marker}</span>Body</p>
+                    <!--EndFragment--></body></html>`,
+            });
+
+            const item = document.getElementById(ID)!.querySelector('li')!;
+
+            expect(item.style.listStyleType).toBe(template == '%1)' ? '"1) "' : '');
+            expect(item.textContent).toBe('Body');
+        });
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],

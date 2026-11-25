@@ -136,6 +136,14 @@ export function processWordList(
                         delete listItem.format.marginRight;
                     }
 
+                    if (!isHeading && listType == 'OL' && bullet === undefined) {
+                        const label = getCompositeListLabel(listMetadata, bulletElement);
+
+                        if (label) {
+                            listItem.format.listStyleType = '"' + label + ' "';
+                        }
+                    }
+
                     if (listType == 'OL') {
                         setStartNumber(listItem, context, listMetadata, element);
                     }
@@ -204,6 +212,25 @@ function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType:
     }
 
     return getListStyleTypeFromString(listType, templateFinal);
+}
+
+function getCompositeListLabel(
+    listMetadata: WordMetadata | undefined,
+    bulletElement: HTMLElement | undefined
+): string | undefined {
+    const template = listMetadata?.['mso-level-text']?.replace(/\\\./g, '.') || '';
+    const label = bulletElement?.textContent?.trim();
+
+    if (label && /^%[1-9](?:\.%[1-9])+[.)]?$/.test(template)) {
+        const pattern = template
+            .replace(/\./g, '\\.')
+            .replace(/\)/g, '\\)')
+            .replace(/%[1-9]/g, '\\d+');
+
+        return new RegExp('^' + pattern + '$').test(label) ? label : undefined;
+    }
+
+    return undefined;
 }
 
 function setStartNumber(
