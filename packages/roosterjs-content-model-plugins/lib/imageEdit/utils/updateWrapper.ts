@@ -67,7 +67,7 @@ export function updateWrapper(
     wrapper.style.marginRight = `${marginHorizontal}px`;
 
     wrapper.style.transform = `rotate(${angleRad}rad)`;
-    setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight, !!isRotating);
+    setWrapperSizeDimensions(wrapper, image, visibleWidth, visibleHeight);
     wrapper.style.verticalAlign = 'text-bottom';
 
     // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
