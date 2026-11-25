@@ -6,13 +6,17 @@ import { reorderList } from '../../lib/dragAndDrop/utils/reorderList';
 import {
     ContentModelDocument,
     ContentModelFormatter,
+    DomToModelOptionForSanitizing,
     FormatContentModelContext,
     IEditor,
 } from 'roosterjs-content-model-types';
 import { ChangeSource } from 'roosterjs-content-model-dom';
 import { DefaultSanitizers } from '../../lib/pluginUtils/Sanitizers/DefaultSanitizers';
 
-const defaultSanitizingOptions = {
+const defaultSanitizingOptions: Pick<
+    DomToModelOptionForSanitizing,
+    'additionalAllowedTags' | 'additionalDisallowedTags' | 'styleSanitizers' | 'attributeSanitizers'
+> = {
     styleSanitizers: DefaultSanitizers,
     additionalAllowedTags: [],
     additionalDisallowedTags: [],
@@ -279,7 +283,13 @@ describe('DragAndDropPlugin', () => {
         });
 
         it('should pass custom sanitizing options', () => {
-            const sanitizingOptions = {
+            const sanitizingOptions: Pick<
+                DomToModelOptionForSanitizing,
+                | 'additionalAllowedTags'
+                | 'additionalDisallowedTags'
+                | 'styleSanitizers'
+                | 'attributeSanitizers'
+            > = {
                 styleSanitizers: { color: false },
                 additionalAllowedTags: ['custom-allowed' as const],
                 additionalDisallowedTags: ['custom-disallowed' as const],
