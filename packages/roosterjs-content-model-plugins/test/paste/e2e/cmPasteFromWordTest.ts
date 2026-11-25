@@ -37,6 +37,44 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    it('preserves signed run offsets and nested zero without changing font size', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment--><p style="font-size:12pt">Base
+                <span style="position:relative;top:-3pt;mso-text-raise:3pt">Raised
+                <span style="position:relative;top:0pt">Nested zero</span>
+                <span style="position:relative;top:3pt">Nested return</span></span>
+                <span style="position:relative;top:3pt;mso-text-raise:-3pt">Lowered</span>
+                <span style="mso-text-raise:3pt">MSO only</span>
+                <sup>Superscript</sup></p><!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        const styles: Record<string, CSSStyleDeclaration> = {};
+
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            ['Raised', 'Nested zero', 'Nested return', 'Lowered', 'MSO only'].forEach(text => {
+                if (node.textContent?.includes(text)) {
+                    styles[text] = getComputedStyle(node.parentElement!);
+                }
+            });
+        }
+
+        expect(styles.Raised?.top).toBe('-4px');
+        expect(styles['Nested zero']?.top).toBe('-4px');
+        expect(styles['Nested return']?.top).toBe('0px');
+        expect(styles.Lowered?.top).toBe('4px');
+        expect(styles['MSO only']?.top).toBe('auto');
+        expect(styles.Raised?.fontSize).toBe('16px');
+        expect(root.querySelector('sup')!.textContent).toBe('Superscript');
+        expect(root.querySelector('sub')).toBeNull();
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],
@@ -227,6 +265,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textOffset: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -391,6 +430,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textOffset: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -946,6 +986,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textOffset: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -1278,6 +1319,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textOffset: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -1729,6 +1771,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textOffset: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -2429,6 +2472,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                textOffset: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',

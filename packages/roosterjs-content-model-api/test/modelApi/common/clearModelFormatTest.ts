@@ -26,6 +26,19 @@ import {
 describe('clearModelFormat', () => {
     const mockedCachedElement = 'CACHE' as any;
 
+    it('clears inline baseline displacement without changing text', () => {
+        const model = createContentModelDocument();
+        const paragraph = originalCreateParagraph();
+        const text = createText('Raised', { textOffset: '-4px' });
+
+        text.isSelected = true;
+        paragraph.segments.push(text);
+        model.blocks.push(paragraph);
+        clearModelFormat(model, [], [], []);
+        expect(text.format).toEqual({});
+        expect(text.text).toBe('Raised');
+    });
+
     function createDivider(tagName: 'hr' | 'div', format?: Readonly<ContentModelBlockFormat>) {
         const result = originalCreateDivider(tagName, format);
         result.cachedElement = mockedCachedElement;

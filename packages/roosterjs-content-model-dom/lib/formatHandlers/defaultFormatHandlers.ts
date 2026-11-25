@@ -20,6 +20,7 @@ import { imageStateFormatHandler } from './segment/imageStateFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
+import { textOffsetFormatHandler } from './segment/textOffsetFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemAlignFormatHandler } from './list/listItemAlignFormatHandler';
@@ -80,6 +81,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     italic: italicFormatHandler,
     legacyTableBorder: legacyTableBorderFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
+    textOffset: textOffsetFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
     listItemAlign: listItemAlignFormatHandler,
@@ -147,10 +149,17 @@ export const defaultFormatKeysPerCategory: {
     listLevelThread: ['listLevelThread'],
     listItemElement: [...sharedBlockFormats, 'listItemAlign', 'margin', 'listStyle'],
     listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
-    styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
+    styleBasedSegment: [
+        ...styleBasedSegmentFormats,
+        'textOffset',
+        'textColor',
+        'backgroundColor',
+        'lineHeight',
+    ],
     elementBasedSegment: sizeNeutralElementBasedSegmentFormats,
     superOrSubScript: ['superOrSubScript'],
     segment: [
+        'textOffset',
         ...styleBasedSegmentFormats,
         ...elementBasedSegmentFormats,
         'textColor',

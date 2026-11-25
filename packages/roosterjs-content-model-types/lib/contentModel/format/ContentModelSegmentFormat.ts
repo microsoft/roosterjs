@@ -8,6 +8,7 @@ import type { LineHeightFormat } from './formatParts/LineHeightFormat';
 import type { StrikeFormat } from './formatParts/StrikeFormat';
 import type { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
+import type { TextOffsetFormat } from './formatParts/TextOffsetFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 
 /**
@@ -23,4 +24,5 @@ export type ContentModelSegmentFormat = TextColorFormat &
     UnderlineFormat &
     StrikeFormat &
     SuperOrSubScriptFormat &
+    TextOffsetFormat &
     LineHeightFormat;
