@@ -138,6 +138,27 @@ describe(ID, () => {
         expect(root.textContent).toBe('ThreeFourSeven');
     });
 
+    it('Preserve unknown markers inside a successfully converted Word list item', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document">
+                <style>@list l0:level1 { mso-level-number-format:bullet; }</style>
+                </head><body><!--StartFragment-->
+                <ul><li style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">·</span>Parent<p style="mso-list:l1 level1 lfo2"><span style="mso-list:Ignore">* </span>Fallback</p>
+                </li></ul><!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const paragraph = root.querySelector('p')!;
+
+        expect(paragraph.textContent).toBe('* Fallback');
+        expect(root.querySelectorAll('li').length).toBe(1);
+        expect(root.textContent?.trim()).toBe('Parent* Fallback');
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],

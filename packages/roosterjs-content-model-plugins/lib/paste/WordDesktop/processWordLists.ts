@@ -71,7 +71,17 @@ export function processWordList(
 
     // Preserve unknown markers instead of guessing OL; retain markerless and decimal compatibility.
     if (marker !== undefined && !Number.isSafeInteger(markerNumber)) {
-        return false;
+        const wasConverted = listFormat.wordConvertedItems?.has(group);
+
+        listFormat.wordConvertedItems?.delete(group);
+        try {
+            context.defaultElementProcessors.element(group, element, context);
+        } finally {
+            if (wasConverted) {
+                listFormat.wordConvertedItems?.add(group);
+            }
+        }
+        return true;
     }
 
     if (decimalMarker?.[2] == ')') {
