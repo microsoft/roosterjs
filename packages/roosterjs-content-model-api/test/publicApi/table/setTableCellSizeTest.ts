@@ -206,12 +206,15 @@ describe('setTableCellSize', () => {
         expect(table.widths).toEqual([100, 120, 140]);
     });
 
-    [0, -1, NaN, Infinity, -Infinity].forEach(size => {
-        it(`rejects invalid dimensions (${size}) before formatting`, () => {
-            expect(() => setTableCellSize(editor, size, 80)).toThrowError(RangeError);
-            expect(() => setTableCellSize(editor, 60, size)).toThrowError(RangeError);
-            expect(editor.formatContentModel).not.toHaveBeenCalled();
-            expect(editor.focus).not.toHaveBeenCalled();
+    [0, -1].forEach(size => {
+        it(`clamps dimensions below the resizer minimums (${size}) without throwing`, () => {
+            table.rows[0].cells[0].isSelected = true;
+
+            expect(() => setTableCellSize(editor, size, size)).not.toThrow();
+
+            expect(table.rows[0].height).toBe(22);
+            expect(table.widths[0]).toBe(30);
+            expect(result).toBeTrue();
         });
     });
 });

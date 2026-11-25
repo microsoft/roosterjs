@@ -16,16 +16,8 @@ import type { IEditor } from 'roosterjs-content-model-types';
  * Omit to keep existing heights.
  * @param width The column width in pixels, clamped to the table resizer minimum of 30.
  * Omit to keep existing widths.
- * @throws RangeError If a supplied dimension is not a finite positive number
  */
 export function setTableCellSize(editor: IEditor, height?: number, width?: number) {
-    if (
-        (height !== undefined && (!Number.isFinite(height) || height <= 0)) ||
-        (width !== undefined && (!Number.isFinite(width) || width <= 0))
-    ) {
-        throw new RangeError('Table cell dimensions must be finite positive numbers.');
-    }
-
     editor.focus();
     editor.formatContentModel(
         model => {
