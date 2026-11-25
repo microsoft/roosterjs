@@ -24,6 +24,7 @@ export interface BuildInPluginList {
     markdownPaste: boolean;
     hyperlink: boolean;
     imageEditPlugin: boolean;
+    horizontalLineEditPlugin: boolean;
     customReplace: boolean;
     hiddenProperty: boolean;
     touch: boolean;

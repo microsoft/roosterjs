@@ -12,6 +12,7 @@ import {
     TableEditPluginCode,
     ShortcutPluginCode,
     ImageEditPluginCode,
+    HorizontalLineEditPluginCode,
 } from './SimplePluginCode';
 
 export class PluginsCodeBase extends CodeElement {
@@ -48,6 +49,7 @@ export class PluginsCode extends PluginsCodeBase {
             pluginList.markdown && new MarkdownCode(state.markdownOptions),
             pluginList.markdownPaste && new MarkdownPasteCode(state.markdownPasteOptions),
             pluginList.imageEditPlugin && new ImageEditPluginCode(),
+            pluginList.horizontalLineEditPlugin && new HorizontalLineEditPluginCode(),
             pluginList.dragAndDrop && new DragAndDropPluginCode(),
         ]);
     }

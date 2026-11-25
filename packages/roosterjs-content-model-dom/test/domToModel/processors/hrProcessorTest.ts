@@ -73,6 +73,20 @@ describe('hrProcessor', () => {
         });
     });
 
+    it('HR with border-box dimensions', () => {
+        const doc = createContentModelDocument();
+        const hr = document.createElement('hr');
+        hr.style.cssText = 'box-sizing:border-box;width:200px;height:4px';
+
+        hrProcessor(doc, hr, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Divider',
+            tagName: 'hr',
+            format: { useBorderBox: true, width: '200px', height: '4px' },
+        });
+    });
+
     it('HR with width, size and display', () => {
         const doc = createContentModelDocument();
         const hr = document.createElement('hr');
