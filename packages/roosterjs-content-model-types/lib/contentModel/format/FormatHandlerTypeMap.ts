@@ -38,11 +38,17 @@ import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
 import type { WordBreakFormat } from './formatParts/WordBreakFormat';
+import type { WritingModeFormat } from './formatParts/WritingModeFormat';
 
 /**
  * Represents a record of all format handlers
  */
 export interface FormatHandlerTypeMap {
+    /**
+     * Format for table-cell text orientation
+     */
+    writingMode: WritingModeFormat;
+
     /**
      * Format for AriaFormat
      */

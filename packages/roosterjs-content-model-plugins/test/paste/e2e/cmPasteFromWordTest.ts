@@ -37,6 +37,30 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    it('preserves table-cell writing modes without applying MSO rotation', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment--><table><tr>
+                <td style="layout-flow:vertical-ideographic;writing-mode:vertical-rl">文字</td>
+                <td style="mso-rotate:90;writing-mode:sideways-lr">Rotated</td>
+                <td style="writing-mode:horizontal-tb">Horizontal</td>
+                </tr></table><!--EndFragment--></body></html>`,
+        });
+
+        const cells = document.getElementById(ID)!.querySelectorAll('td');
+
+        expect(CSS.supports('writing-mode', 'sideways-lr')).toBe(true);
+        expect(getComputedStyle(cells[0]).writingMode).toBe('vertical-rl');
+        expect(getComputedStyle(cells[1]).writingMode).toBe('sideways-lr');
+        expect(getComputedStyle(cells[1]).transform).toBe('none');
+        expect(getComputedStyle(cells[2]).writingMode).toBe('horizontal-tb');
+        expect(cells[0].getBoundingClientRect().height).toBeGreaterThan(0);
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],

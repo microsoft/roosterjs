@@ -155,6 +155,29 @@ describe('Cell Resizer tests', () => {
             resizeRowTest(1, 0, 0, 1);
         });
 
+        it('preserves vertical cell writing mode while resizing its row', () => {
+            editor.dispose();
+            node.innerHTML = '';
+            cmTable = getModelTable(targetId);
+            cmTable.rows[0].cells[0].format.writingMode = 'vertical-rl';
+            editor = new Editor(node, {
+                plugins: [tableEdit],
+                initialModel: {
+                    blockGroupType: 'Document',
+                    blocks: [cmTable],
+                },
+            });
+
+            resizeRowTest(1, 0, 0, 1);
+
+            const table = getCurrentTable(editor);
+
+            expect(getComputedStyle(table.rows[0].cells[0]).writingMode).toBe('vertical-rl');
+            expect(getCMTableFromTable(editor, table).rows[0].cells[0].format.writingMode).toBe(
+                'vertical-rl'
+            );
+        });
+
         it('increases the height of the last row', () => {
             const MODEL_TABLE = cmTable;
             resizeRowTest(1, MODEL_TABLE.rows.length - 1, MODEL_TABLE.widths.length - 1, -1);

@@ -20,6 +20,7 @@ import { imageStateFormatHandler } from './segment/imageStateFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
+import { writingModeFormatHandler } from './table/writingModeFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemAlignFormatHandler } from './list/listItemAlignFormatHandler';
@@ -80,6 +81,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     italic: italicFormatHandler,
     legacyTableBorder: legacyTableBorderFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
+    writingMode: writingModeFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
     listItemAlign: listItemAlignFormatHandler,
@@ -164,6 +166,7 @@ export const defaultFormatKeysPerCategory: {
         'textColorOnTableCell',
     ],
     tableCell: [
+        'writingMode',
         'border',
         'borderColor',
         'backgroundColor',
