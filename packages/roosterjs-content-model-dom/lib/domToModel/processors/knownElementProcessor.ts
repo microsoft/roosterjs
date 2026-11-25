@@ -4,6 +4,7 @@ import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { isBlockElement } from '../utils/isBlockElement';
 import { isBlockEntityContainer } from '../../domUtils/entityUtils';
+import { inlineDirectionProcessor } from './inlineDirectionProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 import {
@@ -78,6 +79,8 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 )
             );
         }
+    } else if (element.dir == 'ltr' || element.dir == 'rtl') {
+        inlineDirectionProcessor(group, element, context);
     } else {
         stackFormat(
             context,

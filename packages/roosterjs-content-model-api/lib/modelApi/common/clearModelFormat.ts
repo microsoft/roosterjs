@@ -65,6 +65,7 @@ export function clearModelFormat(
             // Otherwise, we will clear all format of selected text. And since they are under LI tag, we
             // also need to clear the format of LI (format holder) so that the format is really cleared
             includeListFormatHolder: model.format ? 'never' : 'anySegment',
+            contentUnderSelectedGeneralElement: 'both',
         }
     );
 
