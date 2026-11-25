@@ -7,6 +7,13 @@ import {
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 
 describe('addLink', () => {
+    it('retains an ID-only anchor decorator', () => {
+        const segment = createSelectionMarker();
+
+        addLink(segment, { format: { anchorId: 'Destination' }, dataset: {} });
+        expect(segment.link?.format.anchorId).toBe('Destination');
+    });
+
     it('no link', () => {
         const segment = createSelectionMarker();
         const link: ContentModelLink = {

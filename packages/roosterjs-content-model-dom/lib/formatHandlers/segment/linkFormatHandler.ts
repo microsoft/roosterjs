@@ -47,7 +47,7 @@ export const linkFormatHandler: FormatHandler<LinkFormat> = {
         }
     },
     apply: (format, element) => {
-        if (isElementOfType(element, 'a') && (format.href || format.name)) {
+        if (isElementOfType(element, 'a') && (format.href || format.name || format.anchorId)) {
             if (format.href && !isUnsafeUrl(format.href)) {
                 element.href = format.href;
             }

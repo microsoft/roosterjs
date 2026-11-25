@@ -57,7 +57,11 @@ export function isSegmentEmpty(
 ): boolean {
     switch (segment.segmentType) {
         case 'Text':
-            return !segment.text && (!treatAnchorAsNotEmpty || !segment.link?.format.name);
+            return (
+                !segment.text &&
+                (!treatAnchorAsNotEmpty ||
+                    !(segment.link?.format.name || segment.link?.format.anchorId))
+            );
 
         default:
             return false;

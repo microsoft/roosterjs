@@ -4,6 +4,7 @@ import { convertInlineCss } from '../createModelFromHtml/convertInlineCss';
 import { generatePasteOptionFromPlugins } from './generatePasteOptionFromPlugins';
 import { mergePasteContent } from './mergePasteContent';
 import { retrieveHtmlInfo } from './retrieveHtmlInfo';
+import { reconcilePasteBookmarks } from './reconcilePasteBookmarks';
 import type {
     PasteTypeOrGetter,
     ClipboardData,
@@ -77,6 +78,7 @@ export function paste(
 
     // 5. Convert global CSS to inline CSS
     convertInlineCss(eventResult.fragment, htmlFromClipboard.globalCssRules);
+    reconcilePasteBookmarks(editor, eventResult.fragment, !eventResult.customizedMerge);
 
     // 6. Merge pasted content into main Content Model
     mergePasteContent(editor, eventResult, isFirstPaste);

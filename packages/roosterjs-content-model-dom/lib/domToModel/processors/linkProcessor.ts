@@ -12,11 +12,12 @@ import type { ElementProcessor } from 'roosterjs-content-model-types';
 export const linkProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const name = element.getAttribute('name');
     const href = element.getAttribute('href');
+    const id = element.id;
 
-    if (name || href) {
-        const isAnchor = !!name && !href;
+    if (name || href || id) {
+        const isAnchor = !!(name || id) && !href;
         const option: StackFormatOptions = {
-            // For anchor (name without ref), no need to add other styles
+            // For anchor (name or id without href), no need to add other styles
             // For link (href exists), add default link styles
             link: isAnchor ? 'empty' : 'linkDefault',
         };

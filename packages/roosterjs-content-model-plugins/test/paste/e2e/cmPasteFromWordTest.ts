@@ -37,6 +37,97 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    it('reuses a fully replaced bookmark without breaking surviving references', () => {
+        const pasteFragment = (fragment: string) =>
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment-->${fragment}<!--EndFragment--></body></html>`,
+            });
+
+        pasteFragment(
+            '<p><a name="ReplaceTarget">Old</a></p><p><a href="#ReplaceTarget">Surviving jump</a></p>'
+        );
+        const root = document.getElementById(ID)!;
+        const range = document.createRange();
+
+        range.selectNode(root.querySelector('a[name]')!);
+        editor.setDOMSelection({ type: 'range', range });
+        pasteFragment('<a name="ReplaceTarget">New</a><a href="#ReplaceTarget">New jump</a>');
+
+        expect(root.querySelectorAll('a[name="ReplaceTarget"]').length).toBe(1);
+        expect(root.querySelector('a[name="ReplaceTarget"]')!.textContent).toBe('New');
+        expect(root.querySelectorAll('a[href="#ReplaceTarget"]').length).toBe(2);
+        expect(root.textContent).not.toContain('Old');
+    });
+
+    it('preserves empty ID bookmarks and their name aliases across collisions', () => {
+        const fragment =
+            '<p><a id="EmptyTarget" name="EmptyTarget"></a><a href="#EmptyTarget">Jump</a>' +
+            '<a id="IdOnly"></a><a href="#IdOnly">ID jump</a></p>';
+        const pasteBookmark = () =>
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment-->${fragment}<!--EndFragment--></body></html>`,
+            });
+
+        pasteBookmark();
+        pasteBookmark();
+
+        const root = document.getElementById(ID)!;
+        const anchors = root.querySelectorAll('a[id]');
+        const links = root.querySelectorAll('a[href]');
+
+        expect(anchors.length).toBe(4);
+        expect(anchors[0].id).toBe('EmptyTarget');
+        expect(anchors[1].id).toBe('IdOnly');
+        expect(anchors[2].id).not.toBe('EmptyTarget');
+        expect(anchors[2].name).toBe(anchors[2].id);
+        expect(links[2].getAttribute('href')).toBe('#' + anchors[2].id);
+        expect(links[3].getAttribute('href')).toBe('#' + anchors[3].id);
+        expect(document.getElementById(anchors[3].id)).toBe(anchors[3]);
+    });
+
+    it('remaps collided bookmarks and only their incoming fragment references', () => {
+        const pasteFragment = (fragment: string) => {
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                    <body><!--StartFragment-->${fragment}<!--EndFragment--></body></html>`,
+            });
+        };
+
+        pasteFragment(
+            '<p><a name="Destination">Earlier</a><a href="#Destination">Earlier jump</a></p>'
+        );
+        pasteFragment(
+            '<p><a name="Destination">Later</a><a href="#Destination">Later jump</a><a href="#Absent">Outside fragment</a></p>'
+        );
+
+        const root = document.getElementById(ID)!;
+        const anchors = root.querySelectorAll('a[name]');
+        const links = root.querySelectorAll('a[href]');
+
+        expect(anchors[0].name).toBe('Destination');
+        expect(anchors[1].name).not.toBe('Destination');
+        expect(links[0].getAttribute('href')).toBe('#Destination');
+        expect(links[1].getAttribute('href')).toBe('#' + anchors[1].name);
+        expect(links[2].getAttribute('href')).toBe('#Absent');
+        expect(
+            document.getElementsByName(links[1].getAttribute('href')!.slice(1))[0].textContent
+        ).toBe('Later');
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],
