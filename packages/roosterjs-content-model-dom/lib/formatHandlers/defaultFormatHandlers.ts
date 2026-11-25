@@ -128,6 +128,7 @@ const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'textIndent',
     'lineHeight',
     'whiteSpace',
+    'wordBreak',
 ];
 const sharedContainerFormats: (keyof FormatHandlerTypeMap)[] = [
     'backgroundColor',
