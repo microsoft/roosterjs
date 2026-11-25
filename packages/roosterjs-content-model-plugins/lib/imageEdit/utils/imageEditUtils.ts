@@ -62,17 +62,11 @@ export function setWrapperSizeDimensions(
     wrapper: HTMLElement,
     image: HTMLImageElement,
     width: number,
-    height: number,
-    isRotating: boolean
+    height: number
 ) {
     const hasBorder = image.style.borderStyle;
     if (hasBorder) {
         const borderWidth = image.style.borderWidth ? 2 * parseInt(image.style.borderWidth) : 2;
-        if (isRotating) {
-            wrapper.style.width = getPx(parseInt(image.style.width) + borderWidth);
-            wrapper.style.height = getPx(parseInt(image.style.height) + borderWidth);
-            return;
-        }
         wrapper.style.width = getPx(width + borderWidth);
         wrapper.style.height = getPx(height + borderWidth);
         return;
