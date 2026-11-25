@@ -20,6 +20,11 @@ export function applySegmentFormat(
             format.fontWeight = newFormat.fontWeight;
             format.italic = newFormat.italic;
             format.strikethrough = newFormat.strikethrough;
+            if (newFormat.strikethroughStyle) {
+                format.strikethroughStyle = newFormat.strikethroughStyle;
+            } else {
+                delete format.strikethroughStyle;
+            }
             format.superOrSubScriptSequence = newFormat.superOrSubScriptSequence;
             format.textColor = newFormat.textColor;
             format.underline = newFormat.underline;

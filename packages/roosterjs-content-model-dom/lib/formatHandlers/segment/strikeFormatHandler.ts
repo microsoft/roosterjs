@@ -11,11 +11,25 @@ export const strikeFormatHandler: FormatHandler<StrikeFormat> = {
 
         if (textDecoration?.indexOf('line-through')! >= 0) {
             format.strikethrough = true;
+            const style = element.style.textDecorationStyle || defaultStyle.textDecorationStyle;
+
+            if (style == 'double') {
+                format.strikethroughStyle = style;
+            } else {
+                delete format.strikethroughStyle;
+            }
+        } else if (textDecoration == 'none' && format.strikethrough) {
+            format.strikethrough = false;
+            delete format.strikethroughStyle;
         }
     },
     apply: (format, element) => {
         if (format.strikethrough) {
-            wrapAllChildNodes(element, 's');
+            const strike = wrapAllChildNodes(element, 's');
+
+            if (format.strikethroughStyle == 'double') {
+                strike.style.textDecorationStyle = 'double';
+            }
         }
     },
 };

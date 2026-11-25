@@ -13,6 +13,7 @@ export function toggleStrikethrough(editor: IEditor) {
         'toggleStrikethrough',
         (format, isTurningOn) => {
             format.strikethrough = !!isTurningOn;
+            delete format.strikethroughStyle;
         },
         format => !!format.strikethrough
     );

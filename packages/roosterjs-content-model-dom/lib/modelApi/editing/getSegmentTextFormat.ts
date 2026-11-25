@@ -6,7 +6,7 @@ import type {
 /**
  * Get the text format of a segment, this function will return only format that is applicable to text
  * @param segment The segment to get format from
- * @param includingBIU When pass true, also get Bold/Italic/Underline format
+ * @param includingBIU When pass true, also get Bold/Italic/Underline/Strikethrough format
  * @returns
  */
 export function getSegmentTextFormat(
@@ -24,6 +24,8 @@ export function getSegmentTextFormat(
         fontWeight: includingBIU ? format.fontWeight : undefined,
         italic: includingBIU ? format.italic : undefined,
         underline: includingBIU ? format.underline : undefined,
+        strikethrough: includingBIU ? format.strikethrough : undefined,
+        strikethroughStyle: includingBIU ? format.strikethroughStyle : undefined,
     };
 
     return removeUndefinedValues(textFormat);

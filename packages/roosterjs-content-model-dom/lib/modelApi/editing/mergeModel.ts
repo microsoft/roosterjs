@@ -654,6 +654,9 @@ function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentMod
     }
     if (strikethrough) {
         result.strikethrough = strikethrough;
+        if (segmentFormat.strikethroughStyle) {
+            result.strikethroughStyle = segmentFormat.strikethroughStyle;
+        }
     }
 
     return result;

@@ -12,6 +12,7 @@ import { wordContainerParser } from '../parsers/wordContainerParser';
 import { wordTableParser } from '../parsers/wordTableParser';
 import { removeListParagraphMargins } from './removeListParagraphMargins';
 import { wordBorderParser } from './wordBorderParser';
+import { wordStrikeParser } from '../parsers/wordStrikeParser';
 import type { WordMetadata } from './WordMetadata';
 import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
 
@@ -40,6 +41,9 @@ export function processPastedContentFromWordDesktop(
     addParser(domToModelOption, 'container', wordContainerParser);
     addParser(domToModelOption, 'table', wordTableParser);
     addParser(domToModelOption, 'tableBorder', wordBorderParser);
+    addParser(domToModelOption, 'segment', wordStrikeParser);
+    addParser(domToModelOption, 'segmentOnBlock', wordStrikeParser);
+    addParser(domToModelOption, 'segmentOnTableCell', wordStrikeParser);
 }
 
 const wordDesktopElementProcessor = (

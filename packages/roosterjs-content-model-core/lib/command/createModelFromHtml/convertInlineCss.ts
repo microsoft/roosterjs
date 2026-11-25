@@ -21,6 +21,18 @@ export function retrieveCssRules(doc: Document): CssRule[] {
     const result: CssRule[] = [];
 
     styles.forEach(styleNode => {
+        // CSSOM drops Word's legacy strike declaration. Temporarily use a custom property.
+        const strikeProperty = '--rooster-text-line-through';
+        const text = styleNode.textContent || '';
+        const preservedText = text.replace(
+            /([;{]\s*)text-line-through\s*:/gi,
+            '$1' + strikeProperty + ':'
+        );
+
+        if (text != preservedText) {
+            styleNode.textContent = preservedText;
+        }
+
         const sheet = styleNode.sheet;
 
         if (sheet) {
@@ -30,7 +42,10 @@ export function retrieveCssRules(doc: Document): CssRule[] {
                 if (rule.type == CSSRule.STYLE_RULE && rule.selectorText) {
                     result.push({
                         selectors: splitSelectors(rule.selectorText),
-                        text: rule.style.cssText,
+                        text: rule.style.cssText.replace(
+                            /--rooster-text-line-through\s*:/g,
+                            'text-line-through:'
+                        ),
                     });
                 }
             }
