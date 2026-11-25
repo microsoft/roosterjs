@@ -471,6 +471,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                fontVariant: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',

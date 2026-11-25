@@ -26,6 +26,23 @@ import {
 describe('clearModelFormat', () => {
     const mockedCachedElement = 'CACHE' as any;
 
+    it('clears small caps to the document default without changing text', () => {
+        const model = createContentModelDocument();
+        const paragraph = originalCreateParagraph();
+        const text = createText('Mixed', { fontVariant: 'small-caps' });
+
+        text.isSelected = true;
+        paragraph.segments.push(text);
+        model.blocks.push(paragraph);
+        clearModelFormat(model, [], [], []);
+        expect(text.format).toEqual({});
+        expect(text.text).toBe('Mixed');
+        model.format = { fontVariant: 'normal' };
+        text.format = { fontVariant: 'small-caps' };
+        clearModelFormat(model, [], [], []);
+        expect(text.format).toEqual({ fontVariant: 'normal' });
+    });
+
     function createDivider(tagName: 'hr' | 'div', format?: Readonly<ContentModelBlockFormat>) {
         const result = originalCreateDivider(tagName, format);
         result.cachedElement = mockedCachedElement;

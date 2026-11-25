@@ -37,6 +37,40 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    it('preserves small caps and normal resets without changing stored text', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment--><p style="font-variant:small-caps">Mixed
+                <span style="font-variant:normal">Original</span>
+                <span style="font-variant:inherit">Inherited</span></p>
+                <table><tr><td style="font-variant:small-caps">Cell</td></tr></table>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        const styles: Record<string, string> = {};
+
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            const text = node.textContent?.trim();
+
+            if (text) {
+                styles[text] = getComputedStyle(node.parentElement!).fontVariant;
+            }
+        }
+
+        expect(styles.Mixed).toBe('small-caps');
+        expect(styles.Original).toBe('normal');
+        expect(styles.Inherited).toBe('small-caps');
+        expect(styles.Cell).toBe('small-caps');
+        expect(root.textContent).toContain('Mixed');
+        expect(root.textContent).not.toContain('MIXED');
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],
@@ -227,6 +261,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                fontVariant: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -391,6 +426,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                fontVariant: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -946,6 +982,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                fontVariant: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -1278,6 +1315,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                fontVariant: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -1729,6 +1767,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                fontVariant: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',
@@ -2429,6 +2468,7 @@ describe(ID, () => {
                                 fontWeight: '',
                                 italic: false,
                                 letterSpacing: '',
+                                fontVariant: '',
                                 lineHeight: '',
                                 strikethrough: false,
                                 superOrSubScriptFontSize: '',

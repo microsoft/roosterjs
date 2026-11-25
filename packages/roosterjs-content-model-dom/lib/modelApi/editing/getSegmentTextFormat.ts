@@ -20,6 +20,7 @@ export function getSegmentTextFormat(
         textColor: format.textColor,
         backgroundColor: format.backgroundColor,
         letterSpacing: format.letterSpacing,
+        fontVariant: format.fontVariant,
         lineHeight: format.lineHeight,
         fontWeight: includingBIU ? format.fontWeight : undefined,
         italic: includingBIU ? format.italic : undefined,

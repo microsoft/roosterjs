@@ -12,6 +12,7 @@ import type { EntityInfoFormat } from './formatParts/EntityInfoFormat';
 import type { FloatFormat } from './formatParts/FloatFormat';
 import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import type { FontSizeFormat } from './formatParts/FontSizeFormat';
+import type { FontVariantFormat } from './formatParts/FontVariantFormat';
 import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
 import type { ItalicFormat } from './formatParts/ItalicFormat';
@@ -43,6 +44,11 @@ import type { WordBreakFormat } from './formatParts/WordBreakFormat';
  * Represents a record of all format handlers
  */
 export interface FormatHandlerTypeMap {
+    /**
+     * Format for small-cap typography
+     */
+    fontVariant: FontVariantFormat;
+
     /**
      * Format for AriaFormat
      */
