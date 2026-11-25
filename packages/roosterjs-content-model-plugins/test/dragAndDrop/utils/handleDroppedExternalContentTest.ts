@@ -657,6 +657,101 @@ describe('handleDroppedExternalContent - model verification', () => {
         expect(textSegments.some(seg => seg.text === 'safe content')).toBe(true);
     });
 
+    it('should remove iframe by default through sanitizing even without forbidden elements', async () => {
+        const textNode = document.createTextNode('existing');
+        getNodePositionFromEventSpy.and.returnValue({
+            node: textNode,
+            offset: 0,
+        });
+
+        const html = '<p>safe content</p><iframe src="bad.com"></iframe>';
+        const parsedDoc = document.implementation.createHTMLDocument();
+        parsedDoc.body.innerHTML = html;
+        htmlToDOMSpy.and.returnValue(parsedDoc);
+
+        const event = {
+            x: 0,
+            y: 0,
+            dataTransfer: createHtmlDataTransfer(html),
+            preventDefault: jasmine.createSpy('preventDefault'),
+            stopPropagation: jasmine.createSpy('stopPropagation'),
+        } as any;
+
+        await handleDroppedExternalContent(editor, event, []);
+
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        para.segments.push(createSelectionMarker());
+        model.blocks.push(para);
+
+        expect(capturedCallback).not.toBeNull();
+        capturedCallback!(model, {});
+
+        expect(parsedDoc.querySelector('iframe')).not.toBeNull();
+        expect(
+            JSON.stringify(model, (key, value) =>
+                key == 'element' || key == 'wrapper' ? value?.tagName : value
+            )
+        ).not.toContain('IFRAME');
+        expect(
+            model.blocks.some(
+                block =>
+                    block.blockType === 'Paragraph' &&
+                    block.segments.some(
+                        segment => segment.segmentType === 'Text' && segment.text === 'safe content'
+                    )
+            )
+        ).toBe(true);
+    });
+
+    it('should apply sanitizing options to dropped HTML', async () => {
+        const textNode = document.createTextNode('existing');
+        getNodePositionFromEventSpy.and.returnValue({
+            node: textNode,
+            offset: 0,
+        });
+
+        const html = '<p>keep</p><p><custom-tag>remove</custom-tag></p>';
+        const parsedDoc = document.implementation.createHTMLDocument();
+        parsedDoc.body.innerHTML = html;
+        htmlToDOMSpy.and.returnValue(parsedDoc);
+
+        const event = {
+            x: 0,
+            y: 0,
+            dataTransfer: createHtmlDataTransfer(html),
+            preventDefault: jasmine.createSpy('preventDefault'),
+            stopPropagation: jasmine.createSpy('stopPropagation'),
+        } as any;
+
+        await handleDroppedExternalContent(editor, event, [], {
+            additionalDisallowedTags: ['custom-tag'],
+        });
+
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        para.segments.push(createSelectionMarker());
+        model.blocks.push(para);
+
+        expect(capturedCallback).not.toBeNull();
+        capturedCallback!(model, {});
+
+        const texts: string[] = [];
+        model.blocks.forEach(block => {
+            if (block.blockType === 'Paragraph') {
+                (block as ContentModelParagraph).segments.forEach(segment => {
+                    if (segment.segmentType === 'Text') {
+                        texts.push((segment as ContentModelText).text);
+                    }
+                });
+            }
+        });
+
+        expect(htmlToDOMSpy).toHaveBeenCalledWith(html);
+        expect(texts).toContain('keep');
+        expect(texts).not.toContain('remove');
+    });
+
     it('should merge multiple paragraphs into model', async () => {
         const textNode = document.createTextNode('existing');
         getNodePositionFromEventSpy.and.returnValue({

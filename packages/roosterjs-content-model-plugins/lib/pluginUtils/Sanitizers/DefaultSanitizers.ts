@@ -1,7 +1,7 @@
 import type { ValueSanitizer } from 'roosterjs-content-model-types';
 
 /**
- * Default style sanitizers for PastePlugin.
+ * Default style sanitizers for PastePlugin and DragAndDropPlugin.
  */
 export const DefaultSanitizers: Record<string, ValueSanitizer> = {
     width: divParagraphSanitizer,

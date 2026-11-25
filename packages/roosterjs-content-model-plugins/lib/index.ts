@@ -3,7 +3,7 @@ export { OnTableEditorCreatedCallback } from './tableEdit/OnTableEditorCreatedCa
 export { TableEditFeatureName } from './tableEdit/editors/features/TableEditFeatureName';
 export { TableWithRoot } from './tableEdit/TableWithRoot';
 export { PastePlugin } from './paste/PastePlugin';
-export { DefaultSanitizers } from './paste/DefaultSanitizers';
+export { DefaultSanitizers } from './pluginUtils/Sanitizers/DefaultSanitizers';
 export { EditPlugin } from './edit/EditPlugin';
 export { EditOptions, HandleTabOptions } from './edit/EditOptions';
 export { AutoFormatPlugin } from './autoFormat/AutoFormatPlugin';

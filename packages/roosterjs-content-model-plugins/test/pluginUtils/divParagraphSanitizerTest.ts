@@ -1,4 +1,4 @@
-import { divParagraphSanitizer } from '../../../lib/paste/DefaultSanitizers';
+import { divParagraphSanitizer } from '../../lib/pluginUtils/Sanitizers/DefaultSanitizers';
 
 divParagraphSanitizer;
 
