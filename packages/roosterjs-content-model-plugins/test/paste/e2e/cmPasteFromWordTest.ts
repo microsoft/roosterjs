@@ -37,6 +37,42 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    [
+        { metadata: 'mso-level-number-format:alpha-upper;', style: 'upper-alpha' },
+        { metadata: '', style: 'decimal' },
+        {
+            metadata: 'mso-level-number-format:alpha-upper;mso-level-text:"%1)";',
+            style: '"${UpperAlpha}) "',
+        },
+    ].forEach(({ metadata, style }) => {
+        it('Preserve Word list style ' + style + ' with optional level text', () => {
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head><meta name="ProgId" content="Word.Document">
+                    <style>@list l0:level1 { ${metadata} }</style>
+                    </head><body><!--StartFragment-->
+                    <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">A.</span>First</p>
+                    <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore">B.</span>Second</p>
+                    <!--EndFragment--></body></html>`,
+            });
+
+            const root = document.getElementById(ID)!;
+            const list = root.querySelector('ol')!;
+
+            expect(wordFile.processPastedContentFromWordDesktop).toHaveBeenCalled();
+            if (style.startsWith('"')) {
+                expect(list.querySelector('li')!.style.listStyleType).toBe('"A) "');
+            } else {
+                expect(list.style.listStyleType).toBe(style);
+            }
+            expect(list.querySelectorAll('li').length).toBe(2);
+            expect(root.textContent).toBe('FirstSecond');
+        });
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],

@@ -2674,7 +2674,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
+                                        editingInfo: '{"orderedStyleType":9}',
                                     },
                                 },
                             ],

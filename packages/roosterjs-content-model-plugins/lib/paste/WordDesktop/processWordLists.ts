@@ -188,6 +188,9 @@ function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType:
         templateFinal = '"' + template + ' "';
     } else {
         switch (templateType) {
+            case 'alpha-upper':
+                templateFinal = 'upper-alpha';
+                break;
             case 'alpha-lower':
                 templateFinal = 'lower-alpha';
                 break;
