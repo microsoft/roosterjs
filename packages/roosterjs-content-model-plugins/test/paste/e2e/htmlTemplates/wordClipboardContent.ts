@@ -1,16 +1,5 @@
 import type { ClipboardData } from 'roosterjs-content-model-types';
 
-function restoreAnonymizedListMarkers(html: string): string {
-    let number = 0;
-
-    // Redact body text, not structural numbering or the fake marker's spacer whitespace.
-    return html.replace(
-        /(<span[^>]*style=['"]mso-list:Ignore['"][^>]*>)■■(<span[^>]*>)■+(<\/span>)/g,
-        (_match, markerStart: string, spacerStart: string, spacerEnd: string) =>
-            markerStart + ++number + '.' + spacerStart + '&nbsp;&nbsp;' + spacerEnd
-    );
-}
-
 export const wordClipboardContent1: ClipboardData = {
     types: ['text/plain', 'text/html'],
     text:
@@ -112,11 +101,3 @@ export const wordClipboardContent4: ClipboardData = {
         'P',
     ],
 };
-
-(['rawHtml', 'html'] as const).forEach(key => {
-    const html = wordClipboardContent4[key];
-
-    if (html) {
-        wordClipboardContent4[key] = restoreAnonymizedListMarkers(html);
-    }
-});

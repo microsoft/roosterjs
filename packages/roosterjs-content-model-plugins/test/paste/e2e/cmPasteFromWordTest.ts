@@ -1,5 +1,10 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ClipboardData, ContentModelListItem, IEditor } from 'roosterjs-content-model-types';
+import {
+    ClipboardData,
+    ContentModelListItem,
+    ContentModelParagraph,
+    IEditor,
+} from 'roosterjs-content-model-types';
 import { cloneModel } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
@@ -104,6 +109,28 @@ describe(ID, () => {
         expect(fallback).toBeDefined();
         expect(fallback?.closest('li')).toBeNull();
         expect(root.querySelectorAll('li').length).toBe(2);
+    });
+
+    ['■■', 'Section label'].forEach(marker => {
+        it('Preserve opaque Word presentation marker ' + marker, () => {
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                    <body><!--StartFragment-->
+                    <p style="mso-list:l0 level1 lfo1"><span style="mso-list:Ignore;color:red">${marker}&nbsp;</span>Body</p>
+                    <!--EndFragment--></body></html>`,
+            });
+
+            const root = document.getElementById(ID)!;
+
+            expect(root.querySelectorAll('ol,ul,li').length).toBe(0);
+            expect(root.querySelectorAll('p').length).toBe(1);
+            expect(root.textContent).toBe(marker + ' Body');
+            expect(root.querySelector('span')!.style.color).toBe('red');
+        });
     });
 
     it('Preserve decimal marker numbers and discontinuities without Word list metadata', () => {
@@ -1869,9 +1896,39 @@ describe(ID, () => {
         });
     });
 
-    itChromeOnly('E2E paragraphs that are handled as list and with unneeded styles', () => {
+    itChromeOnly('E2E preserve opaque Word list markers and unrelated formatting', () => {
         paste(editor, wordClipboardContent4);
         const model = editor.getContentModelCopy('disconnected');
+        const opaqueMarkerParagraph = (
+            text: string,
+            marginBottom: string
+        ): ContentModelParagraph => ({
+            blockType: 'Paragraph',
+            format: { marginTop: '1em', marginBottom },
+            decorator: { tagName: 'p', format: {} },
+            segments: [
+                {
+                    text: '■■',
+                    segmentType: 'Text',
+                    format: { textColor: 'rgb(0, 0, 0)' },
+                },
+                {
+                    text: '■'.repeat(44),
+                    segmentType: 'Text',
+                    format: {
+                        fontFamily: '"Times New Roman"',
+                        fontSize: '7pt',
+                        textColor: 'rgb(0, 0, 0)',
+                        lineHeight: 'normal',
+                    },
+                },
+                {
+                    text,
+                    segmentType: 'Text',
+                    format: { textColor: 'rgb(0, 0, 0)' },
+                },
+            ],
+        });
 
         expect(wordFile.processPastedContentFromWordDesktop).toHaveBeenCalled();
         debugger;
@@ -1914,42 +1971,7 @@ describe(ID, () => {
                     blockType: 'Paragraph',
                     format: {},
                 },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: { textColor: 'rgb(0, 0, 0)' },
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: {
-                                startNumberOverride: 1,
-                                marginTop: '1em',
-                                listStyleType: 'decimal',
-                            },
-                            dataset: { editingInfo: '{"orderedStyleType":1}' },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: { marginBottom: '2pt' },
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    text: '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
-                                    segmentType: 'Text',
-                                    format: { textColor: 'rgb(0, 0, 0)' },
-                                },
-                            ],
-                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
+                opaqueMarkerParagraph('■'.repeat(43), '2pt'),
                 {
                     segments: [
                         {
@@ -1962,39 +1984,7 @@ describe(ID, () => {
                     blockType: 'Paragraph',
                     format: {},
                 },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: { textColor: 'rgb(0, 0, 0)' },
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
-                            dataset: { editingInfo: '{"orderedStyleType":1}' },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: { marginBottom: '2pt' },
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    text:
-                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
-                                    segmentType: 'Text',
-                                    format: { textColor: 'rgb(0, 0, 0)' },
-                                },
-                            ],
-                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
+                opaqueMarkerParagraph('■'.repeat(61), '2pt'),
                 {
                     segments: [
                         {
@@ -2042,39 +2032,7 @@ describe(ID, () => {
                     blockType: 'Paragraph',
                     format: {},
                 },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: { textColor: 'rgb(0, 0, 0)' },
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
-                            dataset: { editingInfo: '{"orderedStyleType":1}' },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: { marginBottom: '2pt' },
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    text:
-                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
-                                    segmentType: 'Text',
-                                    format: { textColor: 'rgb(0, 0, 0)' },
-                                },
-                            ],
-                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
+                opaqueMarkerParagraph('■'.repeat(221), '2pt'),
                 {
                     segments: [
                         {
@@ -2087,39 +2045,7 @@ describe(ID, () => {
                     blockType: 'Paragraph',
                     format: {},
                 },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: { textColor: 'rgb(0, 0, 0)' },
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
-                            dataset: { editingInfo: '{"orderedStyleType":1}' },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: { marginBottom: '2pt' },
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    text:
-                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
-                                    segmentType: 'Text',
-                                    format: { textColor: 'rgb(0, 0, 0)' },
-                                },
-                            ],
-                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
+                opaqueMarkerParagraph('■'.repeat(93), '2pt'),
                 {
                     segments: [
                         {
@@ -2356,39 +2282,7 @@ describe(ID, () => {
                     blockType: 'Paragraph',
                     format: {},
                 },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: { textColor: 'rgb(0, 0, 0)' },
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
-                            dataset: { editingInfo: '{"orderedStyleType":1}' },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: {},
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    text:
-                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
-                                    segmentType: 'Text',
-                                    format: { textColor: 'rgb(0, 0, 0)' },
-                                },
-                            ],
-                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
+                opaqueMarkerParagraph('■'.repeat(91), '1em'),
                 {
                     segments: [
                         {
@@ -2401,39 +2295,7 @@ describe(ID, () => {
                     blockType: 'Paragraph',
                     format: {},
                 },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: { textColor: 'rgb(0, 0, 0)' },
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
-                            dataset: { editingInfo: '{"orderedStyleType":1}' },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: {},
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    text:
-                                        '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
-                                    segmentType: 'Text',
-                                    format: { textColor: 'rgb(0, 0, 0)' },
-                                },
-                            ],
-                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
+                opaqueMarkerParagraph('■'.repeat(77), '1em'),
                 {
                     segments: [
                         {
@@ -2446,38 +2308,7 @@ describe(ID, () => {
                     blockType: 'Paragraph',
                     format: {},
                 },
-                {
-                    formatHolder: {
-                        isSelected: false,
-                        segmentType: 'SelectionMarker',
-                        format: { textColor: 'rgb(0, 0, 0)' },
-                    },
-                    levels: [
-                        {
-                            listType: 'OL',
-                            format: { marginTop: '1em', listStyleType: 'decimal' },
-                            dataset: { editingInfo: '{"orderedStyleType":1}' },
-                        },
-                    ],
-                    blockType: 'BlockGroup',
-                    format: {},
-                    blockGroupType: 'ListItem',
-                    blocks: [
-                        {
-                            isImplicit: true,
-                            segments: [
-                                {
-                                    text: '■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■',
-                                    segmentType: 'Text',
-                                    format: { textColor: 'rgb(0, 0, 0)' },
-                                },
-                            ],
-                            segmentFormat: { textColor: 'rgb(0, 0, 0)' },
-                            blockType: 'Paragraph',
-                            format: {},
-                        },
-                    ],
-                },
+                opaqueMarkerParagraph('■'.repeat(45), '1em'),
                 {
                     segments: [
                         {
