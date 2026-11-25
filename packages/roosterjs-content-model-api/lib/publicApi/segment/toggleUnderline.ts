@@ -14,8 +14,16 @@ export function toggleUnderline(editor: IEditor, options?: AnnouncingOption) {
         (format, isTurningOn, segment) => {
             format.underline = !!isTurningOn;
 
+            if (!isTurningOn) {
+                delete format.underlineStyle;
+            }
+
             if (segment?.link) {
                 segment.link.format.underline = !!isTurningOn;
+
+                if (!isTurningOn) {
+                    delete segment.link.format.underlineStyle;
+                }
             }
         },
         (format, segment) => !!format.underline || !!segment?.link?.format?.underline,

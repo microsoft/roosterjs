@@ -1,5 +1,5 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
-import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
+import { ClipboardData, ContentModelParagraph, IEditor } from 'roosterjs-content-model-types';
 import { cloneModel } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
@@ -35,6 +35,75 @@ describe(ID, () => {
 
     afterEach(() => {
         document.getElementById(ID)?.remove();
+    });
+
+    ['double', 'wave'].forEach(style => {
+        it('Preserve Word underline style ' + style, () => {
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                    <body><!--StartFragment--><p><u style="text-underline:${style}">Text</u></p>
+                    <!--EndFragment--></body></html>`,
+            });
+
+            const expectedStyle = style == 'wave' ? 'wavy' : 'double';
+            const root = document.getElementById(ID)!;
+            const model = editor.getContentModelCopy('disconnected');
+
+            expect(getComputedStyle(root.querySelector('u')!).textDecorationStyle).toBe(
+                expectedStyle
+            );
+            expect(
+                (model.blocks[0] as ContentModelParagraph).segments[0].format.underlineStyle
+            ).toBe(expectedStyle);
+        });
+    });
+
+    it('Keep Word underline resets, ancestor decoration and unknown styles distinct', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment-->
+                <p><u style="text-decoration:none;text-underline:double">Plain</u></p>
+                <p><u style="text-underline:wave">Outer<span style="text-decoration:none">Inner</span></u></p>
+                <p><u style="text-underline:heavy">Unknown</u></p>
+                <p><a href="https://example.com" style="text-underline:double">Link</a></p>
+                <!--EndFragment--></body></html>`,
+        });
+
+        const paragraphs = document.getElementById(ID)!.querySelectorAll('p');
+
+        expect(paragraphs[0].querySelector('u')).toBeNull();
+        expect(paragraphs[1].textContent).toBe('OuterInner');
+        expect(getComputedStyle(paragraphs[1].querySelector('u')!).textDecorationStyle).toBe(
+            'wavy'
+        );
+        expect(getComputedStyle(paragraphs[2].querySelector('u')!).textDecorationStyle).toBe(
+            'solid'
+        );
+        expect(getComputedStyle(paragraphs[3].querySelector('a')!).textDecorationStyle).toBe(
+            'double'
+        );
+    });
+
+    it('Ignore proprietary underline metadata for non-Word HTML', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: '<p><u style="text-underline:double">Ordinary HTML</u></p>',
+        });
+
+        expect(
+            getComputedStyle(document.getElementById(ID)!.querySelector('u')!).textDecorationStyle
+        ).toBe('solid');
     });
 
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
@@ -233,6 +302,7 @@ describe(ID, () => {
                                 superOrSubScriptSequence: '',
                                 textColor: '',
                                 underline: false,
+                                underlineStyle: '',
                             },
                         },
                         { segmentType: 'Br', format: {} },
@@ -397,6 +467,7 @@ describe(ID, () => {
                                 superOrSubScriptSequence: '',
                                 textColor: '',
                                 underline: false,
+                                underlineStyle: '',
                             },
                         },
                         { segmentType: 'Br', format: {} },
@@ -952,6 +1023,7 @@ describe(ID, () => {
                                 superOrSubScriptSequence: '',
                                 textColor: '',
                                 underline: false,
+                                underlineStyle: '',
                             },
                         },
                         { segmentType: 'Br', format: {} },
@@ -1283,6 +1355,7 @@ describe(ID, () => {
                                 superOrSubScriptFontSize: '',
                                 superOrSubScriptSequence: '',
                                 underline: false,
+                                underlineStyle: '',
                             },
                         },
                         {
@@ -1735,6 +1808,7 @@ describe(ID, () => {
                                 superOrSubScriptSequence: '',
                                 textColor: '',
                                 underline: false,
+                                underlineStyle: '',
                             },
                         },
                         { segmentType: 'Br', format: {} },
@@ -2435,6 +2509,7 @@ describe(ID, () => {
                                 superOrSubScriptSequence: '',
                                 textColor: '',
                                 underline: false,
+                                underlineStyle: '',
                             },
                         },
                         { segmentType: 'Br', format: {} },

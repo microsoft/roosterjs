@@ -19,6 +19,57 @@ describe('toggleUnderline', () => {
         segmentTestCommon('toggleUnderline', toggleUnderline, model, result, calledTimes);
     }
 
+    it('removes underline style when toggling styled text and its link off', () => {
+        const model: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'styled',
+                            isSelected: true,
+                            format: { underline: true, underlineStyle: 'double' },
+                            link: {
+                                format: {
+                                    href: 'https://example.com',
+                                    underline: true,
+                                    underlineStyle: 'double',
+                                },
+                                dataset: {},
+                            },
+                        },
+                    ],
+                },
+            ],
+        };
+        const expected: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'styled',
+                            isSelected: true,
+                            format: { underline: false },
+                            link: {
+                                format: { href: 'https://example.com', underline: false },
+                                dataset: {},
+                            },
+                        },
+                    ],
+                },
+            ],
+        };
+
+        runTest(model, expected, 1);
+    });
+
     it('empty content', () => {
         runTest(
             {

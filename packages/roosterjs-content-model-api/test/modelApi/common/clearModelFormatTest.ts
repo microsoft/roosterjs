@@ -111,6 +111,34 @@ describe('clearModelFormat', () => {
         expect(result).toBeFalse();
     });
 
+    it('clears custom underline style from selected text and link without unlinking', () => {
+        const model = createContentModelDocument();
+        const paragraph = originalCreateParagraph();
+        const text = createText(
+            'styled',
+            { underline: true, underlineStyle: 'wavy' },
+            {
+                format: {
+                    href: 'https://example.com',
+                    underline: true,
+                    underlineStyle: 'wavy',
+                },
+                dataset: {},
+            }
+        );
+        text.isSelected = true;
+        paragraph.segments.push(text);
+        model.blocks.push(paragraph);
+
+        clearModelFormat(model, [], [], []);
+
+        expect(text.format).toEqual({});
+        expect(text.link!.format).toEqual({
+            href: 'https://example.com',
+            underline: true,
+        });
+    });
+
     it('Model without selection', () => {
         const model = createContentModelDocument();
         const para = createParagraph(false, { lineHeight: '10px' });

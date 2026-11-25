@@ -477,6 +477,7 @@ describe(ID, () => {
                                 superOrSubScriptSequence: '',
                                 textColor: '',
                                 underline: false,
+                                underlineStyle: '',
                             },
                         },
                         {

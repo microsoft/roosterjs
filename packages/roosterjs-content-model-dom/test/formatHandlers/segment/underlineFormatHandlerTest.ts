@@ -24,6 +24,17 @@ describe('underlineFormatHandler.parse', () => {
         expect(format.underline).toBeUndefined();
     });
 
+    it('retains explicit standard CSS underline styles', () => {
+        (['double', 'wavy', 'dotted', 'dashed', 'solid'] as const).forEach(style => {
+            div.style.textDecoration = 'underline ' + style;
+            format = {};
+
+            underlineFormatHandler.parse(format, div, context, {});
+
+            expect(format).toEqual({ underline: true, underlineStyle: style });
+        });
+    });
+
     it('underline from element', () => {
         ['underline', 'underline line-through'].forEach(value => {
             div.style.textDecoration = value;
@@ -124,6 +135,28 @@ describe('underlineFormatHandler.apply', () => {
         underlineFormatHandler.apply(format, div, context);
 
         expect(div.outerHTML).toEqual('<div><u>test</u></div>');
+    });
+
+    it('puts underline style on the wrapper that draws the decoration', () => {
+        format = { underline: true, underlineStyle: 'double' };
+        div.textContent = 'test';
+
+        underlineFormatHandler.apply(format, div, context);
+
+        expect(div.style.textDecorationStyle).toBe('');
+        expect(div.querySelector('u')!.style.textDecorationStyle).toBe('double');
+    });
+
+    it('styles an implicitly underlined link itself', () => {
+        const link = document.createElement('a');
+        context.implicitFormat.underline = true;
+        format = { underline: true, underlineStyle: 'wavy' };
+        link.textContent = 'test';
+
+        underlineFormatHandler.apply(format, link, context);
+
+        expect(link.style.textDecorationStyle).toBe('wavy');
+        expect(link.querySelector('u')).toBeNull();
     });
 
     it('Hyperlink without context', () => {

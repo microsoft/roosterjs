@@ -10,6 +10,7 @@ import { removeNegativeTextIndentParser } from '../parsers/removeNegativeTextInd
 import { setProcessor } from '../utils/setProcessor';
 import { wordContainerParser } from '../parsers/wordContainerParser';
 import { wordTableParser } from '../parsers/wordTableParser';
+import { wordUnderlineParser } from '../parsers/wordUnderlineParser';
 import { removeListParagraphMargins } from './removeListParagraphMargins';
 import { wordBorderParser } from './wordBorderParser';
 import type { WordMetadata } from './WordMetadata';
@@ -40,6 +41,8 @@ export function processPastedContentFromWordDesktop(
     addParser(domToModelOption, 'container', wordContainerParser);
     addParser(domToModelOption, 'table', wordTableParser);
     addParser(domToModelOption, 'tableBorder', wordBorderParser);
+    addParser(domToModelOption, 'segment', wordUnderlineParser);
+    addParser(domToModelOption, 'link', wordUnderlineParser);
 }
 
 const wordDesktopElementProcessor = (

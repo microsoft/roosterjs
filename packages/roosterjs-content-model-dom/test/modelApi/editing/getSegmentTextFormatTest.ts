@@ -3,6 +3,18 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies styled underlines only when including B/I/U', () => {
+        (['double', 'wavy'] as const).forEach(underlineStyle => {
+            const segment = createText('test', { underline: true, underlineStyle });
+
+            expect(getSegmentTextFormat(segment)).toEqual({});
+            expect(getSegmentTextFormat(segment, true)).toEqual({
+                underline: true,
+                underlineStyle,
+            });
+        });
+    });
+
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',

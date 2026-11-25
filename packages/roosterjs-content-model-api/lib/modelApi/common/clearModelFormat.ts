@@ -121,6 +121,7 @@ function clearSegmentsFormat(
 
         if (x.link) {
             delete x.link.format.textColor;
+            delete x.link.format.underlineStyle;
         }
 
         delete x.code;
