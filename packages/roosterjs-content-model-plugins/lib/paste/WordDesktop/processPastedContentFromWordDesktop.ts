@@ -33,7 +33,7 @@ export function processPastedContentFromWordDesktop(
 
     setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
-    addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
+    // Hanging indents belong to ordinary paragraphs; only list presentation needs cleanup.
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', adjustWordListMarginParser);
     addParser(domToModelOption, 'listLevel', listLevelParser);

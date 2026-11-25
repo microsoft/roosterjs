@@ -37,6 +37,59 @@ describe(ID, () => {
         document.getElementById(ID)?.remove();
     });
 
+    [
+        { word: true, listStyle: '' },
+        { word: true, listStyle: 'mso-list:unrecognized;' },
+        { word: false, listStyle: '' },
+    ].forEach(({ word, listStyle }) => {
+        it('Preserve hanging indent outside a converted list: ' + word + listStyle, () => {
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head>${
+                    word ? '<meta name="ProgId" content="Word.Document">' : ''
+                }</head><body><!--StartFragment-->
+                    <p style="margin-left:36pt;text-indent:-18pt;${listStyle}">First<br>Continuation</p>
+                    <!--EndFragment--></body></html>`,
+            });
+
+            const root = document.getElementById(ID)!;
+            const paragraph = root.querySelector('p')!;
+
+            expect(paragraph.style.marginLeft).toBe('36pt');
+            expect(paragraph.style.textIndent).toBe('-18pt');
+            expect(root.querySelector('li')).toBeNull();
+            expect(paragraph.textContent).toBe('FirstContinuation');
+        });
+    });
+
+    [false, true].forEach(native => {
+        it('Normalize hanging indent on a confirmed Word list: ' + native, () => {
+            const item = '<span style="mso-list:Ignore">1.</span>Item';
+            const content = native
+                ? `<ol><li style="text-indent:-18pt">${item}</li></ol>`
+                : `<p style="margin-left:36pt;text-indent:-18pt;mso-list:l0 level1 lfo1">${item}</p>`;
+
+            paste(editor, {
+                types: ['text/html'],
+                text: '',
+                image: null,
+                customValues: {},
+                rawHtml: `<html><head><meta name="ProgId" content="Word.Document">
+                    <style>@list l0:level1 { mso-level-number-format:decimal; }</style>
+                    </head><body><!--StartFragment-->${content}<!--EndFragment--></body></html>`,
+            });
+
+            const root = document.getElementById(ID)!;
+
+            expect(root.querySelectorAll('li').length).toBe(1);
+            expect(root.querySelector('li')!.style.textIndent).toBe('');
+            expect(root.textContent).toBe('Item');
+        });
+    });
+
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
         paste(editor, {
             types: ['text/html'],
