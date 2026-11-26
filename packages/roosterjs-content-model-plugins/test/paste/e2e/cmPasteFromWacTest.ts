@@ -1,3 +1,4 @@
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 import * as processPastedContentWacComponents from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
@@ -271,6 +272,8 @@ describe(ID, () => {
                                                                                 fontSize: '11pt',
                                                                                 lineHeight:
                                                                                     '19.7625px',
+                                                                                textStrokeWidth:
+                                                                                    '0px',
                                                                             },
                                                                         },
                                                                     ],
@@ -347,6 +350,8 @@ describe(ID, () => {
                                                                                 fontSize: '11pt',
                                                                                 lineHeight:
                                                                                     '19.7625px',
+                                                                                textStrokeWidth:
+                                                                                    '0px',
                                                                             },
                                                                         },
                                                                     ],
@@ -438,6 +443,7 @@ describe(ID, () => {
                                             'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
                                         fontSize: '12pt',
                                         lineHeight: '20.925px',
+                                        textStrokeWidth: '0px',
                                     },
                                 },
                             ],
@@ -464,20 +470,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         {
                             segmentType: 'Br',
