@@ -1,6 +1,7 @@
 export { insertTable } from './publicApi/table/insertTable';
 export { formatTable } from './publicApi/table/formatTable';
 export { setTableCellShade } from './publicApi/table/setTableCellShade';
+export { setTableCellSize } from './publicApi/table/setTableCellSize';
 export { editTable } from './publicApi/table/editTable';
 export { applyTableBorderFormat } from './publicApi/table/applyTableBorderFormat';
 export { toggleBullet } from './publicApi/list/toggleBullet';

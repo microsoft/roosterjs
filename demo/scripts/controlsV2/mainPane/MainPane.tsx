@@ -332,7 +332,8 @@ export class MainPane extends React.Component<{}, MainPaneState> {
                 buttons={getButtons(
                     this.state.activeTab,
                     this.formatPainterPlugin,
-                    this.imageEditPlugin
+                    this.imageEditPlugin,
+                    this.ribbonPlugin
                 )}
                 plugin={this.ribbonPlugin}
                 dir={this.state.isRtl ? 'rtl' : 'ltr'}
