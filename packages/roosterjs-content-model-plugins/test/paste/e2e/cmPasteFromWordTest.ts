@@ -1697,6 +1697,7 @@ describe(ID, () => {
                         marginRight: '6.75pt',
                         marginLeft: '6.75pt',
                         width: '580.5pt',
+                        htmlAlign: 'start',
                         useBorderBox: true,
                         borderCollapse: true,
                         legacyTableBorder: '1',

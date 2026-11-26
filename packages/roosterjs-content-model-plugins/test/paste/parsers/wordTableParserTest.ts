@@ -49,7 +49,7 @@ describe('wordTableParser', () => {
         format.htmlAlign = 'start';
         wordTableParser(format, element, context, defaultStyle);
         expect(format.marginLeft).toBeUndefined();
-        expect(format.htmlAlign).toBeUndefined();
+        expect(format.htmlAlign).toBe('start');
     });
 
     it('should preserve other format properties', () => {
@@ -61,7 +61,7 @@ describe('wordTableParser', () => {
         expect(format.marginTop).toBe('10px');
         expect(format.marginRight).toBe('5px');
         expect(format.marginLeft).toBeUndefined();
-        expect(format.htmlAlign).toBeUndefined();
+        expect(format.htmlAlign).toBe('end');
     });
 
     it('should handle undefined marginLeft', () => {

@@ -10,7 +10,7 @@ export const wordTableParser: FormatParser<ContentModelTableFormat> = (format, e
     if (format.marginLeft?.startsWith('-')) {
         delete format.marginLeft;
     }
-    if (format.htmlAlign) {
+    if (format.htmlAlign && format.htmlAlign != 'start' && format.htmlAlign != 'end') {
         delete format.htmlAlign;
     }
 };
