@@ -34,6 +34,7 @@ export { LetterSpacingFormat } from './contentModel/format/formatParts/LetterSpa
 export { DataValueFormat } from './contentModel/format/formatParts/DataValueFormat';
 export { LineHeightFormat } from './contentModel/format/formatParts/LineHeightFormat';
 export { StrikeFormat } from './contentModel/format/formatParts/StrikeFormat';
+export { TextAutospaceFormat } from './contentModel/format/formatParts/TextAutospaceFormat';
 export { SuperOrSubScriptFormat } from './contentModel/format/formatParts/SuperOrSubScriptFormat';
 export { TextColorFormat } from './contentModel/format/formatParts/TextColorFormat';
 export { UnderlineFormat } from './contentModel/format/formatParts/UnderlineFormat';

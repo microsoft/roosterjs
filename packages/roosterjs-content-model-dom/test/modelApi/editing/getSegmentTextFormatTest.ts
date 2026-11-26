@@ -3,6 +3,11 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies automatic spacing without changing other typography', () => {
+        expect(getSegmentTextFormat(createText('test', { textAutospace: 'normal' }))).toEqual({
+            textAutospace: 'normal',
+        });
+    });
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',
