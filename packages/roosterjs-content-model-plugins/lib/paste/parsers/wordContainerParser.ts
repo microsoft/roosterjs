@@ -1,3 +1,4 @@
+import { getStyles } from '../utils/getStyles';
 import type {
     ContentModelFormatContainerFormat,
     FormatParser,
@@ -6,13 +7,18 @@ import type {
 /**
  * @internal
  * Parser for processing container formatting specific to Word Desktop
- * Removes negative margin-left values which are commonly used in Word lists
+ * Removes list/container negative margins while preserving ordinary paragraph indentation.
  * @param format The container format to modify
  */
 export const wordContainerParser: FormatParser<ContentModelFormatContainerFormat> = (
-    format
+    format,
+    element
 ): void => {
-    if (format.marginLeft?.startsWith('-')) {
+    const list = getStyles(element)['mso-list']?.trim().toLowerCase();
+    const ordinaryParagraph =
+        /^(P|H[1-6])$/.test(element.tagName) && !element.closest('li') && (!list || list == 'none');
+
+    if (format.marginLeft?.startsWith('-') && !ordinaryParagraph) {
         delete format.marginLeft;
     }
 };

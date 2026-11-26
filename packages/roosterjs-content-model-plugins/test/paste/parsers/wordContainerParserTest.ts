@@ -63,6 +63,29 @@ describe('wordContainerParser', () => {
         expect(format.marginLeft).toBe('20px');
     });
 
+    it('preserves a signed ordinary paragraph indentation', () => {
+        element = document.createElement('p');
+        format.marginLeft = '-24pt';
+        wordContainerParser(format, element, context, {});
+        expect(format.marginLeft).toBe('-24pt');
+    });
+
+    it('keeps native list cleanup for list paragraphs', () => {
+        element = document.createElement('p');
+        element.setAttribute('style', 'mso-list:l0 level1 lfo1');
+        format.marginLeft = '-24pt';
+        wordContainerParser(format, element, context, {});
+        expect(format.marginLeft).toBeUndefined();
+    });
+
+    it('keeps list cleanup for a paragraph nested within a list item', () => {
+        element = document.createElement('p');
+        document.createElement('li').appendChild(element);
+        format.marginLeft = '-24pt';
+        wordContainerParser(format, element, context, {});
+        expect(format.marginLeft).toBeUndefined();
+    });
+
     it('should preserve zero margin-left', () => {
         format.marginLeft = '0px';
 
