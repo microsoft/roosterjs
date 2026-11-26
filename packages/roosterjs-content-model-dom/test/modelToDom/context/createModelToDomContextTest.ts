@@ -109,9 +109,13 @@ describe('createModelToDomContext', () => {
 
         appliers.block[5] = mockedBlockApplier;
         appliers.elementBasedSegment[3] = mockedBoldApplier;
-        appliers.segment[6] = mockedBoldApplier;
-        appliers.segmentOnBlock[6] = mockedBoldApplier;
-        appliers.segmentOnTableCell[6] = mockedBoldApplier;
+        appliers.segment[appliers.segment.indexOf(defaultFormatAppliers.bold)] = mockedBoldApplier;
+        appliers.segmentOnBlock[
+            appliers.segmentOnBlock.indexOf(defaultFormatAppliers.bold)
+        ] = mockedBoldApplier;
+        appliers.segmentOnTableCell[
+            appliers.segmentOnTableCell.indexOf(defaultFormatAppliers.bold)
+        ] = mockedBoldApplier;
         appliers.text = [mockedTextApplier1, mockedTextApplier2];
 
         expect(context).toEqual({
