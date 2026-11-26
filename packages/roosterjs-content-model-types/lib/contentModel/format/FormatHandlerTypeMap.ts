@@ -4,6 +4,7 @@ import type { BoldFormat } from './formatParts/BoldFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
+import type { ColumnFormat } from './formatParts/ColumnFormat';
 import type { DatasetFormat } from './metadata/DatasetFormat';
 import type { DataValueFormat } from './formatParts/DataValueFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
@@ -77,6 +78,11 @@ export interface FormatHandlerTypeMap {
      * Format for BoxShadowFormat
      */
     boxShadow: BoxShadowFormat;
+
+    /**
+     * Format for multi-column containers.
+     */
+    columns: ColumnFormat;
 
     /**
      * Format for DatasetFormat

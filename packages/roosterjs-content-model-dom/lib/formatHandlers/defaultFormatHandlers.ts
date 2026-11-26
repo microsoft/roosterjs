@@ -5,6 +5,7 @@ import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderColorFormatHandler } from './common/borderColorFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
+import { columnFormatHandler } from './block/columnFormatHandler';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
 import { dataValueFormatHandler } from './segment/dataValueFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
@@ -66,6 +67,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     borderBox: borderBoxFormatHandler,
     borderColor: borderColorFormatHandler,
     boxShadow: boxShadowFormatHandler,
+    columns: columnFormatHandler,
     dataset: datasetFormatHandler,
     dataValue: dataValueFormatHandler,
     direction: directionFormatHandler,
@@ -223,7 +225,7 @@ export const defaultFormatKeysPerCategory: {
     data: ['dataValue'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
-    container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display', 'id'],
+    container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display', 'id', 'columns'],
     entity: ['entity'],
     general: ['textColor', 'backgroundColor'], // General model still need to do color transformation in dark mode
 };

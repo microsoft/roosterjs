@@ -117,6 +117,9 @@ function shouldFallbackToParagraph(formatContainer: ContentModelFormatContainer)
 
     return (
         formatContainer.tagName == 'div' &&
+        !formatContainer.format.columnCount &&
+        !formatContainer.format.columnGap &&
+        !formatContainer.format.columnRule &&
         formatContainer.blocks.length == 1 &&
         firstChild.blockType == 'Paragraph' &&
         firstChild.isImplicit
