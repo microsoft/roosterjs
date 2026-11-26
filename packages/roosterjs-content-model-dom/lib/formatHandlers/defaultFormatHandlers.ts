@@ -42,6 +42,7 @@ import { undeletableLinkFormatHandler } from './segment/undeletableLinkFormatHan
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
+import { textSpacingTrimFormatHandler } from './block/textSpacingTrimFormatHandler';
 import { wordBreakFormatHandler } from './common/wordBreakFormatHandler';
 import type { FormatHandler } from './FormatHandler';
 import type {
@@ -102,6 +103,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
+    textSpacingTrim: textSpacingTrimFormatHandler,
     wordBreak: wordBreakFormatHandler,
 };
 
@@ -123,6 +125,7 @@ const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'superOrSubScript',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
+    'textSpacingTrim',
     'direction',
     'textAlign',
     'textIndent',

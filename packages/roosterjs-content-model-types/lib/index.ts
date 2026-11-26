@@ -38,6 +38,7 @@ export { SuperOrSubScriptFormat } from './contentModel/format/formatParts/SuperO
 export { TextColorFormat } from './contentModel/format/formatParts/TextColorFormat';
 export { UnderlineFormat } from './contentModel/format/formatParts/UnderlineFormat';
 export { BorderBoxFormat } from './contentModel/format/formatParts/BorderBoxFormat';
+export { TextSpacingTrimFormat } from './contentModel/format/formatParts/TextSpacingTrimFormat';
 export { VerticalAlignFormat } from './contentModel/format/formatParts/VerticalAlignFormat';
 export { WordBreakFormat } from './contentModel/format/formatParts/WordBreakFormat';
 export { BorderFormat } from './contentModel/format/formatParts/BorderFormat';
