@@ -3,6 +3,21 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies exact Word ligature overrides and independent CSS features', () => {
+        const segment = createText('test', {
+            wordLigatureFeatures: '"liga" 0, "clig" 0, "hlig" 0, "dlig" 0',
+            fontFeatureSettings: '"calt" 1',
+        });
+
+        expect(getSegmentTextFormat(segment)).toEqual(segment.format);
+    });
+
+    it('copies ligature features with text typography', () => {
+        const segment = createText('test', { fontVariantLigatures: 'none', underline: true });
+
+        expect(getSegmentTextFormat(segment)).toEqual({ fontVariantLigatures: 'none' });
+    });
+
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',

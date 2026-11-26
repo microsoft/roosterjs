@@ -1,6 +1,8 @@
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BoldFormat } from './formatParts/BoldFormat';
 import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
+import type { FontFeatureSettingsFormat } from './formatParts/FontFeatureSettingsFormat';
+import type { FontVariantLigaturesFormat } from './formatParts/FontVariantLigaturesFormat';
 import type { FontSizeFormat } from './formatParts/FontSizeFormat';
 import type { ItalicFormat } from './formatParts/ItalicFormat';
 import type { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
@@ -18,6 +20,8 @@ export type ContentModelSegmentFormat = TextColorFormat &
     LetterSpacingFormat &
     FontSizeFormat &
     FontFamilyFormat &
+    FontFeatureSettingsFormat &
+    FontVariantLigaturesFormat &
     BoldFormat &
     ItalicFormat &
     UnderlineFormat &

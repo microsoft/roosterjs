@@ -1,6 +1,6 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
-import { cloneModel } from 'roosterjs-content-model-dom';
+import { EmptySegmentFormat, cloneModel } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { paste } from 'roosterjs-content-model-core';
@@ -220,20 +220,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],
@@ -384,20 +371,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],
@@ -939,20 +913,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],
@@ -977,6 +938,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -1004,6 +966,7 @@ describe(ID, () => {
                                     text: 'dsfa',
                                     segmentType: 'Text',
                                     format: {
+                                        fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -1025,6 +988,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -1048,6 +1012,7 @@ describe(ID, () => {
                                     text: 'dff',
                                     segmentType: 'Text',
                                     format: {
+                                        fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -1069,6 +1034,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -1092,6 +1058,7 @@ describe(ID, () => {
                                     text: 'fdsfsd',
                                     segmentType: 'Text',
                                     format: {
+                                        fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -1113,6 +1080,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -1149,6 +1117,7 @@ describe(ID, () => {
                                     text: 'dfsfd',
                                     segmentType: 'Text',
                                     format: {
+                                        fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -1170,6 +1139,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -1205,6 +1175,7 @@ describe(ID, () => {
                                     text: 'fd',
                                     segmentType: 'Text',
                                     format: {
+                                        fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -1226,6 +1197,7 @@ describe(ID, () => {
                         isSelected: false,
                         segmentType: 'SelectionMarker',
                         format: {
+                            fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                             fontFamily: 'Aptos, sans-serif',
                             fontSize: '12pt',
                             textColor: 'rgb(192, 0, 0)',
@@ -1249,6 +1221,7 @@ describe(ID, () => {
                                     text: 'sdsd',
                                     segmentType: 'Text',
                                     format: {
+                                        fontFeatureSettings: '"liga", "clig", "hlig" 0, "dlig" 0',
                                         fontFamily: 'Aptos, sans-serif',
                                         fontSize: '12pt',
                                         textColor: 'rgb(192, 0, 0)',
@@ -1271,18 +1244,10 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
+                                ...EmptySegmentFormat,
                                 fontFamily: 'Calibri',
                                 fontSize: '11pt',
                                 textColor: '#000000',
-                                backgroundColor: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                underline: false,
                             },
                         },
                         {
@@ -1722,20 +1687,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],
@@ -2422,20 +2374,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],

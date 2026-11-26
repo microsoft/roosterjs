@@ -4121,6 +4121,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             decorator: {
                                 tagName: 'h2',
                                 format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
                                     fontSize: '1.5em',
                                     fontWeight: 'bold',
                                 },
@@ -4136,7 +4137,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                             link: {
                                                 format: {
                                                     name: '_Hlk155259411',
@@ -4147,7 +4151,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: '.',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4170,7 +4177,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '107%',
@@ -4187,7 +4196,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4209,7 +4221,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '107%',
@@ -4226,95 +4240,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    isImplicit: true,
-                                },
-                            ],
-                            levels: [
-                                {
-                                    listType: 'OL',
-                                    format: {
-                                        marginTop: '1em',
-                                        wordList: 'l2',
-                                    },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
-                                },
-                                {
-                                    listType: 'UL',
-                                    format: {
-                                        marginTop: '0in',
-                                        marginRight: '0in',
-                                        wordList: 'l2',
-                                    },
-                                    dataset: {},
-                                },
-                            ],
-                            formatHolder: {
-                                segmentType: 'SelectionMarker',
-                                isSelected: false,
-                                format: {},
-                            },
-                            format: {
-                                lineHeight: '107%',
-                                marginTop: '0in',
-                                marginBottom: '8pt',
-                            },
-                        },
-                        {
-                            blockType: 'BlockGroup',
-                            blockGroupType: 'ListItem',
-                            blocks: [
-                                {
-                                    blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'text',
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    isImplicit: true,
-                                },
-                            ],
-                            levels: [
-                                {
-                                    listType: 'OL',
-                                    format: {
-                                        marginTop: '1em',
-                                        wordList: 'l2',
-                                    },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
-                                },
-                            ],
-                            formatHolder: {
-                                segmentType: 'SelectionMarker',
-                                isSelected: false,
-                                format: {},
-                            },
-                            format: {
-                                lineHeight: '107%',
-                                marginBottom: '8pt',
-                            },
-                        },
-                        {
-                            blockType: 'BlockGroup',
-                            blockGroupType: 'ListItem',
-                            blocks: [
-                                {
-                                    blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4345,7 +4274,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '107%',
@@ -4363,7 +4294,108 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    format: {
+                                        marginTop: '1em',
+                                        wordList: 'l2',
+                                    },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
+                            },
+                            format: {
+                                lineHeight: '107%',
+                                marginBottom: '8pt',
+                            },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'text',
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    format: {
+                                        marginTop: '1em',
+                                        wordList: 'l2',
+                                    },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
+                                },
+                                {
+                                    listType: 'UL',
+                                    format: {
+                                        marginTop: '0in',
+                                        marginRight: '0in',
+                                        wordList: 'l2',
+                                    },
+                                    dataset: {},
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
+                            },
+                            format: {
+                                lineHeight: '107%',
+                                marginTop: '0in',
+                                marginBottom: '8pt',
+                            },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'text',
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4403,7 +4435,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '107%',
@@ -4421,7 +4455,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4443,7 +4480,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '107%',
@@ -4460,7 +4499,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4491,7 +4533,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '107%',
@@ -4500,12 +4544,17 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             },
                         },
                         {
+                            segmentFormat: {
+                                wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                            },
                             blockType: 'Paragraph',
                             segments: [
                                 {
                                     segmentType: 'Text',
                                     text: 'Text',
                                     format: {
+                                        wordLigatureFeatures:
+                                            '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
                                         fontSize: '16pt',
                                     },
                                 },
@@ -4520,12 +4569,18 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             },
                         },
                         {
+                            segmentFormat: {
+                                wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                            },
                             blockType: 'Paragraph',
                             segments: [
                                 {
                                     segmentType: 'Text',
                                     text: 'text',
-                                    format: {},
+                                    format: {
+                                        wordLigatureFeatures:
+                                            '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                    },
                                 },
                             ],
                             format: {
@@ -4538,12 +4593,18 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             },
                         },
                         {
+                            segmentFormat: {
+                                wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                            },
                             blockType: 'Paragraph',
                             segments: [
                                 {
                                     segmentType: 'Text',
                                     text: 'text',
-                                    format: {},
+                                    format: {
+                                        wordLigatureFeatures:
+                                            '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                    },
                                 },
                             ],
                             format: {
@@ -4565,7 +4626,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4588,7 +4652,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '107%',
@@ -4605,7 +4671,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4636,7 +4705,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '105%',
@@ -4654,7 +4725,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4676,7 +4750,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '105%',
@@ -4693,12 +4769,18 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'text',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                         {
                                             segmentType: 'Text',
                                             text: ' ',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4729,7 +4811,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {
                                 lineHeight: '105%',
@@ -4768,7 +4852,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'List 1',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4791,7 +4878,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {},
                         },
@@ -4805,7 +4894,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'List 2',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4827,17 +4919,25 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {},
                         },
                         {
+                            segmentFormat: {
+                                wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                            },
                             blockType: 'Paragraph',
                             segments: [
                                 {
                                     segmentType: 'Text',
                                     text: 'List without bullet',
-                                    format: {},
+                                    format: {
+                                        wordLigatureFeatures:
+                                            '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                    },
                                 },
                             ],
                             format: {
@@ -4850,12 +4950,18 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             },
                         },
                         {
+                            segmentFormat: {
+                                wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                            },
                             blockType: 'Paragraph',
                             segments: [
                                 {
                                     segmentType: 'Text',
                                     text: ' ',
-                                    format: {},
+                                    format: {
+                                        wordLigatureFeatures:
+                                            '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                    },
                                 },
                             ],
                             format: {
@@ -4877,7 +4983,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'List',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4899,17 +5008,25 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {},
                         },
                         {
+                            segmentFormat: {
+                                wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                            },
                             blockType: 'Paragraph',
                             segments: [
                                 {
                                     segmentType: 'Text',
                                     text: 'Text',
-                                    format: {},
+                                    format: {
+                                        wordLigatureFeatures:
+                                            '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                    },
                                 },
                             ],
                             format: {
@@ -4931,7 +5048,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'List',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -4964,17 +5084,25 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {},
                         },
                         {
+                            segmentFormat: {
+                                wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                            },
                             blockType: 'Paragraph',
                             segments: [
                                 {
                                     segmentType: 'Text',
                                     text: 'Text',
-                                    format: {},
+                                    format: {
+                                        wordLigatureFeatures:
+                                            '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                    },
                                 },
                             ],
                             format: {
@@ -4997,7 +5125,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         {
                                             segmentType: 'Text',
                                             text: 'List',
-                                            format: {},
+                                            format: {
+                                                wordLigatureFeatures:
+                                                    '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                            },
                                         },
                                     ],
                                     format: {},
@@ -5040,17 +5171,25 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             formatHolder: {
                                 segmentType: 'SelectionMarker',
                                 isSelected: false,
-                                format: {},
+                                format: {
+                                    wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                },
                             },
                             format: {},
                         },
                         {
+                            segmentFormat: {
+                                wordLigatureFeatures: '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                            },
                             blockType: 'Paragraph',
                             segments: [
                                 {
                                     segmentType: 'Text',
                                     text: 'Text',
-                                    format: {},
+                                    format: {
+                                        wordLigatureFeatures:
+                                            '"liga" 1, "clig" 1, "hlig" 0, "dlig" 0',
+                                    },
                                 },
                             ],
                             format: {

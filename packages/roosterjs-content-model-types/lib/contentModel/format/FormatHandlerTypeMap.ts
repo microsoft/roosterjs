@@ -11,6 +11,8 @@ import type { DisplayFormat } from './formatParts/DisplayFormat';
 import type { EntityInfoFormat } from './formatParts/EntityInfoFormat';
 import type { FloatFormat } from './formatParts/FloatFormat';
 import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
+import type { FontFeatureSettingsFormat } from './formatParts/FontFeatureSettingsFormat';
+import type { FontVariantLigaturesFormat } from './formatParts/FontVariantLigaturesFormat';
 import type { FontSizeFormat } from './formatParts/FontSizeFormat';
 import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
@@ -112,6 +114,16 @@ export interface FormatHandlerTypeMap {
      * Format for FontFamilyFormat
      */
     fontFamily: FontFamilyFormat;
+
+    /**
+     * Format for exact OpenType feature settings and Word ligature overrides
+     */
+    fontFeatureSettings: FontFeatureSettingsFormat;
+
+    /**
+     * Format for OpenType ligature features
+     */
+    fontVariantLigatures: FontVariantLigaturesFormat & FontFeatureSettingsFormat;
 
     /**
      * Format for FontSizeFormat
