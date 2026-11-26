@@ -152,7 +152,11 @@ describe('clearModelFormat', () => {
         const model = createContentModelDocument();
         const para = createParagraph(false, { lineHeight: '10px' });
         const text1 = createText('test1', { textColor: 'red' });
-        const text2 = createText('test2', { textColor: 'green' });
+        const text2 = createText('test2', {
+            textColor: 'green',
+            underline: true,
+            underlineColor: '#ff0000',
+        });
 
         text2.isSelected = true;
 

@@ -82,6 +82,17 @@ describe('underlineFormatHandler.parse', () => {
 
         expect(format).toEqual({});
     });
+
+    it('recovers the light underline color from a dark CSS variable', () => {
+        div.style.textDecorationColor = 'var(--darkColor_red, rgb(255, 0, 0))';
+        context.isDarkMode = true;
+
+        underlineFormatHandler.parse(format, div, context, { textDecoration: 'underline' });
+
+        expect(format.underline).toBeTrue();
+        expect(format.underlineColor).toBe('rgb(255, 0, 0)');
+        expect(div.style.color).toBe('');
+    });
 });
 
 describe('underlineFormatHandler.apply', () => {
@@ -148,6 +159,17 @@ describe('underlineFormatHandler.apply', () => {
         underlineFormatHandler.apply(format, a, context);
 
         expect(a.outerHTML).toEqual('<a>test</a>');
+    });
+
+    it('keeps a latent color without enabling underline', () => {
+        format.underlineColor = 'red';
+        div.textContent = 'plain';
+
+        underlineFormatHandler.apply(format, div, context);
+
+        expect(div.querySelector('u')).toBeNull();
+        expect(div.style.textDecorationColor).toBe('red');
+        expect(div.style.color).toBe('');
     });
 
     it('Hyperlink without underline', () => {

@@ -2,6 +2,7 @@ import * as processPastedContentWacComponents from '../../../lib/paste/WacCompon
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 import { paste } from 'roosterjs-content-model-core';
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_From_WORD_Online_E2E';
 
@@ -465,18 +466,7 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
+                                ...EmptySegmentFormat,
                             },
                         },
                         {

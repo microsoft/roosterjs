@@ -24,6 +24,7 @@ export function getSegmentTextFormat(
         fontWeight: includingBIU ? format.fontWeight : undefined,
         italic: includingBIU ? format.italic : undefined,
         underline: includingBIU ? format.underline : undefined,
+        underlineColor: includingBIU ? format.underlineColor : undefined,
     };
 
     return removeUndefinedValues(textFormat);

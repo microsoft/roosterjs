@@ -63,6 +63,7 @@ describe('getSegmentTextFormat', () => {
             italic: true,
             underline: false,
         });
+
         expect(getSegmentTextFormat(segment, true)).toEqual({
             fontFamily: 'Arial',
             fontSize: '12px',
@@ -73,6 +74,21 @@ describe('getSegmentTextFormat', () => {
             fontWeight: 'bold',
             italic: true,
             underline: false,
+        });
+    });
+
+    it('copies underline color only with underline formatting', () => {
+        const segment = createText('colored line', {
+            underline: true,
+            underlineColor: '#ff0000',
+            textColor: '#000000',
+        });
+
+        expect(getSegmentTextFormat(segment)).toEqual({ textColor: '#000000' });
+        expect(getSegmentTextFormat(segment, true)).toEqual({
+            underline: true,
+            underlineColor: '#ff0000',
+            textColor: '#000000',
         });
     });
 });
