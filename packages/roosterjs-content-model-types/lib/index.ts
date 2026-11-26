@@ -185,7 +185,11 @@ export {
     ShallowMutableContentModelBlockGroup,
 } from './contentModel/blockGroup/ContentModelBlockGroup';
 
-export { ContentModelBr, ReadonlyContentModelBr } from './contentModel/segment/ContentModelBr';
+export {
+    ContentModelBr,
+    ContentModelBrFormat,
+    ReadonlyContentModelBr,
+} from './contentModel/segment/ContentModelBr';
 export {
     ContentModelGeneralSegment,
     ReadonlyContentModelGeneralSegment,

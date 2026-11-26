@@ -12,6 +12,10 @@ export const handleBr: ContentModelSegmentHandler<ContentModelBr> = (
     segmentNodes
 ) => {
     const br = doc.createElement('br');
+    if (segment.format.clear) {
+        br.style.clear = segment.format.clear;
+    }
+
     const element = doc.createElement('span');
     element.appendChild(br);
     parent.appendChild(element);

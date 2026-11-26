@@ -65,6 +65,22 @@ describe('brProcessor', () => {
         });
     });
 
+    it('ignores invalid legacy clearing without changing segment defaults', () => {
+        const doc = createContentModelDocument();
+        const br = document.createElement('br');
+        br.setAttribute('clear', 'invalid');
+
+        brProcessor(doc, br, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [{ segmentType: 'Br', format: {} }],
+            format: {},
+        });
+        expect(context.segmentFormat).toEqual({});
+    });
+
     it('Br with domIndexer', () => {
         const doc = createContentModelDocument();
         const br = document.createElement('br');

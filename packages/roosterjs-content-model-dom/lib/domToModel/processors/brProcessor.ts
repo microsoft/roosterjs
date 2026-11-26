@@ -8,6 +8,19 @@ import type { ElementProcessor } from 'roosterjs-content-model-types';
  */
 export const brProcessor: ElementProcessor<HTMLBRElement> = (group, element, context) => {
     const br = createBr(context.segmentFormat);
+    const legacyClear = element.getAttribute('clear')?.toLowerCase();
+    const clear =
+        element.style.clear ||
+        (legacyClear == 'all'
+            ? 'both'
+            : legacyClear && ['left', 'right', 'none'].indexOf(legacyClear) >= 0
+            ? legacyClear
+            : undefined);
+
+    if (clear) {
+        br.format.clear = clear;
+    }
+
     const [start, end] = getRegularSelectionOffsets(context, element);
 
     if (start >= 0) {

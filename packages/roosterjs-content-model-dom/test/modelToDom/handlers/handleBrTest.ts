@@ -33,6 +33,19 @@ describe('handleSegment', () => {
         expect(parent.innerHTML).toBe('<span style="color: red;"><br></span>');
     });
 
+    it('applies clearing only to the line break, not its text wrapper', () => {
+        const br: ContentModelBr = {
+            segmentType: 'Br',
+            format: { clear: 'both', textColor: 'red' },
+        };
+
+        handleBr(document, parent, br, context, []);
+
+        expect(parent.querySelector('br')!.style.clear).toBe('both');
+        expect(parent.querySelector('span')!.style.clear).toBe('');
+        expect(context.implicitFormat).not.toEqual(jasmine.objectContaining({ clear: 'both' }));
+    });
+
     it('With onNodeCreated', () => {
         const br: ContentModelBr = {
             segmentType: 'Br',
