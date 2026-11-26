@@ -135,6 +135,25 @@ describe('Word ligatures', () => {
         });
     });
 
+    it('preserves inherited native features for CSS inherit and unset', () => {
+        const root = pasteRun(
+            'mso-ligatures:none',
+            'Parent<span style="font-variant-ligatures:inherit">Inherited</span><span style="font-variant-ligatures:unset">Unset</span>'
+        );
+        expect(features(textElement(root, 'Inherited'))).toEqual({
+            liga: 0,
+            clig: 0,
+            hlig: 0,
+            dlig: 0,
+        });
+        expect(features(textElement(root, 'Unset'))).toEqual({
+            liga: 0,
+            clig: 0,
+            hlig: 0,
+            dlig: 0,
+        });
+    });
+
     it('does not guess ligature flags for an unknown Word keyword', () => {
         const run = textElement(pasteRun('mso-ligatures:unknown'));
 
