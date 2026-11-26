@@ -8,6 +8,7 @@ import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
 import { dataValueFormatHandler } from './segment/dataValueFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
+import { diagonalBorderFormatHandler } from './table/diagonalBorderFormatHandler';
 import { displayFormatHandler } from './block/displayFormatHandler';
 import { entityFormatHandler } from './entity/entityFormatHandler';
 import { floatFormatHandler } from './common/floatFormatHandler';
@@ -69,6 +70,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     dataset: datasetFormatHandler,
     dataValue: dataValueFormatHandler,
     direction: directionFormatHandler,
+    diagonalBorder: diagonalBorderFormatHandler,
     display: displayFormatHandler,
     float: floatFormatHandler,
     fontFamily: fontFamilyFormatHandler,
@@ -164,6 +166,7 @@ export const defaultFormatKeysPerCategory: {
         'textColorOnTableCell',
     ],
     tableCell: [
+        'diagonalBorder',
         'border',
         'borderColor',
         'backgroundColor',

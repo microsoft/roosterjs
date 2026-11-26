@@ -381,6 +381,11 @@ export function applyTableBorderFormat(
 
                     for (const { cell, positions } of borderUpdates) {
                         applyBorderFormat(cell, borderFormat, positions);
+                        if (operation == 'noBorders') {
+                            const format = mutateBlock(cell).format;
+                            delete format.diagonalDown;
+                            delete format.diagonalUp;
+                        }
                     }
 
                     //Format perimeter if necessary or possible

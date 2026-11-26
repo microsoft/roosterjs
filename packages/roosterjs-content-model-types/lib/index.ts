@@ -42,6 +42,7 @@ export { VerticalAlignFormat } from './contentModel/format/formatParts/VerticalA
 export { WordBreakFormat } from './contentModel/format/formatParts/WordBreakFormat';
 export { BorderFormat } from './contentModel/format/formatParts/BorderFormat';
 export { DirectionFormat } from './contentModel/format/formatParts/DirectionFormat';
+export { DiagonalBorderFormat } from './contentModel/format/formatParts/DiagonalBorderFormat';
 export { HtmlAlignFormat } from './contentModel/format/formatParts/HtmlAlignFormat';
 export { MarginFormat } from './contentModel/format/formatParts/MarginFormat';
 export { PaddingFormat } from './contentModel/format/formatParts/PaddingFormat';

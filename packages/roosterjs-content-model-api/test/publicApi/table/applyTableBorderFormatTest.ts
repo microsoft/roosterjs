@@ -111,6 +111,17 @@ describe('applyTableBorderFormat', () => {
             return JSON.parse(JSON.stringify(table));
         }
 
+        it('removes diagonal borders only from selected cells for noBorders', () => {
+            const table = createTestTable(3, 3, {
+                diagonalDown: '1pt solid #0066CC',
+                diagonalUp: '2pt solid #CC3300',
+            });
+            applyToTable(table, 'noBorders');
+            expect(table.rows[1].cells[1].format.diagonalDown).toBeUndefined();
+            expect(table.rows[1].cells[1].format.diagonalUp).toBeUndefined();
+            expect(table.rows[0].cells[0].format.diagonalDown).toBe('1pt solid #0066CC');
+        });
+
         operations.forEach(operation => {
             [false, true].forEach(isRtl => {
                 // Single cell, row, column, and grids with and without inner cells.

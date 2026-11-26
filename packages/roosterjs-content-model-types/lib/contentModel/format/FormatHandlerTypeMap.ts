@@ -7,6 +7,7 @@ import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
 import type { DatasetFormat } from './metadata/DatasetFormat';
 import type { DataValueFormat } from './formatParts/DataValueFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
+import type { DiagonalBorderFormat } from './formatParts/DiagonalBorderFormat';
 import type { DisplayFormat } from './formatParts/DisplayFormat';
 import type { EntityInfoFormat } from './formatParts/EntityInfoFormat';
 import type { FloatFormat } from './formatParts/FloatFormat';
@@ -92,6 +93,11 @@ export interface FormatHandlerTypeMap {
      * Format for DirectionFormat
      */
     direction: DirectionFormat;
+
+    /**
+     * Format for diagonal table-cell borders.
+     */
+    diagonalBorder: DiagonalBorderFormat;
 
     /**
      * Format for DisplayFormat
