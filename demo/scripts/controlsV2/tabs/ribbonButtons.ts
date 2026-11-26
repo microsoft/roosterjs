@@ -16,6 +16,7 @@ import { listStartNumberButton } from '../demoButtons/listStartNumberButton';
 import { pasteAsMarkdownButton } from '../demoButtons/pasteAsMarkdownButton';
 import { pasteButton } from '../demoButtons/pasteButton';
 import { setBulletedListStyleButton } from '../demoButtons/setBulletedListStyleButton';
+import { setListLevelButton } from '../demoButtons/setListLevelButton';
 import { setNumberedListStyleButton } from '../demoButtons/setNumberedListStyleButton';
 import { setTableCellShadeButton } from '../demoButtons/setTableCellShadeButton';
 import { spaceAfterButton, spaceBeforeButton } from '../demoButtons/spaceBeforeAfterButtons';
@@ -140,6 +141,7 @@ const paragraphButtons: RibbonButton<any>[] = [
     setBulletedListStyleButton,
     setNumberedListStyleButton,
     listStartNumberButton,
+    setListLevelButton,
     spacingButton,
     spaceBeforeButton,
     spaceAfterButton,
@@ -183,6 +185,7 @@ const allButtons: RibbonButton<any>[] = [
     setBulletedListStyleButton,
     setNumberedListStyleButton,
     listStartNumberButton,
+    setListLevelButton,
     formatTableButton,
     setTableCellShadeButton,
     tableOptionsButton,

@@ -165,7 +165,12 @@ export function setListType(
     return paragraphOrListItems.length > 0;
 }
 
-function shouldIgnoreBlock(block: ReadonlyContentModelBlock) {
+/**
+ * @internal
+ * Check if a block should be ignored when deciding whether selected blocks are already in the expected list type
+ * @param block The block to check
+ */
+export function shouldIgnoreBlock(block: ReadonlyContentModelBlock) {
     switch (block.blockType) {
         case 'Table':
             return false;
