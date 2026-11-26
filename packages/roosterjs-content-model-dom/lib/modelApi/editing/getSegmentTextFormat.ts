@@ -1,3 +1,5 @@
+import { copyFormat } from '../block/copyFormat';
+import { TextBorderKeys } from '../../formatHandlers/utils/textBorderKeys';
 import type {
     ContentModelSegmentFormat,
     ReadonlyContentModelSegment,
@@ -6,7 +8,7 @@ import type {
 /**
  * Get the text format of a segment, this function will return only format that is applicable to text
  * @param segment The segment to get format from
- * @param includingBIU When pass true, also get Bold/Italic/Underline format
+ * @param includingBIU When pass true, also get Bold/Italic/Underline and character border format
  * @returns
  */
 export function getSegmentTextFormat(
@@ -25,6 +27,10 @@ export function getSegmentTextFormat(
         italic: includingBIU ? format.italic : undefined,
         underline: includingBIU ? format.underline : undefined,
     };
+
+    if (includingBIU) {
+        copyFormat(textFormat, format, TextBorderKeys);
+    }
 
     return removeUndefinedValues(textFormat);
 }

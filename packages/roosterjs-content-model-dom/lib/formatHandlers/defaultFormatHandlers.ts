@@ -35,6 +35,7 @@ import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatH
 import { tableLayoutFormatHandler } from './table/tableLayoutFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textAlignFormatHandler } from './block/textAlignFormatHandler';
+import { textBorderFormatHandler } from './segment/textBorderFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
 import { textIndentFormatHandler } from './block/textIndentFormatHandler';
@@ -95,6 +96,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     tableLayout: tableLayoutFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
     textAlign: textAlignFormatHandler,
+    textBorder: textBorderFormatHandler,
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
     textIndent: textIndentFormatHandler,
@@ -148,7 +150,7 @@ export const defaultFormatKeysPerCategory: {
     listItemElement: [...sharedBlockFormats, 'listItemAlign', 'margin', 'listStyle'],
     listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
-    elementBasedSegment: sizeNeutralElementBasedSegmentFormats,
+    elementBasedSegment: [...sizeNeutralElementBasedSegmentFormats, 'textBorder'],
     superOrSubScript: ['superOrSubScript'],
     segment: [
         ...styleBasedSegmentFormats,
@@ -156,6 +158,7 @@ export const defaultFormatKeysPerCategory: {
         'textColor',
         'backgroundColor',
         'lineHeight',
+        'textBorder',
     ],
     segmentOnBlock: [...styleBasedSegmentFormats, ...elementBasedSegmentFormats, 'textColor'],
     segmentOnTableCell: [

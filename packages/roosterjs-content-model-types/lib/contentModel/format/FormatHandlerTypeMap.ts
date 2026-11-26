@@ -32,6 +32,7 @@ import type { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptForma
 import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
+import type { TextBorderFormat } from './formatParts/TextBorderFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
 import type { UndeletableFormat } from './formatParts/UndeletableFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
@@ -43,6 +44,11 @@ import type { WordBreakFormat } from './formatParts/WordBreakFormat';
  * Represents a record of all format handlers
  */
 export interface FormatHandlerTypeMap {
+    /**
+     * Format for inline character borders
+     */
+    textBorder: TextBorderFormat;
+
     /**
      * Format for AriaFormat
      */

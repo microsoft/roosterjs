@@ -1,6 +1,7 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { cloneModel } from 'roosterjs-content-model-dom';
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { paste } from 'roosterjs-content-model-core';
@@ -35,6 +36,99 @@ describe(ID, () => {
 
     afterEach(() => {
         document.getElementById(ID)?.remove();
+    });
+
+    itChromeOnly('E2E preserve a Word character border around mixed inline formatting', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment--><p><span style="border:solid #17294a 1pt;padding:3pt;background:#ffff00">Box <b>bold</b></span> plain</p><!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const boxes = Array.from(root.querySelectorAll('span')).filter(
+            span => span.style.borderTopStyle == 'solid'
+        );
+
+        expect(root.textContent).toBe('Box bold plain');
+        expect(boxes.length).toBe(1);
+
+        if (boxes.length == 1) {
+            const box = boxes[0];
+
+            expect(box.textContent).toBe('Box bold');
+            expect(box.style.borderTopWidth).toBe('1pt');
+            expect(getComputedStyle(box).paddingLeft).toBe('4px');
+            expect(getComputedStyle(box).backgroundColor).toBe('rgb(255, 255, 0)');
+            expect(box.querySelector('b')?.textContent).toBe('bold');
+        }
+    });
+
+    itChromeOnly('E2E preserve separate character boxes with identical border styles', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment--><p><span style="border:solid #17294a 1pt;padding:3pt">First</span><span style="border:solid #17294a 1pt;padding:3pt">Second</span></p><!--EndFragment--></body></html>`,
+        });
+
+        const boxes = Array.from(document.getElementById(ID)!.querySelectorAll('span')).filter(
+            span => span.style.borderTopStyle == 'solid'
+        );
+
+        expect(boxes.map(box => box.textContent)).toEqual(['First', 'Second']);
+    });
+
+    itChromeOnly('E2E retain character border color across differently colored runs', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<html><head><meta name="ProgId" content="Word.Document"></head>
+                <body><!--StartFragment--><p><span style="border:solid currentColor 1pt;color:red">Red <span style="color:blue">blue</span></span> plain</p><!--EndFragment--></body></html>`,
+        });
+
+        const root = document.getElementById(ID)!;
+        const boxes = Array.from(root.querySelectorAll('span')).filter(
+            span => span.style.borderTopStyle == 'solid'
+        );
+
+        expect(boxes.length).toBe(1);
+
+        if (boxes.length == 1) {
+            expect(boxes[0].textContent).toBe('Red blue');
+            expect(getComputedStyle(boxes[0]).borderTopColor).toBe('rgb(255, 0, 0)');
+            expect(getComputedStyle(boxes[0].querySelector('span')!).color).toBe('rgb(255, 0, 0)');
+            const blue = Array.from(boxes[0].querySelectorAll('span')).find(
+                span => span.textContent == 'blue'
+            );
+
+            expect(blue && getComputedStyle(blue).color).toBe('rgb(0, 0, 255)');
+        }
+    });
+
+    itChromeOnly('E2E keep link and image borders separate from character borders', () => {
+        paste(editor, {
+            types: ['text/html'],
+            text: '',
+            image: null,
+            customValues: {},
+            rawHtml: `<p><a href="https://example.com" style="border:solid red 1pt;padding:3pt">link</a><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" style="border:dotted green 1pt"></p>`,
+        });
+
+        const root = document.getElementById(ID)!;
+
+        expect(root.querySelector('a')?.style.borderTopStyle).toBe('solid');
+        expect(root.querySelector('img')?.style.borderTopStyle).toBe('dotted');
+        expect(
+            Array.from(root.querySelectorAll('span')).some(span => !!span.style.borderTopStyle)
+        ).toBeFalse();
     });
 
     itChromeOnly('E2E isolate Word list fonts from following paragraphs and tables', () => {
@@ -221,18 +315,7 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
+                                ...EmptySegmentFormat,
                             },
                         },
                         { segmentType: 'Br', format: {} },
@@ -385,18 +468,7 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
+                                ...EmptySegmentFormat,
                             },
                         },
                         { segmentType: 'Br', format: {} },
@@ -940,18 +1012,7 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
+                                ...EmptySegmentFormat,
                             },
                         },
                         { segmentType: 'Br', format: {} },
@@ -1271,18 +1332,10 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
+                                ...EmptySegmentFormat,
                                 fontFamily: 'Calibri',
                                 fontSize: '11pt',
                                 textColor: '#000000',
-                                backgroundColor: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                underline: false,
                             },
                         },
                         {
@@ -1723,18 +1776,7 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
+                                ...EmptySegmentFormat,
                             },
                         },
                         { segmentType: 'Br', format: {} },
@@ -2423,18 +2465,7 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
+                                ...EmptySegmentFormat,
                             },
                         },
                         { segmentType: 'Br', format: {} },

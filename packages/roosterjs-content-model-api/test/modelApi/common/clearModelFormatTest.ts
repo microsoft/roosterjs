@@ -152,7 +152,19 @@ describe('clearModelFormat', () => {
         const model = createContentModelDocument();
         const para = createParagraph(false, { lineHeight: '10px' });
         const text1 = createText('test1', { textColor: 'red' });
-        const text2 = createText('test2', { textColor: 'green' });
+        const text2 = createText('test2', {
+            textColor: 'green',
+            textBorderId: 'selected-box',
+            textBorderTop: '1pt solid red',
+            textBorderRight: '1pt solid red',
+            textBorderBottom: '1pt solid red',
+            textBorderLeft: '1pt solid red',
+            textBorderPaddingTop: '3pt',
+            textBorderPaddingRight: '3pt',
+            textBorderPaddingBottom: '3pt',
+            textBorderPaddingLeft: '3pt',
+            textBorderBackgroundColor: 'yellow',
+        });
 
         text2.isSelected = true;
 

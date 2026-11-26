@@ -3,6 +3,24 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies character borders for deletion but not default paste formatting', () => {
+        const segment = createText('boxed', {
+            textBorderId: 'source-box',
+            textBorderTop: '1pt solid red',
+            textBorderRight: '1pt solid red',
+            textBorderBottom: '1pt solid red',
+            textBorderLeft: '1pt solid red',
+            textBorderPaddingTop: '3pt',
+            textBorderPaddingRight: '3pt',
+            textBorderPaddingBottom: '3pt',
+            textBorderPaddingLeft: '3pt',
+            textBorderBackgroundColor: 'yellow',
+        });
+
+        expect(getSegmentTextFormat(segment)).toEqual({});
+        expect(getSegmentTextFormat(segment, true)).toEqual(segment.format);
+    });
+
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',

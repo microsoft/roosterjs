@@ -1,4 +1,5 @@
 import { getObjectKeys } from '../../domUtils/getObjectKeys';
+import { TextBorderKeys } from '../../formatHandlers/utils/textBorderKeys';
 import type {
     ContentModelBlockFormat,
     ContentModelCode,
@@ -31,6 +32,7 @@ export interface StackFormatOptions {
 // </span>
 const SkippedStylesForBlockOnSegmentOnSegment: (keyof ContentModelSegmentFormat)[] = [
     'backgroundColor',
+    ...TextBorderKeys,
 ];
 const SkippedStylesForTable: (keyof ContentModelBlockFormat)[] = [
     'marginLeft',
