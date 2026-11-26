@@ -22,6 +22,7 @@ export { splitTextSegment } from './publicApi/segment/splitTextSegment';
 export { insertImage } from './publicApi/image/insertImage';
 export { setListStyle } from './publicApi/list/setListStyle';
 export { setListStartNumber } from './publicApi/list/setListStartNumber';
+export { setListLevel } from './publicApi/list/setListLevel';
 export { setIndentation } from './publicApi/block/setIndentation';
 export { insertHorizontalLine } from './publicApi/block/insertHorizontalLine';
 export { setAlignment } from './publicApi/block/setAlignment';
