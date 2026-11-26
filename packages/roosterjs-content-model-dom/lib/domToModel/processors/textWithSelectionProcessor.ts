@@ -1,7 +1,11 @@
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { addTextSegment } from '../../modelApi/common/addTextSegment';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
-import type { ElementProcessor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelBlockGroup,
+    DomToModelContext,
+    ElementProcessor,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -10,11 +14,14 @@ export const textWithSelectionProcessor: ElementProcessor<Text> = (group, textNo
     let txt = textNode.nodeValue || '';
     const offsets = getRegularSelectionOffsets(context, textNode);
     const txtStartOffset = offsets[0];
+    const preserveNonBreakingSpaces = !!textNode.parentElement?.closest(
+        '[data-rooster-preserve-nbsp="true"]'
+    );
     let txtEndOffset = offsets[1];
 
     if (txtStartOffset >= 0) {
         const subText = txt.substring(0, txtStartOffset);
-        addTextSegment(group, subText, context);
+        addText(group, subText, context, preserveNonBreakingSpaces);
         context.isInSelection = true;
 
         addSelectionMarker(group, context, textNode, txtStartOffset);
@@ -25,7 +32,7 @@ export const textWithSelectionProcessor: ElementProcessor<Text> = (group, textNo
 
     if (txtEndOffset >= 0) {
         const subText = txt.substring(0, txtEndOffset);
-        addTextSegment(group, subText, context);
+        addText(group, subText, context, preserveNonBreakingSpaces);
 
         if (
             context.selection &&
@@ -38,5 +45,18 @@ export const textWithSelectionProcessor: ElementProcessor<Text> = (group, textNo
         txt = txt.substring(txtEndOffset);
     }
 
-    addTextSegment(group, txt, context);
+    addText(group, txt, context, preserveNonBreakingSpaces);
 };
+
+function addText(
+    group: ContentModelBlockGroup,
+    text: string,
+    context: DomToModelContext,
+    preserveNonBreakingSpaces: boolean
+) {
+    const segment = addTextSegment(group, text, context);
+
+    if (segment && preserveNonBreakingSpaces) {
+        segment.preserveNonBreakingSpaces = true;
+    }
+}

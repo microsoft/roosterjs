@@ -20,6 +20,10 @@ export const handleText: ContentModelSegmentHandler<ContentModelText> = (
     const txt = doc.createTextNode(textContent);
     const element = doc.createElement('span');
 
+    if (segment.preserveNonBreakingSpaces) {
+        element.dataset.roosterPreserveNbsp = 'true';
+    }
+
     parent.appendChild(element);
     element.appendChild(txt);
 

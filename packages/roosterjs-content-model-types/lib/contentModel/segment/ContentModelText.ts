@@ -11,6 +11,11 @@ export interface ContentModelTextCommon {
      * Text content of this segment
      */
     text: string;
+
+    /**
+     * Preserve literal nonbreaking spaces when normalizing text across segment boundaries.
+     */
+    preserveNonBreakingSpaces?: boolean;
 }
 
 /**

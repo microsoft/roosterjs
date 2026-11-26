@@ -2,6 +2,7 @@ import { addParser } from '../utils/addParser';
 import { adjustPercentileLineHeight } from '../parsers/adjustPercentileLineHeightParser';
 import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
+import { createWordOnlyUnderlineProcessor } from './createWordOnlyUnderlineProcessor';
 import { listLevelParser } from '../parsers/listLevelParser';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
@@ -13,7 +14,12 @@ import { wordTableParser } from '../parsers/wordTableParser';
 import { removeListParagraphMargins } from './removeListParagraphMargins';
 import { wordBorderParser } from './wordBorderParser';
 import type { WordMetadata } from './WordMetadata';
-import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
+import type {
+    CssRule,
+    DomToModelOption,
+    ElementProcessor,
+    ValueSanitizer,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -25,13 +31,22 @@ import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-cont
 export function processPastedContentFromWordDesktop(
     domToModelOption: DomToModelOption,
     htmlString: string,
-    globalCssRules: CssRule[] = []
+    globalCssRules: CssRule[] = [],
+    styleSanitizers?: Readonly<Record<string, ValueSanitizer>>
 ) {
     removeListParagraphMargins(globalCssRules);
 
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
 
-    setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
+    const wordUnderline = createWordOnlyUnderlineProcessor(htmlString, styleSanitizers);
+    setProcessor(
+        domToModelOption,
+        'element',
+        wordDesktopElementProcessor(metadataMap, wordUnderline.processElement)
+    );
+    addParser(domToModelOption, 'segment', wordUnderline.parseUnderline);
+    addParser(domToModelOption, 'segmentOnBlock', wordUnderline.parseUnderline);
+    addParser(domToModelOption, 'link', wordUnderline.parseUnderline);
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
@@ -43,7 +58,8 @@ export function processPastedContentFromWordDesktop(
 }
 
 const wordDesktopElementProcessor = (
-    metadataKey: Map<string, WordMetadata>
+    metadataKey: Map<string, WordMetadata>,
+    processUnderline: (element: HTMLElement, inheritedUnderline: boolean) => void
 ): ElementProcessor<HTMLElement> => {
     return (group, element, context) => {
         const styles = getStyles(element);
@@ -54,6 +70,7 @@ const wordDesktopElementProcessor = (
                 processWordComments(styles, element)
             )
         ) {
+            processUnderline(element, !!context.segmentFormat.underline);
             context.defaultElementProcessors.element(group, element, context);
         }
     };

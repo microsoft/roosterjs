@@ -20,7 +20,11 @@ export function mergeTextSegments(block: ShallowMutableContentModelParagraph) {
 
         if (segment.segmentType != 'Text') {
             lastText = null;
-        } else if (!lastText || !segmentsWithSameFormat(lastText, segment)) {
+        } else if (
+            !lastText ||
+            !!lastText.preserveNonBreakingSpaces != !!segment.preserveNonBreakingSpaces ||
+            !segmentsWithSameFormat(lastText, segment)
+        ) {
             lastText = segment;
         } else {
             lastText.text += segment.text;

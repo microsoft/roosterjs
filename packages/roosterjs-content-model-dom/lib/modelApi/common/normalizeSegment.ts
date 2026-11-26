@@ -178,6 +178,7 @@ function normalizeTextSegments(
             const text = segment.text;
 
             if (
+                !segment.preserveNonBreakingSpaces &&
                 text.substr(-1) == NONE_BREAK_SPACE &&
                 text.length > 1 &&
                 text.substr(-2, 1) != SPACE
