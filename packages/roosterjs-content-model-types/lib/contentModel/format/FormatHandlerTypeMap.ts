@@ -24,6 +24,7 @@ import type { ListStyleFormat } from './formatParts/ListStyleFormat';
 import type { ListThreadFormat } from './formatParts/ListThreadFormat';
 import type { MarginFormat } from './formatParts/MarginFormat';
 import type { PaddingFormat } from './formatParts/PaddingFormat';
+import type { OutlineLevelFormat } from './formatParts/OutlineLevelFormat';
 import type { RoleFormat } from './formatParts/RoleFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
 import type { SpacingFormat } from './formatParts/SpacingFormat';
@@ -262,6 +263,11 @@ export interface FormatHandlerTypeMap {
      * Format for WordBreakFormat
      */
     wordBreak: WordBreakFormat;
+
+    /**
+     * Format for explicit paragraph outline levels
+     */
+    outlineLevel: OutlineLevelFormat;
 }
 
 /**

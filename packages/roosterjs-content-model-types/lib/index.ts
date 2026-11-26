@@ -47,6 +47,7 @@ export { MarginFormat } from './contentModel/format/formatParts/MarginFormat';
 export { PaddingFormat } from './contentModel/format/formatParts/PaddingFormat';
 export { TextAlignFormat } from './contentModel/format/formatParts/TextAlignFormat';
 export { TextIndentFormat } from './contentModel/format/formatParts/TextIndentFormat';
+export { OutlineLevelFormat } from './contentModel/format/formatParts/OutlineLevelFormat';
 export { WhiteSpaceFormat } from './contentModel/format/formatParts/WhiteSpaceFormat';
 export { DisplayFormat } from './contentModel/format/formatParts/DisplayFormat';
 export { IdFormat } from './contentModel/format/formatParts/IdFormat';

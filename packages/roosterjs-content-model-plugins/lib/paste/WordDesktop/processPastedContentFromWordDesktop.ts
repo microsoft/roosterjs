@@ -1,6 +1,7 @@
 import { addParser } from '../utils/addParser';
 import { adjustPercentileLineHeight } from '../parsers/adjustPercentileLineHeightParser';
 import { getStyleMetadata } from './getStyleMetadata';
+import { createWordOutlineLevelParser } from './processWordOutlineLevel';
 import { getStyles } from '../utils/getStyles';
 import { listLevelParser } from '../parsers/listLevelParser';
 import { processWordComments } from './processWordComments';
@@ -33,6 +34,7 @@ export function processPastedContentFromWordDesktop(
 
     setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
+    addParser(domToModelOption, 'block', createWordOutlineLevelParser(htmlString));
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', adjustWordListMarginParser);

@@ -1,6 +1,45 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, ContentModelParagraph } from 'roosterjs-content-model-types';
 import { paragraphTestCommon } from './paragraphTestCommon';
 import { setHeadingLevel } from '../../../lib/publicApi/block/setHeadingLevel';
+
+describe('setHeadingLevel on imported outline paragraphs', () => {
+    for (const level of [0, 1] as const) {
+        it('clears selected native outline metadata when setting heading level ' + level, () => {
+            function paragraph(outlineLevel?: number, selected = false): ContentModelParagraph {
+                return {
+                    blockType: 'Paragraph',
+                    format: outlineLevel ? { outlineLevel } : {},
+                    segments: [
+                        { segmentType: 'Text', text: 'Heading', format: {} },
+                        ...(selected
+                            ? [
+                                  {
+                                      segmentType: 'SelectionMarker' as const,
+                                      format: {},
+                                      isSelected: true,
+                                  },
+                              ]
+                            : []),
+                    ],
+                };
+            }
+            const selectedResult = paragraph(undefined, true);
+            if (level == 1) {
+                selectedResult.decorator = {
+                    tagName: 'h1',
+                    format: { fontWeight: 'bold', fontSize: '2em' },
+                };
+            }
+            paragraphTestCommon(
+                'setHeadingLevel',
+                editor => setHeadingLevel(editor, level),
+                { blockGroupType: 'Document', blocks: [paragraph(7, true), paragraph(9)] },
+                { blockGroupType: 'Document', blocks: [selectedResult, paragraph(9)] },
+                1
+            );
+        });
+    }
+});
 
 describe('setHeadingLevel to 1', () => {
     function runTest(

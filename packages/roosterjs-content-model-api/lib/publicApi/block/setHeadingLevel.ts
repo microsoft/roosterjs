@@ -21,6 +21,7 @@ export function setHeadingLevel(editor: IEditor, headingLevel: 0 | 1 | 2 | 3 | 4
     editor.focus();
 
     formatParagraphWithContentModel(editor, 'setHeadingLevel', para => {
+        delete para.format.outlineLevel;
         const tagName =
             headingLevel > 0
                 ? (('h' + headingLevel) as HeadingLevelTags | null)
