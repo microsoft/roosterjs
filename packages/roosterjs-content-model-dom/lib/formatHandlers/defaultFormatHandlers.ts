@@ -12,6 +12,7 @@ import { displayFormatHandler } from './block/displayFormatHandler';
 import { entityFormatHandler } from './entity/entityFormatHandler';
 import { floatFormatHandler } from './common/floatFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
+import { fontFeatureSettingsFormatHandler } from './segment/fontFeatureSettingsFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { getObjectKeys } from '../domUtils/getObjectKeys';
 import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
@@ -72,6 +73,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     display: displayFormatHandler,
     float: floatFormatHandler,
     fontFamily: fontFamilyFormatHandler,
+    fontFeatureSettings: fontFeatureSettingsFormatHandler,
     fontSize: fontSizeFormatHandler,
     entity: entityFormatHandler,
     htmlAlign: htmlAlignFormatHandler,
@@ -109,6 +111,7 @@ const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'letterSpacing',
     'fontFamily',
     'fontSize',
+    'fontFeatureSettings',
 ];
 
 const sizeNeutralElementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [

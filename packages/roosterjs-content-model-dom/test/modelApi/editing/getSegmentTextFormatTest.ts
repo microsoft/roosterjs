@@ -3,6 +3,13 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies native stylistic sets and independent CSS features', () => {
+        const segment = createText('test', {
+            wordStylisticSetFeatures: '"ss01" 1, "ss02" 0',
+            fontFeatureSettings: '"calt" 0',
+        });
+        expect(getSegmentTextFormat(segment)).toEqual(segment.format);
+    });
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',

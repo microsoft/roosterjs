@@ -1,3 +1,4 @@
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 import * as processPastedContentFromExcel from '../../../lib/paste/Excel/processPastedContentFromExcel';
 import { expectEqual, initEditor } from './testUtils';
 import { paste } from 'roosterjs-content-model-core';
@@ -1234,20 +1235,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],

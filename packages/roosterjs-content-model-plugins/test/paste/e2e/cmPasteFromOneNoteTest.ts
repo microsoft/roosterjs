@@ -1,3 +1,4 @@
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 import * as addParserF from '../../../lib/paste/utils/addParser';
 import * as getDocumentSourceF from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import * as oneNote from '../../../lib/paste/oneNote/processPastedContentFromOneNote';
@@ -1544,20 +1545,7 @@ describe('OneNote', () => {
                             {
                                 isSelected: true,
                                 segmentType: 'SelectionMarker',
-                                format: {
-                                    backgroundColor: '',
-                                    fontFamily: '',
-                                    fontSize: '',
-                                    fontWeight: '',
-                                    italic: false,
-                                    letterSpacing: '',
-                                    lineHeight: '',
-                                    strikethrough: false,
-                                    superOrSubScriptFontSize: '',
-                                    superOrSubScriptSequence: '',
-                                    textColor: '',
-                                    underline: false,
-                                },
+                                format: { ...EmptySegmentFormat },
                             },
                             {
                                 segmentType: 'Br',
@@ -3193,18 +3181,11 @@ describe('OneNote', () => {
                                 isSelected: true,
                                 segmentType: 'SelectionMarker',
                                 format: {
+                                    ...EmptySegmentFormat,
                                     fontFamily: 'Calibri',
                                     fontSize: '11pt',
                                     textColor: 'rgb(0,0,0)',
-                                    backgroundColor: '',
                                     fontWeight: 'normal',
-                                    italic: false,
-                                    letterSpacing: '',
-                                    lineHeight: '',
-                                    strikethrough: false,
-                                    superOrSubScriptFontSize: '',
-                                    superOrSubScriptSequence: '',
-                                    underline: false,
                                 },
                             },
                             {
@@ -5059,20 +5040,7 @@ describe('OneNote', () => {
                             {
                                 isSelected: true,
                                 segmentType: 'SelectionMarker',
-                                format: {
-                                    backgroundColor: '',
-                                    fontFamily: '',
-                                    fontSize: '',
-                                    fontWeight: '',
-                                    italic: false,
-                                    letterSpacing: '',
-                                    lineHeight: '',
-                                    strikethrough: false,
-                                    superOrSubScriptFontSize: '',
-                                    superOrSubScriptSequence: '',
-                                    textColor: '',
-                                    underline: false,
-                                },
+                                format: { ...EmptySegmentFormat },
                             },
                             {
                                 segmentType: 'Br',

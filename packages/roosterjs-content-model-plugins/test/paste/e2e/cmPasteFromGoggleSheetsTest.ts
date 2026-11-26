@@ -1,3 +1,4 @@
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { googleSheetsHtmlClipboard } from './htmlTemplates/htmlFromGoogleSheetsClipboardContent';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
@@ -1881,18 +1882,10 @@ describe('Google Sheets E2E', () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
+                                ...EmptySegmentFormat,
                                 fontFamily: 'Calibri',
                                 fontSize: '11pt',
                                 textColor: '#000000',
-                                backgroundColor: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                underline: false,
                             },
                         },
                         {
