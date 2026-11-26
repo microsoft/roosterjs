@@ -136,6 +136,13 @@ export function processWordList(
                         delete listItem.format.marginRight;
                     }
 
+                    if (
+                        listMetadata?.['mso-level-number-format']?.toLowerCase() == 'none' &&
+                        !element.style.listStyleType
+                    ) {
+                        listItem.format.listStyleType = 'none';
+                    }
+
                     if (listType == 'OL') {
                         setStartNumber(listItem, context, listMetadata, element);
                     }
@@ -160,6 +167,10 @@ export function processWordList(
 function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType: 'OL' | 'UL') {
     const templateType = listMetadata?.['mso-level-number-format'] || 'decimal';
     let templateFinal: string;
+
+    if (templateType.toLowerCase() == 'none') {
+        return undefined;
+    }
 
     if (listMetadata?.['mso-level-text']) {
         let templateValue: string = '';
