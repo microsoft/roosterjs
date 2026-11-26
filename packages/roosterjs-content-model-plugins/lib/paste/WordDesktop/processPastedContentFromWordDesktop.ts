@@ -12,6 +12,7 @@ import { wordContainerParser } from '../parsers/wordContainerParser';
 import { wordTableParser } from '../parsers/wordTableParser';
 import { removeListParagraphMargins } from './removeListParagraphMargins';
 import { wordBorderParser } from './wordBorderParser';
+import { prepareWordHorizontalTextGroups } from './prepareWordHorizontalTextGroups';
 import type { WordMetadata } from './WordMetadata';
 import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
 
@@ -21,17 +22,24 @@ import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-cont
  * @param domToModelOption Options for DOM to Content Model conversion
  * @param htmlString The HTML string to process
  * @param globalCssRules Global CSS rules extracted from the pasted document
+ * @param fragment Original clipboard fragment
  */
 export function processPastedContentFromWordDesktop(
     domToModelOption: DomToModelOption,
     htmlString: string,
-    globalCssRules: CssRule[] = []
+    globalCssRules: CssRule[] = [],
+    fragment?: ParentNode
 ) {
     removeListParagraphMargins(globalCssRules);
 
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
+    const horizontalGroups = prepareWordHorizontalTextGroups(fragment);
 
-    setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
+    setProcessor(
+        domToModelOption,
+        'element',
+        wordDesktopElementProcessor(metadataMap, horizontalGroups)
+    );
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
@@ -43,9 +51,14 @@ export function processPastedContentFromWordDesktop(
 }
 
 const wordDesktopElementProcessor = (
-    metadataKey: Map<string, WordMetadata>
+    metadataKey: Map<string, WordMetadata>,
+    horizontalGroups: WeakSet<HTMLElement>
 ): ElementProcessor<HTMLElement> => {
     return (group, element, context) => {
+        if (horizontalGroups.has(element)) {
+            context.elementProcessors['*'](group, element, context);
+            return;
+        }
         const styles = getStyles(element);
         // Process Word Lists or Word Commands, otherwise use the default processor on this element.
         if (

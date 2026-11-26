@@ -13,6 +13,7 @@ import { processPastedContentFromExcel } from './Excel/processPastedContentFromE
 import { processPastedContentFromOneNote } from './oneNote/processPastedContentFromOneNote';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
+import { WORD_HORIZONTAL_TEXT_GROUP_TAG } from './WordDesktop/prepareWordHorizontalTextGroups';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import { setProcessor } from './utils/setProcessor';
 import { tableBorderParser } from './parsers/tableBorderParser';
@@ -109,13 +110,27 @@ export class PastePlugin implements EditorPlugin {
         const pasteType = event.pasteType;
 
         switch (pasteSource) {
-            case 'wordDesktop':
+            case 'wordDesktop': {
+                const allowHorizontalGroups =
+                    !event.domToModelOption.additionalDisallowedTags.includes(
+                        WORD_HORIZONTAL_TEXT_GROUP_TAG
+                    ) &&
+                    !this.domToModelForSanitizing?.additionalDisallowedTags.includes(
+                        WORD_HORIZONTAL_TEXT_GROUP_TAG
+                    );
+                if (allowHorizontalGroups) {
+                    event.domToModelOption.additionalAllowedTags.push(
+                        WORD_HORIZONTAL_TEXT_GROUP_TAG
+                    );
+                }
                 processPastedContentFromWordDesktop(
                     event.domToModelOption,
                     event.htmlBefore || event.clipboardData.rawHtml || '',
-                    event.globalCssRules
+                    event.globalCssRules,
+                    allowHorizontalGroups ? event.fragment : undefined
                 );
                 break;
+            }
             case 'wacComponents':
                 processPastedContentWacComponents(event);
                 break;
