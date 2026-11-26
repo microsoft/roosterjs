@@ -28,6 +28,7 @@ interface WordDesktopListFormat extends DomToModelListFormat {
     wordLevel?: number | '';
     wordList?: string;
     wordKnownLevels?: Map<string, ContentModelListLevel[]>;
+    wordPictureBullet?: HTMLElement;
 }
 
 interface WordListFormat extends ContentModelListItemFormat {
@@ -55,10 +56,9 @@ export function processWordList(
     }
     const wordListStyle = styles[MSO_LIST] || '';
 
-    // If the element contains Ignore style, do not process it,
-    // Usually this element contains the fake bullet used in Word Desktop.
+    // Keep supplied picture markers; ordinary text markers are synthesized from list metadata.
     if (wordListStyle.toLowerCase() === MSO_LIST_IGNORE) {
-        return true;
+        return !listFormat.wordPictureBullet?.contains(element);
     }
 
     const [lNumber, level] = wordListStyle.split(' ');
@@ -77,7 +77,12 @@ export function processWordList(
         const isHeading = /^H[1-6]$/.test(element.tagName);
         // Retrieve the Fake bullet on the element and also the list type
         const listMetadata = metadata.get(`${lNumber}:${level}`);
+        const bulletElement = getBulletElement(element);
+        const isPictureBullet =
+            listMetadata?.['mso-level-number-format']?.toLowerCase() == 'image' &&
+            !!bulletElement?.querySelector('img')?.getAttribute('src');
         const listType =
+            !isPictureBullet &&
             listMetadata?.['mso-level-number-format']?.toLowerCase() != BULLET_METADATA
                 ? 'OL'
                 : 'UL';
@@ -102,7 +107,6 @@ export function processWordList(
         }
 
         const bullet = getBulletFromMetadata(listMetadata, listType);
-        const bulletElement = getBulletElement(element);
         const listFormatMetadata = bullet
             ? {
                   unorderedStyleType: listType == 'UL' ? bullet : undefined,
@@ -111,9 +115,11 @@ export function processWordList(
             : undefined;
 
         const originalSegmentFormat = context.segmentFormat;
+        const originalPictureBullet = listFormat.wordPictureBullet;
 
         try {
             context.segmentFormat = { ...originalSegmentFormat };
+            listFormat.wordPictureBullet = isPictureBullet ? bulletElement : undefined;
             processAsListItem(
                 context,
                 element,
@@ -136,6 +142,13 @@ export function processWordList(
                         delete listItem.format.marginRight;
                     }
 
+                    if (isPictureBullet) {
+                        listItem.format.listStyleType = 'none';
+                        if (element.style.textIndent) {
+                            listItem.format.textIndent = element.style.textIndent;
+                        }
+                    }
+
                     if (listType == 'OL') {
                         setStartNumber(listItem, context, listMetadata, element);
                     }
@@ -143,6 +156,7 @@ export function processWordList(
             );
         } finally {
             context.segmentFormat = originalSegmentFormat;
+            listFormat.wordPictureBullet = originalPictureBullet;
         }
 
         if (
