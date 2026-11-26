@@ -222,7 +222,14 @@ export const defaultFormatKeysPerCategory: {
     code: ['fontFamily', 'display'],
     data: ['dataValue'],
     dataset: ['dataset'],
-    divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
+    divider: [
+        ...sharedBlockFormats,
+        ...sharedContainerFormats,
+        'display',
+        'size',
+        'htmlAlign',
+        'textColor',
+    ],
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display', 'id'],
     entity: ['entity'],
     general: ['textColor', 'backgroundColor'], // General model still need to do color transformation in dark mode

@@ -1,6 +1,7 @@
 import { addParser } from './utils/addParser';
 import { blockElementParser } from './parsers/blockElementParser';
 import { chainSanitizerCallback } from './utils/chainSanitizerCallback';
+import { createDividerColorParser } from './parsers/createDividerColorParser';
 import { DefaultSanitizers } from './DefaultSanitizers';
 import { deprecatedBorderColorParser } from './parsers/deprecatedColorParser';
 import { getDocumentSource } from './pasteSourceValidations/getDocumentSource';
@@ -151,6 +152,15 @@ export class PastePlugin implements EditorPlugin {
         addParser(event.domToModelOption, 'tableCell', tableBorderParser);
         addParser(event.domToModelOption, 'table', deprecatedBorderColorParser);
         addParser(event.domToModelOption, 'image', imageSizeParser);
+        addParser(
+            event.domToModelOption,
+            'divider',
+            createDividerColorParser(
+                event.domToModelOption.styleSanitizers,
+                pasteSource == 'wordDesktop',
+                event.domToModelOption.attributeSanitizers
+            )
+        );
         setProcessor(event.domToModelOption, 'button', pasteButtonProcessor);
 
         if (pasteType === 'mergeFormat') {
