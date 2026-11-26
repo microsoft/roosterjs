@@ -28,6 +28,7 @@ import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandle
 import { listStyleFormatHandler } from './list/listStyleFormatHandler';
 import { marginFormatHandler } from './block/marginFormatHandler';
 import { paddingFormatHandler } from './block/paddingFormatHandler';
+import { paragraphFontAlignmentFormatHandler } from './block/paragraphFontAlignmentFormatHandler';
 import { roleFormatHandler } from './common/roleFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
@@ -88,6 +89,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listStyle: listStyleFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
+    paragraphFontAlignment: paragraphFontAlignmentFormatHandler,
     role: roleFormatHandler,
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
@@ -123,6 +125,7 @@ const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'superOrSubScript',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
+    'paragraphFontAlignment',
     'direction',
     'textAlign',
     'textIndent',

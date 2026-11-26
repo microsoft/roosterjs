@@ -6,6 +6,7 @@ import type { IdFormat } from './formatParts/IdFormat';
 import type { LineHeightFormat } from './formatParts/LineHeightFormat';
 import type { MarginFormat } from './formatParts/MarginFormat';
 import type { PaddingFormat } from './formatParts/PaddingFormat';
+import type { ParagraphFontAlignmentFormat } from './formatParts/ParagraphFontAlignmentFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
 import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
@@ -19,6 +20,7 @@ export type ContentModelBlockFormat = BackgroundColorFormat &
     HtmlAlignFormat &
     MarginFormat &
     PaddingFormat &
+    ParagraphFontAlignmentFormat &
     LineHeightFormat &
     WhiteSpaceFormat &
     BorderFormat &

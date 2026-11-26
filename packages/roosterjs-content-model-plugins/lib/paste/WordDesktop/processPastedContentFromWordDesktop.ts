@@ -13,7 +13,14 @@ import { wordTableParser } from '../parsers/wordTableParser';
 import { removeListParagraphMargins } from './removeListParagraphMargins';
 import { wordBorderParser } from './wordBorderParser';
 import type { WordMetadata } from './WordMetadata';
-import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
+import type {
+    ContentModelBlockFormat,
+    CssRule,
+    DomToModelOption,
+    ElementProcessor,
+    FormatParser,
+    ValueSanitizer,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -25,7 +32,8 @@ import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-cont
 export function processPastedContentFromWordDesktop(
     domToModelOption: DomToModelOption,
     htmlString: string,
-    globalCssRules: CssRule[] = []
+    globalCssRules: CssRule[] = [],
+    styleSanitizers?: Readonly<Record<string, ValueSanitizer>>
 ) {
     removeListParagraphMargins(globalCssRules);
 
@@ -33,6 +41,7 @@ export function processPastedContentFromWordDesktop(
 
     setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
+    addParser(domToModelOption, 'block', createWordParagraphFontAlignmentParser(styleSanitizers));
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', adjustWordListMarginParser);
@@ -57,4 +66,34 @@ const wordDesktopElementProcessor = (
             context.defaultElementProcessors.element(group, element, context);
         }
     };
+};
+
+const createWordParagraphFontAlignmentParser = (
+    styleSanitizers?: Readonly<Record<string, ValueSanitizer>>
+): FormatParser<ContentModelBlockFormat> => (format, element) => {
+    const alignment = element.style.verticalAlign;
+    if (
+        element.tagName == 'P' &&
+        !getStyles(element)['mso-list'] &&
+        (alignment == 'top' ||
+            alignment == 'middle' ||
+            alignment == 'baseline' ||
+            alignment == 'bottom')
+    ) {
+        const sanitizer = styleSanitizers?.['vertical-align'];
+        const sanitized =
+            typeof sanitizer == 'function'
+                ? sanitizer(alignment, element.tagName)
+                : sanitizer === false
+                ? null
+                : alignment;
+        if (
+            sanitized == 'top' ||
+            sanitized == 'middle' ||
+            sanitized == 'baseline' ||
+            sanitized == 'bottom'
+        ) {
+            format.paragraphFontAlignment = sanitized;
+        }
+    }
 };

@@ -119,6 +119,25 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             }
 
             optimize(container, context);
+            if (paragraph.format.paragraphFontAlignment) {
+                // CSS vertical-align on a paragraph has no effect on its inline text.
+                for (const node of Array.from(container.childNodes)) {
+                    let inline: HTMLElement | undefined;
+                    if (node.nodeType == 3) {
+                        inline = doc.createElement('span');
+                        container.insertBefore(inline, node);
+                        inline.appendChild(node);
+                    } else if (
+                        node.nodeType == 1 &&
+                        !['IMG', 'BR', 'SUP', 'SUB'].includes((node as HTMLElement).tagName)
+                    ) {
+                        inline = node as HTMLElement;
+                    }
+                    if (inline && !inline.style.verticalAlign) {
+                        inline.style.verticalAlign = 'var(--rooster-paragraph-font-align)';
+                    }
+                }
+            }
 
             // It is possible the next sibling node is changed during processing child segments
             // e.g. When this paragraph is an implicit paragraph and it contains an inline entity segment

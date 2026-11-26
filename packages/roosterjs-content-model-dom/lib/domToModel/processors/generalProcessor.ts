@@ -46,8 +46,10 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
         {
             segment:
                 'empty' /*clearFormat, General segment will include all properties and styles when generate back to HTML, so no need to carry over existing segment format*/,
+            paragraph: context.blockFormat.paragraphFontAlignment ? 'shallowClone' : undefined,
         },
         () => {
+            delete context.blockFormat.paragraphFontAlignment;
             parseFormat(element, context.formatParsers.general, segment.format, context);
 
             context.elementProcessors.child(segment, element, context);
