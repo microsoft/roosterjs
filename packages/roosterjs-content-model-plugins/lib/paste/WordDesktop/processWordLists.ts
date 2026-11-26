@@ -61,15 +61,16 @@ export function processWordList(
         return true;
     }
 
-    const [lNumber, level] = wordListStyle.split(' ');
+    const [lNumber, level, listOverride] = wordListStyle.split(' ');
     // Try get the list metadata from word, which follows this format: l1 level1 lfo2
     // If we are able to get the level property means we can process this element to be a list
     listFormat.wordLevel = level && parseInt(level.substr('level'.length));
-    listFormat.wordList = lNumber || WORD_FIRST_LIST;
+    // LFO identifies a list instance; independent instances can share a definition.
+    const listDefinition = lNumber || WORD_FIRST_LIST;
+    listFormat.wordList = listOverride ? `${listDefinition}:${listOverride}` : listDefinition;
 
     if (listFormat.levels.length == 0) {
-        listFormat.levels =
-            (listFormat.wordList && listFormat.wordKnownLevels.get(listFormat.wordList)) || [];
+        listFormat.levels = listFormat.wordKnownLevels.get(listFormat.wordList) || [];
     }
 
     if (wordListStyle && group && typeof listFormat.wordLevel === 'number') {

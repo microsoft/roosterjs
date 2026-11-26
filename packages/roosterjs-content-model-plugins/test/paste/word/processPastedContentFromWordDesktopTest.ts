@@ -496,7 +496,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {
                                     marginTop: '1em',
                                     marginBottom: undefined,
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                         ],
@@ -536,7 +536,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginBottom: '0px',
                                     paddingLeft: '0px',
                                     paddingRight: '0px',
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                         ],
@@ -594,7 +594,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {
                                     marginTop: '1em',
                                     marginBottom: undefined,
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                         ],
@@ -630,7 +630,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {
                                     marginTop: '1em',
                                     marginBottom: undefined,
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                             {
@@ -641,7 +641,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginBottom: '0px',
                                     paddingLeft: '0px',
                                     paddingRight: '0px',
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                         ],
@@ -699,7 +699,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {
                                     marginTop: '1em',
                                     marginBottom: undefined,
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                         ],
@@ -735,7 +735,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {
                                     marginTop: '1em',
                                     marginBottom: undefined,
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                             {
@@ -746,7 +746,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginBottom: '0px',
                                     paddingLeft: '0px',
                                     paddingRight: '0px',
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                             {
@@ -757,7 +757,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginBottom: '0px',
                                     paddingLeft: '0px',
                                     paddingRight: '0px',
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                         ],
@@ -814,7 +814,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {
                                     marginTop: '1em',
                                     marginBottom: undefined,
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                         ],
@@ -850,7 +850,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 format: {
                                     marginTop: '1em',
                                     marginBottom: undefined,
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                 },
                             },
                             {
@@ -861,7 +861,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginBottom: '0px',
                                     paddingLeft: '0px',
                                     paddingRight: '0px',
-                                    wordList: 'l1',
+                                    wordList: 'l1:lfo2',
                                 },
                             },
                             {
@@ -872,7 +872,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginBottom: '0px',
                                     paddingLeft: '0px',
                                     paddingRight: '0px',
-                                    wordList: 'l1',
+                                    wordList: 'l1:lfo2',
                                 },
                             },
                         ],
@@ -947,7 +947,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                     {
@@ -956,7 +956,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                     {
@@ -965,7 +965,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                     {
@@ -974,60 +974,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
-                                                        },
-                                                    },
-                                                ],
-                                                formatHolder: {
-                                                    segmentType: 'SelectionMarker',
-                                                    isSelected: false,
-                                                    format: { fontFamily: 'Symbol' },
-                                                },
-                                                format: {},
-                                            },
-                                            {
-                                                blockType: 'BlockGroup',
-                                                blockGroupType: 'ListItem',
-                                                blocks: [
-                                                    {
-                                                        blockType: 'Paragraph',
-                                                        segments: [
-                                                            {
-                                                                segmentType: 'Text',
-                                                                text: 'test2',
-                                                                format: {},
-                                                            },
-                                                        ],
-                                                        format: {},
-                                                        isImplicit: true,
-                                                    },
-                                                ],
-                                                levels: [
-                                                    {
-                                                        listType: 'UL',
-                                                        dataset: {},
-                                                        format: {
-                                                            marginTop: '1em',
-                                                            marginBottom: undefined,
-                                                            wordList: 'l1',
-                                                        },
-                                                    },
-                                                    {
-                                                        listType: 'UL',
-                                                        dataset: {},
-                                                        format: {
-                                                            marginTop: '1em',
-                                                            marginBottom: undefined,
-                                                            wordList: 'l1',
-                                                        },
-                                                    },
-                                                    {
-                                                        listType: 'UL',
-                                                        dataset: {},
-                                                        format: {
-                                                            marginTop: '1em',
-                                                            marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                 ],
@@ -1062,7 +1009,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                     {
@@ -1071,7 +1018,16 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
+                                                        },
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                 ],
@@ -1106,7 +1062,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                     {
@@ -1115,7 +1071,42 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
+                                                        },
+                                                    },
+                                                ],
+                                                formatHolder: {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: false,
+                                                    format: { fontFamily: 'Symbol' },
+                                                },
+                                                format: {},
+                                            },
+                                            {
+                                                blockType: 'BlockGroup',
+                                                blockGroupType: 'ListItem',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'test2',
+                                                                format: {},
+                                                            },
+                                                        ],
+                                                        format: {},
+                                                        isImplicit: true,
+                                                    },
+                                                ],
+                                                levels: [
+                                                    {
+                                                        listType: 'UL',
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                     {
@@ -1124,7 +1115,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                     {
@@ -1133,7 +1124,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                     {
@@ -1142,7 +1133,16 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                         format: {
                                                             marginTop: '1em',
                                                             marginBottom: undefined,
-                                                            wordList: 'l1',
+                                                            wordList: 'l1:lfo2',
+                                                        },
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                            wordList: 'l1:lfo2',
                                                         },
                                                     },
                                                 ],
@@ -1217,7 +1217,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 {
                                     listType: 'OL',
                                     format: {
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -1255,7 +1255,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 {
                                     listType: 'OL',
                                     format: {
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -1264,61 +1264,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 {
                                     listType: 'OL',
                                     format: {
-                                        wordList: 'l0',
-                                    },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
-                                },
-                            ],
-                            blockType: 'BlockGroup',
-                            format: {},
-                            blockGroupType: 'ListItem',
-                            blocks: [
-                                {
-                                    isImplicit: true,
-                                    segments: [
-                                        {
-                                            text: '123123',
-                                            segmentType: 'Text',
-                                            format: {},
-                                        },
-                                    ],
-                                    blockType: 'Paragraph',
-                                    format: {},
-                                },
-                            ],
-                        },
-                        {
-                            formatHolder: {
-                                isSelected: false,
-                                segmentType: 'SelectionMarker',
-                                format: {},
-                            },
-                            levels: [
-                                {
-                                    listType: 'OL',
-                                    format: {
-                                        wordList: 'l0',
-                                    },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
-                                },
-                                {
-                                    listType: 'OL',
-                                    format: {
-                                        wordList: 'l0',
-                                    },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
-                                },
-                                {
-                                    listType: 'OL',
-                                    format: {
-                                        marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -1353,7 +1299,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 {
                                     listType: 'OL',
                                     format: {
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -1362,7 +1308,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 {
                                     listType: 'OL',
                                     format: {
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -1372,7 +1318,42 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
+                                    },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
+                                },
+                            ],
+                            blockType: 'BlockGroup',
+                            format: {},
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    isImplicit: true,
+                                    segments: [
+                                        {
+                                            text: '123123',
+                                            segmentType: 'Text',
+                                            format: {},
+                                        },
+                                    ],
+                                    blockType: 'Paragraph',
+                                    format: {},
+                                },
+                            ],
+                        },
+                        {
+                            formatHolder: {
+                                isSelected: false,
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                            },
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    format: {
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -1381,7 +1362,26 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 {
                                     listType: 'OL',
                                     format: {
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
+                                    },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
+                                },
+                                {
+                                    listType: 'OL',
+                                    format: {
+                                        marginTop: '1em',
+                                        wordList: 'l0:lfo1',
+                                    },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
+                                },
+                                {
+                                    listType: 'OL',
+                                    format: {
+                                        wordList: 'l0:lfo1',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -1494,7 +1494,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {},
                                 },
@@ -1564,7 +1564,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '0in',
                                         marginRight: '0in',
                                         paddingLeft: '0px',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {},
                                 },
@@ -1635,7 +1635,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         marginBottom: undefined,
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                 },
                             ],
@@ -1671,7 +1671,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         marginBottom: undefined,
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                 },
                             ],
@@ -1761,7 +1761,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l5',
+                                        wordList: 'l5:lfo1',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -1806,7 +1806,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l5',
+                                        wordList: 'l5:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -1850,7 +1850,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l5',
+                                        wordList: 'l5:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -1929,7 +1929,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo2',
                                         startNumberOverride: 52,
                                     },
                                     dataset: {
@@ -1974,7 +1974,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo2',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":6}',
@@ -2051,7 +2051,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l8',
+                                        wordList: 'l8:lfo3',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -2088,7 +2088,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l8',
+                                        wordList: 'l8:lfo3',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":6}',
@@ -2124,7 +2124,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l6',
+                                        wordList: 'l6:lfo10',
                                         startNumberOverride: 65,
                                     },
                                     dataset: {
@@ -2161,7 +2161,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l6',
+                                        wordList: 'l6:lfo10',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -2215,7 +2215,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l4',
+                                        wordList: 'l4:lfo9',
                                         startNumberOverride: 15,
                                     },
                                     dataset: {
@@ -2252,7 +2252,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l4',
+                                        wordList: 'l4:lfo9',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":3}',
@@ -2306,7 +2306,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo4',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -2343,7 +2343,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo4',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":17}',
@@ -2397,7 +2397,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l7',
+                                        wordList: 'l7:lfo5',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -2434,7 +2434,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l7',
+                                        wordList: 'l7:lfo5',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":5}',
@@ -2488,7 +2488,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l9',
+                                        wordList: 'l9:lfo6',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -2525,7 +2525,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l9',
+                                        wordList: 'l9:lfo6',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -2579,7 +2579,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo7',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -2616,7 +2616,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo7',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":13}',
@@ -2670,7 +2670,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo8',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -2741,7 +2741,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                         startNumberOverride: 100,
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
@@ -2790,7 +2790,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -2799,7 +2799,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                         startNumberOverride: 1,
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
@@ -2846,7 +2846,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -2855,7 +2855,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -2864,7 +2864,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                         startNumberOverride: 1,
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
@@ -2911,7 +2911,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -2920,7 +2920,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -2929,7 +2929,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -2938,7 +2938,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                         startNumberOverride: 1,
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
@@ -2985,7 +2985,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -2994,7 +2994,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3003,7 +3003,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3012,7 +3012,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3021,7 +3021,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                         startNumberOverride: 1,
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":3}' },
@@ -3068,7 +3068,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3077,7 +3077,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3086,7 +3086,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3095,7 +3095,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3104,7 +3104,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
@@ -3113,7 +3113,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                         startNumberOverride: 1,
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
@@ -3160,7 +3160,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3169,7 +3169,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3178,7 +3178,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3187,7 +3187,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3196,7 +3196,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
@@ -3205,7 +3205,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3214,7 +3214,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                         startNumberOverride: 1,
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
@@ -3261,7 +3261,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3270,7 +3270,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3279,7 +3279,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3288,7 +3288,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3297,7 +3297,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
@@ -3306,7 +3306,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3315,7 +3315,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3324,7 +3324,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                         startNumberOverride: 500,
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
@@ -3371,7 +3371,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3380,7 +3380,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3389,7 +3389,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3398,7 +3398,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3407,7 +3407,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
@@ -3416,7 +3416,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3425,7 +3425,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3434,7 +3434,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3443,7 +3443,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                         startNumberOverride: 6,
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
@@ -3490,7 +3490,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3499,7 +3499,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3508,7 +3508,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3517,7 +3517,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3526,7 +3526,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
@@ -3535,7 +3535,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3544,7 +3544,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3553,7 +3553,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3599,7 +3599,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3608,7 +3608,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3617,7 +3617,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3626,7 +3626,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3635,7 +3635,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
@@ -3644,7 +3644,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3653,7 +3653,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3699,7 +3699,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3708,7 +3708,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3717,7 +3717,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3726,7 +3726,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3735,7 +3735,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
@@ -3744,7 +3744,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3790,7 +3790,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3799,7 +3799,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3808,7 +3808,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3817,7 +3817,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3826,7 +3826,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":3}' },
                                 },
@@ -3872,7 +3872,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3881,7 +3881,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3890,7 +3890,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -3899,7 +3899,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3945,7 +3945,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -3954,7 +3954,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo4',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -3963,7 +3963,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":13}' },
                                 },
@@ -4009,7 +4009,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -4018,7 +4018,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":5}' },
                                 },
@@ -4064,7 +4064,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l3',
+                                        wordList: 'l3:lfo2',
                                     },
                                     dataset: { editingInfo: '{"orderedStyleType":1}' },
                                 },
@@ -4159,7 +4159,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -4199,7 +4199,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4238,7 +4238,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4249,7 +4249,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {},
                                 },
@@ -4287,7 +4287,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4326,7 +4326,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4337,7 +4337,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {},
                                 },
@@ -4375,7 +4375,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4386,7 +4386,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {},
                                 },
@@ -4395,7 +4395,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l1',
+                                        wordList: 'l1:lfo2',
                                     },
                                     dataset: {},
                                 },
@@ -4433,7 +4433,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4472,7 +4472,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4483,7 +4483,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l2',
+                                        wordList: 'l2:lfo1',
                                     },
                                     dataset: {},
                                 },
@@ -4577,7 +4577,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -4617,7 +4617,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4628,7 +4628,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: {},
                                 },
@@ -4666,7 +4666,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4710,7 +4710,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4721,7 +4721,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '0in',
                                         marginRight: '0in',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo3',
                                     },
                                     dataset: {},
                                 },
@@ -4780,7 +4780,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -4817,7 +4817,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4889,7 +4889,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4943,7 +4943,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4953,7 +4953,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -5009,7 +5009,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -5019,7 +5019,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":5}',
@@ -5029,7 +5029,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     listType: 'OL',
                                     format: {
                                         marginTop: '1em',
-                                        wordList: 'l0',
+                                        wordList: 'l0:lfo1',
                                         startNumberOverride: 1,
                                     },
                                     dataset: {
@@ -5130,7 +5130,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     editingInfo: '{"orderedStyleType":1}',
                                 },
                                 format: {
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                     marginBottom: undefined,
                                 },
                             },
@@ -5179,7 +5179,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     editingInfo: '{"orderedStyleType":1}',
                                 },
                                 format: {
-                                    wordList: 'l0',
+                                    wordList: 'l0:lfo1',
                                     marginBottom: undefined,
                                 },
                             },
