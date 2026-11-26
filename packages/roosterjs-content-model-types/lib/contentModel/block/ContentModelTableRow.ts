@@ -1,5 +1,6 @@
 import type { MutableMark, ReadonlyMark, ShallowMutableMark } from '../common/MutableMark';
 import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { DisplayFormat } from '../format/formatParts/DisplayFormat';
 import type { ContentModelBlockWithCache } from '../common/ContentModelBlockWithCache';
 import type {
     ContentModelTableCell,
@@ -27,7 +28,7 @@ export interface ContentModelTableRow
     extends MutableMark,
         ContentModelTableRowCommon,
         ContentModelBlockWithCache<HTMLTableRowElement>,
-        ContentModelWithFormat<ContentModelBlockFormat> {
+        ContentModelWithFormat<ContentModelBlockFormat & DisplayFormat> {
     /**
      * Cells of this table
      */
@@ -41,7 +42,7 @@ export interface ReadonlyContentModelTableRow
     extends ReadonlyMark,
         Readonly<ContentModelTableRowCommon>,
         ContentModelBlockWithCache<HTMLTableRowElement>,
-        ReadonlyContentModelWithFormat<ContentModelBlockFormat> {
+        ReadonlyContentModelWithFormat<ContentModelBlockFormat & DisplayFormat> {
     /**
      * Cells of this table
      */
@@ -55,7 +56,7 @@ export interface ShallowMutableContentModelTableRow
     extends ShallowMutableMark,
         ContentModelTableRowCommon,
         ContentModelBlockWithCache<HTMLTableRowElement>,
-        ContentModelWithFormat<ContentModelBlockFormat> {
+        ContentModelWithFormat<ContentModelBlockFormat & DisplayFormat> {
     /**
      * Cells of this table
      */

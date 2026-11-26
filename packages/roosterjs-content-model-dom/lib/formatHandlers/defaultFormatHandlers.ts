@@ -174,7 +174,7 @@ export const defaultFormatKeysPerCategory: {
         'htmlAlign',
         'size',
     ],
-    tableRow: ['backgroundColor'],
+    tableRow: ['backgroundColor', 'display'],
     tableColumn: ['size'],
     table: [
         'aria',

@@ -1,4 +1,5 @@
 import type { SizeFormat } from './formatParts/SizeFormat';
+import type { DisplayFormat } from './formatParts/DisplayFormat';
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import type { ContentModelDataFormat } from './ContentModelDataFormat';
 import type { ContentModelDividerFormat } from './ContentModelDividerFormat';
@@ -73,7 +74,7 @@ export interface ContentModelFormatMap {
     /**
      * Format type for tableRow
      */
-    tableRow: ContentModelBlockFormat;
+    tableRow: ContentModelBlockFormat & DisplayFormat;
 
     /**
      * Format type for tableColumn
