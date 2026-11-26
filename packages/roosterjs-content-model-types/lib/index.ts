@@ -36,6 +36,7 @@ export { LineHeightFormat } from './contentModel/format/formatParts/LineHeightFo
 export { StrikeFormat } from './contentModel/format/formatParts/StrikeFormat';
 export { SuperOrSubScriptFormat } from './contentModel/format/formatParts/SuperOrSubScriptFormat';
 export { TextColorFormat } from './contentModel/format/formatParts/TextColorFormat';
+export { TextShadowFormat } from './contentModel/format/formatParts/TextShadowFormat';
 export { UnderlineFormat } from './contentModel/format/formatParts/UnderlineFormat';
 export { BorderBoxFormat } from './contentModel/format/formatParts/BorderBoxFormat';
 export { VerticalAlignFormat } from './contentModel/format/formatParts/VerticalAlignFormat';

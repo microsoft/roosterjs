@@ -32,6 +32,7 @@ import type { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptForma
 import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
+import type { TextShadowFormat } from './formatParts/TextShadowFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
 import type { UndeletableFormat } from './formatParts/UndeletableFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
@@ -227,6 +228,11 @@ export interface FormatHandlerTypeMap {
      * Format for TextColorFormat
      */
     textColor: TextColorFormat;
+
+    /**
+     * Format for text shadows.
+     */
+    textShadow: TextShadowFormat;
 
     /**
      * Format for TextColorFormat, for Table Cell only

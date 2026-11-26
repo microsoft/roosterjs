@@ -205,6 +205,7 @@ describe('mergePasteContent', () => {
             deletedEntities: [],
             newImages: [],
             newPendingFormat: {
+                textShadow: '',
                 backgroundColor: '',
                 fontFamily: '',
                 fontSize: '',
@@ -421,6 +422,7 @@ describe('mergePasteContent', () => {
             newEntities: [],
             newImages: [],
             newPendingFormat: {
+                textShadow: '',
                 backgroundColor: '',
                 fontFamily: 'Arial',
                 fontSize: '11pt',
@@ -483,6 +485,7 @@ describe('mergePasteContent', () => {
             newImages: [],
             deletedEntities: [],
             newPendingFormat: {
+                textShadow: '',
                 backgroundColor: '',
                 fontFamily: 'Arial',
                 fontSize: '',
@@ -744,6 +747,7 @@ describe('mergePasteContent', () => {
                 deletedEntities: [],
                 newImages: [],
                 newPendingFormat: {
+                    textShadow: '',
                     backgroundColor: '',
                     fontFamily: '',
                     fontSize: '14px',
@@ -1119,6 +1123,7 @@ describe('mergePasteContent', () => {
                 deletedEntities: [],
                 newImages: [],
                 newPendingFormat: {
+                    textShadow: '',
                     backgroundColor: '',
                     fontFamily: '',
                     fontSize: '14px',
@@ -1430,6 +1435,7 @@ describe('mergePasteContent', () => {
                 deletedEntities: [],
                 newImages: [],
                 newPendingFormat: {
+                    textShadow: '',
                     backgroundColor: '',
                     fontFamily: '',
                     fontSize: '14px',
@@ -1617,6 +1623,7 @@ describe('mergePasteContent', () => {
                 deletedEntities: [],
                 newImages: [],
                 newPendingFormat: {
+                    textShadow: '',
                     backgroundColor: '',
                     fontFamily: 'Aptos',
                     fontSize: '14px',
@@ -1760,6 +1767,7 @@ describe('mergePasteContent', () => {
                 deletedEntities: [],
                 newImages: [],
                 newPendingFormat: {
+                    textShadow: '',
                     backgroundColor: '',
                     fontFamily: 'Aptos',
                     fontSize: '14px',
@@ -1889,6 +1897,7 @@ describe('mergePasteContent', () => {
                 deletedEntities: [],
                 newImages: [],
                 newPendingFormat: {
+                    textShadow: '',
                     backgroundColor: '',
                     fontFamily: 'Aptos',
                     fontSize: '14px',
