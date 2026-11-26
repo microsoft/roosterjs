@@ -12,6 +12,7 @@ import type { EntityInfoFormat } from './formatParts/EntityInfoFormat';
 import type { FloatFormat } from './formatParts/FloatFormat';
 import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import type { FontSizeFormat } from './formatParts/FontSizeFormat';
+import type { FontVariantNumericFormat } from './formatParts/FontVariantNumericFormat';
 import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
 import type { ItalicFormat } from './formatParts/ItalicFormat';
@@ -117,6 +118,11 @@ export interface FormatHandlerTypeMap {
      * Format for FontSizeFormat
      */
     fontSize: FontSizeFormat;
+
+    /**
+     * Format for numeric font variants
+     */
+    fontVariantNumeric: FontVariantNumericFormat;
 
     /**
      * Format for HtmlAlignFormat

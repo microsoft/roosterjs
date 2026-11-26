@@ -3,6 +3,16 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies numeric spacing and independent Word numeral form', () => {
+        const segment = createText('0123', {
+            fontVariantNumeric: 'tabular-nums',
+            wordNumberForm: 'oldstyle',
+        });
+        expect(getSegmentTextFormat(segment)).toEqual({
+            fontVariantNumeric: 'tabular-nums',
+            wordNumberForm: 'oldstyle',
+        });
+    });
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',
