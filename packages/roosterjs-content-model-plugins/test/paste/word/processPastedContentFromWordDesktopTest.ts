@@ -1517,8 +1517,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             );
         });
 
-        it('adjustWordListMarginParser subtracts default list padding from MsoListParagraph margin', () => {
-            // margin-left: 1in = 96px; parser subtracts 40px (default list paddingInlineStart) → 56px
+        it('retains the full MsoListParagraph margin when list padding is already cleared', () => {
             const source =
                 '<p style="margin:0in 0in 0in 1in;font-size:12pt;font-family:Calibri, sans-serif;text-indent:-.25in;mso-list:l0 level1 lfo1" class="MsoListParagraph"><span style="font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol"><span style="mso-list:Ignore">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n</span></span></span>TEST</p>';
             spyOn(getStyleMetadata, 'getStyleMetadata').and.returnValue(
@@ -1578,7 +1577,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 marginTop: '0in',
                                 marginRight: '0in',
                                 marginBottom: '0in',
-                                marginLeft: '56px',
+                                marginLeft: '1in',
                             },
                         },
                     ],
