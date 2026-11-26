@@ -36,6 +36,15 @@ interface WordListFormat extends ContentModelListItemFormat {
 
 /**
  * @internal
+ */
+export interface WordListMargins {
+    left: { value?: string | null; isExplicit: boolean; isSanitized: boolean };
+    right: { value?: string | null; isExplicit: boolean; isSanitized: boolean };
+    sanitizePadding?: (property: 'padding-left' | 'padding-right') => string | null;
+}
+
+/**
+ * @internal
  * @param styles
  * @param group
  * @param element
@@ -47,7 +56,8 @@ export function processWordList(
     group: ContentModelBlockGroup,
     element: HTMLElement,
     context: DomToModelContext,
-    metadata: Map<string, WordMetadata>
+    metadata: Map<string, WordMetadata>,
+    getMargins?: (element: HTMLElement) => WordListMargins
 ) {
     const listFormat = context.listFormat as WordDesktopListFormat;
     if (!listFormat.wordKnownLevels) {
@@ -75,6 +85,7 @@ export function processWordList(
     if (wordListStyle && group && typeof listFormat.wordLevel === 'number') {
         const { wordLevel, wordList } = listFormat;
         const isHeading = /^H[1-6]$/.test(element.tagName);
+        const margins = getMargins?.(element);
         // Retrieve the Fake bullet on the element and also the list type
         const listMetadata = metadata.get(`${lNumber}:${level}`);
         const listType =
@@ -84,7 +95,7 @@ export function processWordList(
 
         // Create the new level of the list item and parse the format
         setupListFormat(listType, element, context, wordLevel, listFormat, group, [
-            wordListPaddingParser,
+            (format, element) => wordListPaddingParser(format, element, margins),
         ]);
         const currentLevelFormat = listFormat.levels[listFormat.levels.length - 1]
             .format as WordListFormat;
@@ -121,6 +132,21 @@ export function processWordList(
                 listFormatMetadata,
                 bulletElement,
                 listItem => {
+                    if (margins?.left.isSanitized && margins.left.value !== undefined) {
+                        if (margins.left.value) {
+                            listItem.format.marginLeft = margins.left.value;
+                        } else {
+                            delete listItem.format.marginLeft;
+                        }
+                    }
+                    if (margins?.right.isSanitized && margins.right.value !== undefined) {
+                        if (margins.right.value) {
+                            listItem.format.marginRight = margins.right.value;
+                        } else {
+                            delete listItem.format.marginRight;
+                        }
+                    }
+                    const marginLeft = margins ? margins.left.value : element.style.marginLeft;
                     if (isHeading && listType == 'OL') {
                         listItem.format.marginLeft = '0px';
                         listItem.format.marginRight = '0px';
@@ -134,6 +160,15 @@ export function processWordList(
                     } else if (wordLevel > 1 && !isHeading) {
                         delete listItem.format.marginLeft;
                         delete listItem.format.marginRight;
+                    } else if (
+                        !isHeading &&
+                        element.classList.contains('MsoListParagraph') &&
+                        marginLeft &&
+                        parseInt(marginLeft) == 0 &&
+                        parseFloat(marginLeft) != 0
+                    ) {
+                        // Fractional unit values now clear wrapper padding, so keep the full item margin.
+                        listItem.format.marginLeft = marginLeft;
                     }
 
                     if (listType == 'OL') {
@@ -261,13 +296,29 @@ function getLastNotEmptyBlock(listParent: ContentModelBlockGroup | undefined) {
 
 function wordListPaddingParser(
     format: ContentModelListItemLevelFormat,
-    element: HTMLElement
+    element: HTMLElement,
+    margins?: WordListMargins
 ): void {
-    if (element.style.marginLeft && parseInt(element.style.marginLeft) != 0) {
-        format.paddingLeft = '0px';
+    const marginLeft = margins ? margins.left.value : element.style.marginLeft;
+    const marginRight = margins ? margins.right.value : element.style.marginRight;
+    if (marginLeft && (parseFloat(marginLeft) != 0 || margins?.left.isExplicit)) {
+        const padding = margins?.sanitizePadding ? margins.sanitizePadding('padding-left') : '0px';
+        if (padding) {
+            format.paddingLeft = padding;
+        }
     }
-    if (element.style.marginRight && parseInt(element.style.marginRight) != 0) {
-        format.paddingRight = '0px';
+    if (marginRight && (parseFloat(marginRight) != 0 || margins?.right.isExplicit)) {
+        const padding = margins?.sanitizePadding ? margins.sanitizePadding('padding-right') : '0px';
+        if (padding) {
+            format.paddingRight = padding;
+        }
+    }
+    if (margins?.right.isSanitized && margins.right.value !== undefined) {
+        if (margins.right.value) {
+            format.marginRight = margins.right.value;
+        } else {
+            delete format.marginRight;
+        }
     }
 }
 /**
