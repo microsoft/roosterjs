@@ -3,6 +3,14 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies native contextual alternates without erasing independent CSS features', () => {
+        const segment = createText('test', {
+            wordContextualAlternates: '"calt" 0',
+            fontFeatureSettings: '"liga" 1',
+            fontVariantLigatures: 'common-ligatures',
+        });
+        expect(getSegmentTextFormat(segment)).toEqual(segment.format);
+    });
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',

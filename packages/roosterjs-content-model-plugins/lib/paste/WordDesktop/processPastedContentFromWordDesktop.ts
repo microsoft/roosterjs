@@ -1,4 +1,5 @@
 import { addParser } from '../utils/addParser';
+import { createWordContextualAlternatesParser } from '../parsers/wordContextualAlternatesParser';
 import { adjustPercentileLineHeight } from '../parsers/adjustPercentileLineHeightParser';
 import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
@@ -12,6 +13,7 @@ import { wordContainerParser } from '../parsers/wordContainerParser';
 import { wordTableParser } from '../parsers/wordTableParser';
 import { removeListParagraphMargins } from './removeListParagraphMargins';
 import { wordBorderParser } from './wordBorderParser';
+import { wordContextualAlternatesTextProcessor } from './wordContextualAlternatesTextProcessor';
 import type { WordMetadata } from './WordMetadata';
 import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
 
@@ -32,6 +34,7 @@ export function processPastedContentFromWordDesktop(
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
 
     setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
+    setProcessor(domToModelOption, 'textWithSelection', wordContextualAlternatesTextProcessor);
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
@@ -40,6 +43,9 @@ export function processPastedContentFromWordDesktop(
     addParser(domToModelOption, 'container', wordContainerParser);
     addParser(domToModelOption, 'table', wordTableParser);
     addParser(domToModelOption, 'tableBorder', wordBorderParser);
+    const wordContextualAlternatesParser = createWordContextualAlternatesParser(htmlString);
+    addParser(domToModelOption, 'segment', wordContextualAlternatesParser);
+    addParser(domToModelOption, 'segmentOnBlock', wordContextualAlternatesParser);
 }
 
 const wordDesktopElementProcessor = (

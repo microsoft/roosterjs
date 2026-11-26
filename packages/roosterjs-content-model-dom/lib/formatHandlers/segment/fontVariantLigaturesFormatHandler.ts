@@ -1,0 +1,38 @@
+import type { FormatHandler } from '../FormatHandler';
+import type {
+    FontFeatureSettingsFormat,
+    FontVariantLigaturesFormat,
+} from 'roosterjs-content-model-types';
+
+/**
+ * @internal
+ */
+export const fontVariantLigaturesFormatHandler: FormatHandler<
+    FontVariantLigaturesFormat & FontFeatureSettingsFormat
+> = {
+    parse: (format, element, _, defaultStyle) => {
+        const value = element.style.fontVariantLigatures || defaultStyle.fontVariantLigatures;
+
+        if (value == 'inherit' || value == 'unset') {
+            return;
+        }
+        if (value) {
+            const explicit =
+                value != 'normal' ||
+                /(?:^|;)\s*font-variant-ligatures\s*:/i.test(element.style.cssText) ||
+                !!defaultStyle.fontVariantLigatures;
+            if (explicit || format.fontVariantLigatures) {
+                format.fontVariantLigatures = value;
+            }
+            // Other font-variant components reset this longhand in CSSOM too.
+            if (explicit) {
+                delete format.wordContextualAlternates;
+            }
+        }
+    },
+    apply: (format, element, context) => {
+        if (format.fontVariantLigatures != context.implicitFormat.fontVariantLigatures) {
+            element.style.fontVariantLigatures = format.fontVariantLigatures || 'normal';
+        }
+    },
+};

@@ -1,3 +1,4 @@
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 import * as processPastedContentWacComponents from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
@@ -261,7 +262,22 @@ describe(ID, () => {
                                                                 {
                                                                     segments: [
                                                                         {
-                                                                            text: 'Test TableÂ ',
+                                                                            text: 'Test Table',
+                                                                            segmentType: 'Text',
+                                                                            format: {
+                                                                                fontVariantLigatures:
+                                                                                    'none',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                fontFamily:
+                                                                                    'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
+                                                                                fontSize: '11pt',
+                                                                                lineHeight:
+                                                                                    '19.7625px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            text: 'Â ',
                                                                             segmentType: 'Text',
                                                                             format: {
                                                                                 textColor:
@@ -269,6 +285,8 @@ describe(ID, () => {
                                                                                 fontFamily:
                                                                                     'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
                                                                                 fontSize: '11pt',
+                                                                                fontVariantLigatures:
+                                                                                    'normal',
                                                                                 lineHeight:
                                                                                     '19.7625px',
                                                                             },
@@ -337,7 +355,22 @@ describe(ID, () => {
                                                                 {
                                                                     segments: [
                                                                         {
-                                                                            text: 'Test TableÂ ',
+                                                                            text: 'Test Table',
+                                                                            segmentType: 'Text',
+                                                                            format: {
+                                                                                fontVariantLigatures:
+                                                                                    'none',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                fontFamily:
+                                                                                    'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
+                                                                                fontSize: '11pt',
+                                                                                lineHeight:
+                                                                                    '19.7625px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            text: 'Â ',
                                                                             segmentType: 'Text',
                                                                             format: {
                                                                                 textColor:
@@ -345,6 +378,8 @@ describe(ID, () => {
                                                                                 fontFamily:
                                                                                     'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
                                                                                 fontSize: '11pt',
+                                                                                fontVariantLigatures:
+                                                                                    'normal',
                                                                                 lineHeight:
                                                                                     '19.7625px',
                                                                             },
@@ -433,6 +468,7 @@ describe(ID, () => {
                                     text: 'Â ',
                                     segmentType: 'Text',
                                     format: {
+                                        fontVariantLigatures: 'normal',
                                         textColor: 'rgb(0, 0, 0)',
                                         fontFamily:
                                             'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
@@ -464,20 +500,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         {
                             segmentType: 'Br',
