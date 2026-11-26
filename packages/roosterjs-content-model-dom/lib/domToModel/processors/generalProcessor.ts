@@ -46,6 +46,8 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
         {
             segment:
                 'empty' /*clearFormat, General segment will include all properties and styles when generate back to HTML, so no need to carry over existing segment format*/,
+            // Block wrappers inside ruby split its base and annotation into separate lines.
+            paragraph: /^(RUBY|RT|RP)$/.test(element.tagName) ? 'empty' : undefined,
         },
         () => {
             parseFormat(element, context.formatParsers.general, segment.format, context);
