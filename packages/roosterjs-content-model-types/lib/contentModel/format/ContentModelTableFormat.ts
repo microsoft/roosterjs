@@ -11,6 +11,7 @@ import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
 import type { RoleFormat } from './formatParts/RoleFormat';
+import type { TableSummaryFormat } from './formatParts/TableSummaryFormat';
 
 /**
  * Format of Table
@@ -27,4 +28,5 @@ export type ContentModelTableFormat = ContentModelBlockFormat &
     TableLayoutFormat &
     SizeFormat &
     RoleFormat &
+    TableSummaryFormat &
     LegacyTableBorderFormat;

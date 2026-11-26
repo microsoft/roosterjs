@@ -30,6 +30,7 @@ import type { SpacingFormat } from './formatParts/SpacingFormat';
 import type { StrikeFormat } from './formatParts/StrikeFormat';
 import type { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
+import type { TableSummaryFormat } from './formatParts/TableSummaryFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextColorFormat } from './formatParts/TextColorFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
@@ -217,6 +218,11 @@ export interface FormatHandlerTypeMap {
      * Format for SpacingFormat
      */
     tableSpacing: SpacingFormat;
+
+    /**
+     * Format for descriptive table alternative text.
+     */
+    tableSummary: TableSummaryFormat;
 
     /**
      * Format for TextAlignFormat

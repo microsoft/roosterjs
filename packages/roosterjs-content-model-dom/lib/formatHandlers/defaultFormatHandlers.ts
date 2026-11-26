@@ -34,6 +34,7 @@ import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
 import { tableLayoutFormatHandler } from './table/tableLayoutFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
+import { tableSummaryFormatHandler } from './table/tableSummaryFormatHandler';
 import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
@@ -94,6 +95,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     superOrSubScript: superOrSubScriptFormatHandler,
     tableLayout: tableLayoutFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
+    tableSummary: tableSummaryFormatHandler,
     textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
@@ -178,6 +180,7 @@ export const defaultFormatKeysPerCategory: {
     tableColumn: ['size'],
     table: [
         'aria',
+        'tableSummary',
         'id',
         'border',
         'backgroundColor',

@@ -52,6 +52,7 @@ export { DisplayFormat } from './contentModel/format/formatParts/DisplayFormat';
 export { IdFormat } from './contentModel/format/formatParts/IdFormat';
 export { SpacingFormat } from './contentModel/format/formatParts/SpacingFormat';
 export { TableLayoutFormat } from './contentModel/format/formatParts/TableLayoutFormat';
+export { TableSummaryFormat } from './contentModel/format/formatParts/TableSummaryFormat';
 export { LinkFormat } from './contentModel/format/formatParts/LinkFormat';
 export { SizeFormat } from './contentModel/format/formatParts/SizeFormat';
 export { BoxShadowFormat } from './contentModel/format/formatParts/BoxShadowFormat';

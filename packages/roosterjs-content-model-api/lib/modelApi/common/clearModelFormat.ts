@@ -102,10 +102,13 @@ function createTablesFormat(tablesToClear: [ContentModelTable, boolean][]) {
     tablesToClear.forEach(x => {
         const [table, isWholeTableSelected] = x;
         if (isWholeTableSelected) {
+            const format = table.format;
+
             table.format = {
-                useBorderBox: table.format.useBorderBox,
-                borderCollapse: table.format.borderCollapse,
+                useBorderBox: format.useBorderBox,
+                borderCollapse: format.borderCollapse,
             };
+            copyFormat(table.format, format, ['title', 'summary']);
         }
 
         applyTableFormat(table, undefined /*newFormat*/, true);
