@@ -28,6 +28,7 @@ import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandle
 import { listStyleFormatHandler } from './list/listStyleFormatHandler';
 import { marginFormatHandler } from './block/marginFormatHandler';
 import { paddingFormatHandler } from './block/paddingFormatHandler';
+import { paginationFormatHandler } from './block/paginationFormatHandler';
 import { roleFormatHandler } from './common/roleFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
@@ -88,6 +89,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listStyle: listStyleFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
+    pagination: paginationFormatHandler,
     role: roleFormatHandler,
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
@@ -123,6 +125,7 @@ const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'superOrSubScript',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
+    'pagination',
     'direction',
     'textAlign',
     'textIndent',
@@ -130,6 +133,7 @@ const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'whiteSpace',
 ];
 const sharedContainerFormats: (keyof FormatHandlerTypeMap)[] = [
+    'pagination',
     'backgroundColor',
     'margin',
     'padding',
@@ -174,7 +178,7 @@ export const defaultFormatKeysPerCategory: {
         'htmlAlign',
         'size',
     ],
-    tableRow: ['backgroundColor'],
+    tableRow: ['backgroundColor', 'pagination'],
     tableColumn: ['size'],
     table: [
         'aria',

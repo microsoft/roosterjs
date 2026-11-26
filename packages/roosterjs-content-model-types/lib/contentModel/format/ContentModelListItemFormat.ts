@@ -4,6 +4,7 @@ import type { LineHeightFormat } from './formatParts/LineHeightFormat';
 import type { ListStyleFormat } from './formatParts/ListStyleFormat';
 import type { MarginFormat } from './formatParts/MarginFormat';
 import type { PaddingFormat } from './formatParts/PaddingFormat';
+import type { PaginationFormat } from './formatParts/PaginationFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
 
@@ -14,6 +15,7 @@ export type ContentModelListItemFormat = DirectionFormat &
     LineHeightFormat &
     MarginFormat &
     PaddingFormat &
+    PaginationFormat &
     TextAlignFormat &
     ListStyleFormat &
     TextIndentFormat &
