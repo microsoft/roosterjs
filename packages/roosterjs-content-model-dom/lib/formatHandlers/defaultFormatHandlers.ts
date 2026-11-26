@@ -31,6 +31,7 @@ import { paddingFormatHandler } from './block/paddingFormatHandler';
 import { roleFormatHandler } from './common/roleFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
+import { spellCheckFormatHandler } from './segment/spellCheckFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
 import { tableLayoutFormatHandler } from './table/tableLayoutFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
@@ -91,6 +92,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     role: roleFormatHandler,
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
+    spellCheck: spellCheckFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
     tableLayout: tableLayoutFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
@@ -112,6 +114,7 @@ const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
 ];
 
 const sizeNeutralElementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'spellCheck',
     'strike',
     'underline',
     'italic',

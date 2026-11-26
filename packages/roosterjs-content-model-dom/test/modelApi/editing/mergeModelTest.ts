@@ -26,6 +26,20 @@ import {
 } from 'roosterjs-content-model-dom';
 
 describe('mergeModel', () => {
+    it('retains source proofing metadata when matching destination formatting', () => {
+        const target = createContentModelDocument();
+        const destination = createParagraph();
+        destination.segments.push(createSelectionMarker({ fontFamily: 'Arial', spellCheck: true }));
+        target.blocks.push(destination);
+        const source = createContentModelDocument();
+        const paragraph = createParagraph();
+        const text = createText('Unproofed', { fontFamily: 'Calibri', spellCheck: false });
+        paragraph.segments.push(text);
+        source.blocks.push(paragraph);
+        mergeModel(target, source, undefined, { mergeFormat: 'keepSourceEmphasisFormat' });
+        expect(text.format.spellCheck).toBeFalse();
+        expect(text.format.fontFamily).toBe('Arial');
+    });
     it('empty to single selection', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();

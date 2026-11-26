@@ -3,6 +3,11 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('preserves explicit proofing opt-out when copying text format', () => {
+        expect(getSegmentTextFormat(createText('test', { spellCheck: false }))).toEqual({
+            spellCheck: false,
+        });
+    });
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',

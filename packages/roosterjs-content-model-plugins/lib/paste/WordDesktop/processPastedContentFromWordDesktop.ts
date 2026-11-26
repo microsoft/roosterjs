@@ -1,4 +1,5 @@
 import { addParser } from '../utils/addParser';
+import { createWordNoProofParser } from '../parsers/wordNoProofParser';
 import { adjustPercentileLineHeight } from '../parsers/adjustPercentileLineHeightParser';
 import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
@@ -40,6 +41,9 @@ export function processPastedContentFromWordDesktop(
     addParser(domToModelOption, 'container', wordContainerParser);
     addParser(domToModelOption, 'table', wordTableParser);
     addParser(domToModelOption, 'tableBorder', wordBorderParser);
+    const wordNoProofParser = createWordNoProofParser(htmlString);
+    addParser(domToModelOption, 'segment', wordNoProofParser);
+    addParser(domToModelOption, 'segmentOnBlock', wordNoProofParser);
 }
 
 const wordDesktopElementProcessor = (

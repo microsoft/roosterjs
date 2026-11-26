@@ -641,6 +641,10 @@ function mergeSegmentFormat(
 function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentModelSegmentFormat {
     const result: ContentModelSegmentFormat = {};
 
+    if (typeof segmentFormat.spellCheck == 'boolean') {
+        result.spellCheck = segmentFormat.spellCheck;
+    }
+
     const { fontWeight, italic, underline, strikethrough } = segmentFormat;
 
     if (fontWeight && fontWeight != 'normal') {

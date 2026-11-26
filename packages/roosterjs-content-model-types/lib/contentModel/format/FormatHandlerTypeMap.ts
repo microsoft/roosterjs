@@ -28,6 +28,7 @@ import type { RoleFormat } from './formatParts/RoleFormat';
 import type { SizeFormat } from './formatParts/SizeFormat';
 import type { SpacingFormat } from './formatParts/SpacingFormat';
 import type { StrikeFormat } from './formatParts/StrikeFormat';
+import type { SpellCheckFormat } from './formatParts/SpellCheckFormat';
 import type { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import type { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
@@ -43,6 +44,10 @@ import type { WordBreakFormat } from './formatParts/WordBreakFormat';
  * Represents a record of all format handlers
  */
 export interface FormatHandlerTypeMap {
+    /**
+     * Text-run proofing metadata
+     */
+    spellCheck: SpellCheckFormat;
     /**
      * Format for AriaFormat
      */

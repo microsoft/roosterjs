@@ -117,7 +117,11 @@ function clearSegmentsFormat(
     defaultSegmentFormat: Readonly<ContentModelSegmentFormat> | undefined
 ) {
     segmentsToClear.forEach(x => {
+        const spellCheck = x.format.spellCheck;
         x.format = { ...(defaultSegmentFormat || {}) };
+        if (typeof spellCheck == 'boolean') {
+            x.format.spellCheck = spellCheck;
+        }
 
         if (x.link) {
             delete x.link.format.textColor;
