@@ -76,10 +76,16 @@ export function setModelAlignment(
                 block.blocks.forEach(b => {
                     const { format } = mutateBlock(b);
                     format.textAlign = newAlignment;
+                    if (format.textAlignLast) {
+                        format.textAlignLast = 'auto';
+                    }
                 });
             }
             const { format } = block;
             format.textAlign = newAlignment;
+            if (format.textAlignLast) {
+                format.textAlignLast = 'auto';
+            }
         }
     });
 

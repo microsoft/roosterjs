@@ -44,6 +44,21 @@ describe('align left', () => {
         expect(splitSelectedParagraphByBrSpy).toHaveBeenCalledWith(group);
     });
 
+    it('clears pasted final-line distribution when choosing another alignment', () => {
+        const group = createContentModelDocument();
+        const paragraph = createParagraph(false, {
+            textAlign: 'justify',
+            textAlignLast: 'justify',
+        });
+        const text = createText('Distributed');
+        text.isSelected = true;
+        paragraph.segments.push(text);
+        group.blocks.push(paragraph);
+        expect(setModelAlignment(group, 'center')).toBeTrue();
+        expect(paragraph.format.textAlign).toBe('center');
+        expect(paragraph.format.textAlignLast).toBe('auto');
+    });
+
     it('Group without selection', () => {
         const group = createContentModelDocument();
         const para = createParagraph();

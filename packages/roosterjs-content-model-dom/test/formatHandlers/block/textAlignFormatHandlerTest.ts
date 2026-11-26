@@ -58,6 +58,25 @@ describe('textAlignFormatHandler.parse', () => {
         expect(format).toEqual({});
     });
 
+    it('preserves explicit final-line alignment and stylesheet defaults', () => {
+        div.style.textAlignLast = 'justify';
+        textAlignFormatHandler.parse(format, div, context, { textAlignLast: 'center' });
+        expect(format.textAlignLast).toBe('justify');
+        div.style.textAlignLast = '';
+        textAlignFormatHandler.parse(format, div, context, { textAlignLast: 'center' });
+        expect(format.textAlignLast).toBe('center');
+    });
+
+    it('retains inherited final-line policy and preserves an explicit reset', () => {
+        format.textAlignLast = 'justify';
+        div.style.textAlignLast = 'inherit';
+        textAlignFormatHandler.parse(format, div, context, {});
+        expect(format.textAlignLast).toBe('justify');
+        div.style.textAlignLast = 'auto';
+        textAlignFormatHandler.parse(format, div, context, {});
+        expect(format.textAlignLast).toBe('auto');
+    });
+
     it('Align in CSS', () => {
         runTest(div, 'left', null, null, 'start', undefined);
     });
@@ -116,6 +135,12 @@ describe('textAlignFormatHandler.apply', () => {
     it('No alignment and direction', () => {
         textAlignFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div></div>');
+    });
+
+    it('applies final-line alignment independently of paragraph direction', () => {
+        format.textAlignLast = 'justify';
+        textAlignFormatHandler.apply(format, div, context);
+        expect(div.style.textAlignLast).toBe('justify');
     });
 
     it('No direction start', () => {

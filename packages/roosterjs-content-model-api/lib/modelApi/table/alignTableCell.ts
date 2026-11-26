@@ -48,7 +48,13 @@ export function alignTableCellHorizontally(
         const alignment =
             TextAlignValueMap[operation][cell.format.direction == 'rtl' ? 'rtl' : 'ltr'];
         cell.format.textAlign = alignment;
+        if (cell.format.textAlignLast) {
+            cell.format.textAlignLast = 'auto';
+        }
         for (const block of cell.blocks) {
+            if (block.format.textAlignLast) {
+                mutateBlock(block).format.textAlignLast = 'auto';
+            }
             if (block.blockType === 'Paragraph' && block.format.textAlign) {
                 delete mutateBlock(block).format.textAlign;
             } else if (block.blockType == 'BlockGroup' && block.blockGroupType == 'ListItem') {

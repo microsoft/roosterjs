@@ -15,12 +15,22 @@ export const textAlignFormatHandler: FormatHandler<DirectionFormat & TextAlignFo
         if (textAlign && element.parentElement?.style.display !== 'flex') {
             format.textAlign = calcAlign(textAlign, format.direction);
         }
+
+        const last = element.style.textAlignLast || defaultStyle.textAlignLast;
+
+        if (last && last != 'inherit' && last != 'unset') {
+            format.textAlignLast = last;
+        }
     },
     apply: (format, element) => {
         const dir: 'ltr' | 'rtl' = format.direction == 'rtl' ? 'rtl' : 'ltr';
 
         if (format.textAlign) {
             element.style.textAlign = ResultMap[format.textAlign][dir];
+        }
+
+        if (format.textAlignLast) {
+            element.style.textAlignLast = format.textAlignLast;
         }
     },
 };
