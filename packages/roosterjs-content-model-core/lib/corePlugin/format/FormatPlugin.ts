@@ -31,6 +31,7 @@ const DefaultStyleKeyMap: Record<
 > = {
     backgroundColor: 'backgroundColor',
     textColor: 'color',
+    textFillColor: 'webkitTextFillColor',
     fontFamily: 'fontFamily',
     fontSize: 'fontSize',
 };

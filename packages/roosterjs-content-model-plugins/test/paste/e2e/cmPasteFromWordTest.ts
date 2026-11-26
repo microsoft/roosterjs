@@ -1,6 +1,6 @@
 import * as wordFile from '../../../lib/paste/WordDesktop/processPastedContentFromWordDesktop';
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
-import { cloneModel } from 'roosterjs-content-model-dom';
+import { EmptySegmentFormat, cloneModel } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from './testUtils';
 import { itChromeOnly } from 'roosterjs-content-model-dom/test/testUtils';
 import { paste } from 'roosterjs-content-model-core';
@@ -220,20 +220,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],
@@ -384,20 +371,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],
@@ -939,20 +913,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],
@@ -1271,18 +1232,10 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
+                                ...EmptySegmentFormat,
                                 fontFamily: 'Calibri',
                                 fontSize: '11pt',
                                 textColor: '#000000',
-                                backgroundColor: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                underline: false,
                             },
                         },
                         {
@@ -1722,20 +1675,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],
@@ -2100,6 +2040,7 @@ describe(ID, () => {
                                 fontFamily: 'Aptos, sans-serif',
                                 fontSize: '9pt',
                                 textColor: 'rgb(37, 37, 37)',
+                                textFillColor: 'rgb(37, 37, 37)',
                             },
                         },
                         {
@@ -2108,6 +2049,7 @@ describe(ID, () => {
                             format: {
                                 fontFamily: 'Aptos, sans-serif',
                                 textColor: 'rgb(52, 171, 255)',
+                                textFillColor: 'rgb(52, 171, 255)',
                             },
                         },
                         {
@@ -2117,6 +2059,7 @@ describe(ID, () => {
                                 fontFamily: 'Aptos, sans-serif',
                                 fontSize: '9pt',
                                 textColor: 'rgb(37, 37, 37)',
+                                textFillColor: 'rgb(37, 37, 37)',
                             },
                         },
                         {
@@ -2125,6 +2068,7 @@ describe(ID, () => {
                             format: {
                                 fontFamily: 'Aptos, sans-serif',
                                 textColor: 'rgb(52, 171, 255)',
+                                textFillColor: 'rgb(52, 171, 255)',
                             },
                         },
                         {
@@ -2142,6 +2086,7 @@ describe(ID, () => {
                             format: {
                                 fontFamily: 'Aptos, sans-serif',
                                 textColor: 'rgb(52, 171, 255)',
+                                textFillColor: 'rgb(52, 171, 255)',
                             },
                         },
                     ],
@@ -2422,20 +2367,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         { segmentType: 'Br', format: {} },
                     ],

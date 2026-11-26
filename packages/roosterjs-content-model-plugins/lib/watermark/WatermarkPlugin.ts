@@ -8,6 +8,7 @@ const styleMap: Record<keyof WatermarkFormat, string> = {
     fontFamily: 'font-family',
     fontSize: 'font-size',
     textColor: 'color',
+    textFillColor: '-webkit-text-fill-color',
 };
 
 /**

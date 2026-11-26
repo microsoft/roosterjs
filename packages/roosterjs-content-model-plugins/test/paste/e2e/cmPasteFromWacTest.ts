@@ -1,3 +1,4 @@
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 import * as processPastedContentWacComponents from '../../../lib/paste/WacComponents/processPastedContentWacComponents';
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
@@ -464,20 +465,7 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
-                            },
+                            format: { ...EmptySegmentFormat },
                         },
                         {
                             segmentType: 'Br',
