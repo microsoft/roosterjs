@@ -37,6 +37,7 @@ import type { UndeletableFormat } from './formatParts/UndeletableFormat';
 import type { UnderlineFormat } from './formatParts/UnderlineFormat';
 import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
+import type { WidowOrphanFormat } from './formatParts/WidowOrphanFormat';
 import type { WordBreakFormat } from './formatParts/WordBreakFormat';
 
 /**
@@ -257,6 +258,11 @@ export interface FormatHandlerTypeMap {
      * Format for WhiteSpaceFormat
      */
     whiteSpace: WhiteSpaceFormat;
+
+    /**
+     * Paragraph line constraints across fragments.
+     */
+    widowOrphan: WidowOrphanFormat;
 
     /**
      * Format for WordBreakFormat

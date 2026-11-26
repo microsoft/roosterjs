@@ -1,4 +1,5 @@
 import { addParser } from '../utils/addParser';
+import { createWordWidowOrphanParser } from '../parsers/wordWidowOrphanParser';
 import { adjustPercentileLineHeight } from '../parsers/adjustPercentileLineHeightParser';
 import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
@@ -33,6 +34,7 @@ export function processPastedContentFromWordDesktop(
 
     setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
+    addParser(domToModelOption, 'block', createWordWidowOrphanParser(htmlString));
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', adjustWordListMarginParser);

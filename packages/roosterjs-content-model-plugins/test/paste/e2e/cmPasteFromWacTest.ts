@@ -246,6 +246,8 @@ describe(ID, () => {
                                                             tagName: 'div',
                                                             blockType: 'BlockGroup',
                                                             format: {
+                                                                orphans: '2',
+                                                                widows: '2',
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
                                                                 marginTop: '0px',
@@ -279,6 +281,8 @@ describe(ID, () => {
                                                                     },
                                                                     blockType: 'Paragraph',
                                                                     format: {
+                                                                        orphans: '2',
+                                                                        widows: '2',
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
                                                                         whiteSpace: 'pre-wrap',
@@ -297,6 +301,8 @@ describe(ID, () => {
                                                         },
                                                     ],
                                                     format: {
+                                                        orphans: '2',
+                                                        widows: '2',
                                                         direction: 'ltr',
                                                         textAlign: 'start',
                                                         borderTop: '1px solid currentcolor',
@@ -322,6 +328,8 @@ describe(ID, () => {
                                                             tagName: 'div',
                                                             blockType: 'BlockGroup',
                                                             format: {
+                                                                orphans: '2',
+                                                                widows: '2',
                                                                 direction: 'ltr',
                                                                 textAlign: 'start',
                                                                 marginTop: '0px',
@@ -355,6 +363,8 @@ describe(ID, () => {
                                                                     },
                                                                     blockType: 'Paragraph',
                                                                     format: {
+                                                                        orphans: '2',
+                                                                        widows: '2',
                                                                         direction: 'ltr',
                                                                         textAlign: 'start',
                                                                         whiteSpace: 'pre-wrap',
@@ -373,6 +383,8 @@ describe(ID, () => {
                                                         },
                                                     ],
                                                     format: {
+                                                        orphans: '2',
+                                                        widows: '2',
                                                         direction: 'ltr',
                                                         textAlign: 'start',
                                                         borderTop: '1px solid currentcolor',
@@ -394,6 +406,8 @@ describe(ID, () => {
                                     ],
                                     blockType: 'Table',
                                     format: {
+                                        orphans: '2',
+                                        widows: '2',
                                         direction: 'ltr',
                                         textAlign: 'start',
                                         marginTop: '0px',
@@ -446,6 +460,8 @@ describe(ID, () => {
                             },
                             blockType: 'Paragraph',
                             format: {
+                                orphans: '2',
+                                widows: '2',
                                 direction: 'ltr',
                                 textAlign: 'start',
                                 whiteSpace: 'pre-wrap',

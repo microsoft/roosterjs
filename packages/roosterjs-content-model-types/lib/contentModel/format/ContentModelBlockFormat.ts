@@ -9,6 +9,7 @@ import type { PaddingFormat } from './formatParts/PaddingFormat';
 import type { TextAlignFormat } from './formatParts/TextAlignFormat';
 import type { TextIndentFormat } from './formatParts/TextIndentFormat';
 import type { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
+import type { WidowOrphanFormat } from './formatParts/WidowOrphanFormat';
 
 /**
  * The format object for a paragraph in Content Model
@@ -21,6 +22,7 @@ export type ContentModelBlockFormat = BackgroundColorFormat &
     PaddingFormat &
     LineHeightFormat &
     WhiteSpaceFormat &
+    WidowOrphanFormat &
     BorderFormat &
     TextIndentFormat &
     IdFormat;
