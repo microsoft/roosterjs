@@ -18,6 +18,7 @@ import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { imageStateFormatHandler } from './segment/imageStateFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { hyphensFormatHandler } from './segment/hyphensFormatHandler';
 import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
@@ -78,6 +79,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     id: idFormatHandler,
     imageState: imageStateFormatHandler,
     italic: italicFormatHandler,
+    hyphens: hyphensFormatHandler,
     legacyTableBorder: legacyTableBorderFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
@@ -106,6 +108,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
 };
 
 const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'hyphens',
     'letterSpacing',
     'fontFamily',
     'fontSize',

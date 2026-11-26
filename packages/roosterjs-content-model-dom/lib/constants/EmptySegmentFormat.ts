@@ -9,6 +9,7 @@ export const EmptySegmentFormat: Readonly<Required<ContentModelSegmentFormat>> =
     fontSize: '',
     fontWeight: '',
     italic: false,
+    hyphens: '',
     letterSpacing: '',
     lineHeight: '',
     strikethrough: false,

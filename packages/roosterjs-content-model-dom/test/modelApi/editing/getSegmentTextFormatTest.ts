@@ -3,6 +3,11 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies the supplied hyphenation policy', () => {
+        expect(getSegmentTextFormat(createText('test', { hyphens: 'manual' }))).toEqual({
+            hyphens: 'manual',
+        });
+    });
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',

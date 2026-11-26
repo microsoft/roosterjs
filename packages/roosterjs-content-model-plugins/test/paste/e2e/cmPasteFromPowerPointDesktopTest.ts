@@ -1,3 +1,4 @@
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 import * as addParserF from '../../../lib/paste/utils/addParser';
 import * as getDocumentSourceF from '../../../lib/paste/pasteSourceValidations/getDocumentSource';
 import * as ppt from '../../../lib/paste/PowerPoint/processPastedContentFromPowerPoint';
@@ -1813,18 +1814,10 @@ describe('PowerPoint', () => {
                                 isSelected: true,
                                 segmentType: 'SelectionMarker',
                                 format: {
+                                    ...EmptySegmentFormat,
                                     fontFamily: 'Calibri',
                                     fontSize: '11pt',
                                     textColor: '#000000',
-                                    backgroundColor: '',
-                                    fontWeight: '',
-                                    italic: false,
-                                    letterSpacing: '',
-                                    lineHeight: '',
-                                    strikethrough: false,
-                                    superOrSubScriptFontSize: '',
-                                    superOrSubScriptSequence: '',
-                                    underline: false,
                                 },
                             },
                             {
@@ -2139,18 +2132,10 @@ describe('PowerPoint', () => {
                                 isSelected: true,
                                 segmentType: 'SelectionMarker',
                                 format: {
+                                    ...EmptySegmentFormat,
                                     fontFamily: '"Segoe Sans Text"',
                                     fontSize: '20pt',
                                     textColor: 'black',
-                                    backgroundColor: '',
-                                    fontWeight: '',
-                                    italic: false,
-                                    letterSpacing: '',
-                                    lineHeight: '',
-                                    strikethrough: false,
-                                    superOrSubScriptFontSize: '',
-                                    superOrSubScriptSequence: '',
-                                    underline: false,
                                 },
                             },
                             {
@@ -2561,18 +2546,11 @@ describe('PowerPoint', () => {
                                         isSelected: true,
                                         segmentType: 'SelectionMarker',
                                         format: {
+                                            ...EmptySegmentFormat,
                                             fontFamily: 'Aptos',
                                             fontSize: '14pt',
                                             textColor: 'black',
                                             fontWeight: 'bold',
-                                            backgroundColor: '',
-                                            italic: false,
-                                            letterSpacing: '',
-                                            lineHeight: '',
-                                            strikethrough: false,
-                                            superOrSubScriptFontSize: '',
-                                            superOrSubScriptSequence: '',
-                                            underline: false,
                                         },
                                     },
                                     {
@@ -3040,18 +3018,11 @@ describe('PowerPoint', () => {
                                 isSelected: true,
                                 segmentType: 'SelectionMarker',
                                 format: {
+                                    ...EmptySegmentFormat,
                                     fontFamily: 'Aptos',
                                     fontSize: '14pt',
                                     textColor: 'black',
                                     fontWeight: 'bold',
-                                    backgroundColor: '',
-                                    italic: false,
-                                    letterSpacing: '',
-                                    lineHeight: '',
-                                    strikethrough: false,
-                                    superOrSubScriptFontSize: '',
-                                    superOrSubScriptSequence: '',
-                                    underline: false,
                                 },
                             },
                             {

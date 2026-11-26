@@ -15,6 +15,7 @@ import type { FontSizeFormat } from './formatParts/FontSizeFormat';
 import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
 import type { ItalicFormat } from './formatParts/ItalicFormat';
+import type { HyphensFormat } from './formatParts/HyphensFormat';
 import type { ImageStateFormat } from './formatParts/ImageStateFormat';
 import type { LegacyTableBorderFormat } from './formatParts/LegacyTableBorderFormat';
 import type { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
@@ -43,6 +44,10 @@ import type { WordBreakFormat } from './formatParts/WordBreakFormat';
  * Represents a record of all format handlers
  */
 export interface FormatHandlerTypeMap {
+    /**
+     * Hyphenation policy
+     */
+    hyphens: HyphensFormat;
     /**
      * Format for AriaFormat
      */

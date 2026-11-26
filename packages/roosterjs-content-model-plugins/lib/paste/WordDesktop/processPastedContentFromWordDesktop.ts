@@ -1,4 +1,5 @@
 import { addParser } from '../utils/addParser';
+import { createWordHyphenationParser } from '../parsers/wordHyphenationParser';
 import { adjustPercentileLineHeight } from '../parsers/adjustPercentileLineHeightParser';
 import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
@@ -40,6 +41,9 @@ export function processPastedContentFromWordDesktop(
     addParser(domToModelOption, 'container', wordContainerParser);
     addParser(domToModelOption, 'table', wordTableParser);
     addParser(domToModelOption, 'tableBorder', wordBorderParser);
+    const wordHyphenationParser = createWordHyphenationParser(htmlString);
+    addParser(domToModelOption, 'segment', wordHyphenationParser);
+    addParser(domToModelOption, 'segmentOnBlock', wordHyphenationParser);
 }
 
 const wordDesktopElementProcessor = (
