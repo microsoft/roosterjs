@@ -15,6 +15,7 @@ import type {
     ContentModelListLevel,
     DomToModelContext,
     DomToModelListFormat,
+    ValueSanitizer,
 } from 'roosterjs-content-model-types';
 
 /** Word list metadata style name */
@@ -47,7 +48,8 @@ export function processWordList(
     group: ContentModelBlockGroup,
     element: HTMLElement,
     context: DomToModelContext,
-    metadata: Map<string, WordMetadata>
+    metadata: Map<string, WordMetadata>,
+    styleSanitizers: Readonly<Record<string, ValueSanitizer>> = {}
 ) {
     const listFormat = context.listFormat as WordDesktopListFormat;
     if (!listFormat.wordKnownLevels) {
@@ -101,6 +103,28 @@ export function processWordList(
             delete currentLevelFormat.paddingRight;
         }
 
+        const isRtl = (currentLevelFormat.direction || context.blockFormat.direction) == 'rtl';
+        const marginKey = isRtl ? 'marginRight' : 'marginLeft';
+        const nestedMargin =
+            wordLevel > 1 && (isElementOfType(element, 'p') || isElementOfType(element, 'div'))
+                ? element.style[marginKey]
+                : '';
+        const sanitizer = styleSanitizers[isRtl ? 'margin-right' : 'margin-left'];
+        const effectiveNestedMargin = !nestedMargin
+            ? undefined
+            : typeof sanitizer == 'function'
+            ? sanitizer(nestedMargin, element.tagName)
+            : sanitizer === false
+            ? null
+            : nestedMargin;
+
+        if (nestedMargin && isRtl && parseFloat(currentLevelFormat.marginRight || '') != 0) {
+            delete currentLevelFormat.marginRight;
+        }
+        const relativeNestedMargin = effectiveNestedMargin
+            ? subtractListIndent(effectiveNestedMargin, listFormat.levels, context, isRtl)
+            : undefined;
+
         const bullet = getBulletFromMetadata(listMetadata, listType);
         const bulletElement = getBulletElement(element);
         const listFormatMetadata = bullet
@@ -134,6 +158,9 @@ export function processWordList(
                     } else if (wordLevel > 1 && !isHeading) {
                         delete listItem.format.marginLeft;
                         delete listItem.format.marginRight;
+                        if (relativeNestedMargin) {
+                            listItem.format[marginKey] = relativeNestedMargin;
+                        }
                     }
 
                     if (listType == 'OL') {
@@ -155,6 +182,35 @@ export function processWordList(
     }
 
     return false;
+}
+
+function subtractListIndent(
+    margin: string,
+    levels: ContentModelListLevel[],
+    context: DomToModelContext,
+    isRtl: boolean
+): string {
+    if (margin == 'auto') {
+        return margin;
+    }
+    const length = /^[+-]?0(?:\.0+)?$/.test(margin.trim()) ? '0px' : margin;
+    const offsets: string[] = [];
+    levels.forEach(level => {
+        const format = level.format;
+        const direction = format.direction || context.blockFormat.direction;
+        const padding =
+            (isRtl ? format.paddingRight : format.paddingLeft) ??
+            ((direction == 'rtl') == isRtl ? '40px' : '0px');
+        const ancestorMargin = isRtl ? format.marginRight : format.marginLeft;
+        [padding, ancestorMargin].forEach(value => {
+            if (value && parseFloat(value) != 0) {
+                offsets.push(value);
+            }
+        });
+    });
+
+    // Nested wrappers are siblings of ancestor items; subtract wrappers, not item margins.
+    return offsets.length ? `calc(${length} - ${offsets.join(' - ')})` : margin;
 }
 
 function getBulletFromMetadata(listMetadata: WordMetadata | undefined, listType: 'OL' | 'UL') {

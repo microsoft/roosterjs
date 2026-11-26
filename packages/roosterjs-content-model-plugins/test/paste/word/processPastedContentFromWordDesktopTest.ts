@@ -1326,7 +1326,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 },
                             ],
                             blockType: 'BlockGroup',
-                            format: {},
+                            format: { marginLeft: 'calc(1.5in - 40px - 40px - 40px)' },
                             blockGroupType: 'ListItem',
                             blocks: [
                                 {
@@ -2814,6 +2814,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(1in - 40px - 40px)',
                             },
                         },
                         {
@@ -2879,6 +2880,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(1.5in - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -2953,6 +2955,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(2in - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3036,6 +3039,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(2.5in - 40px - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3128,6 +3132,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(3in - 40px - 40px - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3229,6 +3234,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft:
+                                    'calc(3.5in - 40px - 40px - 40px - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3339,6 +3346,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft:
+                                    'calc(4in - 40px - 40px - 40px - 40px - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3458,6 +3467,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft:
+                                    'calc(4.5in - 40px - 40px - 40px - 40px - 40px - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3567,6 +3578,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft:
+                                    'calc(4in - 40px - 40px - 40px - 40px - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3667,6 +3680,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft:
+                                    'calc(3.5in - 40px - 40px - 40px - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3758,6 +3773,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(3in - 40px - 40px - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3840,6 +3856,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(2.5in - 40px - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3913,6 +3930,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(2in - 40px - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -3977,6 +3995,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(1.5in - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -4032,6 +4051,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '116%',
                                 marginTop: '0in',
                                 marginBottom: '0in',
+                                marginLeft: 'calc(1in - 40px - 40px)',
                             },
                         },
                         {
@@ -4263,6 +4283,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '107%',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
+                                marginLeft: 'calc(1in - 40px - 40px)',
                             },
                         },
                         {
@@ -4351,6 +4372,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '107%',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
+                                marginLeft: 'calc(1in - 40px - 40px)',
                             },
                         },
                         {
@@ -4409,6 +4431,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '107%',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
+                                marginLeft: 'calc(117pt - 40px - 40px - 40px)',
                             },
                         },
                         {
@@ -4497,6 +4520,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '107%',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
+                                marginLeft: 'calc(1in - 40px - 40px)',
                             },
                         },
                         {
@@ -4642,6 +4666,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '105%',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
+                                marginLeft: 'calc(1in - 40px - 40px)',
                             },
                         },
                         {
@@ -4735,6 +4760,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 lineHeight: '105%',
                                 marginTop: '0in',
                                 marginBottom: '8pt',
+                                marginLeft: 'calc(1in - 40px - 40px)',
                             },
                         },
                     ],
@@ -4966,7 +4992,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: 'calc(1in - 40px - 40px)' },
                         },
                         {
                             blockType: 'Paragraph',
@@ -5042,7 +5068,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: 'calc(1.5in - 40px - 40px - 40px)' },
                         },
                         {
                             blockType: 'Paragraph',

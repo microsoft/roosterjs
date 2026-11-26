@@ -1139,6 +1139,7 @@ describe(ID, () => {
                         marginTop: '0cm',
                         marginBottom: '0cm',
                         lineHeight: '115%',
+                        marginLeft: 'calc(16px)',
                     },
                     blockGroupType: 'ListItem',
                     blocks: [
@@ -1195,6 +1196,7 @@ describe(ID, () => {
                         marginTop: '0cm',
                         marginBottom: '0cm',
                         lineHeight: '115%',
+                        marginLeft: 'calc(16px)',
                     },
                     blockGroupType: 'ListItem',
                     blocks: [
