@@ -1,5 +1,6 @@
 import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
+import type { BlockWritingModeFormat } from './formatParts/BlockWritingModeFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
 import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
@@ -23,4 +24,5 @@ export type ContentModelBlockFormat = BackgroundColorFormat &
     WhiteSpaceFormat &
     BorderFormat &
     TextIndentFormat &
+    BlockWritingModeFormat &
     IdFormat;

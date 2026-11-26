@@ -117,6 +117,10 @@ function shouldUseFormatContainer(element: HTMLElement, context: DomToModelConte
     const style = element.style;
     const defaultStyle = getDefaultStyle(element);
 
+    if (style.writingMode) {
+        return true;
+    }
+
     const bgcolor = style.getPropertyValue('background-color');
 
     // For block element with background, we need to use format container

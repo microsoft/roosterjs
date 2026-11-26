@@ -1,6 +1,7 @@
 import { ariaFormatHandler } from './common/ariaFormatHandler';
 import { backgroundColorFormatHandler } from './common/backgroundColorFormatHandler';
 import { boldFormatHandler } from './segment/boldFormatHandler';
+import { blockWritingModeFormatHandler } from './block/blockWritingModeFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderColorFormatHandler } from './common/borderColorFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
@@ -62,6 +63,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     aria: ariaFormatHandler,
     backgroundColor: backgroundColorFormatHandler,
     bold: boldFormatHandler,
+    blockWritingMode: blockWritingModeFormatHandler,
     border: borderFormatHandler,
     borderBox: borderBoxFormatHandler,
     borderColor: borderColorFormatHandler,
@@ -123,6 +125,7 @@ const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'superOrSubScript',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
+    'blockWritingMode',
     'direction',
     'textAlign',
     'textIndent',
@@ -223,7 +226,14 @@ export const defaultFormatKeysPerCategory: {
     data: ['dataValue'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
-    container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display', 'id'],
+    container: [
+        ...sharedContainerFormats,
+        'blockWritingMode',
+        'htmlAlign',
+        'size',
+        'display',
+        'id',
+    ],
     entity: ['entity'],
     general: ['textColor', 'backgroundColor'], // General model still need to do color transformation in dark mode
 };

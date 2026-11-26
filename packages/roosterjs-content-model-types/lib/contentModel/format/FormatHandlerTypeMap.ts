@@ -3,6 +3,7 @@ import type { BackgroundColorFormat } from './formatParts/BackgroundColorFormat'
 import type { BoldFormat } from './formatParts/BoldFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
+import type { BlockWritingModeFormat } from './formatParts/BlockWritingModeFormat';
 import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
 import type { DatasetFormat } from './metadata/DatasetFormat';
 import type { DataValueFormat } from './formatParts/DataValueFormat';
@@ -262,6 +263,11 @@ export interface FormatHandlerTypeMap {
      * Format for WordBreakFormat
      */
     wordBreak: WordBreakFormat;
+
+    /**
+     * Format for block writing-mode
+     */
+    blockWritingMode: BlockWritingModeFormat;
 }
 
 /**

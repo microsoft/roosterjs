@@ -1,6 +1,7 @@
 import { addParser } from '../utils/addParser';
 import { adjustPercentileLineHeight } from '../parsers/adjustPercentileLineHeightParser';
 import { getStyleMetadata } from './getStyleMetadata';
+import { createWordTextFlowProcessor } from './processWordTextFlow';
 import { getStyles } from '../utils/getStyles';
 import { listLevelParser } from '../parsers/listLevelParser';
 import { processWordComments } from './processWordComments';
@@ -31,7 +32,11 @@ export function processPastedContentFromWordDesktop(
 
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
 
-    setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
+    setProcessor(
+        domToModelOption,
+        'element',
+        wordDesktopElementProcessor(metadataMap, createWordTextFlowProcessor(htmlString))
+    );
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
     addParser(domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
@@ -43,9 +48,11 @@ export function processPastedContentFromWordDesktop(
 }
 
 const wordDesktopElementProcessor = (
-    metadataKey: Map<string, WordMetadata>
+    metadataKey: Map<string, WordMetadata>,
+    processTextFlow: (element: HTMLElement) => void
 ): ElementProcessor<HTMLElement> => {
     return (group, element, context) => {
+        processTextFlow(element);
         const styles = getStyles(element);
         // Process Word Lists or Word Commands, otherwise use the default processor on this element.
         if (
