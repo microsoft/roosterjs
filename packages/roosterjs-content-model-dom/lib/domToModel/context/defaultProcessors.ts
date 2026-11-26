@@ -16,6 +16,7 @@ import { linkProcessor } from '../processors/linkProcessor';
 import { listItemProcessor } from '../processors/listItemProcessor';
 import { listProcessor } from '../processors/listProcessor';
 import { pProcessor } from '../processors/pProcessor';
+import { revisionProcessor } from '../processors/revisionProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
 import { textWithSelectionProcessor } from '../processors/textWithSelectionProcessor';
@@ -32,13 +33,14 @@ export const defaultProcessorMap: ElementProcessorMap = {
     code: codeProcessor,
     data: dataProcessor,
     dd: formatContainerProcessor,
-    del: knownElementProcessor,
+    del: revisionProcessor,
     div: knownElementProcessor,
     dl: formatContainerProcessor,
     dt: formatContainerProcessor,
     em: knownElementProcessor,
     font: fontProcessor,
     i: knownElementProcessor,
+    ins: revisionProcessor,
     img: imageProcessor,
     h1: headingProcessor,
     h2: headingProcessor,
