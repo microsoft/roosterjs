@@ -15,7 +15,14 @@ export const fontVariantLigaturesFormatHandler: FormatHandler<
 
         if (value) {
             format.fontVariantLigatures = value;
-            delete format.wordLigatureFeatures;
+            // Other font-variant components reset this longhand in CSSOM too.
+            if (
+                value != 'normal' ||
+                /(?:^|;)\s*font-variant-ligatures\s*:/i.test(element.style.cssText) ||
+                defaultStyle.fontVariantLigatures
+            ) {
+                delete format.wordLigatureFeatures;
+            }
         }
     },
     apply: (format, element, context) => {

@@ -112,6 +112,29 @@ describe('Word ligatures', () => {
         expect(features(run)).toEqual({ liga: 0, clig: 0, hlig: 0, dlig: 0 });
     });
 
+    it('does not mistake a font shorthand reset for explicit ligature CSS', () => {
+        const run = textElement(pasteRun('font:24pt Calibri;mso-ligatures:none'));
+        expect(features(run)).toEqual({ liga: 0, clig: 0, hlig: 0, dlig: 0 });
+    });
+
+    it('preserves native ligatures alongside supplied small caps', () => {
+        const run = textElement(pasteRun('font-variant:small-caps;mso-ligatures:none'));
+        expect(features(run)).toEqual({ liga: 0, clig: 0, hlig: 0, dlig: 0 });
+    });
+
+    it('keeps inherited native ligatures when only small caps change', () => {
+        const root = pasteRun(
+            'mso-ligatures:none',
+            'Parent<span style="font-variant:small-caps">Child</span>'
+        );
+        expect(features(textElement(root, 'Child'))).toEqual({
+            liga: 0,
+            clig: 0,
+            hlig: 0,
+            dlig: 0,
+        });
+    });
+
     it('does not guess ligature flags for an unknown Word keyword', () => {
         const run = textElement(pasteRun('mso-ligatures:unknown'));
 
