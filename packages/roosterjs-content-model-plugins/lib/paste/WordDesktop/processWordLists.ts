@@ -15,6 +15,7 @@ import type {
     ContentModelListLevel,
     DomToModelContext,
     DomToModelListFormat,
+    ValueSanitizer,
 } from 'roosterjs-content-model-types';
 
 /** Word list metadata style name */
@@ -47,7 +48,8 @@ export function processWordList(
     group: ContentModelBlockGroup,
     element: HTMLElement,
     context: DomToModelContext,
-    metadata: Map<string, WordMetadata>
+    metadata: Map<string, WordMetadata>,
+    styleSanitizers: Readonly<Record<string, ValueSanitizer>> = {}
 ) {
     const listFormat = context.listFormat as WordDesktopListFormat;
     if (!listFormat.wordKnownLevels) {
@@ -101,6 +103,16 @@ export function processWordList(
             delete currentLevelFormat.paddingRight;
         }
 
+        const hasItemRightMargin =
+            wordLevel == 1 &&
+            (isElementOfType(element, 'p') || isElementOfType(element, 'div')) &&
+            !!currentLevelFormat.marginRight &&
+            parseFloat(currentLevelFormat.marginRight) != 0;
+        if (hasItemRightMargin) {
+            // List items clone these levels, so remove the paragraph's wrapper copy first.
+            delete currentLevelFormat.marginRight;
+        }
+
         const bullet = getBulletFromMetadata(listMetadata, listType);
         const bulletElement = getBulletElement(element);
         const listFormatMetadata = bullet
@@ -121,6 +133,21 @@ export function processWordList(
                 listFormatMetadata,
                 bulletElement,
                 listItem => {
+                    if (hasItemRightMargin && listItem.format.marginRight) {
+                        const sanitizer = styleSanitizers['margin-right'];
+                        const margin =
+                            typeof sanitizer == 'function'
+                                ? sanitizer(listItem.format.marginRight, element.tagName)
+                                : sanitizer === false
+                                ? null
+                                : listItem.format.marginRight;
+                        if (margin == null) {
+                            delete listItem.format.marginRight;
+                        } else {
+                            listItem.format.marginRight = margin;
+                        }
+                    }
+
                     if (isHeading && listType == 'OL') {
                         listItem.format.marginLeft = '0px';
                         listItem.format.marginRight = '0px';
