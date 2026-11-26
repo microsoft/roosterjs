@@ -34,7 +34,7 @@ describe('Word ligatures', () => {
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
         let node: Node | null;
         while ((node = walker.nextNode())) {
-            if (node.textContent == value && node.parentElement) return node.parentElement;
+            if (node.textContent?.includes(value) && node.parentElement) return node.parentElement;
         }
         throw new Error('Pasted text not found: ' + value);
     };
@@ -152,6 +152,21 @@ describe('Word ligatures', () => {
             hlig: 0,
             dlig: 0,
         });
+    });
+
+    it('resolves generic CSS inheritance without depending on source DOM nesting', () => {
+        const root = pasteRun(
+            'font-variant-ligatures:none',
+            'Parent<span style="font-variant-ligatures:inherit">Inherited</span><span style="font-variant-ligatures:unset">Unset</span>'
+        );
+        expect(getComputedStyle(textElement(root, 'Inherited')).fontVariantLigatures).toBe('none');
+        expect(getComputedStyle(textElement(root, 'Unset')).fontVariantLigatures).toBe('none');
+    });
+
+    it('keeps an explicit ligature component of the font-variant shorthand authoritative', () => {
+        const run = textElement(pasteRun('font-variant:none;mso-ligatures:standardcontextual'));
+        expect(getComputedStyle(run).fontVariantLigatures).toBe('none');
+        expect(features(run).liga).toBeUndefined();
     });
 
     it('does not guess ligature flags for an unknown Word keyword', () => {

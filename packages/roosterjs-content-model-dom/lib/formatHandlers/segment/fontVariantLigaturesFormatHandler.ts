@@ -13,6 +13,9 @@ export const fontVariantLigaturesFormatHandler: FormatHandler<
     parse: (format, element, _, defaultStyle) => {
         const value = element.style.fontVariantLigatures || defaultStyle.fontVariantLigatures;
 
+        if (value == 'inherit' || value == 'unset') {
+            return;
+        }
         if (value) {
             format.fontVariantLigatures = value;
             // Other font-variant components reset this longhand in CSSOM too.

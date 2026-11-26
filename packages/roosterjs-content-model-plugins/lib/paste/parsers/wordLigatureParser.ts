@@ -10,7 +10,15 @@ export function createWordLigatureParser(html: string): FormatParser<ContentMode
 
     return (format, element, _, defaultStyle) => {
         const styles = getStyles(element);
-        if (!styles['font-variant-ligatures'] && !defaultStyle.fontVariantLigatures) {
+        const variant = element.style.fontVariantLigatures;
+        if (
+            !(variant && variant != 'normal') &&
+            !(
+                styles['font-variant-ligatures'] &&
+                /(?:^|;)\s*font-variant-ligatures\s*:/i.test(element.style.cssText)
+            ) &&
+            !defaultStyle.fontVariantLigatures
+        ) {
             let ligatures = parseWordLigatures(styles['mso-ligatures']);
 
             if (!ligatures) {
