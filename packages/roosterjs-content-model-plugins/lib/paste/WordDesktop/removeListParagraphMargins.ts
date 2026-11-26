@@ -1,11 +1,12 @@
 import type { CssRule } from 'roosterjs-content-model-types';
 
 /**
+ * @internal
  * CSS class selectors used by Word Desktop to mark list paragraph elements.
  * Word emits global CSS rules that apply margins to these classes, which we want
  * to suppress so that RoosterJS list indentation logic is used instead.
  */
-const WORD_LIST_PARAGRAPH_SELECTORS = new Set([
+export const WORD_LIST_PARAGRAPH_SELECTORS = new Set([
     'p.MsoListParagraph',
     'p.MsoListParagraphCxSpFirst',
     'p.MsoListParagraphCxSpMiddle',

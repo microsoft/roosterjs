@@ -12,8 +12,14 @@ import { wordContainerParser } from '../parsers/wordContainerParser';
 import { wordTableParser } from '../parsers/wordTableParser';
 import { removeListParagraphMargins } from './removeListParagraphMargins';
 import { wordBorderParser } from './wordBorderParser';
+import { createWordListStyleParsers } from './createWordListStyleParsers';
 import type { WordMetadata } from './WordMetadata';
-import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-content-model-types';
+import type {
+    CssRule,
+    DomToModelOption,
+    ElementProcessor,
+    ValueSanitizer,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -21,12 +27,15 @@ import type { CssRule, DomToModelOption, ElementProcessor } from 'roosterjs-cont
  * @param domToModelOption Options for DOM to Content Model conversion
  * @param htmlString The HTML string to process
  * @param globalCssRules Global CSS rules extracted from the pasted document
+ * @param styleSanitizers Live style sanitizer policies for recovered stylesheet margins
  */
 export function processPastedContentFromWordDesktop(
     domToModelOption: DomToModelOption,
     htmlString: string,
-    globalCssRules: CssRule[] = []
+    globalCssRules: CssRule[] = [],
+    styleSanitizers: Readonly<Record<string, ValueSanitizer>> = {}
 ) {
+    const styleParsers = createWordListStyleParsers(globalCssRules, styleSanitizers);
     removeListParagraphMargins(globalCssRules);
 
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
@@ -37,6 +46,8 @@ export function processPastedContentFromWordDesktop(
     addParser(domToModelOption, 'listItemElement', removeNegativeTextIndentParser);
     addParser(domToModelOption, 'listItemElement', adjustWordListMarginParser);
     addParser(domToModelOption, 'listLevel', listLevelParser);
+    addParser(domToModelOption, 'listLevel', styleParsers.listLevel);
+    addParser(domToModelOption, 'listItemElement', styleParsers.listItemElement);
     addParser(domToModelOption, 'container', wordContainerParser);
     addParser(domToModelOption, 'table', wordTableParser);
     addParser(domToModelOption, 'tableBorder', wordBorderParser);

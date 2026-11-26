@@ -497,6 +497,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginTop: '1em',
                                     marginBottom: undefined,
                                     wordList: 'l0',
+                                    paddingLeft: '0px',
+                                    paddingRight: '0px',
                                 },
                             },
                         ],
@@ -507,7 +509,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 fontFamily: 'Symbol',
                             },
                         },
-                        format: {},
+                        format: { marginLeft: '0.5in', marginRight: '0in' },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -595,6 +597,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginTop: '1em',
                                     marginBottom: undefined,
                                     wordList: 'l0',
+                                    paddingLeft: '0px',
+                                    paddingRight: '0px',
                                 },
                             },
                         ],
@@ -603,7 +607,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             isSelected: false,
                             format: { fontFamily: 'Symbol' },
                         },
-                        format: {},
+                        format: { marginLeft: '0.5in', marginRight: '0in' },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -631,6 +635,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginTop: '1em',
                                     marginBottom: undefined,
                                     wordList: 'l0',
+                                    paddingLeft: '0px',
+                                    paddingRight: '0px',
                                 },
                             },
                             {
@@ -700,6 +706,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginTop: '1em',
                                     marginBottom: undefined,
                                     wordList: 'l0',
+                                    paddingLeft: '0px',
+                                    paddingRight: '0px',
                                 },
                             },
                         ],
@@ -708,7 +716,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             isSelected: false,
                             format: { fontFamily: 'Symbol' },
                         },
-                        format: {},
+                        format: { marginLeft: '0.5in', marginRight: '0in' },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -736,6 +744,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginTop: '1em',
                                     marginBottom: undefined,
                                     wordList: 'l0',
+                                    paddingLeft: '0px',
+                                    paddingRight: '0px',
                                 },
                             },
                             {
@@ -815,6 +825,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginTop: '1em',
                                     marginBottom: undefined,
                                     wordList: 'l0',
+                                    paddingLeft: '0px',
+                                    paddingRight: '0px',
                                 },
                             },
                         ],
@@ -823,7 +835,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             isSelected: false,
                             format: { fontFamily: 'Symbol' },
                         },
-                        format: {},
+                        format: { marginLeft: '0.5in', marginRight: '0in' },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -851,6 +863,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     marginTop: '1em',
                                     marginBottom: undefined,
                                     wordList: 'l0',
+                                    paddingLeft: '0px',
+                                    paddingRight: '0px',
                                 },
                             },
                             {
@@ -1636,6 +1650,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         marginBottom: undefined,
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                 },
                             ],
@@ -1644,7 +1660,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: { fontFamily: 'Arial, sans-serif' },
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -1672,6 +1688,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         marginBottom: undefined,
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                 },
                             ],
@@ -1680,7 +1698,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: { fontFamily: 'Arial, sans-serif' },
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                     ],
                 }
@@ -1763,6 +1781,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l5',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -1776,6 +1796,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             },
                             format: {
                                 marginBottom: '0in',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -1807,6 +1829,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l5',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -1820,6 +1844,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             },
                             format: {
                                 marginBottom: '0in',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -1851,6 +1877,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l5',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -1864,6 +1892,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             },
                             format: {
                                 marginBottom: '0in',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -1931,6 +1961,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l1',
                                         startNumberOverride: 52,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":6}',
@@ -1944,6 +1976,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             },
                             format: {
                                 marginBottom: '0in',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -1975,6 +2009,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l1',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":6}',
@@ -1988,6 +2024,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             },
                             format: {
                                 marginBottom: '0in',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -2053,6 +2091,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l8',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":6}',
@@ -2064,7 +2104,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -2089,6 +2129,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l8',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":6}',
@@ -2100,7 +2142,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -2126,6 +2168,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l6',
                                         startNumberOverride: 65,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -2137,7 +2181,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -2162,6 +2206,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l6',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":18}',
@@ -2173,7 +2219,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'Paragraph',
@@ -2217,6 +2263,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l4',
                                         startNumberOverride: 15,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":3}',
@@ -2228,7 +2276,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -2253,6 +2301,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l4',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":3}',
@@ -2264,7 +2314,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'Paragraph',
@@ -2308,6 +2358,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l0',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":17}',
@@ -2319,7 +2371,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -2344,6 +2396,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":17}',
@@ -2355,7 +2409,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'Paragraph',
@@ -2399,6 +2453,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l7',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":5}',
@@ -2410,7 +2466,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -2435,6 +2491,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l7',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":5}',
@@ -2446,7 +2504,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'Paragraph',
@@ -2490,6 +2548,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l9',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -2501,7 +2561,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -2526,6 +2586,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l9',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -2537,7 +2599,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'Paragraph',
@@ -2581,6 +2643,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l3',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":13}',
@@ -2592,7 +2656,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -2617,6 +2681,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l3',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":13}',
@@ -2628,7 +2694,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'Paragraph',
@@ -2672,6 +2738,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l2',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -2683,7 +2751,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                     ],
                 },
@@ -4161,6 +4229,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l2',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4175,6 +4245,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             format: {
                                 lineHeight: '107%',
                                 marginBottom: '8pt',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -4200,6 +4272,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l2',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4214,6 +4288,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             format: {
                                 lineHeight: '107%',
                                 marginBottom: '8pt',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -4239,94 +4315,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l2',
-                                    },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
-                                },
-                                {
-                                    listType: 'UL',
-                                    format: {
-                                        marginTop: '0in',
-                                        marginRight: '0in',
-                                        wordList: 'l2',
-                                    },
-                                    dataset: {},
-                                },
-                            ],
-                            formatHolder: {
-                                segmentType: 'SelectionMarker',
-                                isSelected: false,
-                                format: {},
-                            },
-                            format: {
-                                lineHeight: '107%',
-                                marginTop: '0in',
-                                marginBottom: '8pt',
-                            },
-                        },
-                        {
-                            blockType: 'BlockGroup',
-                            blockGroupType: 'ListItem',
-                            blocks: [
-                                {
-                                    blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'text',
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    isImplicit: true,
-                                },
-                            ],
-                            levels: [
-                                {
-                                    listType: 'OL',
-                                    format: {
-                                        marginTop: '1em',
-                                        wordList: 'l2',
-                                    },
-                                    dataset: {
-                                        editingInfo: '{"orderedStyleType":1}',
-                                    },
-                                },
-                            ],
-                            formatHolder: {
-                                segmentType: 'SelectionMarker',
-                                isSelected: false,
-                                format: {},
-                            },
-                            format: {
-                                lineHeight: '107%',
-                                marginBottom: '8pt',
-                            },
-                        },
-                        {
-                            blockType: 'BlockGroup',
-                            blockGroupType: 'ListItem',
-                            blocks: [
-                                {
-                                    blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'Text',
-                                            text: 'text',
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                    isImplicit: true,
-                                },
-                            ],
-                            levels: [
-                                {
-                                    listType: 'OL',
-                                    format: {
-                                        marginTop: '1em',
-                                        wordList: 'l2',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4376,6 +4366,102 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l2',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
+                                    },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {
+                                lineHeight: '107%',
+                                marginBottom: '8pt',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
+                            },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'text',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    format: {
+                                        marginTop: '1em',
+                                        wordList: 'l2',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
+                                    },
+                                    dataset: {
+                                        editingInfo: '{"orderedStyleType":1}',
+                                    },
+                                },
+                                {
+                                    listType: 'UL',
+                                    format: {
+                                        marginTop: '0in',
+                                        marginRight: '0in',
+                                        wordList: 'l2',
+                                    },
+                                    dataset: {},
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: false,
+                                format: {},
+                            },
+                            format: {
+                                lineHeight: '107%',
+                                marginTop: '0in',
+                                marginBottom: '8pt',
+                            },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'text',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    format: {
+                                        marginTop: '1em',
+                                        wordList: 'l2',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4434,6 +4520,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l2',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4448,6 +4536,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             format: {
                                 lineHeight: '107%',
                                 marginBottom: '8pt',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -4473,6 +4563,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l2',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4579,6 +4671,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l0',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4593,6 +4687,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             format: {
                                 lineHeight: '107%',
                                 marginBottom: '8pt',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -4618,6 +4714,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4667,6 +4765,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4681,6 +4781,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             format: {
                                 lineHeight: '105%',
                                 marginBottom: '8pt',
+                                marginLeft: '0.5in',
+                                marginRight: '0in',
                             },
                         },
                         {
@@ -4711,6 +4813,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4782,6 +4886,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                         marginTop: '1em',
                                         wordList: 'l0',
                                         startNumberOverride: 1,
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4793,7 +4899,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -4818,6 +4924,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4829,7 +4937,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'Paragraph',
@@ -4890,6 +4998,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -4901,7 +5011,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                 isSelected: false,
                                 format: {},
                             },
-                            format: {},
+                            format: { marginLeft: '0.5in', marginRight: '0in' },
                         },
                         {
                             blockType: 'Paragraph',
@@ -4944,6 +5054,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
@@ -5010,6 +5122,8 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                     format: {
                                         marginTop: '1em',
                                         wordList: 'l0',
+                                        paddingLeft: '0px',
+                                        paddingRight: '0px',
                                     },
                                     dataset: {
                                         editingInfo: '{"orderedStyleType":1}',
