@@ -11,6 +11,7 @@ import type { DisplayFormat } from './formatParts/DisplayFormat';
 import type { EntityInfoFormat } from './formatParts/EntityInfoFormat';
 import type { FloatFormat } from './formatParts/FloatFormat';
 import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
+import type { FontKerningFormat } from './formatParts/FontKerningFormat';
 import type { FontSizeFormat } from './formatParts/FontSizeFormat';
 import type { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import type { IdFormat } from './formatParts/IdFormat';
@@ -112,6 +113,11 @@ export interface FormatHandlerTypeMap {
      * Format for FontFamilyFormat
      */
     fontFamily: FontFamilyFormat;
+
+    /**
+     * Format for font kerning, including size-dependent Word thresholds
+     */
+    fontKerning: FontKerningFormat & FontSizeFormat;
 
     /**
      * Format for FontSizeFormat

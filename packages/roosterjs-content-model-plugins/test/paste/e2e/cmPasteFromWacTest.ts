@@ -2,6 +2,7 @@ import * as processPastedContentWacComponents from '../../../lib/paste/WacCompon
 import { ClipboardData, IEditor } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 import { paste } from 'roosterjs-content-model-core';
+import { EmptySegmentFormat } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_From_WORD_Online_E2E';
 
@@ -264,6 +265,7 @@ describe(ID, () => {
                                                                             text: 'Test TableÂ ',
                                                                             segmentType: 'Text',
                                                                             format: {
+                                                                                fontKerning: 'none',
                                                                                 textColor:
                                                                                     'rgb(0, 0, 0)',
                                                                                 fontFamily:
@@ -275,6 +277,7 @@ describe(ID, () => {
                                                                         },
                                                                     ],
                                                                     segmentFormat: {
+                                                                        fontKerning: 'none',
                                                                         textColor: 'rgb(0, 0, 0)',
                                                                     },
                                                                     blockType: 'Paragraph',
@@ -340,6 +343,7 @@ describe(ID, () => {
                                                                             text: 'Test TableÂ ',
                                                                             segmentType: 'Text',
                                                                             format: {
+                                                                                fontKerning: 'none',
                                                                                 textColor:
                                                                                     'rgb(0, 0, 0)',
                                                                                 fontFamily:
@@ -351,6 +355,7 @@ describe(ID, () => {
                                                                         },
                                                                     ],
                                                                     segmentFormat: {
+                                                                        fontKerning: 'none',
                                                                         textColor: 'rgb(0, 0, 0)',
                                                                     },
                                                                     blockType: 'Paragraph',
@@ -433,6 +438,7 @@ describe(ID, () => {
                                     text: 'Â ',
                                     segmentType: 'Text',
                                     format: {
+                                        fontKerning: 'none',
                                         textColor: 'rgb(0, 0, 0)',
                                         fontFamily:
                                             'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
@@ -442,6 +448,7 @@ describe(ID, () => {
                                 },
                             ],
                             segmentFormat: {
+                                fontKerning: 'none',
                                 textColor: 'rgb(0, 0, 0)',
                             },
                             blockType: 'Paragraph',
@@ -465,18 +472,7 @@ describe(ID, () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {
-                                backgroundColor: '',
-                                fontFamily: '',
-                                fontSize: '',
-                                fontWeight: '',
-                                italic: false,
-                                letterSpacing: '',
-                                lineHeight: '',
-                                strikethrough: false,
-                                superOrSubScriptFontSize: '',
-                                superOrSubScriptSequence: '',
-                                textColor: '',
-                                underline: false,
+                                ...EmptySegmentFormat,
                             },
                         },
                         {

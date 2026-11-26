@@ -28,6 +28,7 @@ export { AriaFormat } from './contentModel/format/formatParts/AriaFormat';
 export { BackgroundColorFormat } from './contentModel/format/formatParts/BackgroundColorFormat';
 export { BoldFormat } from './contentModel/format/formatParts/BoldFormat';
 export { FontFamilyFormat } from './contentModel/format/formatParts/FontFamilyFormat';
+export { FontKerningFormat } from './contentModel/format/formatParts/FontKerningFormat';
 export { FontSizeFormat } from './contentModel/format/formatParts/FontSizeFormat';
 export { ItalicFormat } from './contentModel/format/formatParts/ItalicFormat';
 export { LetterSpacingFormat } from './contentModel/format/formatParts/LetterSpacingFormat';

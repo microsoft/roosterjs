@@ -3,6 +3,19 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('keeps kerning and its Word threshold when copying text typography', () => {
+        const segment = createText('test', {
+            fontKerning: 'none',
+            wordKerningThreshold: '20pt',
+            underline: true,
+        });
+
+        expect(getSegmentTextFormat(segment)).toEqual({
+            fontKerning: 'none',
+            wordKerningThreshold: '20pt',
+        });
+    });
+
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',
