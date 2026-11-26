@@ -43,7 +43,7 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
  */
 export function parseTextFillColor(format: TextColorFormat, element: HTMLElement) {
     const fill = element.style.getPropertyValue('-webkit-text-fill-color');
-    if (fill && fill != 'inherit') {
-        format.textFillColor = fill == 'initial' || fill == 'unset' ? 'currentcolor' : fill;
+    if (fill && fill != 'inherit' && fill != 'unset') {
+        format.textFillColor = fill == 'initial' ? 'currentcolor' : fill;
     }
 }

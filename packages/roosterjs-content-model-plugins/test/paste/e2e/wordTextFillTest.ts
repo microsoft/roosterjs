@@ -60,6 +60,13 @@ describe('Word glyph text fill', () => {
         run(`<span style="${native};-webkit-text-fill-color:red">Explicit</span>`);
         expect(fill('Explicit')).toBe('rgb(255, 0, 0)');
     });
+    it('inherits an unset fill but resets an initial fill to current color', () => {
+        run(
+            `<span style="${native}"><span style="-webkit-text-fill-color:unset">Unset</span><span style="-webkit-text-fill-color:initial">Initial</span></span>`
+        );
+        expect(fill('Unset')).toBe('rgba(0, 102, 204, 0.25)');
+        expect(fill('Initial')).toBe('rgb(0, 102, 204)');
+    });
     it('allows the text-color command to replace imported alpha', () => {
         run(`<span style="${native}">Edit</span>`);
         const range = document.createRange();
