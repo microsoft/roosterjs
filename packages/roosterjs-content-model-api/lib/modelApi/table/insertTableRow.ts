@@ -25,6 +25,7 @@ export function insertTableRow(
             const sourceRow = table.rows[insertAbove ? sel.firstRow : sel.lastRow];
 
             table.rows.splice(insertAbove ? sel.firstRow : sel.lastRow + 1, 0, {
+                ...(sourceRow.section ? { section: sourceRow.section } : {}),
                 format: { ...sourceRow.format },
                 cells: sourceRow.cells.map(cell => {
                     const newCell = createTableCell(

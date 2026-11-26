@@ -15,6 +15,12 @@ import type {
  */
 export interface ContentModelTableRowCommon {
     /**
+     * HTML row group. Omitted rows belong to the table body.
+     * This does not change whether the cells are TD or TH.
+     */
+    section?: 'thead' | 'tfoot';
+
+    /**
      * Heights of each row
      */
     height: number;

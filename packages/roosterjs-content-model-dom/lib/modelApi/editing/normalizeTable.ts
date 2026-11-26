@@ -22,7 +22,7 @@ export const MIN_ALLOWED_TABLE_CELL_HEIGHT: number = 22;
 /**
  * Normalize a Content Model table, make sure:
  * 1. Fist cells are not spanned
- * 2. Only first column and row can have headers
+ * 2. Only first column, first row and THEAD rows can have headers
  * 3. All cells have content
  * 4. Table and table row have correct width/height
  * 5. Spanned cell has no child blocks
@@ -66,9 +66,9 @@ export function normalizeTable(
                 addSegment(cell, createBr(format));
             }
 
-            if (rowIndex == 0) {
+            if (rowIndex == 0 || row.section != table.rows[rowIndex - 1].section) {
                 cell.spanAbove = false;
-            } else if (rowIndex > 0 && colIndex > 0 && cell.isHeader) {
+            } else if (colIndex > 0 && cell.isHeader && row.section != 'thead') {
                 cell.isHeader = false;
             }
 

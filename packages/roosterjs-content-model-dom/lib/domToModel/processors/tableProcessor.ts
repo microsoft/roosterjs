@@ -79,6 +79,14 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                 const tbody = tr.parentNode;
 
+                if (isNodeOfType(tbody, 'ELEMENT_NODE')) {
+                    if (isElementOfType(tbody, 'thead')) {
+                        tableRow.section = 'thead';
+                    } else if (isElementOfType(tbody, 'tfoot')) {
+                        tableRow.section = 'tfoot';
+                    }
+                }
+
                 if (
                     isNodeOfType(tbody, 'ELEMENT_NODE') &&
                     (isElementOfType(tbody, 'tbody') ||
@@ -130,6 +138,10 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                         for (; tableRow.cells[targetCol]; targetCol++) {}
 
                         const td = tr.cells[sourceCol];
+                        const remainingRows = isInTableSection
+                            ? translateRowSpanZero(parent, td)
+                            : table.rows.length - row;
+                        const rowSpanCount = Math.min(td.rowSpan || remainingRows, remainingRows);
                         const hasSelectionBeforeCell = context.isInSelection;
                         if (recalculateTableSize) {
                             const colEnd = targetCol + td.colSpan;
@@ -202,12 +214,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                         let rowSpan = 1;
                                         // RowSpan of 0 means it should span to the end of the table
                                         // https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/td#rowspan
-                                        rowSpan <=
-                                        (td.rowSpan == 0
-                                            ? isInTableSection
-                                                ? translateRowSpanZero(parent, td)
-                                                : 1
-                                            : td.rowSpan);
+                                        rowSpan <= rowSpanCount;
                                         rowSpan++
                                     ) {
                                         const hasTd = colSpan == 1 && rowSpan == 1;

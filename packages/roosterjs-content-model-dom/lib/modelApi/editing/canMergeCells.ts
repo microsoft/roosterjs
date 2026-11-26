@@ -1,7 +1,8 @@
 import type { ReadonlyContentModelTableRow } from 'roosterjs-content-model-types';
 
 /**
- * Check whether the given range of table cells can be merged without splitting existing spans.
+ * Check whether the given range of table cells can be merged without splitting existing spans
+ * or crossing HTML row groups.
  * @param rows The table rows to check
  * @param firstRow The first row index of the range
  * @param firstCol The first column index of the range
@@ -15,6 +16,10 @@ export function canMergeCells(
     lastRow: number,
     lastCol: number
 ): boolean {
+    if (rows.slice(firstRow, lastRow + 1).some(row => row.section != rows[firstRow].section)) {
+        return false;
+    }
+
     const noSpanAbove =
         firstCol == lastCol ||
         rows[firstRow].cells.every(

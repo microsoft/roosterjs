@@ -50,8 +50,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 
     context.onNodeCreated?.(table, tableNode);
 
-    const tbody = doc.createElement('tbody');
-    tableNode.appendChild(tbody);
+    let section: HTMLTableSectionElement | undefined;
 
     for (let row = 0; row < table.rows.length; row++) {
         const tableRow = table.rows[row];
@@ -61,8 +60,15 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             continue;
         }
 
+        const sectionTag = tableRow.section || 'tbody';
+
+        if (!section || section.tagName.toLowerCase() != sectionTag) {
+            section = doc.createElement(sectionTag);
+            tableNode.appendChild(section);
+        }
+
         const tr = (context.allowCacheElement && tableRow.cachedElement) || doc.createElement('tr');
-        tbody.appendChild(tr);
+        section.appendChild(tr);
         moveChildNodes(tr);
 
         if (!tableRow.cachedElement) {
@@ -108,7 +114,12 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 let width = table.widths[col];
                 let height = tableRow.height;
 
-                for (; table.rows[row + rowSpan]?.cells[col]?.spanAbove; rowSpan++) {
+                for (
+                    ;
+                    table.rows[row + rowSpan]?.section == tableRow.section &&
+                    table.rows[row + rowSpan]?.cells[col]?.spanAbove;
+                    rowSpan++
+                ) {
                     height += table.rows[row + rowSpan].height;
                 }
                 for (; tableRow.cells[col + colSpan]?.spanLeft; colSpan++) {

@@ -255,11 +255,12 @@ function cloneTableRow(
     row: ReadonlyContentModelTableRow,
     options: CloneModelOptions
 ): ContentModelTableRow {
-    const { height, cells, cachedElement } = row;
+    const { height, cells, cachedElement, section } = row;
 
     return Object.assign(
         {
             height,
+            ...(section ? { section } : {}),
             cachedElement: handleCachedElement(cachedElement, 'cache', options),
             cells: cells.map(cell => cloneTableCell(cell, options)),
         },

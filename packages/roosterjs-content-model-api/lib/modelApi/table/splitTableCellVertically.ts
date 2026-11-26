@@ -35,6 +35,7 @@ export function splitTableCellVertically(table: ShallowMutableContentModelTable)
             } else {
                 const newHeight = Math.max((row.height /= 2), MIN_HEIGHT);
                 const newRow: ContentModelTableRow = {
+                    ...(row.section ? { section: row.section } : {}),
                     format: { ...row.format },
                     height: newHeight,
                     cells: row.cells.map((cell, colIndex) => {

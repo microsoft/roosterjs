@@ -1953,6 +1953,7 @@ describe('tableProcessor without recalculateTableSize', () => {
                     blockType: 'Table',
                     rows: [
                         {
+                            section: 'thead',
                             height: 0,
                             format: {},
                             cells: [
@@ -1986,6 +1987,7 @@ describe('tableProcessor without recalculateTableSize', () => {
                             ],
                         },
                         {
+                            section: 'thead',
                             height: 0,
                             format: {},
                             cells: [
@@ -2177,6 +2179,7 @@ describe('tableProcessor without recalculateTableSize', () => {
                     blockType: 'Table',
                     rows: [
                         {
+                            section: 'thead',
                             height: 0,
                             format: {},
                             cells: [
