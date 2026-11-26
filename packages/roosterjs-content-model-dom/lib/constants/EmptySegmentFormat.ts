@@ -15,5 +15,8 @@ export const EmptySegmentFormat: Readonly<Required<ContentModelSegmentFormat>> =
     superOrSubScriptFontSize: '',
     superOrSubScriptSequence: '',
     textColor: '',
+    textEmphasisStyle: '',
+    textEmphasisPosition: '',
+    textEmphasisColor: '',
     underline: false,
 };

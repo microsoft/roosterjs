@@ -36,6 +36,7 @@ import { tableLayoutFormatHandler } from './table/tableLayoutFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
+import { textEmphasisFormatHandler } from './segment/textEmphasisFormatHandler';
 import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
 import { textIndentFormatHandler } from './block/textIndentFormatHandler';
 import { undeletableLinkFormatHandler } from './segment/undeletableLinkFormatHandler';
@@ -96,6 +97,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     tableSpacing: tableSpacingFormatHandler,
     textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
+    textEmphasis: textEmphasisFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
     textIndent: textIndentFormatHandler,
     undeletableLink: undeletableLinkFormatHandler,
@@ -109,6 +111,7 @@ const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'letterSpacing',
     'fontFamily',
     'fontSize',
+    'textEmphasis',
 ];
 
 const sizeNeutralElementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [

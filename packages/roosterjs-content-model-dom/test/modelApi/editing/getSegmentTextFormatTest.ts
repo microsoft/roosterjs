@@ -3,6 +3,14 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies emphasis glyphs, position and color with text typography', () => {
+        const segment = createText('test', {
+            textEmphasisStyle: '"*"',
+            textEmphasisPosition: 'under right',
+            textEmphasisColor: 'red',
+        });
+        expect(getSegmentTextFormat(segment)).toEqual(segment.format);
+    });
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',
