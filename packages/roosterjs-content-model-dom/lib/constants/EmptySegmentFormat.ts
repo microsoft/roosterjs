@@ -7,6 +7,8 @@ export const EmptySegmentFormat: Readonly<Required<ContentModelSegmentFormat>> =
     backgroundColor: '',
     fontFamily: '',
     fontSize: '',
+    fontVariantNumeric: '',
+    wordNumberSpacing: '',
     fontWeight: '',
     italic: false,
     letterSpacing: '',

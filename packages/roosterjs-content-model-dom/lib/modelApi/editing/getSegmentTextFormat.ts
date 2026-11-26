@@ -17,6 +17,8 @@ export function getSegmentTextFormat(
     const textFormat: ContentModelSegmentFormat = {
         fontFamily: format.fontFamily,
         fontSize: format.fontSize,
+        fontVariantNumeric: format.fontVariantNumeric,
+        wordNumberSpacing: format.wordNumberSpacing,
         textColor: format.textColor,
         backgroundColor: format.backgroundColor,
         letterSpacing: format.letterSpacing,

@@ -2,6 +2,7 @@ import { addParser } from '../utils/addParser';
 import { adjustPercentileLineHeight } from '../parsers/adjustPercentileLineHeightParser';
 import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
+import { createWordNumberSpacingParser } from '../parsers/wordNumberSpacingParser';
 import { listLevelParser } from '../parsers/listLevelParser';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
@@ -30,6 +31,9 @@ export function processPastedContentFromWordDesktop(
     removeListParagraphMargins(globalCssRules);
 
     const metadataMap: Map<string, WordMetadata> = getStyleMetadata(htmlString);
+    const numberFormParser = createWordNumberSpacingParser(htmlString);
+    addParser(domToModelOption, 'segment', numberFormParser);
+    addParser(domToModelOption, 'segmentOnBlock', numberFormParser);
 
     setProcessor(domToModelOption, 'element', wordDesktopElementProcessor(metadataMap));
     addParser(domToModelOption, 'block', adjustPercentileLineHeight);
