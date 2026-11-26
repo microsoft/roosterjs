@@ -21,6 +21,7 @@ import { italicFormatHandler } from './segment/italicFormatHandler';
 import { legacyTableBorderFormatHandler } from './table/legacyTableBorderFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
+import { lineBreakFormatHandler } from './common/lineBreakFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemAlignFormatHandler } from './list/listItemAlignFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
@@ -81,6 +82,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     legacyTableBorder: legacyTableBorderFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
+    lineBreak: lineBreakFormatHandler,
     link: linkFormatHandler,
     listItemAlign: listItemAlignFormatHandler,
     listItemThread: listItemThreadFormatHandler,
@@ -106,6 +108,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
 };
 
 const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'lineBreak',
     'letterSpacing',
     'fontFamily',
     'fontSize',
@@ -123,6 +126,7 @@ const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'superOrSubScript',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
+    'lineBreak',
     'direction',
     'textAlign',
     'textIndent',

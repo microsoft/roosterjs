@@ -1,4 +1,5 @@
 import { addParser } from '../utils/addParser';
+import { createWordLineBreakParser } from '../parsers/wordLineBreakParser';
 import { adjustPercentileLineHeight } from '../parsers/adjustPercentileLineHeightParser';
 import { getStyleMetadata } from './getStyleMetadata';
 import { getStyles } from '../utils/getStyles';
@@ -40,6 +41,10 @@ export function processPastedContentFromWordDesktop(
     addParser(domToModelOption, 'container', wordContainerParser);
     addParser(domToModelOption, 'table', wordTableParser);
     addParser(domToModelOption, 'tableBorder', wordBorderParser);
+    const wordLineBreakParser = createWordLineBreakParser(htmlString);
+    addParser(domToModelOption, 'block', wordLineBreakParser);
+    addParser(domToModelOption, 'listItemElement', wordLineBreakParser);
+    addParser(domToModelOption, 'segmentOnBlock', wordLineBreakParser);
 }
 
 const wordDesktopElementProcessor = (

@@ -11,6 +11,7 @@ export const EmptySegmentFormat: Readonly<Required<ContentModelSegmentFormat>> =
     italic: false,
     letterSpacing: '',
     lineHeight: '',
+    lineBreak: '',
     strikethrough: false,
     superOrSubScriptFontSize: '',
     superOrSubScriptSequence: '',

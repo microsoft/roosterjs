@@ -3,6 +3,11 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { getSegmentTextFormat } from '../../../lib/modelApi/editing/getSegmentTextFormat';
 
 describe('getSegmentTextFormat', () => {
+    it('copies supplied line-breaking rules', () => {
+        expect(getSegmentTextFormat(createText('test', { lineBreak: 'strict' }))).toEqual({
+            lineBreak: 'strict',
+        });
+    });
     it('get format from text segment', () => {
         const segment = createText('test', {
             fontFamily: 'Arial',

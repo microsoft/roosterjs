@@ -33,6 +33,7 @@ export { ItalicFormat } from './contentModel/format/formatParts/ItalicFormat';
 export { LetterSpacingFormat } from './contentModel/format/formatParts/LetterSpacingFormat';
 export { DataValueFormat } from './contentModel/format/formatParts/DataValueFormat';
 export { LineHeightFormat } from './contentModel/format/formatParts/LineHeightFormat';
+export { LineBreakFormat } from './contentModel/format/formatParts/LineBreakFormat';
 export { StrikeFormat } from './contentModel/format/formatParts/StrikeFormat';
 export { SuperOrSubScriptFormat } from './contentModel/format/formatParts/SuperOrSubScriptFormat';
 export { TextColorFormat } from './contentModel/format/formatParts/TextColorFormat';

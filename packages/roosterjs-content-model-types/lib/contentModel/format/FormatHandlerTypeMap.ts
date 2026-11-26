@@ -19,6 +19,7 @@ import type { ImageStateFormat } from './formatParts/ImageStateFormat';
 import type { LegacyTableBorderFormat } from './formatParts/LegacyTableBorderFormat';
 import type { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import type { LineHeightFormat } from './formatParts/LineHeightFormat';
+import type { LineBreakFormat } from './formatParts/LineBreakFormat';
 import type { LinkFormat } from './formatParts/LinkFormat';
 import type { ListStyleFormat } from './formatParts/ListStyleFormat';
 import type { ListThreadFormat } from './formatParts/ListThreadFormat';
@@ -43,6 +44,10 @@ import type { WordBreakFormat } from './formatParts/WordBreakFormat';
  * Represents a record of all format handlers
  */
 export interface FormatHandlerTypeMap {
+    /**
+     * East Asian line-breaking rules
+     */
+    lineBreak: LineBreakFormat;
     /**
      * Format for AriaFormat
      */
