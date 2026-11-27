@@ -20,6 +20,7 @@ const initialState: OptionState = {
         markdown: true,
         markdownPaste: true,
         imageEditPlugin: true,
+        horizontalLineEditPlugin: true,
         hyperlink: true,
         customReplace: true,
         hiddenProperty: true,

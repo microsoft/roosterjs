@@ -1,4 +1,4 @@
-import { alignTable } from '../table/alignTable';
+import { alignTableAndDivider } from './alignTableAndDivider';
 import { getOperationalBlocks, mutateBlock } from 'roosterjs-content-model-dom';
 import { splitSelectedParagraphByBr } from './splitSelectedParagraphByBr';
 import type {
@@ -66,8 +66,11 @@ export function setModelAlignment(
         const block = mutateBlock(readonlyBlock);
         const newAlignment = ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
 
-        if (block.blockType === 'Table' && alignment !== 'justify') {
-            alignTable(
+        if (
+            (block.blockType === 'Table' || block.blockType === 'Divider') &&
+            alignment !== 'justify'
+        ) {
+            alignTableAndDivider(
                 block,
                 TableAlignMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr']
             );

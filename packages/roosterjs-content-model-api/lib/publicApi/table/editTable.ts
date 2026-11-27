@@ -1,4 +1,4 @@
-import { alignTable } from '../../modelApi/table/alignTable';
+import { alignTableAndDivider } from '../../modelApi/block/alignTableAndDivider';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
@@ -42,7 +42,7 @@ export function editTable(editor: IEditor, operation: TableOperation) {
             case 'alignCenter':
             case 'alignLeft':
             case 'alignRight':
-                alignTable(tableModel, operation);
+                alignTableAndDivider(tableModel, operation);
                 break;
 
             case 'deleteColumn':

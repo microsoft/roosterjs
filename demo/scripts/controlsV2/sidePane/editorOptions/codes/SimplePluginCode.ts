@@ -45,3 +45,9 @@ export class DragAndDropPluginCode extends SimplePluginCode {
         super('DragAndDropPlugin');
     }
 }
+
+export class HorizontalLineEditPluginCode extends SimplePluginCode {
+    constructor() {
+        super('HorizontalLineEditPlugin');
+    }
+}

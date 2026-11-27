@@ -1,11 +1,11 @@
-import { alignTable } from '../../../lib/modelApi/table/alignTable';
+import { alignTableAndDivider } from '../../../lib/modelApi/block/alignTableAndDivider';
 import { createTable } from 'roosterjs-content-model-dom';
 
-describe('alignTable', () => {
+describe('alignTableAndDivider', () => {
     it('Align table to left', () => {
         const table = createTable(1);
 
-        alignTable(table, 'alignLeft');
+        alignTableAndDivider(table, 'alignLeft');
 
         expect(table.format).toEqual({
             marginRight: 'auto',
@@ -16,7 +16,7 @@ describe('alignTable', () => {
     it('Align table to center', () => {
         const table = createTable(1);
 
-        alignTable(table, 'alignCenter');
+        alignTableAndDivider(table, 'alignCenter');
 
         expect(table.format).toEqual({
             marginLeft: 'auto',
@@ -27,7 +27,7 @@ describe('alignTable', () => {
     it('Align table to right', () => {
         const table = createTable(1);
 
-        alignTable(table, 'alignRight');
+        alignTableAndDivider(table, 'alignRight');
 
         expect(table.format).toEqual({
             marginLeft: 'auto',
@@ -42,7 +42,7 @@ describe('alignTable', () => {
         table.format.marginBottom = '10px';
         table.format.marginLeft = '10px';
 
-        alignTable(table, 'alignRight');
+        alignTableAndDivider(table, 'alignRight');
 
         expect(table.format).toEqual({
             marginTop: '10px',
@@ -58,7 +58,7 @@ describe('alignTable', () => {
         table.format.textAlign = 'start';
         table.format.htmlAlign = 'end';
 
-        alignTable(table, 'alignRight');
+        alignTableAndDivider(table, 'alignRight');
 
         expect(table.format).toEqual({
             marginRight: '',

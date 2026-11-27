@@ -67,6 +67,26 @@ describe('handleDivider', () => {
         });
     });
 
+    it('HR with border-box dimensions', () => {
+        const parent = document.createElement('div');
+        handleDivider(
+            document,
+            parent,
+            {
+                blockType: 'Divider',
+                tagName: 'hr',
+                format: { useBorderBox: true, width: '200px', height: '4px' },
+            },
+            context,
+            null
+        );
+
+        const hr = parent.querySelector('hr')!;
+        expect(hr.style.boxSizing).toBe('border-box');
+        expect(hr.style.width).toBe('200px');
+        expect(hr.style.height).toBe('4px');
+    });
+
     it('HR with width, size and display', () => {
         const hr: ContentModelDivider = {
             blockType: 'Divider',
