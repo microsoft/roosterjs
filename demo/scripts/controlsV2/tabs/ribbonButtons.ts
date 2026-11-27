@@ -9,7 +9,9 @@ import { imageBorderRemoveButton } from '../demoButtons/imageBorderRemoveButton'
 import { imageBorderStyleButton } from '../demoButtons/imageBorderStyleButton';
 import { imageBorderWidthButton } from '../demoButtons/imageBorderWidthButton';
 import { imageBoxShadowButton } from '../demoButtons/imageBoxShadowButton';
+import { imageSizeButton } from '../demoButtons/imageSizeButton';
 import { ImageEditor } from 'roosterjs-content-model-types';
+import { insertHorizontalLineButton } from '../demoButtons/insertHorizontalLineButton';
 import { listStartNumberButton } from '../demoButtons/listStartNumberButton';
 import { pasteAsMarkdownButton } from '../demoButtons/pasteAsMarkdownButton';
 import { pasteButton } from '../demoButtons/pasteButton';
@@ -109,6 +111,7 @@ const imageButtons: RibbonButton<any>[] = [
     imageBorderRemoveButton,
     changeImageButton,
     imageBoxShadowButton,
+    imageSizeButton,
 ];
 
 const insertButtons: RibbonButton<any>[] = [
@@ -116,6 +119,7 @@ const insertButtons: RibbonButton<any>[] = [
     removeLinkButton,
     insertTableButton,
     insertImageButton,
+    insertHorizontalLineButton,
 ];
 
 const paragraphButtons: RibbonButton<any>[] = [
@@ -166,6 +170,7 @@ const allButtons: RibbonButton<any>[] = [
     removeLinkButton,
     insertTableButton,
     insertImageButton,
+    insertHorizontalLineButton,
     superscriptButton,
     subscriptButton,
     strikethroughButton,
@@ -198,6 +203,7 @@ const allButtons: RibbonButton<any>[] = [
     imageBorderRemoveButton,
     changeImageButton,
     imageBoxShadowButton,
+    imageSizeButton,
     spacingButton,
     spaceBeforeButton,
     spaceAfterButton,

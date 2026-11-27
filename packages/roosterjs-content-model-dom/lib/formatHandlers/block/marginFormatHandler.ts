@@ -39,6 +39,7 @@ export const marginFormatHandler: FormatHandler<MarginFormat & DirectionFormat> 
             const alternativeKey = DefaultMarginKey[format.direction ?? 'ltr'][key];
             const value: string | undefined =
                 element.style[key] ||
+                (alternativeKey ? element.style[alternativeKey]?.toString() : '') ||
                 defaultStyle[key] ||
                 (alternativeKey ? defaultStyle[alternativeKey]?.toString() : '');
 

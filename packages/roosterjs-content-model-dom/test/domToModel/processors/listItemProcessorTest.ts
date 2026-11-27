@@ -1,6 +1,6 @@
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from 'roosterjs-content-model-types';
+import { ContentModelListItem, DomToModelContext } from 'roosterjs-content-model-types';
 import { listItemProcessor } from '../../../lib/domToModel/processors/listItemProcessor';
 
 describe('listItemProcessor', () => {
@@ -11,6 +11,54 @@ describe('listItemProcessor', () => {
             processorOverride: {
                 li: listItemProcessor,
             },
+        });
+    });
+
+    [undefined, '12px', '0px'].forEach(marginBottom => {
+        it(`Stores WordLikeStyles defaults in the model while preserving marginBottom ${marginBottom}`, () => {
+            const group = createContentModelDocument();
+            const li = document.createElement('li');
+
+            context.experimentalFeatures = ['WordLikeStyles'];
+            li.innerHTML = 'foo<b>bar</b>baz';
+
+            if (marginBottom) {
+                li.style.marginBottom = marginBottom;
+            }
+
+            listItemProcessor(group, li, context);
+
+            const listItem = group.blocks[0] as ContentModelListItem;
+
+            expect(listItem.format.marginBottom).toBe(marginBottom ?? '2px');
+            expect(listItem.blocks[0]).toEqual(
+                jasmine.objectContaining({
+                    blockType: 'Paragraph',
+                    isImplicit: false,
+                    format: { marginLeft: '8px' },
+                })
+            );
+            expect(li.style.marginBottom).toBe(marginBottom ?? '');
+            expect(li.querySelector('b')!.style.marginInlineStart).toBe('');
+        });
+    });
+
+    (['ltr', 'rtl'] as const).forEach(direction => {
+        it(`Preserves an authored inline start margin with WordLikeStyles in ${direction}`, () => {
+            const group = createContentModelDocument();
+            const li = document.createElement('li');
+
+            context.experimentalFeatures = ['WordLikeStyles'];
+            li.style.direction = direction;
+            li.innerHTML = '<div style="margin-inline-start: 16px;">test</div>';
+
+            listItemProcessor(group, li, context);
+
+            const listItem = group.blocks[0] as ContentModelListItem;
+            const marginKey = direction == 'rtl' ? 'marginRight' : 'marginLeft';
+
+            expect(listItem.blocks[0].format[marginKey]).toBe('16px');
+            expect(context.blockFormat.direction).toBeUndefined();
         });
     });
 
