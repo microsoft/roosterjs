@@ -10,6 +10,11 @@ import { imageBorderStyleButton } from '../demoButtons/imageBorderStyleButton';
 import { imageBorderWidthButton } from '../demoButtons/imageBorderWidthButton';
 import { imageBoxShadowButton } from '../demoButtons/imageBoxShadowButton';
 import { imageSizeButton } from '../demoButtons/imageSizeButton';
+import {
+    imageTextWrapInlineButton,
+    imageTextWrapSquareButton,
+    imageTextWrapTopAndBottomButton,
+} from '../demoButtons/imageTextWrapButtons';
 import { ImageEditor } from 'roosterjs-content-model-types';
 import { insertHorizontalLineButton } from '../demoButtons/insertHorizontalLineButton';
 import { listStartNumberButton } from '../demoButtons/listStartNumberButton';
@@ -112,6 +117,9 @@ const imageButtons: RibbonButton<any>[] = [
     changeImageButton,
     imageBoxShadowButton,
     imageSizeButton,
+    imageTextWrapInlineButton,
+    imageTextWrapSquareButton,
+    imageTextWrapTopAndBottomButton,
 ];
 
 const insertButtons: RibbonButton<any>[] = [
@@ -204,6 +212,9 @@ const allButtons: RibbonButton<any>[] = [
     changeImageButton,
     imageBoxShadowButton,
     imageSizeButton,
+    imageTextWrapInlineButton,
+    imageTextWrapSquareButton,
+    imageTextWrapTopAndBottomButton,
     spacingButton,
     spaceBeforeButton,
     spaceAfterButton,

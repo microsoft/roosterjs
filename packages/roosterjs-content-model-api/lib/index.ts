@@ -39,6 +39,7 @@ export { insertLink } from './publicApi/link/insertLink';
 export { removeLink } from './publicApi/link/removeLink';
 export { adjustLinkSelection } from './publicApi/link/adjustLinkSelection';
 export { setImageAltText } from './publicApi/image/setImageAltText';
+export { setImageTextWrap } from './publicApi/image/setImageTextWrap';
 export { adjustImageSelection } from './publicApi/image/adjustImageSelection';
 export { setParagraphMargin } from './publicApi/block/setParagraphMargin';
 export { toggleCode } from './publicApi/segment/toggleCode';
