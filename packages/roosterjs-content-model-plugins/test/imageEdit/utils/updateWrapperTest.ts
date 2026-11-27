@@ -249,9 +249,54 @@ describe('updateWrapper', () => {
             true
         );
 
-        // During rotation with borders, wrapper should use image.style dimensions + border
-        expectPixelValue(wrapper.style.width, 20); // 18px + 2px border
-        expectPixelValue(wrapper.style.height, 20); // 18px + 2px border
+        expectPixelValue(wrapper.style.width, 22);
+        expectPixelValue(wrapper.style.height, 22);
+
+        image.remove();
+    });
+
+    it('should keep the current bordered wrapper size during repeated rotation updates', () => {
+        const image = document.createElement('img');
+        image.style.border = '2px solid';
+        image.style.width = '100px';
+        image.style.height = '80px';
+        document.body.appendChild(image);
+
+        const { wrapper, imageClone } = createImageWrapper(
+            editor,
+            image,
+            options,
+            editInfo,
+            htmlOptions,
+            ['resize', 'rotate']
+        );
+
+        updateWrapper(editInfo, options, image, imageClone, wrapper);
+
+        const cloneWidth = imageClone.style.width;
+        const cloneHeight = imageClone.style.height;
+
+        [Math.PI / 4, Math.PI / 2, Math.PI].forEach(angle => {
+            editInfo.angleRad = angle;
+            updateWrapper(
+                editInfo,
+                options,
+                image,
+                imageClone,
+                wrapper,
+                undefined,
+                undefined,
+                false,
+                true
+            );
+
+            expectPixelValue(wrapper.style.width, 24);
+            expectPixelValue(wrapper.style.height, 24);
+            expect(imageClone.style.width).toBe(cloneWidth);
+            expect(imageClone.style.height).toBe(cloneHeight);
+            expect(editInfo.widthPx).toBe(20);
+            expect(editInfo.heightPx).toBe(20);
+        });
 
         image.remove();
     });

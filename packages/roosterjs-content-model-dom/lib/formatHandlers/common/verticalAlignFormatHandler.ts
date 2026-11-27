@@ -28,8 +28,13 @@ export const verticalAlignFormatHandler: FormatHandler<VerticalAlignFormat> = {
                 break;
         }
     },
-    apply: (format, element) => {
-        if (format.verticalAlign) {
+    apply: (format, element, context) => {
+        if (
+            element.tagName == 'IMG' &&
+            (context.experimentalFeatures?.indexOf('WordLikeStyles') ?? -1) >= 0
+        ) {
+            element.style.verticalAlign = format.verticalAlign ?? 'middle';
+        } else if (format.verticalAlign) {
             element.style.verticalAlign = format.verticalAlign;
         }
     },
