@@ -1,7 +1,13 @@
 import { createImageCropper } from '../../../lib/imageEdit/Cropper/createImageCropper';
 import { createImageResizer } from '../../../lib/imageEdit/Resizer/createImageResizer';
 import { createImageRotator } from '../../../lib/imageEdit/Rotator/createImageRotator';
-import { IEditor, ImageEditOperation, ImageMetadataFormat } from 'roosterjs-content-model-types';
+import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
+import {
+    ContentModelParagraph,
+    IEditor,
+    ImageEditOperation,
+    ImageMetadataFormat,
+} from 'roosterjs-content-model-types';
 import { ImageEditOptions } from '../../../lib/imageEdit/types/ImageEditOptions';
 import { ImageHtmlOptions } from '../../../lib/imageEdit/types/ImageHtmlOptions';
 import { initEditor } from '../../TestHelper';
@@ -174,6 +180,96 @@ describe('createImageWrapper', () => {
             croppers: cropper,
         });
         imageSpan.remove();
+    });
+
+    describe('text wrap', () => {
+        const options: ImageEditOptions = {
+            borderColor: '#DB626C',
+            minWidth: 10,
+            minHeight: 10,
+            preserveRatio: true,
+            disableRotate: false,
+            disableSideResize: false,
+            onSelectState: ['resize'],
+        };
+        const editInfo = {
+            src: 'test',
+            widthPx: 20,
+            heightPx: 20,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0,
+            bottomPercent: 0,
+            angleRad: 0,
+        };
+        const htmlOptions = {
+            borderColor: '#DB626C',
+            rotateHandleBackColor: 'white',
+            isSmallImage: false,
+            disableSideResize: false,
+        };
+
+        function runTextWrapTest(
+            imageStyle: string,
+            expectedDisplay: string,
+            expectedFloat: string,
+            expectedTextAlign: string
+        ) {
+            const container = document.createElement('div');
+            const image = document.createElement('img');
+            image.setAttribute('style', imageStyle);
+            container.appendChild(image);
+            document.body.appendChild(container);
+
+            const { shadowSpan } = createImageWrapper(
+                editor,
+                image,
+                options,
+                editInfo,
+                htmlOptions,
+                ['resize']
+            );
+
+            expect(shadowSpan.style.display).toBe(expectedDisplay);
+            expect(shadowSpan.style.float).toBe(expectedFloat);
+            expect(shadowSpan.style.textAlign).toBe(expectedTextAlign);
+            container.remove();
+        }
+
+        it('inline', () => {
+            runTextWrapTest('display: inline', '', '', '');
+        });
+
+        it('square', () => {
+            runTextWrapTest('display: inline; float: left', '', 'left', '');
+        });
+
+        it('top and bottom', () => {
+            runTextWrapTest('display: block', 'flow-root', '', 'start');
+        });
+
+        it('top and bottom image should not split paragraph when parsed to model', () => {
+            const div = document.createElement('div');
+            const image = document.createElement('img');
+            image.style.display = 'block';
+            div.appendChild(document.createTextNode('before'));
+            div.appendChild(image);
+            div.appendChild(document.createTextNode('after'));
+            document.body.appendChild(div);
+
+            createImageWrapper(editor, image, options, editInfo, htmlOptions, ['resize']);
+
+            const model = domToContentModel(div, createDomToModelContext());
+
+            expect(model.blocks.length).toBe(1);
+            expect(model.blocks[0].blockType).toBe('Paragraph');
+            expect(
+                (model.blocks[0] as ContentModelParagraph).segments.map(s => s.segmentType)
+            ).toEqual(['Text', 'Image', 'Text']);
+            div.remove();
+        });
     });
 });
 

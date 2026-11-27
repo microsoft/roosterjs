@@ -67,6 +67,7 @@ export function createImageWrapper(
     const imageHeight = image.offsetHeight;
     const imageSpan = wrap(doc, image, 'span');
     const shadowSpan = createShadowSpan(wrapper, imageSpan, imageWidth, imageHeight);
+    applyTextWrapStyles(image, shadowSpan);
     return { wrapper, shadowSpan, imageClone, resizers, rotators, croppers };
 }
 
@@ -88,6 +89,27 @@ const createShadowSpan = (
 
     shadowRoot.appendChild(wrapper);
     return imageSpan;
+};
+
+/**
+ * The image is not rendered while it is hosted by the shadow root, so its text wrap styles
+ * (display and float) need to be applied to the shadow host to keep text in the same position.
+ * For block images, use "flow-root" instead of "block": it has the same block level layout,
+ * but it is not treated as a block element when converting DOM to Content Model, so the
+ * paragraph containing the image will not be split while editing.
+ */
+const applyTextWrapStyles = (image: HTMLImageElement, shadowSpan: HTMLElement) => {
+    const { display, float } = image.style;
+
+    if (display == 'block') {
+        shadowSpan.style.display = 'flow-root';
+        // text-align does not affect the position of a block image, so keep the wrapper at the start
+        shadowSpan.style.textAlign = 'start';
+    }
+
+    if (float && float != 'none') {
+        shadowSpan.style.float = float;
+    }
 };
 
 const createWrapper = (

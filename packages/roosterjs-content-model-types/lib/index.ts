@@ -417,6 +417,7 @@ export { ContentModelFormatState } from './parameter/ContentModelFormatState';
 export { PasteTypeOrGetter, PasteTypeGetter } from './parameter/PasteTypeOrGetter';
 export { ImageFormatState } from './parameter/ImageFormatState';
 export { Border } from './parameter/Border';
+export { ImageTextWrap } from './parameter/ImageTextWrap';
 export { InsertEntityOptions } from './parameter/InsertEntityOptions';
 export {
     DeleteSelectionContext,
